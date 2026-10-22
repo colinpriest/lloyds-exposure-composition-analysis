@@ -2733,7 +2733,10 @@ def load_and_classify(outcome=None):
         }
         records.append(record)
 
-    stale = sorted(set(fx_register) - fx_applied)
+    # an entry whose filing is in the corpus and reached no reliable gross record did not exclude anything; one whose
+    # filing is not in the corpus read (a smaller corpus, a test's synthetic one) has nothing to exclude
+    in_corpus = {Path(f).name for f in files}
+    stale = sorted(k for k in set(fx_register) - fx_applied if "syndicate_%s.json" % k in in_corpus)
     if stale:
         raise ValueError("data/fx_untranslated_excluded.json: %s reached no reliable gross record of the primary "
                          "sample, so the exclusion did not happen" % ", ".join(stale))

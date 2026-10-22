@@ -389,14 +389,26 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
     # has entered with no triangle year). The test follows whichever ledger is there, so it needs no edit after the
     # regeneration; a ledger that is neither fails.
     regenerated = any(k in sample for k in regen["added"])
-    if regenerated:
+    # the primary sample (the owner's decision of 22 October 2026, option c; the regeneration of 23 October): a record
+    # with no triangle year carries no mature-cohort figure and leaves the sample, except 3334/2018, whose figure the
+    # confirmed register decides (blind["on_the_primary_sample"])
+    primary = blind["on_the_primary_sample"]
+    on_the_primary = (not regenerated
+                      and not any(k in sample for k in blind["records"] if k not in primary["records"]))
+    if on_the_primary:
+        assert primary["count"] == len(primary["records"]) == len(unseen) and len(sample) == 649
+        assert sorted(unseen) == sorted(primary["records"]) and set(primary["records"]) <= set(blind["records"])
+        for key in primary["records"]:
+            assert not ra.triangle_years(_imported(key)), key
+    elif regenerated:
         assert all(k in sample for k in regen["added"]) and not any(k in sample for k in regen["left"])
         expected = sorted((set(blind["records"]) | set(regen["added"])) - set(regen["left"]))
         assert blind["count"] == 20 and len(unseen) == regen["count"] == 21
+        assert sorted(unseen) == expected and len(unseen) == len(expected)
     else:
         expected = sorted(blind["records"])
         assert blind["count"] == len(unseen) == 20
-    assert sorted(unseen) == expected and len(unseen) == len(expected)
+        assert sorted(unseen) == expected and len(unseen) == len(expected)
     assert regen["count"] == blind["count"] + len(regen["added"]) - len(regen["left"]) == 21
     for key in regen["added"]:
         assert key not in blind["records"] and not ra.triangle_years(_imported(key)), key
@@ -410,8 +422,10 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
         years = ra.triangle_years(_imported(key))
         assert years and any(y <= t - ra.MATURE_LAG for y in years), key
         assert key not in blind["records"]
-        # 1967/2014 has left the regenerated sample (a basis exclusion now); the others stay in either sample
-        assert key in sample or (regenerated and key == "1967_2014"), key
+        # 1967/2014 has left the regenerated sample (a basis exclusion now); the others stay in either 672 sample. In the
+        # primary a record is in the sample only with a mature-enforced figure, which the other four's triangles
+        # may not give, so their presence is not asserted there
+        assert key in sample or (regenerated and key == "1967_2014") or on_the_primary, key
 
 
 #: the year each syndicate began, as the scan's `found` text gives it for the three records it names

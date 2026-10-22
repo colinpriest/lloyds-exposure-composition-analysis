@@ -67,6 +67,11 @@
    "added": ["4020_2019"],
    "left": []
   },
+  "on_the_primary_sample": {
+   "what": "the same count on the primary sample (outcome mature_cohort, the owner's decision of 22 October 2026, option c; 649 records after the exchange-rate rule), measured from the regenerated ledger on 23 October 2026: the primary carries a severity only for a mature-enforced figure, and a record with no triangle year has none, so it leaves at the unusable-severity step (NO_MATURE_COHORT_FIGURE) unless a register decides its figure. Only 3334/2018 remains, whose figure two readings of the filing confirmed (data/pyd_confirmed_figures.json: route confirmed-figure, a mature-enforced triangle figure); the other 19 of the list above, and 4020/2019, are out of the primary sample",
+   "count": 1,
+   "records": ["3334_2018"]
+  },
   "scan": "each filing's text (its text layer, the OCR page cache for pages without one) searched for: began / begun / commenced / started / incepted / launched / formed / established / created / set up / incorporated / replacing / replaced, with the year t or t-1 (bare, 'YOA', 'year of account', '1 January') within 150 characters; 'first (full) (underwriting) year (of account / trading / operations)'; 'second (underwriting) year (of account)'; 'new syndicate', 'new entrant', 'newly formed', 'newly established'",
   "hits_read": 52,
   "records_with_a_hit": 18,

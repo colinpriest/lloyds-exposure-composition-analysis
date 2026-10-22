@@ -104,7 +104,9 @@ def test_the_syndicate_control_leaves_out_whole_syndicates_matched_on_size_and_r
             gone = set(syn[~keep].tolist())
             # whole syndicates: every record of a syndicate left out is left out, none of its records is kept
             assert not gone & set(syn[keep].tolist()), name
-            assert len(gone) == len(synds), name
+            # as many syndicates as the variant has in the sample: syndicate 1994 holds no record of the primary
+            # sample (the regeneration of 23 October 2026), so each variant counts one syndicate fewer than it lists
+            assert len(gone) == len(set(synds) & set(syn.tolist())), name
             # drawn from the syndicates the variant keeps: none of the variant's own
             assert not gone & set(synds), name
             # within the tolerance of the variant's records left out and their share of the size proxy

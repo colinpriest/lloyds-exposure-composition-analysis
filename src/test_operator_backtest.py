@@ -74,11 +74,21 @@ def _digest(syn, k):
 
 
 def test_the_real_samples_folds_are_the_ones_oos_validation_used_before_the_extraction():
-    """Digests of the syndicate-to-fold map of the 118 syndicates, taken from the original inline expression."""
+    """Digests of the syndicate-to-fold map of the 118 syndicates, taken from the original inline expression (the sorted
+    syndicates dealt out in turn, syndicate i to fold i mod k). The primary sample (the regeneration of 23 October 2026)
+    has syndicate 6107 in and 1994 out of the 672 construction's 118, which moves the folds of the syndicates between
+    them; the pins are the digests of the same inline rule on the primary's syndicates (they were
+    f44a6ca19dc52276cd42c8da78718d7f9d8b9af86385c7b3a7cd6bd9cbbd8885 and
+    7e9200380ac8a5305985ff3ee8a5969a5518d8192211b4fc7713bcde8628c31a)."""
     syn = am.load_sample()[4]
     assert len(set(syn.tolist())) == 118
-    assert _digest(syn, 5) == "f44a6ca19dc52276cd42c8da78718d7f9d8b9af86385c7b3a7cd6bd9cbbd8885"
-    assert _digest(syn, 10) == "7e9200380ac8a5305985ff3ee8a5969a5518d8192211b4fc7713bcde8628c31a"
+    assert _digest(syn, 5) == "49eb3843c9cefd6b178a31ede741a3ac76ecf0ffcfece41be2f247ec054ab1b2"
+    assert _digest(syn, 10) == "88c78d42a8862e914d531c7ba3685f266881e36ef367e8b2b96fd674c1b6f595"
+    # and the inline rule itself, retyped here so the pin does not rest on the helper alone
+    uniq = sorted(set(syn.tolist()))
+    for k in (5, 10):
+        inline = ",".join("%s:%d" % (u, i % k) for i, u in enumerate(uniq))
+        assert hashlib.sha256(inline.encode()).hexdigest() == _digest(syn, k)
     # and oos_validation's own loader gives the same syndicates as the model's sample
     assert OV.load()[3].tolist() == syn.tolist()
 
@@ -361,7 +371,7 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
     r = BT.fit_training(3)
     S, R, H, yr, syn, ritc = am.load_sample()
     held = OV.fold_assignment(syn, BT.K_HONEST) == 3
-    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 672
+    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 649
     assert r["n_held_out_syndicates"] == len(set(syn[held].tolist()))
     assert r["n_train_syndicates"] + r["n_held_out_syndicates"] == 118
     assert set(r["means"]) == set(BT.OPERATOR_PARAMS) and 0.5 < r["means"]["k"] < 1.0
@@ -393,8 +403,10 @@ def small_run():
 
 def test_the_record_has_both_versions_all_methods_and_both_pool_rules(small_run):
     o = small_run
-    # 672 since the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded)
-    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (672, 118, 38)
+    # 649 (118 syndicates, 34 RITC-regime) since the regeneration of 23 October 2026 on the primary sample; it was 672
+    # (118, 38) from the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017
+    # excluded)
+    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (649, 118, 34)
     for ver in ("honest", "cheap"):
         assert set(o[ver]["pool_rules"]) == set(BT.POOL_RULES)
         for rule in BT.POOL_RULES:
@@ -450,13 +462,13 @@ def test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly(re
         d = f["diagnostics"]
         assert d["divergences"] == 0 and d["max_rhat"] <= 1.01 and d["min_ess_bulk"] >= 400, (f["fold"], d)
         assert set(f["params"]) == set(BT.FIT_PARAMS) and 0.5 < f["params"]["k"]["mean"] < 1.0
-    assert sum(f["n_held_out"] for f in fits) == 672 and sum(f["n_held_out_syndicates"] for f in fits) == 118
+    assert sum(f["n_held_out"] for f in fits) == 649 and sum(f["n_held_out_syndicates"] for f in fits) == 118
     assert rec["sampler"] == {"draws": 1500, "tune": 1500, "chains": 4, "target_accept": 0.98, "seed": 42}
 
 
 def test_the_counts_add_up_and_match_the_expected_counts(rec):
     counts = rec["size_quartiles"]["counts"]
-    assert sum(counts) == 672 and len(counts) == 4
+    assert sum(counts) == 649 and len(counts) == 4
     for ver, rule, blk in _methods_block(rec):
         for m in BT.METHODS:
             for a in BT.LEVELS:
@@ -464,14 +476,14 @@ def test_the_counts_add_up_and_match_the_expected_counts(rec):
                 e, x = row["expected"], row["exceedances"]
                 assert x["clean"] + x["ritc"] == x["all"], (ver, rule, m, a)
                 assert sum(x["size_quartile_%d" % j] for j in (1, 2, 3, 4)) == x["all"], (ver, rule, m, a)
-                assert e["all"] == pytest.approx(672 * (1 - a)) and e["ritc"] == pytest.approx(38 * (1 - a))
+                assert e["all"] == pytest.approx(649 * (1 - a)) and e["ritc"] == pytest.approx(34 * (1 - a))
                 assert [e["size_quartile_%d" % (j + 1)] for j in range(4)] == pytest.approx([c * (1 - a) for c in counts])
                 for g, rate in row["rate_bayes_bootstrap"].items():
                     assert rate["lo"] <= rate["mean"] <= rate["hi"] and rate["nominal"] == pytest.approx(1 - a)
                 assert all(v >= 0 for v in row["pinball_mean"].values())
 
 
-#: a count the record's prose names: "the 672 targets", "the published 672-donor pool"
+#: a count the record's prose names: "the 649 targets", "the published 649-donor pool"
 NAMED_COUNT = re.compile(r"\b(\d+)(?:-donor| donors?\b| targets?\b| records?\b| syndicate-years?\b)")
 
 
@@ -487,15 +499,15 @@ def _strings(node):
 
 
 def test_every_count_the_record_names_is_the_samples(rec):
-    """The labels read "the 674 targets" and "the published 674-donor pool" against a 672 sample and pool (the final
+    """The labels read "the 674 targets" and "the published 674-donor pool" against a 672 sample and pool, now 649 (the final
     review of 14 October 2026, P19); the script now writes the count it has. Every count the record's strings name is
     the sample's, and the two labels that carried the stale one are among those read."""
     pool_n = len(BT.load_pool()[0])
-    assert rec["n"] == 672 == sum(rec["size_quartiles"]["counts"]) == pool_n
+    assert rec["n"] == 649 == sum(rec["size_quartiles"]["counts"]) == pool_n
     named = [(s, int(m.group(1))) for s in _strings(rec) for m in NAMED_COUNT.finditer(s)]
     assert [(s, n) for s, n in named if n != rec["n"]] == []
-    assert rec["size_quartiles"]["of"] == "R of the 672 targets"
-    assert rec["vignette_figures"]["pool"] == "the published 672-donor pool, full sample (no donor held out)"
+    assert rec["size_quartiles"]["of"] == "R of the 649 targets"
+    assert rec["vignette_figures"]["pool"] == "the published 649-donor pool, full sample (no donor held out)"
     assert {s for s, _n in named} >= {rec["size_quartiles"]["of"], rec["vignette_figures"]["pool"]}
 
 
@@ -508,10 +520,10 @@ def test_exceedances_cannot_rise_with_the_level(rec):
 
 
 def test_the_record_scores_every_target_once(rec):
-    # at 90% the three methods are scored on the same 672 targets: the cheapest sanity that none was dropped
+    # at 90% the three methods are scored on the same 649 targets: the cheapest sanity that none was dropped
     for _ver, _rule, blk in _methods_block(rec):
         for m in BT.METHODS:
-            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(67.2)
+            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(64.9)
 
 
 def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(rec):
@@ -519,7 +531,9 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     0.29515908143283026 from the gamma = 0 fit, 0.2952 to four places. It was 0.2954 under the retired construction
     (the gamma-free fit with gamma zeroed), which check_gamma_free_fit_results.json now records as the bridge.
     Re-pinned on the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
-    0.29505437438720905, 0.2951 to four places."""
+    0.29505437438720905, 0.2951 to four places.
+    Re-pinned on the regeneration of 23 October 2026 on the primary sample (649 donors): 0.3303768219054808, 0.3304 to
+    four places."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -530,7 +544,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.2951
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3304
 
 
 def test_the_draw_based_block_is_beside_the_plug_in_and_reads_the_same_targets(rec):

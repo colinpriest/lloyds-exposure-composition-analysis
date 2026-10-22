@@ -140,9 +140,11 @@ def test_the_two_independent_readings_of_22_october_2026_added_2689_2022_and_149
     2689/2022's R (USD, 83.021 retained) and 27.5% of 1492/2023's (GBP, 185.590 retained). 1492/2023 leaves the coverage
     note's list of filings read and set aside, with the reason."""
     reg = O.load_register()
-    readings = {rid: json.load(io.open(os.path.join(HERE, "results", "extraction_error_rate", "mature-cohort",
-                                                    "fx-translation", "readings", "%s.json" % rid), encoding="utf-8"))
-                for rid in ("F1", "F2")}
+    readings = {}
+    for rid in ("F1", "F2"):
+        with io.open(os.path.join(HERE, "results", "extraction_error_rate", "mature-cohort", "fx-translation",
+                                  "readings", "%s.json" % rid), encoding="utf-8") as _fh:
+            readings[rid] = json.load(_fh)
     want = {"2689_2022": ("USD", 184.618, 101.597, 35, "1254", 83.021),
             "1492_2023": ("GBP", 256.035, 70.445, 56, "2008", 185.590)}
     for key, (currency, opening, out, page, counterparty, retained) in want.items():
@@ -324,14 +326,17 @@ def test_the_recorded_run_carries_the_adjusted_records():
     # five until the decision of 1 October 2026 put 780/2020, 1861/2021 and 5820/2019 in run-off (whole-year
     # statements outside the RITC regime), which left 1200/2023 and 1861/2019; the stage-3 outbound register then added
     # eight more records whose filings print an outbound transfer (the 8 additions of the third stage-3 commit, read
-    # from the filings' pages), so the regenerated run adjusts ten
-    assert out["n_adjusted"] == 10 and set(out["fits"]) == {"adopted", "retained_base"}
+    # from the filings' pages), so the regenerated run adjusted ten; 2689/2022 and 1492/2023, added from the two
+    # readings of 22 October 2026 (F1, F2), both in the primary sample, make twelve
+    assert out["n_adjusted"] == 12 and set(out["fits"]) == {"adopted", "retained_base"}
     assert out["fits"]["retained_base"]["diagnostics"]["divergences"] == 0
     # the count, the list and the rows are one fact (round 62's verification: n_adjusted retyped 5 -> 6 passed)
     applied = sorted(k for k, r in out["records"].items() if r["applied"])
     assert out["n_adjusted"] == len(out["adjusted"]) == len(applied)
     assert sorted(out["adjusted"]) == applied == sorted(k for k, r in out["records"].items() if r["in_working_sample"])
-    assert applied == ["1084_2018", "1200_2023", "1301_2023", "1861_2019", "1910_2023", "1955_2021", "2007_2018",
-                       "2015_2020", "2468_2018", "4000_2021"]
+    assert applied == ["1084_2018", "1200_2023", "1301_2023", "1492_2023", "1861_2019", "1910_2023", "1955_2021",
+                       "2007_2018", "2015_2020", "2468_2018", "2689_2022", "4000_2021"]
+    assert out["records"]["2689_2022"]["share_transferred"] == pytest.approx(0.550, abs=0.0005)
+    assert out["records"]["1492_2023"]["share_transferred"] == pytest.approx(0.275, abs=0.0005)
     for key in ("780_2020", "1861_2021", "5820_2019", "2468_2022"):
         assert out["records"][key]["loader_disposition"] == "IN RUNOFF", key

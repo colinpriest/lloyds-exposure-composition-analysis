@@ -183,9 +183,12 @@ LEGEND_BELOW = dict(frameon=False, loc="upper center", bbox_to_anchor=(0.45, -0.
                     columnspacing=1.2)
 
 
-def size_axis_floor(aS):
-    """Figure 2's lower vertical limit: the decade at or below the SIZE_AXIS_QUANTILE quantile of the nonzero |S|."""
-    return float(10.0 ** np.floor(np.log10(np.quantile(aS[aS > 0], SIZE_AXIS_QUANTILE))))
+def size_axis_floor(aS, extra=()):
+    """Figure 2's lower vertical limit: the decade at or below the SIZE_AXIS_QUANTILE quantile of the nonzero |S| and of
+    the other things the axis plots (`extra`: the medians and the fitted curve), so that the decade below the first
+    plotted points never reads as empty (test_figure_presentation, which takes the quantile of everything plotted)."""
+    v = np.concatenate([aS[aS > 0], np.asarray(extra, float)[np.asarray(extra, float) > 0]])
+    return float(10.0 ** np.floor(np.log10(np.quantile(v, SIZE_AXIS_QUANTILE))))
 
 
 def size_figure(S, R, H, cal):
@@ -212,7 +215,7 @@ def size_figure(S, R, H, cal):
     ax.axhline(cal["sd_undiv"], ls="--", color="#333", lw=1,
                label="undiversifiable floor %.3f" % cal["sd_undiv"])
     ax.set_xscale("log"); ax.set_yscale("log")
-    lo = size_axis_floor(aS)
+    lo = size_axis_floor(aS, list(by) + list(curve))
     ax.set_ylim(lo, 1.3 * max(float(aS.max()), float(curve.max())))
     n_below = int((aS < lo).sum())
     if n_below:      # a legend entry with no symbol: the count of the points under the axis (|S| = 0 among them)

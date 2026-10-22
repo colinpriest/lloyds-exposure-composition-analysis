@@ -231,15 +231,31 @@ def test_the_672_construction_does_not_read_the_register(loaded, monkeypatch, tm
 
 
 def test_an_entry_that_reaches_no_record_stops_the_run(monkeypatch):
-    """A register that claims an exclusion the loader did not make stops the run: a record missing from the sample, or
-    one that is not a reliable gross record (here a record in run-off and one on a net basis)."""
+    """A register that claims an exclusion the loader did not make stops the run when the filing is in the corpus: here
+    a record in run-off, which never reaches the exclusion step. An entry whose filing is not in the corpus read has
+    nothing to exclude and is not an error (a smaller corpus, or a test's synthetic one)."""
     real = ra.load_fx_untranslated_excluded()
-    for stale in ("9999_2020", "1206_2019"):
-        extra = dict(real)
-        extra[stale] = real["2468_2016"]
-        monkeypatch.setattr(ra, "load_fx_untranslated_excluded", lambda path=None, e=extra: e)
-        with pytest.raises(ValueError, match=stale):
-            ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    extra = dict(real)
+    extra["1206_2019"] = real["2468_2016"]
+    monkeypatch.setattr(ra, "load_fx_untranslated_excluded", lambda path=None, e=extra: e)
+    with pytest.raises(ValueError, match="1206_2019"):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    extra = dict(real)
+    extra["9999_2020"] = real["2468_2016"]
+    monkeypatch.setattr(ra, "load_fx_untranslated_excluded", lambda path=None, e=extra: e)
+    records, counters, log, files = ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+    assert counters["fx_untranslated_excluded"] == 4
+
+
+def test_a_non_gross_or_take_on_record_the_register_names_stops_the_run(monkeypatch):
+    """An entry for a record that reaches the exclusion step but is not a reliable gross record of the primary (here
+    1218/2015, on a net basis) stops the run at that step."""
+    real = ra.load_fx_untranslated_excluded()
+    extra = dict(real)
+    extra["1218_2015"] = real["2468_2016"]
+    monkeypatch.setattr(ra, "load_fx_untranslated_excluded", lambda path=None, e=extra: e)
+    with pytest.raises(ValueError, match="1218_2015"):
+        ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
 
 
 def test_the_register_is_a_hashed_raw_byte_input():

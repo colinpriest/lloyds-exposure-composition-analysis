@@ -61,18 +61,28 @@ def test_the_quoted_counts(inputs):
     # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
     # 1218/2015 joins the basis step on the net basis (-> 122 + 7 = 129: 98 net and 24 unstated), and 4020/2017
     # leaves at the unusable-severity step under the rule gross_triangle_does_not_reconcile (that step 13 -> 14)
-    assert r["identity_basis"] == "122 + 7 = 129"
-    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (98, 24)
-    assert r["unusable_severity_components"] == {"gross_development_unavailable": 5,
+    # the regeneration of 23 October 2026 on the primary sample (the owner's decision of 22 October, option c; 649
+    # records): a net- or unstated-basis gross figure the mature-cohort register restores is no longer a basis exclusion
+    # (122 + 7 = 129 -> 98 + 6 = 104: 82 net and 16 unstated at the basis step), the primary's two new steps join the
+    # unusable-severity step (56 records whose figure is no mature-cohort movement, tagged NO_MATURE_COHORT_FIGURE, and
+    # the 4 of the exchange-rate rule, tagged FX_UNTRANSLATED_TABLE), and its basis records fall from 7 to 6
+    assert r["identity_basis"] == "98 + 6 = 104"
+    assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (82, 16)
+    assert r["unusable_severity_components"] == {"fx_untranslated_table": 4,
+                                                 "gross_development_unavailable": 5,
                                                  "gross_triangle_does_not_reconcile": 1,
-                                                 "non_gross_or_unstated_development": 7,
+                                                 "no_mature_cohort_figure": 56,
+                                                 "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1}
+    assert r["identity_unusable_severity"] == "4 + 5 + 1 + 56 + 6 + 1 = 73"
     g = MC.regime_composition(rows)
     # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
     # of 38 and the corpus's 53 -> 55; the scanned filings' 60 and the basis identities above are unchanged
-    assert g["working_sample"]["composition"] == {"ritc_flagged": 31, "confirmed_transfer_not_flagged": 5,
+    # the regeneration of 23 October 2026 on the primary sample: the working sample's rows 31 + 5 + 2 of 38 -> 27 + 5 + 2
+    # of 34 (the 34 RITC-regime records of the headline fit); the scanned filings' 60 and the corpus's 55 are unchanged
+    assert g["working_sample"]["composition"] == {"ritc_flagged": 27, "confirmed_transfer_not_flagged": 5,
                                                   "takeon_only": 2}
-    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (38, 60, 55)
+    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (34, 60, 55)
 
 
 def test_a_flow_that_disagrees_is_refused(inputs):

@@ -86,7 +86,8 @@ def test_the_reported_pool_gives_a_negative_concentration_contribution(pool):
     # fully transferred: 0.282 on the regenerated run of 6 October 2026 (0.284 on the 1 October outputs, 0.280 before
     # round 62's records). The refit moved gamma from 0.425 to 0.356 and 88 records' composition changed, so the
     # overlay's VaR the manuscript prints (0.284 at gamma 0.425) is stale until stage 4
-    assert v[7] == pytest.approx(0.282, abs=0.001)
+    # and 0.315 on the regeneration of 23 October 2026 on the primary sample (649 donors)
+    assert v[7] == pytest.approx(0.315, abs=0.001)
     assert te + se + ce == pytest.approx(v[7] - v[0])
 
 

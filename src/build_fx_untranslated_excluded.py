@@ -10,7 +10,7 @@ The author's decision of 22 October 2026 (rule B). A record leaves the PRIMARY s
       gross claims outstanding R.
 
 The population screened is the 13 candidates of results/extraction_error_rate/mature-cohort/fx-translation/
-fx_translation.json (measure_fx_translation.py: the primary sample's 653 records, 37 with a table not retranslated, 18
+fx_translation.json (written by fx-translation/measure_fx_translation.py: the primary sample's 653 records, 37 with a table not retranslated, 18
 of those in a year sterling moved 5% or more against the dollar, and of those 3 with a placed exchange line of 5% or
 more and 10 with no placed line), each read twice, independently, from the filing (readers F1 and F2). Both readers
 agree on every record. The register holds the four records both conditions hold for ("excluded") and the nine that
@@ -40,7 +40,7 @@ EXCLUDED = ("1897_2016", "2468_2016", "5151_2016", "5151_2017")
 KEPT = ("218_2017", "1301_2023", "1686_2018", "1971_2023", "2468_2017", "4242_2016", "4242_2017", "4242_2018",
         "5151_2018")
 
-#: the five records the script placed an exchange line for, under 5% (measure_fx_translation.py; a pattern placement,
+#: the five records the script placed an exchange line for, under 5% (fx-translation/measure_fx_translation.py; a pattern placement,
 #: not a reading, and not read twice)
 SCREENED_UNDER_5 = {"1686_2023": 2.03, "2019_2023": 0.03, "2689_2022": 0.26, "4242_2022": 0.14, "4242_2023": 0.30}
 

@@ -528,13 +528,20 @@ def test_the_open_questions_follow_the_records():
     # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded): the
     # composition model WITHOUT the share scores higher again (delta_ELPD -0.05), so on the current record the words
     # are written; they refuse on a copy whose difference is positive (the 6 October orientation)
-    assert lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] < 0
-    assert "the composition model without the share scores" in bcr.long_tail_question(pos, lt)
+    # the regeneration of 23 October 2026 on the primary sample (649 records): the share's slope is resolved positive
+    # (+0.49 [0.19, 0.82]) and the composition model WITH the share scores 1.6 higher by-syndicate (delta_ELPD +1.61,
+    # Bayesian-bootstrap interval [-8.71, +10.81], P = 0.66), so on the current record the words say that the
+    # improvement is not established; the orientation of the earlier records (the model without the share higher)
+    # still writes its own words, and a resolved improvement (interval above zero) still refuses
+    assert lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] > 0
+    assert comp["beta_LT"]["hdi"][0] > 0
+    now = bcr.long_tail_question(comp, lt)
+    assert "the composition model with the share scores" in now and "is not established" in now
+    assert "includes zero" in now and "without the share scores" not in now
     flipped = json.loads(json.dumps(lt))
-    flipped["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = abs(
+    flipped["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = -abs(
         lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])
-    with pytest.raises(SystemExit, match="no longer scores higher"):
-        bcr.long_tail_question(pos, flipped)
+    assert "the composition model without the share scores" in bcr.long_tail_question(pos, flipped)
     oriented = json.loads(json.dumps(lt))
     oriented["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = -abs(
         lt["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"])
@@ -544,8 +551,7 @@ def test_the_open_questions_follow_the_records():
         bcr.long_tail_question(pos, bad)
     bad = json.loads(json.dumps(oriented))
     bad["by_syndicate"]["long_tail_minus_composition"]["delta_ELPD"] = 0.5
-    with pytest.raises(SystemExit, match="no longer scores higher"):
-        bcr.long_tail_question(pos, bad)
+    assert "the composition model with the share scores $+0.5$ higher" in bcr.long_tail_question(pos, bad)
     # Supplement S4's and Table 18's orientation: the model without the share against the model with it
     r = lt["by_syndicate"]["long_tail_minus_composition"]
     ro = oriented["by_syndicate"]["long_tail_minus_composition"]
@@ -553,6 +559,8 @@ def test_the_open_questions_follow_the_records():
     lo, hi = comp["beta_LT"]["hdi"]
     if lo <= 0 <= hi:
         assert "- the long-tail share slope, not distinguishable from zero" in doc
+    elif r["delta_ELPD"] > 0:
+        assert ("$P = %.2f$ that the model with it predicts better" % r["P_first_better"]) in doc
     else:
         assert ("$P = %.2f$ that the model without it predicts better" % (1.0 - r["P_first_better"])) in doc
     flat = json.loads(json.dumps(comp))

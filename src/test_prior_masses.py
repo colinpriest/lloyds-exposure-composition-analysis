@@ -171,8 +171,11 @@ def test_the_events_read_the_way_the_review_found_them(record):
     # P(nu_RITC < 2) across the odds line: 0.0112 against a prior mass of 0.036, a Bayes factor of 0.302 (0.421 on
     # 0.0155 before), so its odds moved by a little more than a factor of 3 and it reads as informed by the data;
     # it is within 0.05 of the prior mass, so it sits at the rule's edge
-    mostly_prior = {"gamma_gt_0.05"}
-    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean", "beta_ritc_abs_gt_0.1", "nu_ritc_lt_2"}
+    # the regeneration of 23 October 2026 on the primary sample (649 records; the owner's decision, option c) moved
+    # P(nu_RITC < 2) back across the line: 0.0185 against a prior mass of 0.036, within 0.05 of it, with odds that moved
+    # by a factor of 0.504 (the threshold is 3), so it is mostly the prior again
+    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_2"}
+    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean", "beta_ritc_abs_gt_0.1"}
     assert {k for k, r in ev.items() if r["data_informed"]} == informed
     for k in mostly_prior:
         assert "mostly the prior" in ev[k]["reading"], k
