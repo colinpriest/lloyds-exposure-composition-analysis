@@ -278,6 +278,24 @@ def test_the_summary_counts_against_expectations_by_group():
     assert tie["0.9"]["exceedances"]["all"] == 1
 
 
+def test_a_group_with_no_targets_has_no_mean_loss_and_no_rate_and_raises_no_warning():
+    """The tie set above has empty RITC and size-quartile groups. Their mean loss and exceedance rate are null (the mean of
+    nothing, and a 0/0 ratio of weights), not nan, and neither calculation warns; the populated groups are as before."""
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        out = BT.summarise_method(np.array([1.0, 2.0]), {0.9: np.array([1.0, 1.0])}, np.array([0, 1]),
+                                  np.zeros(2, bool), np.ones((2, 2)), levels=(0.9,))["0.9"]
+    assert out["pinball_mean"]["ritc"] is None and out["pinball_mean"]["size_quartile_3"] is None
+    assert out["rate_bayes_bootstrap"]["ritc"] == {"mean": None, "lo": None, "hi": None, "nominal": pytest.approx(0.1),
+                                                   "share_above_nominal": None}
+    assert out["exceedances"]["ritc"] == 0 and out["expected"]["ritc"] == 0.0
+    assert out["pinball_mean"]["all"] == pytest.approx(0.45) and out["pinball_mean"]["size_quartile_1"] == 0.0
+    assert out["rate_bayes_bootstrap"]["all"]["mean"] == pytest.approx(0.5)
+    assert json.dumps(out)           # strict json: no nan
+    assert "NaN" not in json.dumps(out)
+
+
 # ------------------------------------------------------------------ the vignette figures ------
 @pytest.fixture(scope="module")
 def vig():

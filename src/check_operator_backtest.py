@@ -152,6 +152,10 @@ def bayes_bootstrap_weights(syn, reps=BB_REPS, seed=BB_SEED):
 
 def rate_posterior(exceed, mask, W, nominal):
     """The exceedance rate over the rows in `mask` under the weight draws W: mean, 95% interval, share above nominal."""
+    if not mask.any():
+        # a group with no targets (a synthetic set's empty size quartile or RITC group) has no rate: the draws' ratio would
+        # be 0/0. The real sample's groups are all populated, so this branch is not taken there.
+        return {"mean": None, "lo": None, "hi": None, "nominal": float(nominal), "share_above_nominal": None}
     Wm = W[:, mask]
     r = (Wm @ exceed[mask].astype(float)) / Wm.sum(axis=1)
     return {"mean": float(r.mean()), "lo": float(np.percentile(r, CI[0])), "hi": float(np.percentile(r, CI[1])),
@@ -171,7 +175,8 @@ def summarise_method(S, qs, quart, ritc, W, levels=LEVELS):
         for g, mask in groups.items():
             row["exceedances"][g] = int(exc[mask].sum())
             row["expected"][g] = float(mask.sum() * (1.0 - a))
-            row["pinball_mean"][g] = float(loss[mask].mean())
+            # an empty group (a synthetic set's empty size quartile or RITC group) has no mean loss: null, not nan
+            row["pinball_mean"][g] = float(loss[mask].mean()) if mask.any() else None
             row["rate_bayes_bootstrap"][g] = rate_posterior(exc, mask, W, 1.0 - a)
         out["%g" % a] = row
     return out
