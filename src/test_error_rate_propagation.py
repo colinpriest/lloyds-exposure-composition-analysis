@@ -363,7 +363,7 @@ def test_the_rate_population_counts_the_sampled_records_still_in_the_working_sam
     assert out["verdicts_in_current_working_sample"] == {"error": 1, "correct": 1, "undeterminable": 1}
     post = out["posterior_in_current_working_sample"]
     assert (post["alpha"], post["beta"]) == (1.5, 1.5) and post["mean"] == pytest.approx(0.5)
-    lo, hi = post["ci95_equal_tailed"]
+    lo, hi = post["credible_interval_95"]
     assert 0 < lo < 0.5 < hi < 1
 
 

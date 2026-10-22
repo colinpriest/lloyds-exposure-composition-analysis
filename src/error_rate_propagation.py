@@ -194,7 +194,7 @@ def rate_population(rate, pool_stems, current_run_id):
         "verdicts_in_current_working_sample": now,
         "posterior_in_current_working_sample": {
             "prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
-            "ci95_equal_tailed": [float(stats.beta.ppf(0.025, a, b)), float(stats.beta.ppf(0.975, a, b))]},
+            "credible_interval_95": [float(stats.beta.ppf(0.025, a, b)), float(stats.beta.ppf(0.975, a, b))]},
         "note": ("the study's rate (A_sampled) is the rate of the working sample it drew from; the records still "
                  "in the current working sample give the rate beside it"),
     }
@@ -356,7 +356,7 @@ def restated_population(verdicts, pool_stems, changed, rows):
             "n_not_restated": sum(1 for v in now.values() if v == NOT_RESTATED),
             "verdicts": counts, "adjudicable": counts["error"] + counts["correct"],
             "posterior": {"prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
-                          "ci95_equal_tailed": [float(stats.beta.ppf(0.025, a, b)),
+                          "credible_interval_95": [float(stats.beta.ppf(0.025, a, b)),
                                                 float(stats.beta.ppf(0.975, a, b))]}}
 
 
