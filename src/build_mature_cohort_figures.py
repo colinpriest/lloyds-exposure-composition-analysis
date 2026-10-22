@@ -33,6 +33,7 @@ Usage:
   python src/build_mature_cohort_figures.py --write    # rebuild and write the register
 """
 import ast
+import copy
 import csv
 import glob
 import io
@@ -58,6 +59,28 @@ ROUNDS = {"C1": SECOND_ROUND, "C2": SECOND_ROUND}
 AGENT_READING_KINDS = ("reading", "error_rate_study")
 STUDY = HERE / "results" / "extraction_error_rate"
 RECORDS = HERE / "pdf_extraction"
+
+#: Appendix 2.1 leaves an aggregated development-age column ("2014 & Prior": older underwriting years added by
+#: development age) out of the mature-cohort figure, because its last two diagonal cells are not like for like by
+#: calendar year. The author's decision of 22 October 2026 applies it to the two records of syndicate 1945, whose oldest
+#: column is such a column (the label and anchor year of the column are the stored grid's aggregated_cohort). Two
+#: independent readings (F1, F2) recompute each figure from the printed table without the column, and the
+#: extraction's estimator on the stored grid without the column gives the same figure. The readings are archived with
+#: the exchange-rate readings of the same brief (fx-translation/readings/F1.json, F2.json).
+AGGREGATED_COLUMN = {"1945_2023": {"label": "2013&Prior", "anchor": 2013},
+                     "1945_2024": {"label": "2014 & Prior", "anchor": 2014}}
+#: the entries of AGGREGATED_COLUMN that no precedence rule displaced: the adopted figure is the code or RAG
+#: triangle's own, with the column in it (the corpus rule, population(), does not see them)
+COLUMN_ONLY = ("1945_2023",)
+COLUMN_READERS = ("F1", "F2")
+COLUMN_READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "fx-translation" / "readings"
+COLUMN_ROUND = "aggregated-column readings of 22 October 2026 (F1, F2)"
+COLUMN_RULE = (
+    "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two "
+    "diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its "
+    "'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. "
+    "The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the "
+    "underwriting years up to t-2 of the latest estimate less the previous one, without that column")
 
 EXTRACTION_ENV = "LLOYDS_EXTRACTION_REPO"
 EXTRACTION_DEFAULT = os.path.join("D:" + os.sep, "dev", "lloyds_reserve_stress_testing")
@@ -180,8 +203,10 @@ NOTES = {
                  "claims outstanding at 1 January, which includes the 101.597m transferred out (the author's decision "
                  "of 29 September 2026, data/outbound_transfer_retained_base.json); the retained-base sensitivity "
                  "(src/check_outbound_transfer_sensitivity.py) replaces R by the balance retained for that register's "
-                 "confirmed records, and 2689/2022 is not yet in it",
-         "decision": "primary, figure unchanged (-3.651); a candidate for the outbound-transfer sensitivity register"},
+                 "confirmed records, and 2689/2022 has been among them since the readings of 22 October "
+                 "2026 (F1, F2)",
+         "decision": "primary, figure unchanged (-3.651); in the outbound-transfer sensitivity register since 22 "
+                     "October 2026"},
     ),
     "1492_2022": (
         {"flag": "an outward loss portfolio transfer (31 August 2022, to Syndicate 2008, of the 2020 year of account) and "
@@ -197,7 +222,7 @@ NOTES = {
                  "amendment). Whether the 2018 year's +12.2m was set in pricing the deal cannot be told from the "
                  "pages, and no rule turns on it",
          "decision": "primary, figure unchanged (+3.669); the split RITC is an outward transfer at the start of "
-                     "1492/2023, a candidate for the outbound-transfer sensitivity register"},
+                     "1492/2023, in the outbound-transfer sensitivity register since 22 October 2026"},
     ),
     "4444_2024": (
         {"flag": "a take-on in year t-1, not t: 'On 1 January 2023 the 2021 year of account of the Syndicate accepted "
@@ -214,19 +239,24 @@ NOTES = {
     ),
     "1945_2024": (
         {"flag": "the '2014 & Prior' column is the 2023 report's '2013&Prior' and '2014' columns added by development "
-                 "age (C2, from the 2023 report p52), so its last step holds the 2013&Prior block's 2023 movement "
-                 "(-37k at 2023 rates) in place of its 2024 movement; the block had 551k outstanding at end-2023, and "
-                 "the column contributes -425k of the +4.839m",
-         "reader": "C2",
-         "rule": "Appendix 2.1 leaves out an aggregated column printed by development age, because its last step is "
-                 "not the report year's movement. The rule has been applied where readings found such a column's "
-                 "step not like for like and material (2007/2015, 6134/2023); 1945/2023, whose oldest column "
-                 "'2013&Prior' is the same construction (C2), is in the primary on its estimator figure with the "
-                 "column. Here the mis-timed part is the 2013&Prior block's, immaterial (its step is -37k); leaving the "
-                 "whole column out would move the figure by +0.425m, to +5.264m, and drop the 2014 year's own 2024 "
-                 "movement with it",
-         "decision": "figure unchanged (+4.839), immaterial; the column's treatment across 1945's years is recorded "
-                     "for the author with Appendix 2.1"},
+                 "age (C2, from the 2023 report p52; F2 the same), so its last step holds the 2013&Prior block's 2023 "
+                 "movement (-37k at 2023 rates) in place of its 2024 movement, and the column contributes -425k of "
+                 "the +4.839m that includes it",
+         "reader": "C2, F2",
+         "rule": COLUMN_RULE,
+         "decision": "the column is left out: the figure is +5.264 (F1 and F2 recompute it from the printed table, "
+                     "and the estimator on the stored grid without the column gives it); +4.839 includes the column "
+                     "and rests on A4 and C2, kept under superseded_readings"},
+    ),
+    "1945_2023": (
+        {"flag": "the '2013&Prior' column of the 2023 table is built by development age from the older underwriting "
+                 "years (C2 read the same construction), so its last step (-37k, ten years later 62,948 less nine "
+                 "years later 62,985) is not the report year's movement",
+         "reader": "F1, F2",
+         "rule": COLUMN_RULE,
+         "decision": "the column is left out: the figure is -4.997 (F1 and F2 recompute it from the printed table, "
+                     "and the estimator on the stored grid without the column gives it); the triangle's own figure "
+                     "with the column, -5.034, is the 672 construction's and the adopted figure before this decision"},
     ),
 }
 
@@ -418,6 +448,122 @@ def table_read(model, tri, figure, details, printed_page):
             "figure_m": figure, "cells": "; ".join(lines)}
 
 
+def strip_aggregated_column(tri, key):
+    """A copy of a stored grid without its aggregated development-age column (the first column, whose label and anchor
+    year AGGREGATED_COLUMN names), for the extraction's estimator."""
+    want = AGGREGATED_COLUMN[key]
+    agg = tri.get("aggregated_cohort") or {}
+    years = list(tri.get("underwriting_years") or [])
+    if agg.get("anchor") != want["anchor"] or agg.get("column") != 1 or not years or years[0] != want["anchor"]:
+        raise SystemExit("%s: the stored grid's aggregated cohort %r is not the first column anchored at %s"
+                         % (key, agg, want["anchor"]))
+    if want["label"].replace(" ", "") not in str(agg.get("label", "")).replace(" ", ""):
+        raise SystemExit("%s: the stored grid's aggregated column is %r, not %r" % (key, agg.get("label"), want["label"]))
+    extra = set(tri) - {"type", "currency", "units", "units_evidence", "cell_binding", "underwriting_years",
+                        "development_rows", "row_labels", "aggregated_cohort", "source_page", "entity"}
+    if extra:
+        raise SystemExit("%s: the stored grid has fields %s this build does not strip by column" % (key, sorted(extra)))
+    out = copy.deepcopy(tri)
+    out["underwriting_years"] = years[1:]
+    out["development_rows"] = [list(row)[1:] for row in tri["development_rows"]]
+    del out["aggregated_cohort"]
+    return out
+
+
+def column_blocks(data):
+    """{model: ["aggregated_column"]} for every block whose stored gross RAG triangle carries an aggregated cohort (the
+    blocks of a COLUMN_ONLY record the corpus rule does not see)."""
+    out = {}
+    for mk, block in sorted((data.get("models") or {}).items()):
+        tri = block.get("_rag_triangle") if isinstance(block, dict) else None
+        if isinstance(tri, dict) and tri.get("type") == "gross" and tri.get("aggregated_cohort"):
+            out[mk] = ["aggregated_column"]
+    return out
+
+
+def load_column_readings():
+    out = {}
+    for rid in COLUMN_READERS:
+        with io.open(COLUMN_READINGS / ("%s.json" % rid), encoding="utf-8") as fh:
+            out[rid] = json.load(fh)
+    return out
+
+
+def column_reading(rid, key, e):
+    """One of the two column readers' readings of a 1945 record, in the register's reading form. F1 and F2 recompute
+    the mature-cohort figure from the printed gross table without the aggregated column, and give the figure with it."""
+    f = e["figure"]
+    without = f.get("mature_excluding_and_prior_m", f.get("excluding_aggregated_column_m"))
+    with_col = f.get("mature_including_and_prior_m", f.get("including_aggregated_column_m"))
+    pages = e["pages"]
+    own = pages.get(key, []) if isinstance(pages, dict) else pages
+    other = {k: v for k, v in pages.items() if k != key} if isinstance(pages, dict) else {}
+    if "cells_used" in e:
+        cells = "; ".join("%s %s" % (y, t) for y, t in e["cells_used"].items())
+        cells = "u<=%d (000s) without the column: %s; sum %+.3f excluding the column, %+.3f including it" % (
+            max(int(y) for y in e["cells_used"]), cells, without, with_col)
+        x_and_prior = e["and_prior_column"]
+    else:
+        cells = e["cells"]
+        x_and_prior = e["x_and_prior"]
+    out = {"kind": "reading", "reader": rid, "round": COLUMN_ROUND,
+           "source": "results/extraction_error_rate/mature-cohort/fx-translation/readings/%s.json" % rid,
+           "pages": _pages(own), "read_by": e.get("read_by"), "table": e.get("table"),
+           "verdict": "confirmed_excluding_the_aggregated_column", "figure_m": _num(without),
+           "figure_with_column_m": _num(with_col), "cells": cells, "x_and_prior": x_and_prior,
+           "reconciliation": e.get("reconciliation"), "transaction": e.get("transaction")}
+    if other:
+        out["pages_of_the_earlier_report"] = {k: _pages(v) for k, v in other.items()}
+    return out
+
+
+def column_entry(entry, key, tri, year, fn, figure_with, model, printed_page, column_files, earlier):
+    """Complete the figure entry of an AGGREGATED_COLUMN record: the figure is the estimator's on the stored grid
+    without the column, and both column readers' (F1, F2); the figure with the column is the stored grid's own, the
+    earlier readings of it (A4, C2) are kept under superseded_readings."""
+    col = AGGREGATED_COLUMN[key]
+    figure, details = compute(fn, strip_aggregated_column(tri, key), year)
+    if figure is None:
+        raise SystemExit("%s: the estimator computes no figure without the aggregated column: %s" % (key, details))
+    reads = [column_reading(rid, key, column_files[rid][key]) for rid in COLUMN_READERS]
+    for r in reads:
+        if r["figure_m"] is None or abs(r["figure_m"] - figure) > FIGURE_TOL:
+            raise SystemExit("%s: reader %s's figure %s is not the estimator's %s without the column"
+                             % (key, r["reader"], r["figure_m"], figure))
+        if r["figure_with_column_m"] is None or abs(r["figure_with_column_m"] - figure_with) > FIGURE_TOL:
+            raise SystemExit("%s: reader %s's figure with the column %s is not the stored grid's %s"
+                             % (key, r["reader"], r["figure_with_column_m"], figure_with))
+    currency, gbp = fx_gbp(key, figure)
+    entry.update({"figure_m": figure, "figure_gbp_m": gbp, "figure_kind": "triangle"})
+    entry["recomputation"].update({"figure_with_column_m": figure_with, "figure_without_column_m": figure,
+                                   "estimator_without_column": "the same estimator on the stored grid with its "
+                                                               "first column removed (strip_aggregated_column)"})
+    entry["aggregated_column"] = {"label": col["label"], "anchor": col["anchor"], "rule": COLUMN_RULE,
+                                  "figure_with_column_m": figure_with, "figure_without_column_m": figure,
+                                  "column_step_m": round(figure_with - figure, 3)}
+    entry["readings"] = reads
+    if earlier:
+        entry["superseded_readings"] = earlier
+    gaps = independent_reading_gaps(entry)
+    if gaps:
+        raise SystemExit("%s: a figure entry needs two independent agent readings of the filing: %s" % (key, "; ".join(gaps)))
+    tr = table_read(model, strip_aggregated_column(tri, key), figure, details, printed_page)
+    tr["verdict"] += "; the aggregated column '%s' left out (Appendix 2.1)" % col["label"]
+    entry["table_read"] = tr
+    entry["pages"] = sorted({p for r in reads for p in r["pages"]})
+    entry["quote"] = " | ".join("reader %s, p%s: %s" % (r["reader"], (r.get("table") or {}).get("page"), r["cells"])
+                                for r in reads)
+    if key in NOTES:
+        entry["notes"] = [dict(n) for n in NOTES[key]]
+    entry["status"] = "primary"
+    entry["decision"] = ("decision of the Claude analysis session, 22 October 2026, applying the author's decision of "
+                         "22 October 2026 that Appendix 2.1's rule leaves the aggregated column '%s' out of the "
+                         "mature-cohort figure (%s): primary; a valid mature-cohort figure: the printed gross table's "
+                         "own development over u <= t-2 without that column; under the %s"
+                         % (col["label"], key, OWNER))
+    return entry
+
+
 def independent_reading_gaps(entry):
     """Why a figure entry does not rest on two independent agent readings of the filing, or []: every reading is an
     agent's (AGENT_READING_KINDS; the extraction's table read is not a reading), at least two distinct readers, at
@@ -455,7 +601,7 @@ def fx_gbp(key, figure):
 
 
 # --------------------------------------------------------------------------------------------- the register
-def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
+def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study, column_files=None):
     year = int(key.split("_")[1])
     ck = canonical_key(data)
     cm = data["models"][ck]
@@ -472,6 +618,8 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
     route = cm.get("_pyd_route") or {}
     rules = displaced_by(cm)
     by = "sign_override" if "sign_override" in rules else ("veto" if "veto" in rules else None)
+    if by is None and key in COLUMN_ONLY:
+        by = "aggregated_column"
     gate = None
     if by == "veto":
         m = [g for g in RAG_VETO.finditer(cm.get("data_quality_notes") or "")
@@ -518,6 +666,10 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study):
         entry["decision"] = ("decision of the Claude analysis session, 22 October 2026: no mature-cohort figure is "
                              "adopted (%s), under the %s" % (reason, OWNER))
         return entry
+    if key in AGGREGATED_COLUMN:
+        if figure is None:
+            raise SystemExit("%s: the estimator computes no figure on the stored grid: %s" % (key, details))
+        return column_entry(entry, key, tri, year, fn, figure, model, printed_page, column_files, rr)
     if dec is None:
         raise SystemExit("%s: a displaced record with neither a decision (decisions.csv) nor a NO_FIGURE reason" % key)
     if figure is None:
@@ -574,11 +726,18 @@ def build():
     missing = sorted(set(decisions) - set(pop))
     if missing:
         raise SystemExit("decided records outside the displaced population: %s" % missing)
+    column_files = load_column_readings()
+    if set(COLUMN_ONLY) & set(pop) or not set(COLUMN_ONLY) <= set(AGGREGATED_COLUMN):
+        raise SystemExit("COLUMN_ONLY %s must be aggregated-column records no precedence rule displaced" % (COLUMN_ONLY,))
+    blocks = dict(pop)
+    for key in COLUMN_ONLY:
+        with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
+            blocks[key] = column_blocks(json.load(fh))
     reg = {"_purpose": PURPOSE}
-    for key in sorted(pop, key=lambda k: (int(k.split("_")[0]), int(k.split("_")[1]))):
+    for key in sorted(blocks, key=lambda k: (int(k.split("_")[0]), int(k.split("_")[1]))):
         with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
             data = json.load(fh)
-        reg[key] = entry_for(key, data, pop[key], fn, decisions, design, readings, study)
+        reg[key] = entry_for(key, data, blocks[key], fn, decisions, design, readings, study, column_files)
     return reg
 
 
@@ -604,7 +763,13 @@ PURPOSE = (
     "states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, "
     "outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. "
     "status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes "
-    "(an entry there with figure_route 'mature_cohort_triangle').")
+    "(an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the two "
+    "records of syndicate 1945, the author's decision of 22 October 2026) leaves the stored grid's aggregated "
+    "development-age column out of the figure (Appendix 2.1): its figure is the estimator's on the grid without the "
+    "column and both column readers' (F1, F2, archived in fx-translation/readings/), figure_with_column_m is the grid's "
+    "own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a "
+    "precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure "
+    "is the triangle's own with the column in it (1945/2023).")
 
 
 def dumps(reg):

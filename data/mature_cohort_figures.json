@@ -1,5 +1,5 @@
 {
- "_purpose": "Mature-cohort figures of the primary outcome (the owner's decision, 22 October 2026, option c): the gross prior-year movement over underwriting years u <= t-2 of Equation (1), for every record of the corpus whose stored gross RAG triangle a sign-only precedence rule displaced (the provisions sign-disagreement override, route rag_provisions, or the model-agreement veto, a '[RAG|CODE] PYD NOT APPLIED' note). Built by src/build_mature_cohort_figures.py, which recomputes each figure from the record's stored grid by the extraction's own estimator at the pinned commit and assembles the evidence from results/extraction_error_rate/mature-cohort/ and the error-rate study. figure_m is in millions of the report's own currency (figure_gbp_m at the loader's H.10 rate, for reference). Under ANALYSIS_CONFIG['outcome'] 'mature_cohort' (the primary) run_analysis.py (apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, writes route 'mature_cohort_triangle' (gross, mature-enforced), and refuses an entry unless every model block of the record shows the displaced gross triangle; under 'precedence_672' the register is not applied. An entry with a figure carries at least two independent agent readings of the filing, each with its reader, pages and cells: the readings of 22 October 2026 and the second readings of the records that round read once (kind 'reading'), and earlier readings of the error-rate study that recomputed the same printed triangle (kind 'error_rate_study'). The extraction's own table read of the printed page (the stored grid the estimator computed from) is kept under table_read as supporting evidence; it is not a reading. notes records a flag a reader raised and the existing rule that decides it. An entry without a figure states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes (an entry there with figure_route 'mature_cohort_triangle').",
+ "_purpose": "Mature-cohort figures of the primary outcome (the owner's decision, 22 October 2026, option c): the gross prior-year movement over underwriting years u <= t-2 of Equation (1), for every record of the corpus whose stored gross RAG triangle a sign-only precedence rule displaced (the provisions sign-disagreement override, route rag_provisions, or the model-agreement veto, a '[RAG|CODE] PYD NOT APPLIED' note). Built by src/build_mature_cohort_figures.py, which recomputes each figure from the record's stored grid by the extraction's own estimator at the pinned commit and assembles the evidence from results/extraction_error_rate/mature-cohort/ and the error-rate study. figure_m is in millions of the report's own currency (figure_gbp_m at the loader's H.10 rate, for reference). Under ANALYSIS_CONFIG['outcome'] 'mature_cohort' (the primary) run_analysis.py (apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, writes route 'mature_cohort_triangle' (gross, mature-enforced), and refuses an entry unless every model block of the record shows the displaced gross triangle; under 'precedence_672' the register is not applied. An entry with a figure carries at least two independent agent readings of the filing, each with its reader, pages and cells: the readings of 22 October 2026 and the second readings of the records that round read once (kind 'reading'), and earlier readings of the error-rate study that recomputed the same printed triangle (kind 'error_rate_study'). The extraction's own table read of the printed page (the stored grid the estimator computed from) is kept under table_read as supporting evidence; it is not a reading. notes records a flag a reader raised and the existing rule that decides it. An entry without a figure states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes (an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the two records of syndicate 1945, the author's decision of 22 October 2026) leaves the stored grid's aggregated development-age column out of the figure (Appendix 2.1): its figure is the estimator's on the grid without the column and both column readers' (F1, F2, archived in fx-translation/readings/), figure_with_column_m is the grid's own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure is the triangle's own with the column in it (1945/2023).",
  "382_2021": {
   "figure_m": 20.409,
   "figure_gbp_m": 20.409,
@@ -3599,7 +3599,7 @@
     "flag": "an outward loss portfolio transfer (31 August 2022, to Syndicate 2008, of the 2020 year of account) and a split RITC of the 2018 and prior liabilities effective 31 December 2022 (p62); the gross table still carries the 2015-2018 liabilities at 31 December 2022 (PRA approval of the split RITC came on 25 January 2023)",
     "reader": "C2",
     "rule": "an outward loss portfolio transfer is ceded reinsurance: it moves the net table and leaves the gross table and gross R unchanged (data/outbound_transfer_retained_base.json, 1200/2022); an outward transfer takes a figure out of the primary only where it dominates the gross step (data/takeon_not_development.json: 1856/2020, 2001/2022), and here it does not move the gross table; a transfer at the balance-sheet date does not move year t (error-rate protocol, ninth amendment). Whether the 2018 year's +12.2m was set in pricing the deal cannot be told from the pages, and no rule turns on it",
-    "decision": "primary, figure unchanged (+3.669); the split RITC is an outward transfer at the start of 1492/2023, a candidate for the outbound-transfer sensitivity register"
+    "decision": "primary, figure unchanged (+3.669); the split RITC is an outward transfer at the start of 1492/2023, in the outbound-transfer sensitivity register since 22 October 2026"
    }
   ],
   "status": "primary",
@@ -5018,9 +5018,172 @@
   "status": "primary",
   "decision": "decision of the Claude analysis session, 22 October 2026 (results/extraction_error_rate/mature-cohort/decisions.csv, adjudication.md): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
  },
+ "1945_2023": {
+  "figure_m": -4.997,
+  "figure_gbp_m": -4.997,
+  "report_currency": "GBP",
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "displaced": {
+   "by": "aggregated_column",
+   "veto_gate": null,
+   "route": "rag_triangle",
+   "figure_m": -5.034,
+   "adopted_model": "gemini-2.5-flash",
+   "blocks": {
+    "gemini-2.5-flash": [
+     "aggregated_column"
+    ],
+    "gpt-5-mini": [
+     "aggregated_column"
+    ]
+   },
+   "status_under_precedence_672": "RELIABLE",
+   "route_label": "triangle (rag_triangle)"
+  },
+  "triangle": {
+   "printed_page": null,
+   "stored_source_page": 52,
+   "model": "gemini-2.5-flash",
+   "type": "gross",
+   "units": "thousands",
+   "entity": 1945,
+   "underwriting_years": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "mature_years": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021
+   ]
+  },
+  "recomputation": {
+   "estimator": "test_gemini.compute_pyd_from_triangle at the pinned extraction commit (record_tests.extraction_pin), parsed from the extraction checkout",
+   "figure_m": -5.034,
+   "figure_gbp_m": -5.034,
+   "refusal": null,
+   "figure_with_column_m": -5.034,
+   "figure_without_column_m": -4.997,
+   "estimator_without_column": "the same estimator on the stored grid with its first column removed (strip_aggregated_column)"
+  },
+  "reconciliation": {
+   "census_class_deterministic": null,
+   "co_g_m": null,
+   "co_n_m": null,
+   "table_latest_diagonal_m": null,
+   "shape_check": null,
+   "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv (the census's own script on the stored grid), and each reading's reconciliation below"
+  },
+  "aggregated_column": {
+   "label": "2013&Prior",
+   "anchor": 2013,
+   "rule": "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its 'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the underwriting years up to t-2 of the latest estimate less the previous one, without that column",
+   "figure_with_column_m": -5.034,
+   "figure_without_column_m": -4.997,
+   "column_step_m": -0.037
+  },
+  "readings": [
+   {
+    "kind": "reading",
+    "reader": "F1",
+    "round": "aggregated-column readings of 22 October 2026 (F1, F2)",
+    "source": "results/extraction_error_rate/mature-cohort/fx-translation/readings/F1.json",
+    "pages": [
+     21,
+     25,
+     52
+    ],
+    "read_by": "text layer and page image (p52; the PDF is converted from the HTML report)",
+    "table": {
+     "page": 52,
+     "heading": "15. Claims development tables ... Pure underwriting year - gross ... Estimate of cumulative incurred claims (£000)",
+     "basis": "gross",
+     "exchange_basis": "\"Balances have been translated at exchange rates prevailing at 31 December 2023 in all cases.\""
+    },
+    "verdict": "confirmed_excluding_the_aggregated_column",
+    "figure_m": -4.997,
+    "figure_with_column_m": -5.034,
+    "cells": "u<=2021 (000s) without the column: 2014 Nine years later 43,306 less Eight years later 43,281 = +25; 2015 Eight years later 74,082 less Seven years later 73,632 = +450; 2016 Seven years later 120,993 less Six years later 120,709 = +284; 2017 Six years later 104,010 less Five years later 104,969 = -959; 2018 Five years later 128,720 less Four years later 128,166 = +554; 2019 Four years later 67,978 less Three years later 67,331 = +647; 2020 Three years later 73,968 less Two years later 80,504 = -6,536; 2021 Two years later 66,431 less One year later 65,893 = +538; sum -4.997 excluding the column, -5.034 including it",
+    "x_and_prior": "\"2013&Prior\": latest (Ten years later) 62,948; previous (Nine years later) 62,985; movement -37",
+    "reconciliation": "table \"Claims Outstanding per the Balance Sheet\" total 220,243 (p52); 220,243 also found on the balance-sheet pages (p21) and in the 2024 report's comparative: reconciles",
+    "transaction": "p25: \"The Loss Portfolio Transfer (“LPT”), a reserve reinsurance, became effective at 30th June 2023. This resulted in all 2021 & prior ...\" -- an outward reinsurance in year t; it moves the net, not the gross, table"
+   },
+   {
+    "kind": "reading",
+    "reader": "F2",
+    "round": "aggregated-column readings of 22 October 2026 (F1, F2)",
+    "source": "results/extraction_error_rate/mature-cohort/fx-translation/readings/F2.json",
+    "pages": [
+     52
+    ],
+    "read_by": "text layer (row totals checked against the printed Total column)",
+    "table": {
+     "page": 52,
+     "heading": "Claims development tables ... 'Balances have been translated at exchange rates prevailing at 31 December 2023 in all cases.' Pure underwriting year - gross (£000), Estimate of cumulative incurred claims",
+     "basis": "gross"
+    },
+    "verdict": "confirmed_excluding_the_aggregated_column",
+    "figure_m": -4.997,
+    "figure_with_column_m": -5.034,
+    "cells": "latest (age 2023-u) less previous (age 2022-u), £000: 2014 43,306-43,281 = +25; 2015 74,082-73,632 = +450; 2016 120,993-120,709 = +284; 2017 104,010-104,969 = -959; 2018 128,720-128,166 = +554; 2019 67,978-67,331 = +647; 2020 73,968-80,504 = -6,536; 2021 66,431-65,893 = +538; sum -4,997. '2013&Prior' Ten years later 62,948 less Nine years later 62,985 = -37; with it, -5,034.",
+    "x_and_prior": "'2013&Prior' column: ten years later 62,948, nine years later 62,985. By the same construction as the 2024 report's '2014 & Prior' (an age-by-age sum of older years), its last two cells are not like for like by calendar year. The 2023 filing does not print the column's components, so the construction is inferred from the 2024 report, where it is shown.",
+    "reconciliation": "table 'Claims Outstanding per the Balance Sheet' total 220,243 vs the 2024 report's 2023 comparative claims outstanding 220,243 (1945_2024 p21): agrees",
+    "transaction": null,
+    "pages_of_the_earlier_report": {
+     "1945_2024": [
+      21,
+      54
+     ]
+    }
+   }
+  ],
+  "table_read": {
+   "kind": "extraction_table_read",
+   "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
+   "source": "pdf_extraction/ (the record file)",
+   "pages": [
+    52
+   ],
+   "verdict": "the grid the table backend transcribed from the printed page; the aggregated column '2013&Prior' left out (Appendix 2.1)",
+   "figure_m": -4.997,
+   "cells": "2014: 43306.0 (9yr later) - 43281.0 (8yr later) = +25.000; 2015: 74082.0 (8yr later) - 73632.0 (7yr later) = +450.000; 2016: 120993.0 (7yr later) - 120709.0 (6yr later) = +284.000; 2017: 104010.0 (6yr later) - 104969.0 (5yr later) = -959.000; 2018: 128720.0 (5yr later) - 128166.0 (4yr later) = +554.000; 2019: 67978.0 (4yr later) - 67331.0 (3yr later) = +647.000; 2020: 73968.0 (3yr later) - 80504.0 (2yr later) = -6536.000; 2021: 66431.0 (2yr later) - 65893.0 (1yr later) = +538.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = -4.997m (8 UW years)"
+  },
+  "pages": [
+   21,
+   25,
+   52
+  ],
+  "quote": "reader F1, p52: u<=2021 (000s) without the column: 2014 Nine years later 43,306 less Eight years later 43,281 = +25; 2015 Eight years later 74,082 less Seven years later 73,632 = +450; 2016 Seven years later 120,993 less Six years later 120,709 = +284; 2017 Six years later 104,010 less Five years later 104,969 = -959; 2018 Five years later 128,720 less Four years later 128,166 = +554; 2019 Four years later 67,978 less Three years later 67,331 = +647; 2020 Three years later 73,968 less Two years later 80,504 = -6,536; 2021 Two years later 66,431 less One year later 65,893 = +538; sum -4.997 excluding the column, -5.034 including it | reader F2, p52: latest (age 2023-u) less previous (age 2022-u), £000: 2014 43,306-43,281 = +25; 2015 74,082-73,632 = +450; 2016 120,993-120,709 = +284; 2017 104,010-104,969 = -959; 2018 128,720-128,166 = +554; 2019 67,978-67,331 = +647; 2020 73,968-80,504 = -6,536; 2021 66,431-65,893 = +538; sum -4,997. '2013&Prior' Ten years later 62,948 less Nine years later 62,985 = -37; with it, -5,034.",
+  "notes": [
+   {
+    "flag": "the '2013&Prior' column of the 2023 table is built by development age from the older underwriting years (C2 read the same construction), so its last step (-37k, ten years later 62,948 less nine years later 62,985) is not the report year's movement",
+    "reader": "F1, F2",
+    "rule": "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its 'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the underwriting years up to t-2 of the latest estimate less the previous one, without that column",
+    "decision": "the column is left out: the figure is -4.997 (F1 and F2 recompute it from the printed table, and the estimator on the stored grid without the column gives it); the triangle's own figure with the column, -5.034, is the 672 construction's and the adopted figure before this decision"
+   }
+  ],
+  "status": "primary",
+  "decision": "decision of the Claude analysis session, 22 October 2026, applying the author's decision of 22 October 2026 that Appendix 2.1's rule leaves the aggregated column '2013&Prior' out of the mature-cohort figure (1945_2023): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2 without that column; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
+ },
  "1945_2024": {
-  "figure_m": 4.839,
-  "figure_gbp_m": 4.839,
+  "figure_m": 5.264,
+  "figure_gbp_m": 5.264,
   "report_currency": "GBP",
   "figure_kind": "triangle",
   "basis": "gross",
@@ -5077,7 +5240,10 @@
    "estimator": "test_gemini.compute_pyd_from_triangle at the pinned extraction commit (record_tests.extraction_pin), parsed from the extraction checkout",
    "figure_m": 4.839,
    "figure_gbp_m": 4.839,
-   "refusal": null
+   "refusal": null,
+   "figure_with_column_m": 4.839,
+   "figure_without_column_m": 5.264,
+   "estimator_without_column": "the same estimator on the stored grid with its first column removed (strip_aggregated_column)"
   },
   "reconciliation": {
    "census_class_deterministic": "A",
@@ -5087,7 +5253,70 @@
    "shape_check": "pass",
    "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv (the census's own script on the stored grid), and each reading's reconciliation below"
   },
+  "aggregated_column": {
+   "label": "2014 & Prior",
+   "anchor": 2014,
+   "rule": "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its 'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the underwriting years up to t-2 of the latest estimate less the previous one, without that column",
+   "figure_with_column_m": 4.839,
+   "figure_without_column_m": 5.264,
+   "column_step_m": -0.425
+  },
   "readings": [
+   {
+    "kind": "reading",
+    "reader": "F1",
+    "round": "aggregated-column readings of 22 October 2026 (F1, F2)",
+    "source": "results/extraction_error_rate/mature-cohort/fx-translation/readings/F1.json",
+    "pages": [
+     21,
+     25,
+     54
+    ],
+    "read_by": "text layer and page image (p54; the PDF is converted from the HTML report)",
+    "table": {
+     "page": 54,
+     "heading": "16. Claims development tables ... Gross: Pure underwriting year ... Estimate of gross claims (£000)",
+     "basis": "gross",
+     "exchange_basis": "\"Balances have been translated at exchange rates prevailing at 31 December 2024 in all cases.\""
+    },
+    "verdict": "confirmed_excluding_the_aggregated_column",
+    "figure_m": 5.264,
+    "figure_with_column_m": 4.839,
+    "cells": "u<=2022 (000s) without the column: 2015 Nine years later 73,639 less Eight years later 73,844 = -205; 2016 Eight years later 118,901 less Seven years later 120,555 = -1,654; 2017 Seven years later 102,962 less Six years later 103,354 = -392; 2018 Six years later 130,072 less Five years later 128,828 = +1,244; 2019 Five years later 65,195 less Four years later 68,176 = -2,981; 2020 Four years later 75,930 less Three years later 74,408 = +1,522; 2021 Three years later 70,698 less Two years later 66,652 = +4,046; 2022 Two years later 84,028 less One year later 80,344 = +3,684; sum +5.264 excluding the column, +4.839 including it",
+    "x_and_prior": "\"2014 & Prior\": latest (Ten years later) 105,705; previous (Nine years later) 106,130; movement -425",
+    "reconciliation": "table Gross claims reserve total 255,930 (p54) vs balance sheet Claims outstanding 255,929 (p21): reconciles",
+    "transaction": "p25: \"The Loss Portfolio Transfer (“LPT”), a reinsurance for 2021 & prior underwriting year, became effective at 30th June 2023\" -- a reinsurance in 2023, not year t; it does not move the gross table"
+   },
+   {
+    "kind": "reading",
+    "reader": "F2",
+    "round": "aggregated-column readings of 22 October 2026 (F1, F2)",
+    "source": "results/extraction_error_rate/mature-cohort/fx-translation/readings/F2.json",
+    "pages": [
+     21,
+     54
+    ],
+    "read_by": "text layer of the PDF converted from the HTML report (row totals checked against the printed Total column)",
+    "table": {
+     "page": 54,
+     "heading": "16. Claims development tables ... 'Balances have been translated at exchange rates prevailing at 31 December 2024 in all cases.' Gross: Pure underwriting year (£000)",
+     "basis": "gross"
+    },
+    "verdict": "confirmed_excluding_the_aggregated_column",
+    "figure_m": 5.264,
+    "figure_with_column_m": 4.839,
+    "cells": "latest (age 2024-u) less previous (age 2023-u), £000: 2015 73,639-73,844 = -205; 2016 118,901-120,555 = -1,654; 2017 102,962-103,354 = -392; 2018 130,072-128,828 = +1,244; 2019 65,195-68,176 = -2,981; 2020 75,930-74,408 = +1,522; 2021 70,698-66,652 = +4,046; 2022 84,028-80,344 = +3,684; sum 5,264. '2014 & Prior' Ten years later 105,705 less Nine years later 106,130 = -425; with it, 4,839.",
+    "x_and_prior": "'2014 & Prior' is built by development age: it equals the 2023 report's '2013&Prior' column plus its UY2014 column, age by age (at end of UY 47,184 + 27,788 = 74,972 vs 74,993; one year later 79,443 + 53,077 = 132,520 vs 132,510; nine years later 62,985 + 43,306 = 106,291 vs 106,130; differences from retranslation at 31 December 2024 rates). So its 'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9: the -425 mixes the older years' 2022->2023 development with UY2014's 2023->2024 development, not like for like.",
+    "reconciliation": "table 'Gross claims reserve' total 255,930 vs balance sheet claims outstanding 255,929 (p21): agrees",
+    "transaction": null,
+    "pages_of_the_earlier_report": {
+     "1945_2023": [
+      52
+     ]
+    }
+   }
+  ],
+  "superseded_readings": [
    {
     "kind": "reading",
     "reader": "A4",
@@ -5157,28 +5386,26 @@
    "pages": [
     54
    ],
-   "verdict": "the grid the table backend transcribed from the printed page",
-   "figure_m": 4.839,
-   "cells": "2014: 105705.0 (10yr later) - 106130.0 (9yr later) = -425.000; 2015: 73639.0 (9yr later) - 73844.0 (8yr later) = -205.000; 2016: 118901.0 (8yr later) - 120555.0 (7yr later) = -1654.000; 2017: 102962.0 (7yr later) - 103354.0 (6yr later) = -392.000; 2018: 130072.0 (6yr later) - 128828.0 (5yr later) = +1244.000; 2019: 65195.0 (5yr later) - 68176.0 (4yr later) = -2981.000; 2020: 75930.0 (4yr later) - 74408.0 (3yr later) = +1522.000; 2021: 70698.0 (3yr later) - 66652.0 (2yr later) = +4046.000; 2022: 84028.0 (2yr later) - 80344.0 (1yr later) = +3684.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = +4.839m (9 UW years)"
+   "verdict": "the grid the table backend transcribed from the printed page; the aggregated column '2014 & Prior' left out (Appendix 2.1)",
+   "figure_m": 5.264,
+   "cells": "2015: 73639.0 (9yr later) - 73844.0 (8yr later) = -205.000; 2016: 118901.0 (8yr later) - 120555.0 (7yr later) = -1654.000; 2017: 102962.0 (7yr later) - 103354.0 (6yr later) = -392.000; 2018: 130072.0 (6yr later) - 128828.0 (5yr later) = +1244.000; 2019: 65195.0 (5yr later) - 68176.0 (4yr later) = -2981.000; 2020: 75930.0 (4yr later) - 74408.0 (3yr later) = +1522.000; 2021: 70698.0 (3yr later) - 66652.0 (2yr later) = +4046.000; 2022: 84028.0 (2yr later) - 80344.0 (1yr later) = +3684.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = +5.264m (8 UW years)"
   },
   "pages": [
+   21,
    25,
-   36,
-   54,
-   55,
-   56
+   54
   ],
-  "quote": "reader A4, p54: u<=2022 (£000): 2014&Prior nine 106,130 -> ten 105,705 (-425); 2015 eight 73,844 -> nine 73,639 (-205); 2016 seven 120,555 -> eight 118,901 (-1,654); 2017 six 103,354 -> seven 102,962 (-392); 2018 five 128,828 -> six 130,072 (+1,244); 2019 four 68,176 -> five 65,195 (-2,981); 2020 three 74,408 -> four 75,930 (+1,522); 2021 two 66,652 -> three 70,698 (+4,046); 2022 one 80,344 -> two 84,028 (+3,684); sum +4,839 | reader C2, p54: u<=2022 (£000): 2014&Prior ten 105,705 - nine 106,130 = -425; 2015 nine 73,639 - eight 73,844 = -205; 2016 eight 118,901 - seven 120,555 = -1,654; 2017 seven 102,962 - six 103,354 = -392; 2018 six 130,072 - five 128,828 = +1,244; 2019 five 65,195 - four 68,176 = -2,981; 2020 four 75,930 - three 74,408 = +1,522; 2021 three 70,698 - two 66,652 = +4,046; 2022 two 84,028 - one 80,344 = +3,684; sum +4,839",
+  "quote": "reader F1, p54: u<=2022 (000s) without the column: 2015 Nine years later 73,639 less Eight years later 73,844 = -205; 2016 Eight years later 118,901 less Seven years later 120,555 = -1,654; 2017 Seven years later 102,962 less Six years later 103,354 = -392; 2018 Six years later 130,072 less Five years later 128,828 = +1,244; 2019 Five years later 65,195 less Four years later 68,176 = -2,981; 2020 Four years later 75,930 less Three years later 74,408 = +1,522; 2021 Three years later 70,698 less Two years later 66,652 = +4,046; 2022 Two years later 84,028 less One year later 80,344 = +3,684; sum +5.264 excluding the column, +4.839 including it | reader F2, p54: latest (age 2024-u) less previous (age 2023-u), £000: 2015 73,639-73,844 = -205; 2016 118,901-120,555 = -1,654; 2017 102,962-103,354 = -392; 2018 130,072-128,828 = +1,244; 2019 65,195-68,176 = -2,981; 2020 75,930-74,408 = +1,522; 2021 70,698-66,652 = +4,046; 2022 84,028-80,344 = +3,684; sum 5,264. '2014 & Prior' Ten years later 105,705 less Nine years later 106,130 = -425; with it, 4,839.",
   "notes": [
    {
-    "flag": "the '2014 & Prior' column is the 2023 report's '2013&Prior' and '2014' columns added by development age (C2, from the 2023 report p52), so its last step holds the 2013&Prior block's 2023 movement (-37k at 2023 rates) in place of its 2024 movement; the block had 551k outstanding at end-2023, and the column contributes -425k of the +4.839m",
-    "reader": "C2",
-    "rule": "Appendix 2.1 leaves out an aggregated column printed by development age, because its last step is not the report year's movement. The rule has been applied where readings found such a column's step not like for like and material (2007/2015, 6134/2023); 1945/2023, whose oldest column '2013&Prior' is the same construction (C2), is in the primary on its estimator figure with the column. Here the mis-timed part is the 2013&Prior block's, immaterial (its step is -37k); leaving the whole column out would move the figure by +0.425m, to +5.264m, and drop the 2014 year's own 2024 movement with it",
-    "decision": "figure unchanged (+4.839), immaterial; the column's treatment across 1945's years is recorded for the author with Appendix 2.1"
+    "flag": "the '2014 & Prior' column is the 2023 report's '2013&Prior' and '2014' columns added by development age (C2, from the 2023 report p52; F2 the same), so its last step holds the 2013&Prior block's 2023 movement (-37k at 2023 rates) in place of its 2024 movement, and the column contributes -425k of the +4.839m that includes it",
+    "reader": "C2, F2",
+    "rule": "Appendix 2.1 leaves an aggregated development-age column out of the mature-cohort figure, because its last two diagonal cells are not like for like by calendar year: it adds the older underwriting years age by age, so its 'ten years later' cell holds the older years at age 10 and its 'nine years later' cell the older years at age 9. The author's decision of 22 October 2026 applies the rule to this record: the figure is the sum over the underwriting years up to t-2 of the latest estimate less the previous one, without that column",
+    "decision": "the column is left out: the figure is +5.264 (F1 and F2 recompute it from the printed table, and the estimator on the stored grid without the column gives it); +4.839 includes the column and rests on A4 and C2, kept under superseded_readings"
    }
   ],
   "status": "primary",
-  "decision": "decision of the Claude analysis session, 22 October 2026 (results/extraction_error_rate/mature-cohort/decisions.csv, adjudication.md): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
+  "decision": "decision of the Claude analysis session, 22 October 2026, applying the author's decision of 22 October 2026 that Appendix 2.1's rule leaves the aggregated column '2014 & Prior' out of the mature-cohort figure (1945_2024): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2 without that column; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
  },
  "1947_2019": {
   "figure_m": null,
@@ -8479,8 +8706,8 @@
    {
     "flag": "a remnant after an outward RITC at the start of year t: 'Immediately following 31 December 2021, the 2019 and prior underwriting years were externally Reinsured-to-Close (RITC) to an external party, Syndicate 1254' (p12); 'External RITC (101,597)' in the gross claims outstanding movement (p35); the table develops the 2020 year alone up to t-2",
     "reader": "C1 (A3 reads the same transfer and finds it does not move the 2020 column)",
-    "rule": "the figure is the development of the years the table develops (Appendix 2.1), and the transfer is of years the table does not print, so it is not in the step (design.md section 2, point 4); no_mature_cohort applies only to a table with no column up to t-2. R stays the unadjusted gross claims outstanding at 1 January, which includes the 101.597m transferred out (the author's decision of 29 September 2026, data/outbound_transfer_retained_base.json); the retained-base sensitivity (src/check_outbound_transfer_sensitivity.py) replaces R by the balance retained for that register's confirmed records, and 2689/2022 is not yet in it",
-    "decision": "primary, figure unchanged (-3.651); a candidate for the outbound-transfer sensitivity register"
+    "rule": "the figure is the development of the years the table develops (Appendix 2.1), and the transfer is of years the table does not print, so it is not in the step (design.md section 2, point 4); no_mature_cohort applies only to a table with no column up to t-2. R stays the unadjusted gross claims outstanding at 1 January, which includes the 101.597m transferred out (the author's decision of 29 September 2026, data/outbound_transfer_retained_base.json); the retained-base sensitivity (src/check_outbound_transfer_sensitivity.py) replaces R by the balance retained for that register's confirmed records, and 2689/2022 has been among them since the readings of 22 October 2026 (F1, F2)",
+    "decision": "primary, figure unchanged (-3.651); in the outbound-transfer sensitivity register since 22 October 2026"
    }
   ],
   "status": "primary",
