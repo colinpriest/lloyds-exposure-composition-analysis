@@ -1,0 +1,4754 @@
+{
+ "_rule": "Appendix 2.1 and Equation (1): the outcome is the gross prior-year movement over the underwriting years u <= t-2 of the year t report's printed gross claims development table. An older-years column (such as '2013 and prior') is one of those mature years only if its last step (its latest cell less the cell before it, in the year t table) is a like-for-like movement of the same set of underwriting years during year t. Restated BY CALENDAR YEAR (the year t report recomputes the whole column for its coverage, so each cell is the total of the same years at one calendar date; the label is fixed, or the rows read 'n years or more later'): the last step is like for like and the column stays in. Built BY DEVELOPMENT AGE (the year t cell at age a is the year t-1 report's older column at age a plus the underwriting year that joined the block, so its coverage grows by one year each report): the last step mixes calendar dates, so the column is left out. A column with no development of its own (a single figure, or one the stored grid does not carry) is not part of the triangle and is left out. rule_figure_m is the figure the test gives, adopted_figure_m the figure the primary adopts, and consistent says whether the two are the same figure (the adopted figure treats the column as the rule does; null where the construction is undeterminable, so there is no single rule figure); agrees_within_tolerance is the readers' looser test, within 0.5m or 1% (for an undeterminable construction, within it of every candidate figure). A record whose construction could not be settled is marked confidence 'low_confidence'; its adopted figure stands (a decision of the Claude analysis session, 23 October 2026).",
+ "_population": {
+  "records_read": 64,
+  "how_chosen": "The measurement (round2/measurement/aggcol.json and report.md) scanned all 1,065 record files of the corpus for an older-years ('& prior') column. Part A: records whose stored gross RAG triangle carries the column (aggregated_cohort), 24 in the primary sample. Part B: records whose extraction notes say the filing's table has an older-years column the stored grid leaves out, 47 in the primary sample. Primary sample only: records outside it (510_2014, 557_2014, 2468_2016, 4020_2017, 5678_2015 and other records of the 672 construction alone) were not read. The 64 records read are the 17 of Part A in the primary that the measurement did not settle by its own cell test, and all 47 of Part B. Each was read by one reader of the X arm and one of the Y arm, independently (round 2 of 23 October 2026); the 13 records on which the arms could not settle the construction or disagreed were read again by the tie-break readers Z1 and Z2 (round 3).",
+  "part_a_in_primary": [
+   "33_2015",
+   "218_2016",
+   "218_2017",
+   "218_2018",
+   "218_2019",
+   "218_2020",
+   "1200_2015",
+   "1200_2017",
+   "1945_2022",
+   "1945_2023",
+   "1945_2024",
+   "1955_2015",
+   "1955_2018",
+   "1955_2019",
+   "1955_2020",
+   "2007_2015",
+   "2007_2016",
+   "2007_2017",
+   "2791_2022",
+   "2791_2023",
+   "2791_2024",
+   "3624_2015",
+   "4020_2016",
+   "4020_2018"
+  ],
+  "part_b_in_primary": [
+   "386_2020",
+   "386_2021",
+   "435_2015",
+   "435_2016",
+   "435_2017",
+   "435_2018",
+   "435_2021",
+   "435_2022",
+   "435_2023",
+   "510_2017",
+   "958_2015",
+   "1084_2015",
+   "1084_2020",
+   "1110_2017",
+   "1176_2020",
+   "1176_2021",
+   "1200_2020",
+   "1218_2017",
+   "1218_2018",
+   "1225_2021",
+   "1225_2022",
+   "1274_2021",
+   "1274_2023",
+   "1414_2015",
+   "1458_2021",
+   "1884_2022",
+   "2003_2016",
+   "2003_2020",
+   "2088_2017",
+   "2088_2018",
+   "2121_2015",
+   "2121_2021",
+   "2121_2022",
+   "2468_2018",
+   "2525_2018",
+   "2791_2015",
+   "2987_2023",
+   "2987_2024",
+   "2999_2021",
+   "3000_2015",
+   "4242_2021",
+   "4242_2023",
+   "4444_2015",
+   "4472_2015",
+   "4472_2016",
+   "4472_2018",
+   "5678_2016"
+  ],
+  "part_a_not_read_again": [
+   "218_2016",
+   "218_2017",
+   "218_2018",
+   "218_2019",
+   "218_2020",
+   "1945_2023",
+   "1945_2024"
+  ],
+  "part_a_not_read_again_why": "218_2016 to 218_2020: the measurement's cell test found the column calendar-restated (cells equal, rows labelled 'n years or more later'), consistent with the adopted figure. 1945_2023 and 1945_2024: left out of the figure since the author's decision of 22 October 2026 (readings F1, F2; data/mature_cohort_figures.json), and read again by Z1 and Z2 as development_age.",
+  "section_c_heuristic_candidates_not_read": [
+   "780_2015",
+   "780_2016",
+   "780_2017",
+   "780_2018",
+   "1880_2015",
+   "1880_2016",
+   "1880_2017",
+   "1880_2018",
+   "1880_2019",
+   "1880_2020",
+   "1880_2021",
+   "4472_2019"
+  ],
+  "section_c_why": "12 records whose first stored column's age-0 cell is more than 2.5 times its neighbours' (probably individual large underwriting years, not aggregated columns); the measurement did not find a printed older-years column for them and they were not read",
+  "low_confidence": [
+   "3624_2015",
+   "1955_2018",
+   "1200_2015",
+   "2007_2015",
+   "33_2015",
+   "1200_2017"
+  ]
+ },
+ "33_2015": {
+  "part": "A",
+  "column_label": "2010 and prior GBP 000",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": -118.31,
+  "adopted_figure_m": -118.31,
+  "adopted_figure_gbp_m": -118.31,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": -118.31,
+  "figure_with_column_m": -118.31,
+  "figure_without_column_m": -86.114,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -118.31,
+    "figure_including_column_m": -118.31,
+    "figure_excluding_column_m": -86.114,
+    "pages": {
+     "year_t": [
+      36,
+      31
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -118.31,
+    "figure_including_column_m": -118.31,
+    "figure_excluding_column_m": -86.114,
+    "pages": {
+     "year_t": [
+      31,
+      36
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   31,
+   36
+  ],
+  "decision": "X1 and Y2 calendar_year, from the shape of the year t table alone (no year t-1 table in the corpus: the column is a flat stock re-estimated at successive year ends, and the 2016 report's 'Provision in respect of prior years' covers the same pre-2011 set). The adopted -118.31 (column in) stands; with the column out the figure would be -86.114. The evidence is structural only, so the record is low confidence."
+ },
+ "386_2020": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 43.9,
+  "adopted_figure_m": 43.9,
+  "adopted_figure_gbp_m": 43.9,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 43.9,
+  "figure_with_column_m": 43.9,
+  "figure_without_column_m": 43.9,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 43.9,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 43.9,
+    "pages": {
+     "year_t": [
+      43,
+      25
+     ],
+     "other_reports": {
+      "386_2019": [
+       40,
+       41
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 43.9,
+    "figure_including_column_m": 43.9,
+    "figure_excluding_column_m": 43.9,
+    "pages": {
+     "year_t": [
+      43,
+      25
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   25,
+   43
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 43.9 (without the column), the adopted figure 43.9."
+ },
+ "386_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -1.7,
+  "adopted_figure_m": -1.7,
+  "adopted_figure_gbp_m": -1.7,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -1.7,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -1.7,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -1.7,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -1.7,
+    "pages": {
+     "year_t": [
+      44
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       43
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -1.7,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -1.7,
+    "pages": {
+     "year_t": [
+      44,
+      26
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   26,
+   44
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -1.7 (without the column), the adopted figure -1.7."
+ },
+ "435_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -9.756,
+  "adopted_figure_m": -9.756,
+  "adopted_figure_gbp_m": -9.756,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -9.756,
+  "figure_with_column_m": -9.756,
+  "figure_without_column_m": -9.756,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -9.756,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -9.756,
+    "pages": {
+     "year_t": [
+      17,
+      34
+     ],
+     "other_reports": {
+      "435_2014": [
+       22
+      ],
+      "435_2016": [
+       35
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -9.756,
+    "figure_including_column_m": -9.756,
+    "figure_excluding_column_m": -9.756,
+    "pages": {
+     "year_t": [
+      34,
+      17,
+      35
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   17,
+   34,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -9.756 (without the column), the adopted figure -9.756."
+ },
+ "435_2016": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -44.233,
+  "adopted_figure_m": -44.233,
+  "adopted_figure_gbp_m": -44.233,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -44.233,
+  "figure_with_column_m": -44.233,
+  "figure_without_column_m": -44.233,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -44.233,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -44.233,
+    "pages": {
+     "year_t": [
+      35,
+      18
+     ],
+     "other_reports": {
+      "435_2015": [
+       34
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -44.233,
+    "figure_including_column_m": -44.233,
+    "figure_excluding_column_m": -44.233,
+    "pages": {
+     "year_t": [
+      35
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   18,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -44.233 (without the column), the adopted figure -44.233."
+ },
+ "435_2017": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -30.689,
+  "adopted_figure_m": -30.689,
+  "adopted_figure_gbp_m": -30.689,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -30.689,
+  "figure_with_column_m": -30.689,
+  "figure_without_column_m": -30.689,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -30.689,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -30.689,
+    "pages": {
+     "year_t": [
+      37,
+      20
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -30.689,
+    "figure_including_column_m": -30.689,
+    "figure_excluding_column_m": -30.689,
+    "pages": {
+     "year_t": [
+      30,
+      37
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   20,
+   30,
+   37
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -30.689 (without the column), the adopted figure -30.689."
+ },
+ "435_2018": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -4.551,
+  "adopted_figure_m": -4.551,
+  "adopted_figure_gbp_m": -4.551,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -4.551,
+  "figure_with_column_m": -4.551,
+  "figure_without_column_m": -4.551,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -4.551,
+    "figure_including_column_m": -4.551,
+    "figure_excluding_column_m": -4.551,
+    "pages": {
+     "year_t": [
+      36,
+      19
+     ],
+     "other_reports": {
+      "syndicate_435_2017": [
+       37
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -4.551,
+    "figure_including_column_m": -4.551,
+    "figure_excluding_column_m": -4.551,
+    "pages": {
+     "year_t": [
+      36,
+      29
+     ],
+     "other_reports": {
+      "435_2017": [
+       37
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   19,
+   29,
+   36
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -4.551 (without the column), the adopted figure -4.551."
+ },
+ "435_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -96.222,
+  "adopted_figure_m": -96.222,
+  "adopted_figure_gbp_m": -96.222,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -96.222,
+  "figure_with_column_m": -96.222,
+  "figure_without_column_m": -96.222,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -96.222,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -96.222,
+    "pages": {
+     "year_t": [
+      41,
+      24
+     ],
+     "other_reports": {
+      "435_2020": [
+       41
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -96.222,
+    "figure_including_column_m": -96.222,
+    "figure_excluding_column_m": -96.222,
+    "pages": {
+     "year_t": [
+      41,
+      24
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   24,
+   41
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -96.222 (without the column), the adopted figure -96.222."
+ },
+ "435_2022": {
+  "part": "B",
+  "column_label": [
+   2012
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -43.811,
+  "adopted_figure_m": -43.811,
+  "adopted_figure_gbp_m": -43.811,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -43.811,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -43.811,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -43.811,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -43.811,
+    "pages": {
+     "year_t": [
+      40
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       41
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -43.811,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -43.811,
+    "pages": {
+     "year_t": [
+      40,
+      38,
+      39
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   38,
+   39,
+   40
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -43.811 (without the column), the adopted figure -43.811."
+ },
+ "435_2023": {
+  "part": "B",
+  "column_label": [
+   2013
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -34.385,
+  "adopted_figure_m": -34.385,
+  "adopted_figure_gbp_m": -34.385,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -34.385,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -34.385,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -34.385,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -34.385,
+    "pages": {
+     "year_t": [
+      42,
+      25,
+      35,
+      40
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -34.385,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -34.385,
+    "pages": {
+     "year_t": [
+      25,
+      42
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   25,
+   35,
+   40,
+   42
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -34.385 (without the column), the adopted figure -34.385."
+ },
+ "510_2017": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -10.2,
+  "adopted_figure_m": -10.2,
+  "adopted_figure_gbp_m": -10.2,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -10.2,
+  "figure_with_column_m": -10.2,
+  "figure_without_column_m": -10.2,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -10.2,
+    "figure_including_column_m": -10.2,
+    "figure_excluding_column_m": -10.2,
+    "pages": {
+     "year_t": [
+      48,
+      39
+     ],
+     "other_reports": {
+      "syndicate_510_2016": [
+       53
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -10.2,
+    "figure_including_column_m": -10.2,
+    "figure_excluding_column_m": -10.2,
+    "pages": {
+     "year_t": [
+      47,
+      48
+     ],
+     "other_reports": {
+      "510_2016": [
+       53
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   39,
+   47,
+   48
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -10.2 (without the column), the adopted figure -10.2."
+ },
+ "958_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -4.935,
+  "adopted_figure_m": -4.935,
+  "adopted_figure_gbp_m": -4.935,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -4.935,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -4.935,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -4.935,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -4.935,
+    "pages": {
+     "year_t": [
+      23
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -4.935,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -4.935,
+    "pages": {
+     "year_t": [
+      23,
+      14
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   14,
+   23
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -4.935 (without the column), the adopted figure -4.935."
+ },
+ "1084_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 18.5,
+  "adopted_figure_m": 18.5,
+  "adopted_figure_gbp_m": 18.5,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 18.5,
+  "figure_with_column_m": null,
+  "figure_without_column_m": 18.5,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.5,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      35,
+      31
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.5,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      35,
+      20
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   20,
+   31,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 18.5 (without the column), the adopted figure 18.5."
+ },
+ "1084_2020": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 5.7,
+  "adopted_figure_m": 5.7,
+  "adopted_figure_gbp_m": 4.172156,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 5.7,
+  "figure_with_column_m": 5.7,
+  "figure_without_column_m": 5.7,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 5.7,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 5.7,
+    "pages": {
+     "year_t": [
+      14,
+      29
+     ],
+     "other_reports": {
+      "1084_2019": [
+       29
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 5.7,
+    "figure_including_column_m": 5.7,
+    "figure_excluding_column_m": 5.7,
+    "pages": {
+     "year_t": [
+      29,
+      14
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   14,
+   29
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 5.7 (without the column), the adopted figure 5.7."
+ },
+ "1110_2017": {
+  "part": "B",
+  "column_label": [],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -1.845,
+  "adopted_figure_m": -1.845,
+  "adopted_figure_gbp_m": -1.845,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -1.845,
+  "figure_with_column_m": -1.845,
+  "figure_without_column_m": -1.845,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -1.845,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -1.845,
+    "pages": {
+     "year_t": [
+      25,
+      16,
+      36
+     ],
+     "other_reports": {
+      "1110_2016": [
+       44
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -1.845,
+    "figure_including_column_m": -1.845,
+    "figure_excluding_column_m": -1.845,
+    "pages": {
+     "year_t": [
+      25
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   25,
+   36
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -1.845 (without the column), the adopted figure -1.845."
+ },
+ "1176_2020": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -7.549,
+  "adopted_figure_m": -7.549,
+  "adopted_figure_gbp_m": -7.549,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -7.549,
+  "figure_with_column_m": -8.156,
+  "figure_without_column_m": -7.549,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -7.549,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -7.549,
+    "pages": {
+     "year_t": [
+      32,
+      17
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -7.549,
+    "figure_including_column_m": -8.156,
+    "figure_excluding_column_m": -7.549,
+    "pages": {
+     "year_t": [
+      17,
+      28,
+      32
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   17,
+   28,
+   32
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -7.549 (without the column), the adopted figure -7.549."
+ },
+ "1176_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -7.647,
+  "adopted_figure_m": -7.647,
+  "adopted_figure_gbp_m": -7.647,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -7.647,
+  "figure_with_column_m": -7.647,
+  "figure_without_column_m": -7.647,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -7.647,
+    "figure_including_column_m": -7.647,
+    "figure_excluding_column_m": -7.647,
+    "pages": {
+     "year_t": [
+      33,
+      19
+     ],
+     "other_reports": {
+      "syndicate_1176_2020": [
+       32
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -7.647,
+    "figure_including_column_m": -7.647,
+    "figure_excluding_column_m": -7.647,
+    "pages": {
+     "year_t": [
+      33,
+      19
+     ],
+     "other_reports": {
+      "1176_2020": [
+       32
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   19,
+   33
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -7.647 (without the column), the adopted figure -7.647."
+ },
+ "1200_2015": {
+  "part": "A",
+  "column_label": "Before 2011 Em",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 0.5,
+  "adopted_figure_m": 0.5,
+  "adopted_figure_gbp_m": 0.5,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 0.5,
+  "figure_with_column_m": 0.5,
+  "figure_without_column_m": 8.4,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "undeterminable",
+    "verdict": "undeterminable",
+    "rule_figure_m": null,
+    "figure_including_column_m": 0.5,
+    "figure_excluding_column_m": 8.4,
+    "pages": {
+     "year_t": [
+      40,
+      44
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 0.5,
+    "figure_including_column_m": 0.5,
+    "figure_excluding_column_m": 8.4,
+    "pages": {
+     "year_t": [
+      40,
+      17
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "medium",
+    "rule_figure_m": 0.5,
+    "figure_including_column_m": 0.5,
+    "figure_excluding_column_m": 8.4,
+    "pages": {
+     "year_t": [
+      40,
+      39
+     ],
+     "other_reports": {
+      "year_t_plus_1": [
+       40,
+       39
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "medium",
+    "rule_figure_m": 0.5,
+    "figure_including_column_m": 0.5,
+    "figure_excluding_column_m": 8.4,
+    "pages": {
+     "year_t": [
+      33,
+      40
+     ],
+     "other_reports": {
+      "2016_report_t_plus_1": [
+       40
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   17,
+   33,
+   39,
+   40,
+   44
+  ],
+  "decision": "X2 undeterminable (no year t-1 table); Y3 calendar_year; the tie-break readers Z1 and Z2 both find it restated by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a single underwriting year, 2010, at the same factor as 2011), so the record is low confidence."
+ },
+ "1200_2017": {
+  "part": "A",
+  "column_label": "2011 and prior Em 209.2",
+  "construction": "development_age",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 44.9,
+  "adopted_figure_m": 44.9,
+  "adopted_figure_gbp_m": 44.9,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 44.9,
+  "figure_with_column_m": 44.9,
+  "figure_without_column_m": 40.5,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": 40.5,
+    "figure_including_column_m": 44.9,
+    "figure_excluding_column_m": 40.5,
+    "pages": {
+     "year_t": [
+      20,
+      27,
+      43
+     ],
+     "other_reports": {
+      "1200_2016": [
+       40
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": 40.5,
+    "figure_including_column_m": 44.9,
+    "figure_excluding_column_m": 40.5,
+    "pages": {
+     "year_t": [
+      43,
+      20
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "medium",
+    "rule_figure_m": 44.9,
+    "figure_including_column_m": 44.9,
+    "figure_excluding_column_m": 40.5,
+    "pages": {
+     "year_t": [
+      43
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       40
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": 40.5,
+    "figure_including_column_m": 44.9,
+    "figure_excluding_column_m": 40.5,
+    "pages": {
+     "year_t": [
+      43
+     ],
+     "other_reports": {
+      "2016_report": [
+       40
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   20,
+   27,
+   43
+  ],
+  "decision": "Decision of the Claude analysis session, 23 October 2026: X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), which would leave it out (40.5). The column stays in (44.9) because its second-to-last cell equals the end-2016 calendar total (UY2010 266.9 at ages 5 and 6 in the 2016 report), so the last step holds only 2017 movements, and leaving the column out would drop UY2011's 2017 movement. Z2 would leave it out (40.5); Z1 (medium) would keep 44.9. The readers' construction and figure are kept beside the decision.",
+  "readers_rule_figure_m": 40.5,
+  "readers_rule_includes_column": false
+ },
+ "1200_2020": {
+  "part": "B",
+  "column_label": [
+   2013
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 54.4,
+  "adopted_figure_m": 54.4,
+  "adopted_figure_gbp_m": 54.4,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 54.4,
+  "figure_with_column_m": 54.4,
+  "figure_without_column_m": 54.4,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 54.4,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 54.4,
+    "pages": {
+     "year_t": [
+      43,
+      20
+     ],
+     "other_reports": {
+      "1200_2019": [
+       42
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 54.4,
+    "figure_including_column_m": 54.4,
+    "figure_excluding_column_m": 54.4,
+    "pages": {
+     "year_t": [
+      42,
+      43,
+      36
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   20,
+   36,
+   42,
+   43
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 54.4 (without the column), the adopted figure 54.4."
+ },
+ "1218_2017": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -3.14,
+  "adopted_figure_m": -3.14,
+  "adopted_figure_gbp_m": -3.14,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -3.14,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -3.14,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -3.14,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -3.14,
+    "pages": {
+     "year_t": [
+      38
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       37
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -3.14,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -3.14,
+    "pages": {
+     "year_t": [
+      38,
+      30
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   30,
+   38
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -3.14 (without the column), the adopted figure -3.14."
+ },
+ "1218_2018": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -22.744,
+  "adopted_figure_m": -22.744,
+  "adopted_figure_gbp_m": -22.744,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -22.744,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -22.744,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -22.744,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -22.744,
+    "pages": {
+     "year_t": [
+      38,
+      15,
+      30,
+      36
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -22.744,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -22.744,
+    "pages": {
+     "year_t": [
+      15,
+      38
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   15,
+   30,
+   36,
+   38
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -22.744 (without the column), the adopted figure -22.744."
+ },
+ "1225_2021": {
+  "part": "B",
+  "column_label": [
+   2016
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 8.1,
+  "adopted_figure_m": 8.1,
+  "adopted_figure_gbp_m": 8.1,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 8.1,
+  "figure_with_column_m": null,
+  "figure_without_column_m": 8.1,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 8.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 8.1,
+    "pages": {
+     "year_t": [
+      29,
+      30,
+      29
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 8.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 8.1,
+    "pages": {
+     "year_t": [
+      29,
+      30
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   29,
+   30
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 8.1 (without the column), the adopted figure 8.1."
+ },
+ "1225_2022": {
+  "part": "B",
+  "column_label": [
+   2017
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 18.6,
+  "adopted_figure_m": 18.6,
+  "adopted_figure_gbp_m": 18.6,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 18.6,
+  "figure_with_column_m": 18.6,
+  "figure_without_column_m": 18.6,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.6,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 18.6,
+    "pages": {
+     "year_t": [
+      32,
+      33
+     ],
+     "other_reports": {
+      "1225_2021": [
+       30
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.6,
+    "figure_including_column_m": 18.6,
+    "figure_excluding_column_m": 18.6,
+    "pages": {
+     "year_t": [
+      32,
+      33
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   32,
+   33
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 18.6 (without the column), the adopted figure 18.6."
+ },
+ "1274_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 72.645,
+  "adopted_figure_m": 72.645,
+  "adopted_figure_gbp_m": 53.811111,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 72.645,
+  "figure_with_column_m": 72.645,
+  "figure_without_column_m": 72.645,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 72.645,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 72.645,
+    "pages": {
+     "year_t": [
+      36,
+      29
+     ],
+     "other_reports": {
+      "1274_2020": [
+       36
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 72.645,
+    "figure_including_column_m": 72.645,
+    "figure_excluding_column_m": 72.645,
+    "pages": {
+     "year_t": [
+      36
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   29,
+   36
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 72.645 (without the column), the adopted figure 72.645."
+ },
+ "1274_2023": {
+  "part": "B",
+  "column_label": [
+   2013
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 87.073,
+  "adopted_figure_m": 87.073,
+  "adopted_figure_gbp_m": 68.330064,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 87.073,
+  "figure_with_column_m": 87.073,
+  "figure_without_column_m": 87.073,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 87.073,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 87.073,
+    "pages": {
+     "year_t": [
+      35,
+      36,
+      16
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 87.073,
+    "figure_including_column_m": 87.073,
+    "figure_excluding_column_m": 87.073,
+    "pages": {
+     "year_t": [
+      16,
+      28,
+      35,
+      36
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   28,
+   35,
+   36
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 87.073 (without the column), the adopted figure 87.073."
+ },
+ "1414_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -13.749,
+  "adopted_figure_m": -13.749,
+  "adopted_figure_gbp_m": -13.749,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -13.749,
+  "figure_with_column_m": -13.749,
+  "figure_without_column_m": -13.749,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -13.749,
+    "figure_including_column_m": -13.749,
+    "figure_excluding_column_m": -13.749,
+    "pages": {
+     "year_t": [
+      29
+     ],
+     "other_reports": {
+      "syndicate_1414_2016": [
+       29
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -13.749,
+    "figure_including_column_m": -13.749,
+    "figure_excluding_column_m": -13.749,
+    "pages": {
+     "year_t": [
+      29,
+      14
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   14,
+   29
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -13.749 (without the column), the adopted figure -13.749."
+ },
+ "1458_2021": {
+  "part": "B",
+  "column_label": [],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 57.601,
+  "adopted_figure_m": 57.601,
+  "adopted_figure_gbp_m": 42.667407,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 57.601,
+  "figure_with_column_m": 57.601,
+  "figure_without_column_m": 57.601,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 57.601,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 57.601,
+    "pages": {
+     "year_t": [
+      45,
+      19
+     ],
+     "other_reports": {
+      "1458_2020": [
+       45
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 57.601,
+    "figure_including_column_m": 57.601,
+    "figure_excluding_column_m": 57.601,
+    "pages": {
+     "year_t": [
+      44,
+      45,
+      19
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   19,
+   44,
+   45
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 57.601 (without the column), the adopted figure 57.601."
+ },
+ "1884_2022": {
+  "part": "B",
+  "column_label": [
+   2012
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 9.1,
+  "adopted_figure_m": 9.1,
+  "adopted_figure_gbp_m": 9.1,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 9.1,
+  "figure_with_column_m": null,
+  "figure_without_column_m": 9.1,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 9.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 9.1,
+    "pages": {
+     "year_t": [
+      32
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       32
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 9.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 9.1,
+    "pages": {
+     "year_t": [
+      32,
+      16,
+      35
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   32,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 9.1 (without the column), the adopted figure 9.1."
+ },
+ "1945_2022": {
+  "part": "A",
+  "column_label": "2012&Prior GBP 000 20,567",
+  "construction": "development_age",
+  "last_step_like_for_like": false,
+  "rule_includes_column": false,
+  "rule_figure_m": -13.831,
+  "adopted_figure_m": -13.831,
+  "adopted_figure_gbp_m": -13.831,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -13.84,
+  "figure_with_column_m": -13.84,
+  "figure_without_column_m": -13.831,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "medium",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -13.831,
+    "figure_including_column_m": -13.84,
+    "figure_excluding_column_m": -13.831,
+    "pages": {
+     "year_t": [
+      51,
+      44
+     ],
+     "other_reports": {
+      "1945_2021": [
+       49
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -13.831,
+    "figure_including_column_m": -13.84,
+    "figure_excluding_column_m": -13.831,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": -13.831,
+    "figure_including_column_m": -13.84,
+    "figure_excluding_column_m": -13.831,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       49
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "medium",
+    "rule_figure_m": -13.831,
+    "figure_including_column_m": -13.84,
+    "figure_excluding_column_m": -13.831,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {
+      "2021_report": [
+       49
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   44,
+   51
+  ],
+  "decision": "X4, Y5, Z1 and Z2 all find the '2012&Prior' column built by development age (the 2021 report's UY2011 column plus UY2012 at each age, at a uniform factor of 1.0606 on ages 4 to 9). The column is left out: the figure moves from -13.840 to -13.831 (data/mature_cohort_figures.json, decision of the Claude analysis session, 23 October 2026).",
+  "consistent_before": false
+ },
+ "1955_2015": {
+  "part": "A",
+  "column_label": "2011 & Prior GBP 000 438,186",
+  "construction": "undeterminable",
+  "last_step_like_for_like": null,
+  "rule_includes_column": null,
+  "rule_figure_m": null,
+  "adopted_figure_m": 11.444,
+  "adopted_figure_gbp_m": 11.444,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 11.444,
+  "figure_with_column_m": 11.444,
+  "figure_without_column_m": 11.763,
+  "difference_m": null,
+  "consistent": null,
+  "agrees_within_tolerance": true,
+  "confidence": "medium",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "undeterminable",
+    "verdict": "consistent",
+    "rule_figure_m": null,
+    "figure_including_column_m": 11.444,
+    "figure_excluding_column_m": 11.763,
+    "pages": {
+     "year_t": [
+      48,
+      41,
+      18,
+      19
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": 11.763,
+    "figure_including_column_m": 11.444,
+    "figure_excluding_column_m": 11.763,
+    "pages": {
+     "year_t": [
+      19,
+      41,
+      48
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   18,
+   19,
+   41,
+   48
+  ],
+  "decision": "X5 undeterminable (no comparable table in the year t-1 or t+1 report); Y6 development_age. The two candidate figures, 11.444 with the column and 11.763 without it, differ by 0.319m, inside the 0.5m tolerance, so the adopted 11.444 is consistent with the rule under either construction."
+ },
+ "1955_2018": {
+  "part": "A",
+  "column_label": "2012 & Prior GBP m",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 16.7,
+  "adopted_figure_m": 16.7,
+  "adopted_figure_gbp_m": 16.7,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 16.7,
+  "figure_with_column_m": 16.7,
+  "figure_without_column_m": 18.5,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": 18.5,
+    "figure_including_column_m": 16.7,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      48,
+      19,
+      41
+     ],
+     "other_reports": {
+      "syndicate_1955_2019": [
+       47
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "undeterminable",
+    "verdict": "undeterminable",
+    "rule_figure_m": null,
+    "figure_including_column_m": 16.7,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      48,
+      19
+     ],
+     "other_reports": {
+      "1955_2019": [
+       47
+      ]
+     }
+    },
+    "rule_figure_note": "16.7 if the column is calendar-year (lean); 18.5 if development-age"
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "medium",
+    "rule_figure_m": 16.7,
+    "figure_including_column_m": 16.7,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      48
+     ],
+     "other_reports": {
+      "year_t_plus_1": [
+       47
+      ],
+      "also_used": [
+       51,
+       48
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "low",
+    "rule_figure_m": 16.7,
+    "figure_including_column_m": 16.7,
+    "figure_excluding_column_m": 18.5,
+    "pages": {
+     "year_t": [
+      6,
+      19,
+      47,
+      48
+     ],
+     "other_reports": {
+      "2019_report_t_plus_1": [
+       47
+      ],
+      "2015_report_t_minus_3": [
+       48
+      ],
+      "2020_report_t_plus_2": [
+       51
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   6,
+   19,
+   41,
+   47,
+   48
+  ],
+  "decision": "X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the column left out the figure would be 18.5. The construction could not be settled, so the record is low confidence."
+ },
+ "1955_2019": {
+  "part": "A",
+  "column_label": "2013 & Prior GBP m 834.7",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 44.2,
+  "adopted_figure_m": 44.2,
+  "adopted_figure_gbp_m": 44.2,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 44.2,
+  "figure_with_column_m": 44.2,
+  "figure_without_column_m": 65.8,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 44.2,
+    "figure_including_column_m": 44.2,
+    "figure_excluding_column_m": 65.8,
+    "pages": {
+     "year_t": [
+      47,
+      18
+     ],
+     "other_reports": {
+      "1955_2018": [
+       48
+      ],
+      "1955_2020": [
+       51
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 44.2,
+    "figure_including_column_m": 44.2,
+    "figure_excluding_column_m": 65.8,
+    "pages": {
+     "year_t": [
+      47,
+      18,
+      40
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   18,
+   40,
+   47
+  ],
+  "decision": "X and Y agree: calendar_year, rule figure 44.2 (with the column), the adopted figure 44.2."
+ },
+ "1955_2020": {
+  "part": "A",
+  "column_label": "2014 & Prior GBP m",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 15.9,
+  "adopted_figure_m": 15.9,
+  "adopted_figure_gbp_m": 15.9,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 15.9,
+  "figure_with_column_m": 15.9,
+  "figure_without_column_m": 10.7,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": 10.7,
+    "figure_including_column_m": 15.9,
+    "figure_excluding_column_m": 10.7,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       47
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": 10.7,
+    "figure_including_column_m": 15.9,
+    "figure_excluding_column_m": 10.7,
+    "pages": {
+     "year_t": [
+      51,
+      22
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": 15.9,
+    "figure_including_column_m": 15.9,
+    "figure_excluding_column_m": 10.7,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       47
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": 15.9,
+    "figure_including_column_m": 15.9,
+    "figure_excluding_column_m": 10.7,
+    "pages": {
+     "year_t": [
+      51
+     ],
+     "other_reports": {
+      "2019_report": [
+       47
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   22,
+   51
+  ],
+  "decision": "X8 and Y1 development_age (rule 10.7); the tie-break readers Z1 and Z2 (both high) find it restated by calendar year, so the column stays in and the adopted 15.9 stands."
+ },
+ "2003_2016": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 49.256,
+  "adopted_figure_m": 49.256,
+  "adopted_figure_gbp_m": 39.925428,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 49.256,
+  "figure_with_column_m": null,
+  "figure_without_column_m": 49.256,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 49.256,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 49.256,
+    "pages": {
+     "year_t": [
+      43,
+      15,
+      32
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 49.256,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 49.256,
+    "pages": {
+     "year_t": [
+      15,
+      43
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   15,
+   32,
+   43
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 49.256 (without the column), the adopted figure 49.256."
+ },
+ "2003_2020": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 369.0,
+  "adopted_figure_m": 369.0,
+  "adopted_figure_gbp_m": 369.0,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 369.0,
+  "figure_with_column_m": null,
+  "figure_without_column_m": 369.0,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 369.0,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 369.0,
+    "pages": {
+     "year_t": [
+      46,
+      20,
+      46
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 369.0,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 369.0,
+    "pages": {
+     "year_t": [
+      46,
+      16
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   20,
+   46
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 369.0 (without the column), the adopted figure 369.0."
+ },
+ "2007_2015": {
+  "part": "A",
+  "column_label": "2010 & Prior Em",
+  "construction": "development_age",
+  "last_step_like_for_like": false,
+  "rule_includes_column": false,
+  "rule_figure_m": -2.0,
+  "adopted_figure_m": -2.0,
+  "adopted_figure_gbp_m": -2.0,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -2.0,
+  "figure_with_column_m": 148.8,
+  "figure_without_column_m": -2.0,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -2.0,
+    "figure_including_column_m": 148.8,
+    "figure_excluding_column_m": -2.0,
+    "pages": {
+     "year_t": [
+      37,
+      38,
+      53
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -2.0,
+    "figure_including_column_m": 148.8,
+    "figure_excluding_column_m": -2.0,
+    "pages": {
+     "year_t": [
+      37,
+      53
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "undeterminable",
+    "confidence": "medium",
+    "rule_figure_m": -2.0,
+    "figure_including_column_m": 148.8,
+    "figure_excluding_column_m": -2.0,
+    "pages": {
+     "year_t": [
+      37
+     ],
+     "other_reports": {
+      "year_t_plus_1": [
+       35
+      ],
+      "also_used": [
+       33
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "medium",
+    "rule_figure_m": -2.0,
+    "figure_including_column_m": 148.8,
+    "figure_excluding_column_m": -2.0,
+    "pages": {
+     "year_t": [
+      8,
+      26,
+      37
+     ],
+     "other_reports": {
+      "2016_report_t_plus_1": [
+       35
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   8,
+   26,
+   37,
+   38,
+   53
+  ],
+  "decision": "X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence."
+ },
+ "2007_2016": {
+  "part": "A",
+  "column_label": "2010&P GBP m 1,440.4",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 54.8,
+  "adopted_figure_m": 54.8,
+  "adopted_figure_gbp_m": 54.8,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 54.8,
+  "figure_with_column_m": 54.8,
+  "figure_without_column_m": 61.3,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 54.8,
+    "figure_including_column_m": 54.8,
+    "figure_excluding_column_m": 61.3,
+    "pages": {
+     "year_t": [
+      35,
+      48,
+      37
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 54.8,
+    "figure_including_column_m": 54.8,
+    "figure_excluding_column_m": 61.3,
+    "pages": {
+     "year_t": [
+      35,
+      24
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   24,
+   35,
+   37,
+   48
+  ],
+  "decision": "X and Y agree: calendar_year, rule figure 54.8 (with the column), the adopted figure 54.8."
+ },
+ "2007_2017": {
+  "part": "A",
+  "column_label": "2010&P Em",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": -44.5,
+  "adopted_figure_m": -44.5,
+  "adopted_figure_gbp_m": -44.5,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": -44.5,
+  "figure_with_column_m": -44.5,
+  "figure_without_column_m": -22.0,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -44.5,
+    "figure_including_column_m": -44.5,
+    "figure_excluding_column_m": -22.0,
+    "pages": {
+     "year_t": [
+      20,
+      33,
+      46
+     ],
+     "other_reports": {
+      "2007_2016": [
+       35
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -44.5,
+    "figure_including_column_m": -44.5,
+    "figure_excluding_column_m": -22.0,
+    "pages": {
+     "year_t": [
+      33,
+      21,
+      35
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   20,
+   21,
+   33,
+   35,
+   46
+  ],
+  "decision": "X and Y agree: calendar_year, rule figure -44.5 (with the column), the adopted figure -44.5."
+ },
+ "2088_2017": {
+  "part": "B",
+  "column_label": [
+   2012
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 3.259,
+  "adopted_figure_m": 3.259,
+  "adopted_figure_gbp_m": 3.259,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 3.259,
+  "figure_with_column_m": 3.259,
+  "figure_without_column_m": 3.259,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 3.259,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 3.259,
+    "pages": {
+     "year_t": [
+      34,
+      35
+     ],
+     "other_reports": {
+      "2088_2016": [
+       34
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 3.259,
+    "figure_including_column_m": 3.259,
+    "figure_excluding_column_m": 3.259,
+    "pages": {
+     "year_t": [
+      34,
+      16
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   34,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 3.259 (without the column), the adopted figure 3.259."
+ },
+ "2088_2018": {
+  "part": "B",
+  "column_label": [
+   2013
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 10.856,
+  "adopted_figure_m": 10.856,
+  "adopted_figure_gbp_m": 10.856,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 10.856,
+  "figure_with_column_m": 10.856,
+  "figure_without_column_m": 10.856,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 10.856,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 10.856,
+    "pages": {
+     "year_t": [
+      35,
+      16
+     ],
+     "other_reports": {
+      "2088_2017": [
+       34
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 10.856,
+    "figure_including_column_m": 10.856,
+    "figure_excluding_column_m": 10.856,
+    "pages": {
+     "year_t": [
+      35
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   16,
+   35
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 10.856 (without the column), the adopted figure 10.856."
+ },
+ "2121_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 1.619,
+  "adopted_figure_m": 1.619,
+  "adopted_figure_gbp_m": 1.619,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 1.619,
+  "figure_with_column_m": 1.619,
+  "figure_without_column_m": 1.619,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 1.619,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 1.619,
+    "pages": {
+     "year_t": [
+      56,
+      44
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 1.619,
+    "figure_including_column_m": 1.619,
+    "figure_excluding_column_m": 1.619,
+    "pages": {
+     "year_t": [
+      28,
+      55,
+      56
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   28,
+   44,
+   55,
+   56
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 1.619 (without the column), the adopted figure 1.619."
+ },
+ "2121_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 15.7,
+  "adopted_figure_m": 15.7,
+  "adopted_figure_gbp_m": 15.7,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 15.7,
+  "figure_with_column_m": 15.7,
+  "figure_without_column_m": 15.7,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 15.7,
+    "figure_including_column_m": 15.7,
+    "figure_excluding_column_m": 15.7,
+    "pages": {
+     "year_t": [
+      57,
+      28
+     ],
+     "other_reports": {
+      "syndicate_2121_2020": [
+       56
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 15.7,
+    "figure_including_column_m": 15.7,
+    "figure_excluding_column_m": 15.7,
+    "pages": {
+     "year_t": [
+      57,
+      44
+     ],
+     "other_reports": {
+      "2121_2020": [
+       56
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   28,
+   44,
+   57
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 15.7 (without the column), the adopted figure 15.7."
+ },
+ "2121_2022": {
+  "part": "B",
+  "column_label": [
+   2012
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 36.2,
+  "adopted_figure_m": 36.2,
+  "adopted_figure_gbp_m": 36.2,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 36.2,
+  "figure_with_column_m": 36.2,
+  "figure_without_column_m": 36.2,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 36.2,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 36.2,
+    "pages": {
+     "year_t": [
+      59,
+      30
+     ],
+     "other_reports": {
+      "2121_2021": [
+       57
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 36.2,
+    "figure_including_column_m": 36.2,
+    "figure_excluding_column_m": 36.2,
+    "pages": {
+     "year_t": [
+      59,
+      30
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   30,
+   59
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 36.2 (without the column), the adopted figure 36.2."
+ },
+ "2468_2018": {
+  "part": "B",
+  "column_label": [],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 18.37,
+  "adopted_figure_m": 18.37,
+  "adopted_figure_gbp_m": 18.37,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 18.37,
+  "figure_with_column_m": 18.37,
+  "figure_without_column_m": 18.37,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.37,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 18.37,
+    "pages": {
+     "year_t": [
+      41
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       40
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 18.37,
+    "figure_including_column_m": 18.37,
+    "figure_excluding_column_m": 18.37,
+    "pages": {
+     "year_t": [
+      41,
+      33,
+      40
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   33,
+   40,
+   41
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 18.37 (without the column), the adopted figure 18.37."
+ },
+ "2525_2018": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -10.773,
+  "adopted_figure_m": -10.773,
+  "adopted_figure_gbp_m": -10.773,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -10.773,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -10.773,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -10.773,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -10.773,
+    "pages": {
+     "year_t": [
+      44,
+      21
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -10.773,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -10.773,
+    "pages": {
+     "year_t": [
+      21,
+      44
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   21,
+   44
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -10.773 (without the column), the adopted figure -10.773."
+ },
+ "2791_2015": {
+  "part": "B",
+  "column_label": [],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -2.131,
+  "adopted_figure_m": -2.131,
+  "adopted_figure_gbp_m": -2.131,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -2.131,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -2.131,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -2.131,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -2.131,
+    "pages": {
+     "year_t": [
+      69,
+      37,
+      72
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -2.131,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -2.131,
+    "pages": {
+     "year_t": [
+      69,
+      46,
+      71
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   37,
+   46,
+   69,
+   71,
+   72
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -2.131 (without the column), the adopted figure -2.131."
+ },
+ "2791_2022": {
+  "part": "A",
+  "column_label": "2012 and prior 000,3",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": -17.497,
+  "adopted_figure_m": -17.497,
+  "adopted_figure_gbp_m": -17.497,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": -17.497,
+  "figure_with_column_m": -17.497,
+  "figure_without_column_m": -8.245,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": -8.245,
+    "figure_including_column_m": -17.497,
+    "figure_excluding_column_m": -8.245,
+    "pages": {
+     "year_t": [
+      82,
+      59,
+      60
+     ],
+     "other_reports": {
+      "2791_2021": [
+       81
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": -8.245,
+    "figure_including_column_m": -17.497,
+    "figure_excluding_column_m": -8.245,
+    "pages": {
+     "year_t": [
+      82,
+      60
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -17.497,
+    "figure_including_column_m": -17.497,
+    "figure_excluding_column_m": -8.245,
+    "pages": {
+     "year_t": [
+      82,
+      81
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       81,
+       80
+      ],
+      "year_t_plus_1": [
+       83
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -17.497,
+    "figure_including_column_m": -17.497,
+    "figure_excluding_column_m": -8.245,
+    "pages": {
+     "year_t": [
+      81,
+      82
+     ],
+     "other_reports": {
+      "2021_report": [
+       80,
+       81
+      ],
+      "2023_report_t_plus_1": [
+       82,
+       83
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   59,
+   60,
+   81,
+   82
+  ],
+  "decision": "X4 and Y5 development_age (rule -8.245); the tie-break readers Z1 and Z2 (both high) find it restated by calendar year, so the column stays in and the adopted -17.497 stands."
+ },
+ "2791_2023": {
+  "part": "A",
+  "column_label": "2013 and prior 000,3",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": -35.529,
+  "adopted_figure_m": -35.529,
+  "adopted_figure_gbp_m": -35.529,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": -35.529,
+  "figure_with_column_m": -35.529,
+  "figure_without_column_m": -28.21,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -35.529,
+    "figure_including_column_m": -35.529,
+    "figure_excluding_column_m": -28.21,
+    "pages": {
+     "year_t": [
+      83,
+      82,
+      61
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": -28.21,
+    "figure_including_column_m": -35.529,
+    "figure_excluding_column_m": -28.21,
+    "pages": {
+     "year_t": [
+      61,
+      82,
+      83
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -35.529,
+    "figure_including_column_m": -35.529,
+    "figure_excluding_column_m": -28.21,
+    "pages": {
+     "year_t": [
+      83,
+      82
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       82
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -35.529,
+    "figure_including_column_m": -35.529,
+    "figure_excluding_column_m": -28.21,
+    "pages": {
+     "year_t": [
+      82,
+      83
+     ],
+     "other_reports": {
+      "2022_report": [
+       81,
+       82
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   61,
+   82,
+   83
+  ],
+  "decision": "X5 calendar_year, Y6 development_age; the tie-break readers Z1 and Z2 (both high) find it restated by calendar year, so the column stays in and the adopted -35.529 stands."
+ },
+ "2791_2024": {
+  "part": "A",
+  "column_label": "2014 and prior E'000",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": -36.191,
+  "adopted_figure_m": -36.191,
+  "adopted_figure_gbp_m": -36.191,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": -36.191,
+  "figure_with_column_m": -36.191,
+  "figure_without_column_m": -27.986,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "inconsistent",
+    "rule_figure_m": -27.986,
+    "figure_including_column_m": -36.191,
+    "figure_excluding_column_m": -27.986,
+    "pages": {
+     "year_t": [
+      49,
+      36
+     ],
+     "other_reports": {
+      "syndicate_2791_2023": [
+       83
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": -36.191,
+    "figure_including_column_m": -36.191,
+    "figure_excluding_column_m": -27.986,
+    "pages": {
+     "year_t": [
+      49,
+      25,
+      47
+     ],
+     "other_reports": {
+      "2791_2023": [
+       83
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -36.191,
+    "figure_including_column_m": -36.191,
+    "figure_excluding_column_m": -27.986,
+    "pages": {
+     "year_t": [
+      49,
+      48
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       83
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "calendar_year",
+    "confidence": "high",
+    "rule_figure_m": -36.191,
+    "figure_including_column_m": -36.191,
+    "figure_excluding_column_m": -27.986,
+    "pages": {
+     "year_t": [
+      48,
+      49
+     ],
+     "other_reports": {
+      "2023_report": [
+       82,
+       83
+      ]
+     }
+    }
+   }
+  ],
+  "pages": [
+   25,
+   36,
+   47,
+   48,
+   49
+  ],
+  "decision": "X6 development_age, Y7 calendar_year; the tie-break readers Z1 and Z2 (both high) find it restated by calendar year, so the column stays in and the adopted -36.191 stands."
+ },
+ "2987_2023": {
+  "part": "B",
+  "column_label": [
+   2013
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 234.1,
+  "adopted_figure_m": 234.1,
+  "adopted_figure_gbp_m": 183.708703,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 234.1,
+  "figure_with_column_m": 234.1,
+  "figure_without_column_m": 234.1,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 234.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 234.1,
+    "pages": {
+     "year_t": [
+      18,
+      47,
+      48,
+      52
+     ],
+     "other_reports": {
+      "2987_2022": [
+       48
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 234.1,
+    "figure_including_column_m": 234.1,
+    "figure_excluding_column_m": 234.1,
+    "pages": {
+     "year_t": [
+      47,
+      48,
+      18
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   18,
+   47,
+   48,
+   52
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 234.1 (without the column), the adopted figure 234.1."
+ },
+ "2987_2024": {
+  "part": "B",
+  "column_label": [
+   2014
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 170.224,
+  "adopted_figure_m": 170.224,
+  "adopted_figure_gbp_m": 135.950803,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 170.224,
+  "figure_with_column_m": 170.224,
+  "figure_without_column_m": 170.224,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 170.224,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 170.224,
+    "pages": {
+     "year_t": [
+      54,
+      18
+     ],
+     "other_reports": {
+      "2987_2023": [
+       47,
+       48
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 170.224,
+    "figure_including_column_m": 170.224,
+    "figure_excluding_column_m": 170.224,
+    "pages": {
+     "year_t": [
+      54,
+      52
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   18,
+   52,
+   54
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 170.224 (without the column), the adopted figure 170.224."
+ },
+ "2999_2021": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 166.2,
+  "adopted_figure_m": 166.2,
+  "adopted_figure_gbp_m": 166.2,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 166.2,
+  "figure_with_column_m": 166.2,
+  "figure_without_column_m": 166.2,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 166.2,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 166.2,
+    "pages": {
+     "year_t": [
+      46,
+      26
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 166.2,
+    "figure_including_column_m": 166.2,
+    "figure_excluding_column_m": 166.2,
+    "pages": {
+     "year_t": [
+      26,
+      46
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   26,
+   46
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 166.2 (without the column), the adopted figure 166.2."
+ },
+ "3000_2015": {
+  "part": "B",
+  "column_label": [],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -12.617,
+  "adopted_figure_m": -12.617,
+  "adopted_figure_gbp_m": -12.617,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -12.617,
+  "figure_with_column_m": -12.617,
+  "figure_without_column_m": -12.617,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X6",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -12.617,
+    "figure_including_column_m": -12.617,
+    "figure_excluding_column_m": -12.617,
+    "pages": {
+     "year_t": [
+      36,
+      20
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y7",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -12.617,
+    "figure_including_column_m": -12.617,
+    "figure_excluding_column_m": -12.617,
+    "pages": {
+     "year_t": [
+      36,
+      20
+     ],
+     "other_reports": {
+      "3000_2014": [
+       31,
+       22
+      ]
+     }
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   20,
+   36
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -12.617 (without the column), the adopted figure -12.617."
+ },
+ "3624_2015": {
+  "part": "A",
+  "column_label": "2010 and prior GBP 000",
+  "construction": "undeterminable",
+  "last_step_like_for_like": null,
+  "rule_includes_column": null,
+  "rule_figure_m": null,
+  "adopted_figure_m": 5.025,
+  "adopted_figure_gbp_m": 5.025,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 5.025,
+  "figure_with_column_m": 5.025,
+  "figure_without_column_m": -0.912,
+  "difference_m": null,
+  "consistent": null,
+  "agrees_within_tolerance": false,
+  "confidence": "low_confidence",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "undeterminable",
+    "verdict": "undeterminable",
+    "rule_figure_m": null,
+    "figure_including_column_m": 5.025,
+    "figure_excluding_column_m": -0.912,
+    "pages": {
+     "year_t": [
+      36,
+      15,
+      16
+     ],
+     "other_reports": {
+      "3624_2014": [
+       32,
+       17
+      ],
+      "3624_2016": [
+       32
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "undeterminable",
+    "verdict": "undeterminable",
+    "rule_figure_m": null,
+    "figure_including_column_m": 5.025,
+    "figure_excluding_column_m": -0.912,
+    "pages": {
+     "year_t": [
+      36,
+      32,
+      16
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   15,
+   16,
+   32,
+   36
+  ],
+  "decision": "X7 and Y8 undeterminable: no year t-1 table exists and the 2016 report prints no older-years column. The adopted 5.025 includes the column (the column carries the whole pre-2011 gross balance, 393,088 in all with the other years); excluding it would give -0.912. The construction could not be settled, so the record is low confidence and its adopted figure stands."
+ },
+ "4020_2016": {
+  "part": "A",
+  "column_label": "2010 and prior GBP '000 614,673",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 25.303,
+  "adopted_figure_m": 25.303,
+  "adopted_figure_gbp_m": 25.303,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 25.303,
+  "figure_with_column_m": 25.303,
+  "figure_without_column_m": 18.492,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X8",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 25.303,
+    "figure_including_column_m": 25.303,
+    "figure_excluding_column_m": 18.492,
+    "pages": {
+     "year_t": [
+      42
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       44
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y1",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 25.303,
+    "figure_including_column_m": 25.303,
+    "figure_excluding_column_m": 18.492,
+    "pages": {
+     "year_t": [
+      42,
+      43,
+      41
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   41,
+   42,
+   43
+  ],
+  "decision": "X and Y agree: calendar_year, rule figure 25.303 (with the column), the adopted figure 25.303."
+ },
+ "4020_2018": {
+  "part": "A",
+  "column_label": "2010 & prior GBP '000 604,240",
+  "construction": "calendar_year",
+  "last_step_like_for_like": true,
+  "rule_includes_column": true,
+  "rule_figure_m": 43.863,
+  "adopted_figure_m": 43.863,
+  "adopted_figure_gbp_m": 43.863,
+  "report_currency": "GBP",
+  "adopted_includes_column": true,
+  "figure_before_this_register_m": 43.863,
+  "figure_with_column_m": 43.863,
+  "figure_without_column_m": 54.639,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 43.863,
+    "figure_including_column_m": 43.863,
+    "figure_excluding_column_m": 54.639,
+    "pages": {
+     "year_t": [
+      38,
+      39,
+      40
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "calendar_year",
+    "verdict": "consistent",
+    "rule_figure_m": 43.863,
+    "figure_including_column_m": 43.863,
+    "figure_excluding_column_m": 54.639,
+    "pages": {
+     "year_t": [
+      37,
+      38,
+      39,
+      40
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   37,
+   38,
+   39,
+   40
+  ],
+  "decision": "X and Y agree: calendar_year, rule figure 43.863 (with the column), the adopted figure 43.863."
+ },
+ "4242_2021": {
+  "part": "B",
+  "column_label": [
+   2015
+  ],
+  "construction": "development_age",
+  "last_step_like_for_like": false,
+  "rule_includes_column": false,
+  "rule_figure_m": 9.493,
+  "adopted_figure_m": 9.493,
+  "adopted_figure_gbp_m": 7.031852,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 9.493,
+  "figure_with_column_m": -11.496,
+  "figure_without_column_m": 9.493,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X1",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": 9.493,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 9.493,
+    "pages": {
+     "year_t": [
+      46,
+      23,
+      33
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y2",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": 9.493,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 9.493,
+    "pages": {
+     "year_t": [
+      23,
+      33,
+      46
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": 9.493,
+    "figure_including_column_m": -11.496,
+    "figure_excluding_column_m": 9.493,
+    "pages": {
+     "year_t": [
+      46
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       46
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": 9.493,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 9.493,
+    "pages": {
+     "year_t": [
+      46
+     ],
+     "other_reports": {
+      "2020_report": [
+       46,
+       47
+      ]
+     }
+    },
+    "figure_including_note": {
+     "printed_last_step_age9_to_age10": -11.496,
+     "anchor_diagonal_age5_to_age6": 9.387
+    }
+   }
+  ],
+  "pages": [
+   23,
+   33,
+   46
+  ],
+  "decision": "X and Y agree: development_age, rule figure 9.493 (without the column), the adopted figure 9.493."
+ },
+ "4242_2023": {
+  "part": "B",
+  "column_label": [
+   2017
+  ],
+  "construction": "development_age",
+  "last_step_like_for_like": false,
+  "rule_includes_column": false,
+  "rule_figure_m": -7.19,
+  "adopted_figure_m": -7.19,
+  "adopted_figure_gbp_m": -5.642313,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -7.19,
+  "figure_with_column_m": -38.238,
+  "figure_without_column_m": -7.19,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -7.19,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -7.19,
+    "pages": {
+     "year_t": [
+      45,
+      32,
+      44
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "development_age",
+    "verdict": "consistent",
+    "rule_figure_m": -7.19,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -7.19,
+    "pages": {
+     "year_t": [
+      45,
+      44
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [
+   {
+    "reader": "Z1",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": -7.19,
+    "figure_including_column_m": -38.238,
+    "figure_excluding_column_m": -7.19,
+    "pages": {
+     "year_t": [
+      45
+     ],
+     "other_reports": {
+      "year_t_minus_1": [
+       44
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Z2",
+    "arm": "Z",
+    "construction": "development_age",
+    "confidence": "high",
+    "rule_figure_m": -7.19,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -7.19,
+    "pages": {
+     "year_t": [
+      45
+     ],
+     "other_reports": {
+      "2022_report": [
+       44
+      ],
+      "2021_report_context": [
+       46
+      ]
+     }
+    },
+    "figure_including_note": {
+     "printed_last_step_age8_to_age9": -38.238,
+     "anchor_diagonal_age5_to_age6": -17.322
+    }
+   }
+  ],
+  "pages": [
+   32,
+   44,
+   45
+  ],
+  "decision": "X and Y agree: development_age, rule figure -7.19 (without the column), the adopted figure -7.19."
+ },
+ "4444_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -13.896,
+  "adopted_figure_m": -13.896,
+  "adopted_figure_gbp_m": -13.896,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -13.896,
+  "figure_with_column_m": null,
+  "figure_without_column_m": -13.896,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X2",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -13.896,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -13.896,
+    "pages": {
+     "year_t": [
+      24,
+      31
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y3",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -13.896,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -13.896,
+    "pages": {
+     "year_t": [
+      24,
+      14
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   14,
+   24,
+   31
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -13.896 (without the column), the adopted figure -13.896."
+ },
+ "4472_2015": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": -24.3,
+  "adopted_figure_m": -24.3,
+  "adopted_figure_gbp_m": -16.479045,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": -24.3,
+  "figure_with_column_m": -24.3,
+  "figure_without_column_m": -24.3,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X3",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -24.3,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": -24.3,
+    "pages": {
+     "year_t": [
+      6,
+      17,
+      40
+     ],
+     "other_reports": {
+      "4472_2016": [
+       41
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y4",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": -24.3,
+    "figure_including_column_m": -24.3,
+    "figure_excluding_column_m": -24.3,
+    "pages": {
+     "year_t": [
+      40,
+      18,
+      41
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   6,
+   17,
+   18,
+   40,
+   41
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure -24.3 (without the column), the adopted figure -24.3."
+ },
+ "4472_2016": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 26.1,
+  "adopted_figure_m": 26.1,
+  "adopted_figure_gbp_m": 21.155873,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 26.1,
+  "figure_with_column_m": 26.1,
+  "figure_without_column_m": 26.1,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X4",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 26.1,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 26.1,
+    "pages": {
+     "year_t": [
+      41,
+      17
+     ],
+     "other_reports": {
+      "4472_2015": [
+       40
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y5",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 26.1,
+    "figure_including_column_m": 26.1,
+    "figure_excluding_column_m": 26.1,
+    "pages": {
+     "year_t": [
+      41,
+      17
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   17,
+   41
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 26.1 (without the column), the adopted figure 26.1."
+ },
+ "4472_2018": {
+  "part": "B",
+  "column_label": [
+   2010
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 87.9,
+  "adopted_figure_m": 87.9,
+  "adopted_figure_gbp_m": 68.870955,
+  "report_currency": "USD",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 87.9,
+  "figure_with_column_m": 87.9,
+  "figure_without_column_m": 87.9,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X5",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 87.9,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 87.9,
+    "pages": {
+     "year_t": [
+      42,
+      19
+     ],
+     "other_reports": {}
+    }
+   },
+   {
+    "reader": "Y6",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 87.9,
+    "figure_including_column_m": 87.9,
+    "figure_excluding_column_m": 87.9,
+    "pages": {
+     "year_t": [
+      19,
+      37,
+      42
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   19,
+   37,
+   42
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 87.9 (without the column), the adopted figure 87.9."
+ },
+ "5678_2016": {
+  "part": "B",
+  "column_label": [
+   2011
+  ],
+  "construction": "no_own_development",
+  "last_step_like_for_like": null,
+  "rule_includes_column": false,
+  "rule_figure_m": 0.861,
+  "adopted_figure_m": 0.861,
+  "adopted_figure_gbp_m": 0.861,
+  "report_currency": "GBP",
+  "adopted_includes_column": false,
+  "figure_before_this_register_m": 0.861,
+  "figure_with_column_m": 0.861,
+  "figure_without_column_m": 0.861,
+  "difference_m": 0.0,
+  "consistent": true,
+  "agrees_within_tolerance": true,
+  "confidence": "high",
+  "readers": [
+   {
+    "reader": "X7",
+    "arm": "X",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 0.861,
+    "figure_including_column_m": null,
+    "figure_excluding_column_m": 0.861,
+    "pages": {
+     "year_t": [
+      41,
+      17
+     ],
+     "other_reports": {
+      "5678_2015": [
+       41
+      ]
+     }
+    }
+   },
+   {
+    "reader": "Y8",
+    "arm": "Y",
+    "construction": "no_own_development",
+    "verdict": "consistent",
+    "rule_figure_m": 0.861,
+    "figure_including_column_m": 0.861,
+    "figure_excluding_column_m": 0.861,
+    "pages": {
+     "year_t": [
+      41,
+      17
+     ],
+     "other_reports": {}
+    }
+   }
+  ],
+  "tie_break_readers": [],
+  "pages": [
+   17,
+   41
+  ],
+  "decision": "X and Y agree: no_own_development, rule figure 0.861 (without the column), the adopted figure 0.861."
+ }
+}
