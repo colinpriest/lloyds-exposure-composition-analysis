@@ -15,7 +15,9 @@ named in rules.md: rule 5b (23 October, after the round-7 readings U1 and U2 of 
 take-on clause, take_on_table_unreconciled (23 October, after the readings of 3500/2023, and applied to 3500/2022 after
 review 8); and rule 1's exact control clause (23 October, after review 8: the year t-1 control ties within 5%, or within
 10% when the same basis gap explains both years and the year t miss is at least three times the control's), re-applied to
-every record, which changed no outcome but 4242/2022's (it moved from rule 1 to rule 3). Review 8 also added the rule-6
+every record, which changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch; 4242/2022 moved from
+rule 1 to rule 3 on review 8's separate decision to set aside its merged '2016 & Prior' column, not by the clause, whose
+control ties at -1.1% under either reading). Review 8 also added the rule-6
 clause derived_correction (1274/2016, whose corrected figure is the session's derivation from cells both readers quote).
 
 The register holds three buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
@@ -90,7 +92,9 @@ RULE = (
     "printed base does not give a figure that reconciles either. Rules 1 to 7 were written before the adjudication; "
     "rule 5b, rule 6's take-on clause (take_on_table_unreconciled) and rule 1's exact control clause were added after "
     "particular readings or review 8 (rules.md names them): the control clause was made exact on 23 October 2026 after "
-    "review 8 and re-applied to every record, changing no outcome but 4242/2022's, which moved from rule 1 to rule 3. "
+    "review 8 and re-applied to every record, changing no outcome (780/2016 and 4747/2024 meet it only through its 10% "
+    "branch); 4242/2022 moved from rule 1 to rule 3 on review 8's separate decision to set aside the merged "
+    "'2016 & Prior' column, not by the clause (its control, -1.1%, ties under either reading). "
     "The loader (run_analysis.py) removes an 'excluded' "
     "entry's record at the unusable-severity step with the tag RESTATED_BASE_TABLE and counts it "
     "(restated_base_excluded); under outcome 'precedence_672' the register is not read and nothing changes. "
@@ -234,7 +238,9 @@ HISTORY_RESTATED = {
                  "common factor; 1.4-2.1% of R 631.1m), and the early rows were rebuilt beyond the stated "
                  "retranslation (P8: 2016 first year 88,722 against 72,750); p44 states only the closing-rate "
                  "retranslation (P8, Q1; Q1 attributes the moves to it). Incurred -8.1% with UY <= 2012 outside the "
-                 "table (control +2.1%); outstanding ties"),
+                 "table (control +2.1%); outstanding ties. Rule 1 does not apply: incurred is within its 10%, and the "
+                 "paid -15.7% (Q1) is a cross-report proxy because the 2023 table prints no end-2022 payments (P8, "
+                 "Q1)"),
     "780_2017": (["unexplained_history_move", "label_disagreement"],
                  "the 2017 table's end-2016 estimates are 165.6m (24.6%) above the 2016 report's, mirrored by a "
                  "-170.4m fall in the '2010 & prior' balance to pay, with only the generic reconversion sentence (p30) "
@@ -261,10 +267,14 @@ HISTORY_RESTATED = {
     "1910_2018": (["unexplained_history_move"],
                   "the 2016 column was lowered (end-2017 73.0 against 76.5, ratio 0.954) while the other years rose "
                   "2.5-5.6% by the stated retranslation, unexplained (Q7: 'not explained anywhere'; P8): 6.8m, 2.1% of "
-                  "R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%)"),
+                  "R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%). "
+                  "Rule 1 does not apply: the paid +12.4% (P8; +6.3% with the 2017 paid retranslated) is a "
+                  "cross-report proxy because the 2018 table prints no end-2017 payments (P8; Q7: not computable)"),
     "1947_2022": (["unexplained_history_move"],
                   "the 2018 column (oldest) is about 14% above the year's retranslation ratio at every age (about 4.3m, "
-                  "3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%)"),
+                  "3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%). Rule 1 does not "
+                  "apply: the paid +20.8% (P2, Q3) is a cross-report proxy because the 2022 table prints no end-2021 "
+                  "payments (Q3)"),
     "1967_2017": (["unexplained_history_move"],
                   "the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no "
                   "retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R "
@@ -306,7 +316,8 @@ HISTORY_RESTATED = {
     "2001_2017": (["unexplained_history_move"],
                   "the end-2016 history is re-allocated across 2013 (+11.9%), 2014 (+9.7%) and 2015 (-21.1%) beyond the "
                   "stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control "
-                  "+3.1%)"),
+                  "+3.1%). Rule 1 does not apply: the paid -13.1% (P8) is a cross-report proxy because the 2017 table "
+                  "prints no end-2016 payments (P8; Q7: not computable)"),
     "2232_2017": (["label_disagreement"],
                   "the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells "
                   "were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows "
@@ -408,7 +419,9 @@ HISTORY_RESTATED = {
                   "the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R "
                   "183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into "
                   "Syndicate 1955; Q4: unexplained). Incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4): within "
-                  "rule 1's 10%. P3 valid, Q4 restated_base"),
+                  "rule 1's 10%. The paid -72.7% (Q4) is a cross-report proxy because the 2018 table prints no "
+                  "end-2017 payments, only an end-2018 total rolled from the 2017 report's (P3, Q4), and that total's "
+                  "scope shrank with the 2014 column (Q4). P3 valid, Q4 restated_base"),
 }
 
 #: rule 5b (decision of the Claude analysis session, 23 October 2026): the take-on, its share of R and what the readings

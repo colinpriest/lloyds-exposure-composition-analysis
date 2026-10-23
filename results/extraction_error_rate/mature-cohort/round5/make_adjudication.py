@@ -245,8 +245,10 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "tying exactly; year t -81.9%, 11.4 times; neither reader names its basis gap, which the session reads as the "
          "table's own underwriting-year basis, the place the clause leans on judgement). Under the exact clause "
          "2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 and stay on the least-certain "
-         "list, each entry saying why. Re-applying the clause to every record changed no outcome but 4242/2022's, which "
-         "moved from rule 1 to rule 3 on the review's decision.",
+         "list, each entry saying why. Re-applying the clause to every record changed no outcome: 780/2016 and "
+         "4747/2024 meet it only through its 10% branch, and 4242/2022's move from rule 1 to rule 3 did not come from "
+         "the clause (its control, -1.1%, ties under either reading) but from review 8's separate decision to set aside "
+         "the merged '2016 & Prior' column.",
          "- Rule 1 does not reach a year t-1 column: 2015/2022's table restates only its UY2021 column (outside M) and "
          "stands.", ""]
 counts = {}

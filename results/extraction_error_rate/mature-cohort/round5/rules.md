@@ -24,8 +24,10 @@ labels), a third reading decides.
    (control +9.5% from the '2010 & prior' years outside the cells, the same gap in both years; year t paid identity +80%,
    8.4 times the control's) and 4747/2024 (control -7.2%, outstanding tying exactly; year t -81.9%, 11.4 times) are met;
    2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 are not, and stay on the least-certain list (their entries
-   in the register say why). Re-applying the clause to every record changed no outcome but 4242/2022's, which moved from rule 1 to
-   rule 3 on the review's decision.
+   in the register say why). Re-applying the clause to every record changed no outcome. 780/2016 and 4747/2024 meet it
+   only through its 10% branch (2689/2023 and 6134/2022 tie within 5%). 4242/2022's move from rule 1 to rule 3 did not
+   come from the clause: its control (-1.1%) ties under the old and the exact clause alike, and it moved on review 8's
+   separate decision to set aside the merged '2016 & Prior' column.
 2. **Exchange rule B: leaves the primary.** The table mixes exchange bases (history not retranslated while the year end
    is) and the year's exchange effect on gross reserves is at least 5% of R (the author's rule B). Expected: 3000/2022.
 3. **Corrected to the previous report's base.** As in 1, but the year t-1 report's printed cells, used as the base,

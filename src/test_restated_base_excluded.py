@@ -21,6 +21,7 @@ import copy
 import io
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -51,6 +52,19 @@ def adj_keys_of_rule_6_alone(adj):
 def _register():
     with io.open(str(rb.REGISTER), encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def _archived(reader, key):
+    """A record's reading as archived verbatim under round5/readings/ (not the register's copy)."""
+    with io.open(os.path.join(HERE, rb.ROUND5, "readings", reader + ".json"), encoding="utf-8") as fh:
+        return json.load(fh)[key]
+
+
+def _pct(value):
+    """A reading's percentage: a number, or the signed number a diff_pct string leads with ('+79.8 (294.7 vs ...')."""
+    if isinstance(value, (int, float)):
+        return float(value)
+    return float(re.match(r"\s*([+-]?\d+(?:\.\d+)?)", value).group(1))
 
 
 @pytest.fixture(scope="module")
@@ -526,8 +540,9 @@ def _round5_text(name):
 def test_rule_1s_control_clause_is_exact_in_the_rules_the_register_and_the_adjudication():
     """rules.md, the register's _rule text and the adjudication state the exact clause (within 5%, or within 10% when the
     same basis gap explains both years and the year t miss is at least three times the control's), say it was made exact
-    on 23 October after review 8 and changed no outcome but 4242/2022's, and name what was added after the rules were
-    written."""
+    on 23 October after review 8 and changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch;
+    4242/2022 moved to rule 3 on review 8's separate decision, not by the clause), and name what was added after the
+    rules were written. No text may say the clause changed 4242/2022's outcome (final review 2, R4 F1)."""
     rules, adj = _round5_text("rules.md"), _round5_text("adjudication.md")
     clause = "within 5%, or within 10% when the same basis gap explains"
     flat = " ".join(rules.split())
@@ -536,14 +551,28 @@ def test_rule_1s_control_clause_is_exact_in_the_rules_the_register_and_the_adjud
         assert "rule 5b" in text and "take-on clause" in text and "exact control clause" in text
     assert "ties when it is " + clause in flat and "at least three times the control's" in flat
     assert "made exact on 23 October 2026, after review 8, and re-applied to every record" in flat
-    assert "changed no outcome but 4242/2022's" in flat
+    assert "Re-applying the clause to every record changed no outcome." in flat
+    assert "780/2016 and 4747/2024 meet it only through its 10% branch" in flat
+    assert "4242/2022's move from rule 1 to rule 3 did not come from the clause" in flat
     assert "Expected: 2689/2023, 4747/2024, 6134/2022, 780/2016" in flat
     reg_rule = _register()["_rule"]
     for needle in ("within 10% when the same basis gap explains both years", "at least three times the control's",
                    "Rules 1 to 7 were written before the adjudication", "rule 5b, rule 6's take-on clause",
-                   "rule 1's exact control clause", "changing no outcome but 4242/2022's"):
+                   "rule 1's exact control clause", "changing no outcome (780/2016 and 4747/2024 meet it only through "
+                   "its 10% branch)", "separate decision to set aside the merged '2016 & Prior' column, not by the "
+                   "clause"):
         assert needle in reg_rule, needle
     doc = " ".join(rb.__doc__.split())
+    assert "changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch" in doc
+    assert "not by the clause" in doc
+    # the adjudication's rule-1 bullet says the same
+    adj_flat = " ".join(adj.split())
+    assert "changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch" in adj_flat
+    assert "did not come from the clause" in adj_flat
+    # the retracted claim (the clause moved 4242/2022) is gone from every text that stated it
+    for name, text in (("rules.md", flat), ("adjudication.md", adj_flat), ("_rule", " ".join(reg_rule.split())),
+                       ("docstring", doc)):
+        assert "no outcome but 4242" not in text, name
     assert "Rules 1 to 7 were written before the adjudication" in doc and "rule 5b" in doc
     assert "take_on_table_unreconciled" in doc and "rule 1's exact control clause" in doc
     # the adjudication's third line says the same (the sentence wraps in the generator, so read it flat)
@@ -552,6 +581,8 @@ def test_rule_1s_control_clause_is_exact_in_the_rules_the_register_and_the_adjud
     with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as fh:
         prov = " ".join(fh.read().split())
     assert "Rules 1 to 7 were written before the adjudication" in prov and "exact control clause" in prov
+    assert "Re-applying it changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch" in prov
+    assert "not by the clause" in prov and "no outcome but 4242" not in prov
 
 
 def test_the_two_rule_1_records_that_need_the_ten_percent_clause_record_the_control_miss_its_basis_and_the_ratio():
@@ -562,8 +593,16 @@ def test_the_two_rule_1_records_that_need_the_ten_percent_clause_record_the_cont
     c4747 = reg["excluded"]["4747_2024"]["conditions"]["control_ties"]["facts"]
     for needle in ("control miss -7.2%", "38,860", "Basis reason", "-81.9%", "11.4 times", "within 10%", "at least three times"):
         assert needle in c4747, needle
-    # the ratios are the readings' own: 79.8 / 9.5 and 81.9 / 7.2
-    assert round(79.8 / 9.5, 1) == 8.4 and round(81.9 / 7.2, 1) == 11.4 and 79.8 >= 3 * 9.5 and 81.9 >= 3 * 7.2
+    # the ratios are the readings' own: the year t miss over the control's, from the archived readings' diff_pct fields
+    for key, facts, year_t, control in (
+            ("780_2016", c780, _archived("P6", "780_2016")["paid_test"]["diff_pct"],
+             _archived("P6", "780_2016")["incurred_test"]["prev_diff_pct"]),
+            ("4747_2024", c4747, _archived("P2", "4747_2024")["incurred_test"]["diff_pct"],
+             _archived("P2", "4747_2024")["incurred_test"]["control_t_minus_1"]["diff_pct"])):
+        t, c = _pct(year_t), _pct(control)
+        assert "%+.1f%%" % t in facts and "%+.1f%%" % c in facts, key
+        assert "%.1f times" % (abs(t) / abs(c)) in facts, key
+        assert 5 < abs(c) <= 10 and abs(t) >= 3 * abs(c), key
     # the other two keep the plain 5% clause
     for k in ("2689_2023", "6134_2022"):
         assert "within 5%; met" in reg["excluded"][k]["conditions"]["control_ties"]["facts"], k
@@ -584,9 +623,60 @@ def test_the_records_rule_1_does_not_reach_under_the_exact_clause_say_why_and_st
 
 
 def test_the_ratios_the_five_entries_state_are_the_readings_own():
-    """The multiples the entries quote follow from the percentages in their readings (the control's against the year t's)."""
-    assert round(10.5 / 7.4, 1) == 1.4 and round(20.1 / 7.4, 1) == 2.7 and round(3 * 7.4, 1) == 22.2
-    assert round(59.5 / 38.3, 1) == 1.6 and round(8.7 / 6.9, 1) == 1.3
+    """The multiples the entries quote follow from the percentages in their archived readings (the year t miss against
+    the control's), read from the readings' diff_pct fields; 2232/2017's control has no diff_pct field, so it is read
+    from the end of P3's prev_control working, where the reader states it."""
+    reg = _register()["history_restated"]
+    p3 = _archived("P3", "2232_2017")
+    inc_t, paid_t = _pct(p3["incurred_test"]["diff_pct"]), _pct(p3["paid_test"]["diff_pct"])
+    ctl = _pct(re.search(r"([+-]\d+(?:\.\d+)?)%\s*$", p3["incurred_test"]["prev_control"]).group(1))
+    f = reg["2232_2017"]["facts"]
+    for needle in ("%+.1f%%" % ctl, "%.1f%%" % (3 * ctl), "%.1f times it" % (abs(inc_t) / ctl),
+                   "%.1f times it" % (abs(paid_t) / ctl), "incurred %+.1f%%" % inc_t, "paid %+.1f%%" % paid_t):
+        assert needle in f, ("2232_2017", needle)
+    assert abs(inc_t) < 3 * ctl and abs(paid_t) < 3 * ctl
+    p6 = _archived("P6", "2488_2016")["incurred_test"]
+    t, c = _pct(p6["diff_pct"]), _pct(p6["prev_diff_pct"])
+    assert "%+.1f%%" % c in reg["2488_2016"]["facts"] and "%.1f times" % (t / c) in reg["2488_2016"]["facts"]
+    p1 = _archived("P1", "382_2021")["incurred_test"]
+    t, c = _pct(p1["year_t"]["diff_pct"]), _pct(p1["year_t_minus_1_control"]["diff_pct"])
+    assert "%+.1f%%" % c in reg["382_2021"]["facts"] and "%+.1f%%" % t in reg["382_2021"]["facts"]
+    assert "%.1f times" % (t / c) in reg["382_2021"]["facts"]
+
+
+@pytest.mark.parametrize("key,reader,year", [
+    ("4444_2017", "Z6", 2017), ("382_2023", "Q1", 2023), ("1947_2022", "P2", 2022), ("2001_2017", "P8", 2017),
+    ("1910_2018", "P8", 2018), ("6118_2018", "Q4", 2018),
+])
+def test_a_cross_report_paid_proxy_miss_is_set_aside_with_its_reason(key, reader, year):
+    """A year t paid miss over 10% that rests on a cross-report proxy (the year t table prints no end-(t-1) payments, so
+    the base comes from the year t-1 report) is set aside, and the entry says so with the reading's own figure (final
+    review 2, R4 F8: only 4444/2017's and 1967/2017's entries said so)."""
+    f = _register()["history_restated"][key]["facts"]
+    paid = _pct(_archived(reader, key)["paid_test"]["diff_pct"])
+    assert abs(paid) > 10
+    assert "paid %+.1f%%" % paid in f, (key, paid)
+    assert "is a cross-report proxy because the %d table prints no end-%d payments" % (year, year - 1) in f, key
+
+
+def test_every_rule_6_entry_states_any_paid_miss_over_ten_percent_its_readings_report():
+    """Generalises the test above: a rule-6 entry (clauses unexplained_history_move or label_disagreement only) whose
+    reading reports a year t paid miss over 10% quotes that figure, so the entry has to say why rule 1 does not take it."""
+    reg = _register()
+    seen = []
+    for key, e in reg["history_restated"].items():
+        if not set(e["clauses"]) <= {"unexplained_history_move", "label_disagreement"}:
+            continue
+        for rd in e["readings"]:
+            pt = rd.get("paid_test")
+            v = pt.get("diff_pct") if isinstance(pt, dict) else None
+            if isinstance(v, str) and not re.match(r"\s*[+-]?\d", v):
+                v = None
+            if v is None or abs(_pct(v)) <= 10:
+                continue
+            seen.append(key)
+            assert "%+.1f%%" % _pct(v) in e["facts"], (key, rd["reader"], v)
+    assert {"382_2023", "1947_2022", "2001_2017", "1910_2018", "6118_2018", "4444_2017"} <= set(seen)
 
 
 def test_3500_2022_joins_the_list_with_the_lpt_placement_conflict_and_the_share_of_r():

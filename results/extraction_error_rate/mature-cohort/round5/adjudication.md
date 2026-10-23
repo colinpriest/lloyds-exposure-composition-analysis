@@ -10,7 +10,7 @@ Review 8 (23 October 2026, same session; the decisions below are those of the Cl
 
 - Validity classes. A 'label' disagreement (rule 6) is one between the classes valid, screen_misread, units_slip and restated_base, undeterminable (the classes `compare_r5.py` uses for 'VERDICTS DIFFER'). A record whose two readings agree on the cells and the tests but not on the class is a label disagreement; one whose readings give different cells, figures or test results is a fact disagreement and went to a third reading (1609/2024, 4444/2017).
 - Rule 6's first clause reads the screen's flag (a year u <= t-2 moved more than 5% beyond the common exchange factor and by more than max(1% of R, 1m)) together with the readings: the move is 'without explanation' when neither reading finds a cause in either filing (a stated retranslation explains a uniform move, not a year-specific one; a misprint in the year t-1 report, a basis change the filing states, an RITC, or a screen misread explains it).
-- Rule 1's control (made exact on 23 October 2026, after review 8, and re-applied to every record). The year t-1 control ties within 5%; or within 10% when the same basis gap explains both years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at least three times the control's. Two of the four rule-1 records need the 10% clause: 780/2016 (control +9.5% from the '2010 & prior' years outside the cells; year t paid identity +79.8%, 8.4 times) and 4747/2024 (control -7.2%, outstanding tying exactly; year t -81.9%, 11.4 times; neither reader names its basis gap, which the session reads as the table's own underwriting-year basis, the place the clause leans on judgement). Under the exact clause 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 and stay on the least-certain list, each entry saying why. Re-applying the clause to every record changed no outcome but 4242/2022's, which moved from rule 1 to rule 3 on the review's decision.
+- Rule 1's control (made exact on 23 October 2026, after review 8, and re-applied to every record). The year t-1 control ties within 5%; or within 10% when the same basis gap explains both years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at least three times the control's. Two of the four rule-1 records need the 10% clause: 780/2016 (control +9.5% from the '2010 & prior' years outside the cells; year t paid identity +79.8%, 8.4 times) and 4747/2024 (control -7.2%, outstanding tying exactly; year t -81.9%, 11.4 times; neither reader names its basis gap, which the session reads as the table's own underwriting-year basis, the place the clause leans on judgement). Under the exact clause 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 and stay on the least-certain list, each entry saying why. Re-applying the clause to every record changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch, and 4242/2022's move from rule 1 to rule 3 did not come from the clause (its control, -1.1%, ties under either reading) but from review 8's separate decision to set aside the merged '2016 & Prior' column.
 - Rule 1 does not reach a year t-1 column: 2015/2022's table restates only its UY2021 column (outside M) and stands.
 
 ## Outcomes
@@ -225,7 +225,7 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 
 - P8 valid, M -7.893, paid None, incurred -8.1
 - Q1 valid, M -7.893, paid -15.7, incurred -8.1
-- Rule 6 (unexplained_history_move): the end-2022 cells of 2016, 2019 and 2020 sit 2.8%, 2.8% and 7.1% above the 2022 report's latest in a year sterling strengthened, against 0.95-0.99 for the other years (10.9m, 8.8m and 13.1m beyond the common factor; 1.4-2.1% of R 631.1m), and the early rows were rebuilt beyond the stated retranslation (P8: 2016 first year 88,722 against 72,750); p44 states only the closing-rate retranslation (P8, Q1; Q1 attributes the moves to it). Incurred -8.1% with UY <= 2012 outside the table (control +2.1%); outstanding ties. Outcome: stays in the primary, listed under history_restated.
+- Rule 6 (unexplained_history_move): the end-2022 cells of 2016, 2019 and 2020 sit 2.8%, 2.8% and 7.1% above the 2022 report's latest in a year sterling strengthened, against 0.95-0.99 for the other years (10.9m, 8.8m and 13.1m beyond the common factor; 1.4-2.1% of R 631.1m), and the early rows were rebuilt beyond the stated retranslation (P8: 2016 first year 88,722 against 72,750); p44 states only the closing-rate retranslation (P8, Q1; Q1 attributes the moves to it). Incurred -8.1% with UY <= 2012 outside the table (control +2.1%); outstanding ties. Rule 1 does not apply: incurred is within its 10%, and the paid -15.7% (Q1) is a cross-report proxy because the 2023 table prints no end-2022 payments (P8, Q1). Outcome: stays in the primary, listed under history_restated.
 
 ### 780_2017 (rule 6: least_certain)
 
@@ -255,13 +255,13 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 
 - P8 valid, M 1.9, paid 12.4, incurred 5.3
 - Q7 valid, M 2.01, paid None, incurred 5.3
-- Rule 6 (unexplained_history_move): the 2016 column was lowered (end-2017 73.0 against 76.5, ratio 0.954) while the other years rose 2.5-5.6% by the stated retranslation, unexplained (Q7: 'not explained anywhere'; P8): 6.8m, 2.1% of R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%). Outcome: stays in the primary, listed under history_restated.
+- Rule 6 (unexplained_history_move): the 2016 column was lowered (end-2017 73.0 against 76.5, ratio 0.954) while the other years rose 2.5-5.6% by the stated retranslation, unexplained (Q7: 'not explained anywhere'; P8): 6.8m, 2.1% of R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%). Rule 1 does not apply: the paid +12.4% (P8; +6.3% with the 2017 paid retranslated) is a cross-report proxy because the 2018 table prints no end-2017 payments (P8; Q7: not computable). Outcome: stays in the primary, listed under history_restated.
 
 ### 1947_2022 (rule 6: least_certain)
 
 - P2 valid, M -14.449, paid 20.8, incurred -0.5
 - Q3 valid, M -14.449, paid 20.8, incurred -0.5
-- Rule 6 (unexplained_history_move): the 2018 column (oldest) is about 14% above the year's retranslation ratio at every age (about 4.3m, 3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%). Outcome: stays in the primary, listed under history_restated.
+- Rule 6 (unexplained_history_move): the 2018 column (oldest) is about 14% above the year's retranslation ratio at every age (about 4.3m, 3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%). Rule 1 does not apply: the paid +20.8% (P2, Q3) is a cross-report proxy because the 2022 table prints no end-2021 payments (Q3). Outcome: stays in the primary, listed under history_restated.
 
 ### 1967_2017 (rule 6: least_certain)
 
@@ -285,7 +285,7 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 
 - P8 valid, M 111.3, paid -13.1, incurred -4.4
 - Q7 valid, M 111.3, paid None, incurred -4.4
-- Rule 6 (unexplained_history_move): the end-2016 history is re-allocated across 2013 (+11.9%), 2014 (+9.7%) and 2015 (-21.1%) beyond the stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control +3.1%). Outcome: stays in the primary, listed under history_restated.
+- Rule 6 (unexplained_history_move): the end-2016 history is re-allocated across 2013 (+11.9%), 2014 (+9.7%) and 2015 (-21.1%) beyond the stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control +3.1%). Rule 1 does not apply: the paid -13.1% (P8) is a cross-report proxy because the 2017 table prints no end-2016 payments (P8; Q7: not computable). Outcome: stays in the primary, listed under history_restated.
 
 ### 2232_2017 (rule 6: least_certain)
 
@@ -353,7 +353,7 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 
 - P3 valid, M 7.579, paid None, incurred -2.0
 - Q4 restated_base, M 7.579, paid -72.7, incurred 9.5
-- Rule 6 (unexplained_history_move, label_disagreement): the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R 183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into Syndicate 1955; Q4: unexplained). Incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4): within rule 1's 10%. P3 valid, Q4 restated_base. Outcome: stays in the primary, listed under history_restated.
+- Rule 6 (unexplained_history_move, label_disagreement): the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R 183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into Syndicate 1955; Q4: unexplained). Incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4): within rule 1's 10%. The paid -72.7% (Q4) is a cross-report proxy because the 2018 table prints no end-2017 payments, only an end-2018 total rolled from the 2017 report's (P3, Q4), and that total's scope shrank with the 2014 column (Q4). P3 valid, Q4 restated_base. Outcome: stays in the primary, listed under history_restated.
 
 ## Rule 7: stands
 

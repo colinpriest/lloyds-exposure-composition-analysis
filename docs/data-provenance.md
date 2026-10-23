@@ -172,7 +172,9 @@ applied to 3500/2022 after review 8) and rule 1's exact control clause (after re
   years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at least
   three times the control's. 780/2016 (control +9.5%, year t paid identity +79.8%) and 4747/2024 (control -7.2%, year t
   -81.9%) need the 10% clause; 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 under it and stay
-  listed. Re-applying it changed no outcome but 4242/2022's, which moved to rule 3 on the review's decision.
+  listed. Re-applying it changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch, and 4242/2022
+  moved to rule 3 on the review's separate decision to set aside the merged '2016 & Prior' column, not by the clause (its
+  control, -1.1%, ties under either reading).
 - Rule 2 (the author's rule B): 3000/2022 joins `data/fx_untranslated_excluded.json` ("excluded"; its history is
   retranslated while its end-2021 reserves are not, and the exchange line is 8.0% of R).
 - Rules 3 and 4 (corrections): `data/mature_cohort_figures.json` carries 2232/2020 at +19.331m (the 2019 report's printed
