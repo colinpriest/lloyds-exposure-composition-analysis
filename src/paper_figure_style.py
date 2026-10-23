@@ -78,8 +78,8 @@ def plain_log_ticks(ax):
             axis.set_minor_formatter(NullFormatter())
 
 
-def data_under_legend(fig, ax, legend):
-    """The labels of what `ax` plots that the legend's box touches, in display coordinates: a line of any style that
+def data_under_legend(fig, ax, legend, pad_pt=0.0):
+    """The labels of what `ax` plots that the legend's box, grown by `pad_pt` points on every side, touches: a line of any style that
     passes through the box (a connected series crossing it between its vertices as much as one with a vertex in it), a
     scatter point, a bar and a filled band (fill_between). An empty list is a clear legend. A line or band drawn in a
     blended transform (axhline, axvline) is a reference mark and not counted.
@@ -93,7 +93,9 @@ def data_under_legend(fig, ax, legend):
     fig.canvas.draw()
     # only the part of the legend inside the axes can cover anything: what the axes plots outside its limits is clipped
     # (a legend below the axes, as Figures 2, 3 and 6 have, is over nothing)
-    box = Bbox.intersection(legend.get_window_extent(fig.canvas.get_renderer()), ax.bbox)
+    pad = pad_pt * fig.dpi / 72.0
+    ext = legend.get_window_extent(fig.canvas.get_renderer())
+    box = Bbox.intersection(Bbox.from_extents(ext.x0 - pad, ext.y0 - pad, ext.x1 + pad, ext.y1 + pad), ax.bbox)
     if box is None:
         return []
     hits = []

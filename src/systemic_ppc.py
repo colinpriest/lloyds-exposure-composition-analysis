@@ -80,6 +80,8 @@ def profile_figure(xbin, band, bins_obs, grid, curve):
 
 #: the room made above the data for the legend, in fractions of the vertical span, one step at a time, and the most steps
 LEGEND_HEADROOM_STEP, LEGEND_HEADROOM_STEPS = 0.03, 40
+#: the gap kept between the legend and the nearest mark, in points (a marker is about 5 pt across)
+LEGEND_CLEARANCE_PT = 6.0
 
 
 def make_room_for_legend(fig, ax, legend):
@@ -87,7 +89,7 @@ def make_room_for_legend(fig, ax, legend):
     refuse. At the autoscaled limits the legend sat over the observed series' first point and the segment leaving it,
     which the 23 October 2026 layout check (paper_figure_style.data_under_legend) found."""
     for _ in range(LEGEND_HEADROOM_STEPS + 1):
-        if not PFS.data_under_legend(fig, ax, legend):
+        if not PFS.data_under_legend(fig, ax, legend, pad_pt=LEGEND_CLEARANCE_PT):
             return
         lo, hi = ax.get_ylim()
         ax.set_ylim(lo, hi + LEGEND_HEADROOM_STEP * (hi - lo))

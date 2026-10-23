@@ -131,7 +131,8 @@ def test_the_profiles_legend_is_clear_of_every_line_and_the_band():
     """23 October 2026 (the manuscript's gate CC): the legend entry 'M1 implied rho(R), equal-size pairs' was crossed by
     the observed series' first segment and marker. No line, marker or band is under the legend now."""
     fig, ax = _profile()
-    assert PFS.data_under_legend(fig, ax, ax.get_legend()) == []
+    assert PFS.data_under_legend(fig, ax, ax.get_legend(), pad_pt=SPPC.LEGEND_CLEARANCE_PT) == []
+    assert PFS.data_under_legend(fig, ax, ax.get_legend(), pad_pt=60.0) != [], "the padding is read: a wide one reaches the data"
     assert len(ax.get_legend().get_texts()) == 3, "the band, the observed series and the implied curve"
 
 
