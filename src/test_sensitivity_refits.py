@@ -254,8 +254,8 @@ def test_the_syndicate_control_raises_when_even_the_merged_strata_cannot_supply_
 
 
 def test_the_current_primary_merges_the_third_quartile_for_the_37_syndicate_variant_only():
-    """The 643-record primary: the 37-syndicate variant leaves out 15 syndicates of the third quartile, which holds
-    14 unflagged; the other two variants need no merge."""
+    """The 643-record primary: the any_scan_hit variant (37 syndicates flagged, 36 in the sample) leaves out 15
+    syndicates of the third quartile, which holds 14 unflagged; the other two variants need no merge."""
     S, R, H, yr, syn, ritc = am.load_sample()
     got = {name: CM.strata_record(R, syn, synds) for name, synds in CM.margin_variants().items()}
     assert got["any_scan_hit"]["flagged_per_stratum"] == [2, 8, 15, 11]
@@ -311,10 +311,57 @@ def test_the_margin_record_has_its_variants_two_matched_controls_each_and_readin
                     vc["variant_minus_control_mean"] / vc["control_sd_of_means"])
                 assert vc["chance_outside_range_with_no_effect"] == pytest.approx(2 / 4)
     assert "understates" in out["controls_design"]["record"]["caveat"]
+    # the record control's caveat states the counts of these fits, and the direction their means show (S18)
+    ctl = [c for per in out["controls"]["record"].values() for c in per]
+    var = list(out["variants"].values())
+    cs, cr = [c["n_syndicates"] for c in ctl], [c["n_ritc_kept"] for c in ctl]
+    vs, vr = [v["n_syndicates"] for v in var], [v["n_ritc_kept"] for v in var]
+    cav = out["controls_design"]["record"]["caveat"]
+    assert "keeps %d to %d of the %d syndicates, the variant %d to %d" % (min(cs), max(cs), len(set(syn)), min(vs),
+                                                                         max(vs)) in cav
+    assert "%d to %d RITC records (mean %.1f), the variant %d to %d (mean %.1f)" % (
+        min(cr), max(cr), np.mean(cr), min(vr), max(vr), np.mean(vr)) in cav
+    ritc_word = "fewer" if np.mean(cr) < np.mean(vr) else "more" if np.mean(cr) > np.mean(vr) else "as many"
+    assert "keeps more syndicates and %s RITC records than the variant" % ritc_word in cav
+    assert "keeps more syndicates and %s RITC records than the variant" % ritc_word in out["reading"]
+    # each variant's spec counts the flagged syndicates in the sample, beside the register's count
+    for name, synds in CM.margin_variants().items():
+        assert out["variants"][name]["spec"] == ("the adopted model without the %d syndicates of %s in the sample "
+                                                 "(%d flagged)" % (len(set(synds) & set(syn.tolist())), name,
+                                                                   len(synds)))
+    assert "the 36 syndicates of any_scan_hit in the sample (37 flagged)" in out["variants"]["any_scan_hit"]["spec"]
     assert "2/(n+1)" in out["controls_design"]["min_max_flag_caveat"]
     assert "indication" in out["reading"] and "not proof" in out["reading"]
     assert "lower bound" not in out["reading"] or "HTML" in out["flag_is_a_lower_bound"]
     json.dumps(out)
+
+
+@pytest.mark.parametrize("ctl_ritc,word", [((13, 25), "fewer"), ((27, 30), "more"), ((25, 26), "as many")])
+def test_the_record_control_caveat_reads_its_direction_from_the_fits(ctl_ritc, word):
+    """The caveat's counts and its 'more' or 'fewer' come from the summaries, so a typed direction cannot go stale."""
+    variants = {"a": {"n_syndicates": 82, "n_ritc_kept": 25}, "b": {"n_syndicates": 88, "n_ritc_kept": 26}}
+    record = {"a": [{"n_syndicates": 106, "n_ritc_kept": ctl_ritc[0]}, {"n_syndicates": 115, "n_ritc_kept": ctl_ritc[1]}],
+              "b": [{"n_syndicates": 110, "n_ritc_kept": ctl_ritc[1]}, {"n_syndicates": 112, "n_ritc_kept": ctl_ritc[0]}]}
+    cav, syn_word, ritc_word = CM.record_control_caveat(variants, record, 118)
+    assert (syn_word, ritc_word) == ("more", word)
+    assert "over its 2 draws per variant it keeps 106 to 115 of the 118 syndicates, the variant 82 to 88" in cav
+    assert "%d to %d RITC records (mean %.1f), the variant 25 to 26 (mean 25.5)" % (
+        min(ctl_ritc), max(ctl_ritc), sum(ctl_ritc) / 2.0) in cav
+    assert "so it keeps more syndicates and %s RITC records than the variant" % word in cav
+
+
+def test_the_committed_margin_record_states_the_record_controls_own_counts():
+    """The committed record's caveat and reading are the ones its own fits give (final review 2, S18: the record said
+    the record control keeps more RITC records, 22 to 24 against 27 to 32, when its fits keep 13 to 25 against 25 to
+    26). Pending until the regeneration pass rewrites the record with the fixed writer."""
+    with io.open(os.path.join(HERE, "results", "check_margin_sensitivity_results.json"), encoding="utf-8") as fh:
+        rec = json.load(fh)
+    S, R, H, yr, syn, ritc = am.load_sample()
+    cav, syn_word, ritc_word = CM.record_control_caveat(rec["variants"], rec["controls"]["record"],
+                                                        int(len(np.unique(syn))))
+    assert rec["controls_design"]["record"]["caveat"] == cav
+    assert "keeps %s syndicates and %s RITC records than the variant" % (syn_word, ritc_word) in rec["reading"]
+    assert (syn_word, ritc_word) == ("more", "fewer")
 
 
 def test_the_control_sd_is_the_sample_sd_with_n_minus_1():

@@ -7,15 +7,17 @@ working-sample filings that say so, from the review's pattern scan, each hit rea
 carried), conditional ("a margin may be applied"), contradicting ("no margin ..."), or unclear.
 
 This refits the adopted model (adopted_model.scale_block; nothing changed but which observations are included):
-  * without every syndicate that states a held margin in any year (31 syndicates at the PC rescan of 5 October 2026);
-  * without those and the syndicates whose filings say only that a margin may be applied (35);
-  * without every syndicate the scan hit (37);
+  * without every syndicate that states a held margin in any year (31 syndicates flagged at the PC rescan of
+    5 October 2026; 30 of them in the 643-record primary);
+  * without those and the syndicates whose filings say only that a margin may be applied (35 flagged; 34 in it);
+  * without every syndicate the scan hit (37 flagged; 36 in it);
 and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample, 36% to 40% of the records
 and 39% to 41% of the size proxy, can be told from a margin effect:
   * a record-level control: the same number of records drawn at random, matched on the size proxy's deciles (the
-    opening reserves R). It leaves out the variant's number of records but keeps 106 to 117 of the 118 syndicates
-    (200 draws, measured), where the variant keeps 81 to 87, and 14 to 32 of the 38 RITC records (mean 22 to 24),
-    where the variant keeps 26 to 31;
+    opening reserves R). It leaves out the variant's number of records but keeps many more syndicates than the
+    variant, and fewer RITC records on the 643-record primary (it leaves out RITC records at about their share of
+    the sample, while the flagged syndicates hold fewer than their share of them). The counts are in the results (controls_design.record.caveat,
+    computed from the fits by record_control_caveat), not in this text;
   * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
     on the syndicates' size (their total R, in quartiles; a quartile whose unflagged syndicates cannot supply the
     variant's draws is merged with the adjacent quartile nearer the middle, and the results record which) and, by
@@ -69,7 +71,8 @@ N_DECILES = 10
 #: large: with quintiles the 34-syndicate variant needs 13 syndicates from a stratum holding 10 unflagged ones), and
 #: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's. A quartile
 #: that cannot supply its draws is merged with its neighbour (merge_strata): on the 643-record primary the third
-#: quartile holds 14 unflagged syndicates against the 37-syndicate variant's 15
+#: quartile holds 14 unflagged syndicates against the 15 the any_scan_hit variant leaves out of it (the variant's 37
+#: flagged syndicates, 36 of them in the sample)
 N_SYNDICATE_STRATA = 4
 MATCH_TOLERANCE = 0.10
 #: and on the RITC records left out, within this many of the variant's. Measured over 100 draws (tries per accepted
@@ -176,7 +179,8 @@ def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE
     syndicates the variant keeps, in the same number per stratum of total R as `left_syndicates`, and accepted only
     if the records left out and their share of R are within `tol` of the variant's. The n strata stand where each
     holds at least as many unflagged syndicates as the variant leaves out of it. Where one does not (the 643-record
-    primary's 37-syndicate variant leaves out 15 syndicates of the third quartile, which holds 14 unflagged), merge_strata
+    primary's any_scan_hit variant, 36 syndicates in the sample of the 37 flagged, leaves out 15 syndicates of the third
+    quartile, which holds 14 unflagged), merge_strata
     merges it with the adjacent stratum nearer the middle of the size range, repeating until every group suffices, and
     the draws are matched on the merged groups; if even all the strata together cannot supply the draws it raises
     ValueError. strata_record gives the groups and the counts for the results. The draws are cheap (no fit), so
@@ -271,11 +275,42 @@ def versus_control(value, spread):
             "chance_outside_range_with_no_effect": 2.0 / (n + 1)}
 
 
-def assemble(variants, controls, headline, syndicates, n_control, n_sample, matching=None):
+def _more_or_fewer(a, b):
+    """'more', 'fewer' or 'as many': the mean of `a` against the mean of `b`."""
+    ma, mb = float(np.mean(a)), float(np.mean(b))
+    return "more" if ma > mb else "fewer" if ma < mb else "as many"
+
+
+def record_control_caveat(variants, record_controls, n_syndicates_sample=None):
+    """The record-level control's caveat, from the fits it describes: the syndicates and RITC records the controls keep
+    against the variants', with the direction of each read from their means (final review 2, S18: a typed caveat said
+    the control keeps more RITC records when the record shows it keeps fewer). Returns (caveat, syndicates word, RITC
+    word) for the reading."""
+    var_syn = [v["n_syndicates"] for v in variants.values()]
+    var_ritc = [v["n_ritc_kept"] for v in variants.values()]
+    ctl = [c for per in record_controls.values() for c in per]
+    ctl_syn = [c["n_syndicates"] for c in ctl]
+    ctl_ritc = [c["n_ritc_kept"] for c in ctl]
+    n_draws = sorted({len(per) for per in record_controls.values()})
+    syn_word, ritc_word = _more_or_fewer(ctl_syn, var_syn), _more_or_fewer(ctl_ritc, var_ritc)
+    of = "" if n_syndicates_sample is None else " of the %d" % n_syndicates_sample
+    caveat = ("it leaves out records drawn at random, the variant whole syndicates: over its %s draws per variant it "
+              "keeps %d to %d%s syndicates, the variant %d to %d, and %d to %d RITC records (mean %.1f), the variant "
+              "%d to %d (mean %.1f); so it keeps %s syndicates and %s RITC records than the variant, and it "
+              "understates the spread a syndicate-level exclusion of the same size would show"
+              % ("/".join(str(n) for n in n_draws), min(ctl_syn), max(ctl_syn), of, min(var_syn), max(var_syn),
+                 min(ctl_ritc), max(ctl_ritc), float(np.mean(ctl_ritc)), min(var_ritc), max(var_ritc),
+                 float(np.mean(var_ritc)), syn_word, ritc_word))
+    return caveat, syn_word, ritc_word
+
+
+def assemble(variants, controls, headline, syndicates, n_control, n_sample, matching=None, n_syndicates_sample=None):
     """The results record from the fitted summaries (separated from the fitting so its form can be tested).
     `controls` is {kind: {variant: [control summaries]}} for the kinds in CONTROL_KINDS; `matching` is the whole-
     syndicate control's rejection record, {variant: {...}}."""
     spread = {kind: {name: control_spread(cs) for name, cs in per.items()} for kind, per in controls.items()}
+    record_caveat, syn_word, ritc_word = record_control_caveat(variants, controls.get("record", {}),
+                                                               n_syndicates_sample)
     reading = {}
     for name, v in variants.items():
         reading[name] = {}
@@ -303,10 +338,7 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
         "controls_design": {
             "n_draws_each": int(n_control), "seed": SEED,
             "record": {"matched_on": "the deciles of the opening reserves R (the size proxy), per variant",
-                       "caveat": ("it leaves out records drawn at random, the variant whole syndicates: it keeps "
-                                  "106 to 117 of the 118 syndicates, the variant 81 to 87, and on average 22 to 24 "
-                                  "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
-                                  "understates the spread a syndicate-level exclusion of the same size would show")},
+                       "caveat": record_caveat},
             "syndicate": {"matched_on": ("quartiles of the syndicates' total R (adjacent quartiles merged where one "
                                          "cannot supply the unflagged syndicates the variant's draws need: "
                                          "per_variant[...]['strata'] records the groups and the counts), then by "
@@ -336,8 +368,9 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
         "reading": ("each variant against its two matched controls gives an indication of whether stated margins "
                     "move the fitted parameters beyond what the loss of sample does; it is not proof of no effect, "
                     "because the flag is a lower bound, and a small shift does not show there is none. The "
-                    "whole-syndicate control is the like-for-like comparator; the record-level control keeps more "
-                    "syndicates and more RITC records than the variant, so it understates the spread"),
+                    "whole-syndicate control is the like-for-like comparator; the record-level control keeps %s "
+                    "syndicates and %s RITC records than the variant (controls_design.record.caveat), so it "
+                    "understates the spread" % (syn_word, ritc_word)),
     }
 
 
@@ -358,7 +391,8 @@ def run(n_control=N_CONTROL, fit_fn=fit):
     for name, synds in sets.items():
         keep = ~np.isin(syn, synds)
         variants[name] = summarise(fit_fn(keep, name), keep, syn, name,
-                                   "the adopted model without the %d syndicates of %s" % (len(synds), name),
+                                   "the adopted model without the %d syndicates of %s in the sample (%d flagged)"
+                                   % (int(np.isin(np.unique(syn), synds).sum()), name, len(synds)),
                                    R, ritc)
     controls = {kind: {} for kind in CONTROL_KINDS}
     matching = {}
@@ -383,7 +417,8 @@ def run(n_control=N_CONTROL, fit_fn=fit):
                         ("records drawn at random, on size decile" if kind == "record"
                          else "whole syndicates drawn at random, on size, records and share of R", name))
                 controls[kind][name].append(summarise(fit_fn(keep, label), keep, syn, label, spec, R, ritc))
-    return assemble(variants, controls, headline_full_precision(), sets, n_control, len(S), matching)
+    return assemble(variants, controls, headline_full_precision(), sets, n_control, len(S), matching,
+                    n_syndicates_sample=int(len(np.unique(syn))))
 
 
 def main(argv=None):
