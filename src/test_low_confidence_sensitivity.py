@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """The least-certain-records sensitivity (round 2 of the filing readings, 23 October 2026).
 
-  * the records are read from the two registers, never typed: the six older-years columns marked low_confidence in
-    data/aggregated_column_review.json and the four exchange lines marked undeterminable_kept in
-    data/fx_untranslated_excluded.json; changing a register changes the set;
+  * the records are read from the registers, never typed: the six older-years columns marked low_confidence in
+    data/aggregated_column_review.json, the four exchange lines marked undeterminable_kept in
+    data/fx_untranslated_excluded.json and the restated histories rule 6 of the round-5 decision rules lists under
+    history_restated in data/restated_base_excluded.json; changing a register changes the set;
   * every one is a record of the primary working sample, and a key outside it is refused (sample_scope.refit_without);
   * the script is in the manifest after the vignette record it checks against, and declares its output;
   * the committed record (DEFERRED-TO-REFIT: written by the recorded pass).
@@ -33,6 +34,43 @@ def _registers():
     return SS.load_json(LC.COLUMN_REGISTER), SS.load_json(LC.FX_REGISTER)
 
 
+def _registers3():
+    return _registers() + (SS.load_json(LC.RESTATED_REGISTER),)
+
+
+#: the 25 records rule 6 of the round-5 decision rules lists (decision of the Claude analysis session, 23 October 2026)
+RESTATED = ["382_2021", "382_2022", "382_2023", "780_2017", "1176_2019", "1686_2022", "1729_2023", "1910_2018",
+            "1947_2022", "1967_2017", "1967_2018", "2001_2016", "2001_2017", "2232_2017", "2232_2019", "2468_2019",
+            "2468_2020", "2488_2016", "3000_2016", "4020_2018", "4141_2022", "4242_2017", "4444_2017", "5000_2023",
+            "6118_2018"]
+
+
+def test_the_least_certain_set_adds_the_restated_histories_from_their_register():
+    cols, fx, rs = _registers3()
+    named, c, e, r = LC.least_certain_records(cols, fx, rs)
+    assert r == sorted(RESTATED, key=SS.order_key) and len(r) == 25
+    assert sorted(c, key=SS.order_key) == sorted(COLUMNS, key=SS.order_key)
+    assert sorted(e, key=SS.order_key) == sorted(EXCHANGE, key=SS.order_key)
+    assert sorted(named) == sorted(COLUMNS + EXCHANGE + RESTATED) and len(named) == 35
+    for k in RESTATED:
+        assert named[k].startswith("development table's history restated, kept under rule 6"), k
+    # none of them is excluded by the register's other bucket
+    assert not set(RESTATED) & set(rs["excluded"])
+
+
+def test_the_restated_records_follow_the_register_not_a_list_in_the_script():
+    """Mutation check: moving a record out of history_restated takes it out of the set, adding one puts it in, an
+    excluded record is never named, and a register without the bucket adds nothing."""
+    cols, fx, rs = _registers3()
+    r2 = copy.deepcopy(rs)
+    r2["history_restated"]["1084_2016"] = dict(r2["history_restated"].pop("382_2021"))
+    named, _c, _e, r = LC.least_certain_records(cols, fx, r2)
+    assert "1084_2016" in r and "382_2021" not in r and "1084_2016" in named and "382_2021" not in named
+    assert not set(rs["excluded"]) & set(named)
+    assert LC.least_certain_records(cols, fx, {"excluded": rs["excluded"]})[3] == []
+    assert sorted(LC.least_certain_records(cols, fx, {})[0]) == sorted(COLUMNS + EXCHANGE)
+
+
 def test_the_ten_records_are_read_from_the_two_registers():
     cols, fx = _registers()
     named, c, e = LC.named_records(cols, fx)
@@ -44,8 +82,9 @@ def test_the_ten_records_are_read_from_the_two_registers():
 
 
 def test_every_named_record_is_in_the_primary_working_sample():
-    """The primary's membership (model/exposure_results.json): all ten are in it, so the refit can drop them."""
-    named, _c, _e = LC.named_records(*_registers())
+    """The primary's membership (model/exposure_results.json): every least-certain record is in it, so the refit can
+    drop them."""
+    named, _c, _e, _r = LC.least_certain_records(*_registers3())
     keys = {SS.key_of(o) for o in SS.primary()}
     assert sorted(set(named) - keys) == []
 
@@ -98,7 +137,7 @@ def test_the_step_follows_the_vignette_record_and_declares_its_output():
 
 
 def test_the_script_refuses_to_run_with_no_named_record(monkeypatch):
-    monkeypatch.setattr(LC, "named_records", lambda c, f: ({}, [], []))
+    monkeypatch.setattr(LC, "least_certain_records", lambda c, f, r: ({}, [], [], []))
     with pytest.raises(SystemExit, match="nothing to leave out"):
         LC.compute()
 
@@ -154,7 +193,7 @@ def test_the_widened_set_follows_the_registers_at_the_band_edges():
 
 
 def test_every_widened_record_is_in_the_primary_working_sample():
-    wide, _t, _n, _c = LC.widened_records(*_registers())
+    wide, _t, _n, _c = LC.widened_records(*_registers3())
     keys = {SS.key_of(o) for o in SS.primary()}
     assert sorted(set(wide) - keys) == []
 
@@ -168,47 +207,49 @@ def test_the_side_by_side_holds_both_refits_beside_the_primary():
                               "centre": {"V1_v99": 0.2 * (1 + shift), "V2_d995": 0.01 * (1 + shift)},
                               "relative_to_primary": {"V1_v99": shift, "V2_d995": shift}}}
     out = LC.side_by_side(blk(0.1, 639), blk(0.3, 630))
-    assert out["n_fit"] == {"primary": 649, "ten_records": 639, "widened": 630}
-    assert out["fit"]["k"] == {"primary": 1.0, "ten_records": 1.1, "widened": 1.3}
+    assert out["n_fit"] == {"primary": 649, "least_certain": 639, "widened": 630}
+    assert out["fit"]["k"] == {"primary": 1.0, "least_certain": 1.1, "widened": 1.3}
     row = out["vignette_centres"]["V1_v99"]
-    assert row["ten_records"] == pytest.approx(0.22) and row["widened"] == pytest.approx(0.26)
-    assert row["ten_records_relative_to_primary"] == 0.1 and row["widened_relative_to_primary"] == 0.3
+    assert row["least_certain"] == pytest.approx(0.22) and row["widened"] == pytest.approx(0.26)
+    assert row["least_certain_relative_to_primary"] == 0.1 and row["widened_relative_to_primary"] == 0.3
 
 
 # ------------------------------------------------------------------ the committed record (DEFERRED-TO-REFIT)
-def test_the_committed_record_holds_the_ten_and_the_widened_result_side_by_side():
+def test_the_committed_record_holds_the_least_certain_and_the_widened_result_side_by_side():
     """DEFERRED-TO-REFIT: written by the recorded pass."""
     with io.open(os.path.join(HERE, "results", "check_low_confidence_sensitivity_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
     w = rec["widened"]
-    cols, fx = _registers()
-    wide, ten, near, wcols = LC.widened_records(cols, fx)
+    wide, least, near, wcols = LC.widened_records(*_registers3())
     assert {r["record"] for r in w["left_out"]} == set(wide)
     assert w["named_records"] == w["n_left_out"] == len(wide) and w["n_fit"] == rec["n_primary"] - len(wide)
-    assert w["ten_least_certain"] == ten and w["exchange_lines_near_threshold"] == near
+    assert w["least_certain"] == least and w["exchange_lines_near_threshold"] == near
     assert w["columns_undeterminable_or_medium_or_low_confidence"] == wcols
-    assert w["added_to_the_ten"] == sorted(set(wide) - set(ten), key=SS.order_key) and w["added_to_the_ten"]
+    assert w["added_to_the_least_certain"] == sorted(set(wide) - set(least), key=SS.order_key)
+    assert w["added_to_the_least_certain"]
     assert w["fit_convergence"]["divergences"] == 0 and w["fit_convergence"]["max_rhat"] <= 1.01
     for r in w["left_out"]:
         assert r["rules"] and r["why"].strip()
-        assert ("ten_least_certain" in r["rules"]) == (r["record"] in ten)
-    sb = rec["ten_and_widened_side_by_side"]
-    assert sb["n_fit"] == {"primary": rec["n_primary"], "ten_records": rec["n_fit"], "widened": w["n_fit"]}
+        assert ("least_certain" in r["rules"]) == (r["record"] in least)
+    sb = rec["least_certain_and_widened_side_by_side"]
+    assert sb["n_fit"] == {"primary": rec["n_primary"], "least_certain": rec["n_fit"], "widened": w["n_fit"]}
     for v, row in sb["fit"].items():
-        assert row["ten_records"] == rec["fit"][v]["mean"] and row["widened"] == w["fit"][v]["mean"], v
+        assert row["least_certain"] == rec["fit"][v]["mean"] and row["widened"] == w["fit"][v]["mean"], v
     for q, row in sb["vignette_centres"].items():
-        assert row["ten_records"] == rec["vignettes"]["centre"][q] and row["widened"] == w["vignettes"]["centre"][q], q
+        assert row["least_certain"] == rec["vignettes"]["centre"][q], q
+        assert row["widened"] == w["vignettes"]["centre"][q], q
         assert row["widened_relative_to_primary"] == pytest.approx(row["widened"] / row["primary"] - 1), q
-        assert row["ten_records_relative_to_primary"] == pytest.approx(row["ten_records"] / row["primary"] - 1), q
+        assert row["least_certain_relative_to_primary"] == pytest.approx(row["least_certain"] / row["primary"] - 1), q
 
 
 def test_the_low_confidence_record():
     """DEFERRED-TO-REFIT: written by the recorded pass."""
     with io.open(os.path.join(HERE, "results", "check_low_confidence_sensitivity_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
-    assert rec["n_left_out"] == rec["named_records"] == len(rec["left_out"]) == 10
-    assert rec["n_fit"] == rec["n_primary"] - 10
-    assert sorted(r["record"] for r in rec["left_out"]) == sorted(COLUMNS + EXCHANGE)
+    assert rec["n_left_out"] == rec["named_records"] == len(rec["left_out"]) == 35
+    assert rec["n_fit"] == rec["n_primary"] - 35
+    assert sorted(r["record"] for r in rec["left_out"]) == sorted(COLUMNS + EXCHANGE + RESTATED)
+    assert rec["history_restated"] == sorted(RESTATED, key=SS.order_key)
     assert rec["older_years_columns_low_confidence"] == sorted(COLUMNS, key=SS.order_key)
     assert rec["exchange_lines_undeterminable"] == sorted(EXCHANGE, key=SS.order_key)
     d = rec["fit_convergence"]

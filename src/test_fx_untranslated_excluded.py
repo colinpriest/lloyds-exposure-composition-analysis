@@ -25,6 +25,8 @@ import build_fx_untranslated_excluded as bf  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
 EXCLUDED = {"1897_2016": 17.82, "2468_2016": 14.35, "5151_2016": 14.55, "5151_2017": -6.86}
+#: round 5 (23 October 2026): rule 2 of the round-5 decision rules (the author's rule B) on the readings P2 and Q1
+ROUND5 = {"3000_2022": 8.01}
 KEPT = {"218_2017": None, "1301_2023": 0.15, "1686_2018": -2.75, "1971_2023": 0.18, "2468_2017": -2.43,
         "4242_2016": None, "4242_2017": None, "4242_2018": None, "5151_2018": 4.22}
 
@@ -65,14 +67,18 @@ def test_the_register_equals_its_rebuild_from_the_archived_readings():
 def test_the_register_holds_the_four_excluded_and_the_read_and_kept():
     reg = _register()
     round2 = set(reg["_population"]["round2"]["records_are"])
-    assert set(reg["excluded"]) == set(EXCLUDED) and set(reg["read_and_kept"]) == set(KEPT) | round2
+    assert set(reg["excluded"]) == set(EXCLUDED) | set(ROUND5) and set(reg["read_and_kept"]) == set(KEPT) | round2
     assert len(round2) == 97 and not round2 & (set(KEPT) | set(EXCLUDED))
     for bucket, want in (("excluded", EXCLUDED), ("read_and_kept", KEPT)):
         for key, pct in want.items():
             e = reg[bucket][key]
             assert e["fx_line_pct_of_opening"] == pct, key
             assert [r["reader"] for r in e["readings"]] == ["F1", "F2"], key
-    assert ra.load_fx_untranslated_excluded().keys() == set(EXCLUDED)
+    for key, pct in ROUND5.items():
+        e = reg["excluded"][key]
+        assert e["fx_line_pct_of_opening"] == pct and [r["reader"] for r in e["readings"]] == ["P2", "Q1"], key
+    assert reg["_population"]["round5"]["records_excluded"] == sorted(ROUND5)
+    assert ra.load_fx_untranslated_excluded().keys() == set(EXCLUDED) | set(ROUND5)
     assert reg["_population"]["candidates_read_twice"] == 13
     assert len(reg["_population"]["candidates_read_twice_are"]) == 13
     assert "rule B" in reg["_rule"] and "22 October 2026" in reg["_rule"]
@@ -98,6 +104,44 @@ def test_the_rule_is_recomputed_from_each_readers_own_figures():
                 assert e["verdict"] == "keep", key
         assert seen[0] == seen[1], key
         assert (key in reg["excluded"]) == (seen[0][2] == "exclude"), key
+
+
+def test_the_round_5_entry_rests_on_verbatim_snippets_of_both_readings():
+    """3000/2022: each reading's R, exchange line and page are snippets of the archived round-5 reading, both readers give
+    the same figures, the line is 8.0% of R, and the table is not retranslated (its history is, its end-2021 reserves are
+    not); the readers' own verdict is kept beside the rule's."""
+    e = _register()["excluded"]["3000_2022"]
+    assert e["opening_gross_claims_outstanding_m"] == 1146.474 and e["fx_line_gross_m"] == 91.879
+    assert e["table_retranslated"] is False and "rule B" in e["decision"]
+    for r in e["readings"]:
+        with io.open(os.path.join(HERE, *r["source"].split("/")), encoding="utf-8") as fh:
+            text = json.dumps(json.load(fh)["3000_2022"], ensure_ascii=False)
+        for field in ("opening_gross_claims_outstanding", "fx_line_gross"):
+            assert r[field]["quote"] in text, (r["reader"], field)
+        assert r["cells_compared"] in text and r["table_exchange_basis"] in text, r["reader"]
+        assert r["reader_verdict"] == "restated_base" and r["verdict"] == "exclude"
+    ev = bf.build_evidence()
+    assert set(ev["excluded"]["3000_2022"]["mixed_base_cells"]) == {"P2", "Q1"}
+
+
+@pytest.mark.parametrize("field,old,new", [("opening", "1,146,474'", "1,146,475'"), ("fx_line", "91,879'", "91,897'")])
+def test_the_round_5_build_refuses_a_snippet_that_is_not_the_readers(monkeypatch, field, old, new):
+    """Mutation check: a snippet edited away from the archived reading stops the build."""
+    snip = json.loads(json.dumps(bf.ROUND5_SNIPPETS))
+    page, quote, fig = snip["3000_2022"]["P2"][field]
+    snip["3000_2022"]["P2"][field] = [page, quote.replace(old, new), fig.replace(old.rstrip("'"), new.rstrip("'"))]
+    monkeypatch.setattr(bf, "ROUND5_SNIPPETS", snip)
+    with pytest.raises(SystemExit, match="snippet is not in the archived reading"):
+        bf.build_all()
+
+
+def test_the_round_5_build_refuses_readers_who_disagree_on_the_line(monkeypatch):
+    snip = json.loads(json.dumps(bf.ROUND5_SNIPPETS))
+    page, quote, fig = snip["3000_2022"]["Q1"]["fx_line"]
+    snip["3000_2022"]["Q1"]["fx_line"] = [page, quote, "1,146,474"]
+    monkeypatch.setattr(bf, "ROUND5_SNIPPETS", snip)
+    with pytest.raises(SystemExit, match="disagree on R or the exchange line"):
+        bf.build_all()
 
 
 def test_1897_2016_is_treated_as_exchange_on_the_retranslation_of_r():
@@ -182,7 +226,7 @@ def test_the_loader_refuses_an_entry_without_its_evidence(tmp_path, bucket, key,
     with pytest.raises(ValueError, match=key):
         ra.load_fx_untranslated_excluded(p)
     p.write_text(json.dumps(_register()), encoding="utf-8")
-    assert set(ra.load_fx_untranslated_excluded(p)) == set(EXCLUDED)
+    assert set(ra.load_fx_untranslated_excluded(p)) == set(EXCLUDED) | set(ROUND5)
 
 
 def test_a_record_cannot_be_both_excluded_and_kept(tmp_path):
@@ -325,14 +369,14 @@ def test_the_loader_refuses_a_round_2_kept_entry_without_its_evidence(tmp_path, 
     with pytest.raises(ValueError, match=key):
         ra.load_fx_untranslated_excluded(p)
     p.write_text(json.dumps(_register()), encoding="utf-8")
-    assert set(ra.load_fx_untranslated_excluded(p)) == set(EXCLUDED)
+    assert set(ra.load_fx_untranslated_excluded(p)) == set(EXCLUDED) | set(ROUND5)
 
 
 # --- the loader ----------------------------------------------------------------------------------------------------------
 
-def test_the_primary_removes_the_four_records_with_a_named_countable_reason(loaded):
+def test_the_primary_removes_the_five_records_with_a_named_countable_reason(loaded):
     prim, old = loaded[ra.MATURE_COHORT_OUTCOME], loaded[ra.PRECEDENCE_672_OUTCOME]
-    for key in EXCLUDED:
+    for key in list(EXCLUDED) + list(ROUND5):
         r = prim["by_key"][key]
         assert r["data_quality_tag"] == ra.FX_UNTRANSLATED_TAG == "FX_UNTRANSLATED_TABLE", key
         assert r["s_raw_a"] is None and r["pyd_gbp_m"] is None and r["pyd_pct"] is None, key
@@ -344,9 +388,10 @@ def test_the_primary_removes_the_four_records_with_a_named_countable_reason(load
             assert old["by_key"][key]["data_quality_tag"] == "UNKNOWN_BASIS" and old["by_key"][key]["s_raw_a"] is None
         else:
             assert old["by_key"][key]["data_quality_tag"] == "RELIABLE" and old["by_key"][key]["s_raw_a"] is not None
-    assert prim["counters"]["fx_untranslated_excluded"] == 4
-    assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.FX_UNTRANSLATED_TAG) == 4
-    assert set(EXCLUDED) - {"5151_2016"} <= _ws(old["records"]) and not set(EXCLUDED) & _ws(prim["records"])
+    assert prim["counters"]["fx_untranslated_excluded"] == 5
+    assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.FX_UNTRANSLATED_TAG) == 5
+    out = set(EXCLUDED) | set(ROUND5)
+    assert out - {"5151_2016"} <= _ws(old["records"]) and not out & _ws(prim["records"])
 
 
 def test_the_kept_candidates_stay_in_the_primary(loaded):
@@ -385,7 +430,7 @@ def test_an_entry_that_reaches_no_record_stops_the_run(monkeypatch):
     extra["9999_2020"] = real["2468_2016"]
     monkeypatch.setattr(ra, "load_fx_untranslated_excluded", lambda path=None, e=extra: e)
     records, counters, log, files = ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
-    assert counters["fx_untranslated_excluded"] == 4
+    assert counters["fx_untranslated_excluded"] == 5
 
 
 def test_a_non_gross_or_take_on_record_the_register_names_stops_the_run(monkeypatch):
@@ -419,7 +464,8 @@ def test_every_key_of_the_register_has_its_extraction_file():
     key of both buckets is a filing that exists."""
     reg = _register()
     keys = list(reg["excluded"]) + list(reg["read_and_kept"])
-    assert len(keys) == 110 and len(set(keys)) == 110      # 4 excluded, 9 kept in round 1 and 97 kept in round 2
+    assert len(keys) == 111 and len(set(keys)) == 111      # 4 excluded and 9 kept in round 1, 97 kept in round 2,
+    #                                                          1 excluded in round 5
     assert _keys_without_a_file(keys) == []
     assert set(ra.load_fx_untranslated_excluded()) == set(reg["excluded"])      # the loader applies the excluded bucket
     for k in keys:

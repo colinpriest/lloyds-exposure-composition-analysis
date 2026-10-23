@@ -389,11 +389,12 @@ def source_files_for_hash(file_paths):
     register with the decision of 1 October 2026, and the filing-eligibility register and the currency scan with the
     review of 2 October 2026 (P-10, A-5), and the register of compositions the filings print (the PC page readings of
     5 October 2026), and the mature-cohort figures with the owner's decision of 22 October 2026 (the primary outcome).
-    The exchange-rate register (the author's rule B, 22 October 2026) joined it with that decision's last step.
+    The exchange-rate register (the author's rule B, 22 October 2026) joined it with that decision's last step, and the
+    restated-base register with the round-5 decision rules (23 October 2026).
     The FX rates and the calibration are hashed by run_source_hash, in their canonical JSON form."""
     inputs = {str(p) for p in file_paths}
     inputs.update(str(p) for p in (PYD_BASIS_REGISTER, PYD_CONFIRMED_FIGURES, MATURE_COHORT_FIGURES,
-                                   FX_UNTRANSLATED_REGISTER, TAKEON_REGISTER,
+                                   FX_UNTRANSLATED_REGISTER, RESTATED_BASE_REGISTER, TAKEON_REGISTER,
                                    OPENING_RESERVES_CONFIRMED, TAKEON_BASE_REGISTER, assumed_business.RITC_SCAN,
                                    assumed_business.TRANSFER_REGISTER, RUNOFF_REGISTER, RUNOFF_CORPUS_REGISTER,
                                    FILING_ELIGIBILITY_REGISTER, COMPOSITION_PAGE_READINGS, CURRENCY_SCAN_FILE))
@@ -522,6 +523,13 @@ MATURE_COHORT_NO_FIGURE_REASONS = {
     "outside_working_sample_not_read": False,    # out under either outcome for a reason that is not the figure
     "aggregated_column_not_like_for_like": True,  # Appendix 2.1: the only mature column's last step is not year t's
 }
+#: Rules 3 and 4 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026): a printed
+#: table's own figure that is wrong for a stated, checkable reason (a body transposed against its labels, a misprinted
+#: cell; rule 4) or that rests on a restated end-(t-1) diagonal where the year t-1 report's printed cells give a movement
+#: that reconciles with the year's accounts (rule 3) is replaced by the corrected figure both readings give. Nothing
+#: displaced the triangle's figure, which is the adopted block's own; the entry's displaced.by names the correction, and
+#: the entry carries a `correction` object (the rule, the cause and how the figure follows from the readings' cells).
+MATURE_COHORT_CORRECTIONS = ("printed_table_error", "previous_report_base")
 #: the kinds of reading a figure entry may rest on (build_mature_cohort_figures.py), at least one a reader's own. The
 #: extraction's own table read (the stored grid the estimator computed from) is supporting evidence under table_read and
 #: is never a reading: a figure rests on two agents' readings of the filing
@@ -529,9 +537,10 @@ MATURE_COHORT_READING_KINDS = ("reading", "error_rate_study")
 #: The author's decision of 22 October 2026 (rule B), under the primary only: a record whose development table is not
 #: retranslated between the year t-1 and year t reports across a sterling/dollar move of 5% or more, and whose
 #: gross claims-outstanding roll-forward prints an exchange line of at least 5% of the opening gross claims outstanding
-#: R, leaves the primary sample. data/fx_untranslated_excluded.json holds the four records both conditions hold for and
-#: the 106 candidates read and kept (nine of the first round, 97 of round 2), each on two independent readings
-#: (src/build_fx_untranslated_excluded.py).
+#: R, leaves the primary sample. data/fx_untranslated_excluded.json holds the records both conditions hold for (four of
+#: the first round, and 3000/2022 of the round-5 readings of 23 October 2026, where the table's history is retranslated
+#: and its end-(t-1) reserves are not) and the 106 candidates read and kept (nine of the first round, 97 of round 2),
+#: each on two independent readings (src/build_fx_untranslated_excluded.py).
 FX_UNTRANSLATED_REGISTER = SCRIPT_DIR / "data" / "fx_untranslated_excluded.json"
 FX_UNTRANSLATED_TAG = "FX_UNTRANSLATED_TABLE"
 FX_UNTRANSLATED_THRESHOLD_PCT = 5.0
@@ -539,6 +548,28 @@ FX_UNTRANSLATED_THRESHOLD_PCT = 5.0
 #: condition (a) fails (the table is retranslated) or cannot be tested (undeterminable_kept: rule B excludes a record
 #: only when both conditions are shown)
 FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed", "table_retranslated", "undeterminable_kept")
+#: Rule 1 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), under the primary only:
+#: a record whose year t development table carries a history (an underwriting year u <= t-2, or the table as a whole)
+#: that differs from the year t-1 report beyond the exchange rate with no explanation in either filing, whose table fails
+#: the year's accounts by more than 10% beyond what its basis explains while the year t-1 control ties within 5%, and
+#: whose year t-1 printed base gives no figure that reconciles either, leaves the primary sample: its table cannot give
+#: the year's movement. data/restated_base_excluded.json holds those records ("excluded") and the records rule 6 keeps in
+#: the primary but lists for the least-certain sensitivity ("history_restated"), each on two readings of the filing
+#: (src/build_restated_base_excluded.py, from the readings archived under results/extraction_error_rate/mature-cohort/
+#: round5/). The 672 construction does not read it.
+RESTATED_BASE_REGISTER = SCRIPT_DIR / "data" / "restated_base_excluded.json"
+RESTATED_BASE_TAG = "RESTATED_BASE_TABLE"
+#: the register's two buckets: the loader applies the first and validates both
+RESTATED_BUCKETS = ("excluded", "history_restated")
+#: the four conditions of rule 1, each with the value an excluded entry must show
+RESTATED_CONDITIONS = (("history_differs_unexplained", True), ("year_t_fails_accounts", True), ("control_ties", True),
+                       ("previous_base_reconciles", False))
+#: why rule 6 lists a record: an underwriting year u <= t-2 moved beyond the exchange rate, without explanation, by more
+#: than 1% of R; or the two readings disagree on the validity label but not on the facts
+RESTATED_CLAUSES = ("unexplained_history_move", "label_disagreement")
+#: the round-5 verdicts by validity class (a disagreement between the classes is a label disagreement)
+RESTATED_VALID_VERDICTS = ("valid", "screen_misread", "units_slip")
+RESTATED_INVALID_VERDICTS = ("restated_base", "undeterminable")
 #: an entry of the take-on registers that describes the step of the mature-cohort figure names it: such an entry
 #: applies only under the primary, to a block carrying that figure
 FIGURE_ROUTE_KEY = "figure_route"
@@ -1511,6 +1542,27 @@ def _aggregated_column_gaps(entry):
     return gaps
 
 
+def _correction_gaps(entry):
+    """What an entry's correction object lacks (MATURE_COHORT_CORRECTIONS): the rule, the cause, how the figure follows
+    from the readings' cells, and the printed table's own figure (the displaced one). An entry whose displaced.by is a
+    correction must carry the object, and no other entry may."""
+    corr = entry.get("correction")
+    by = (entry.get("displaced") or {}).get("by") if isinstance(entry.get("displaced"), dict) else None
+    if corr is None:
+        return ["a correction object (displaced.by %s)" % by] if by in MATURE_COHORT_CORRECTIONS else []
+    if by not in MATURE_COHORT_CORRECTIONS:
+        return ["no correction object for displaced.by %s" % by]
+    if not isinstance(corr, dict):
+        return ["a correction object"]
+    gaps = ["the correction's %s" % f for f in ("rule", "cause", "derivation")
+            if not isinstance(corr.get(f), str) or not corr[f].strip()]
+    printed = corr.get("figure_as_printed_m")
+    if not _is_number(printed) or not _is_number((entry.get("displaced") or {}).get("figure_m")) \
+            or abs(printed - entry["displaced"]["figure_m"]) > 0.0015:
+        gaps.append("the correction's figure_as_printed_m equal to the displaced figure")
+    return gaps
+
+
 def _mature_cohort_gaps(entry):
     """What a data/mature_cohort_figures.json entry lacks. With a figure: the figure (report currency), the triangle
     kind and the gross basis, what displaced it (MATURE_COHORT_DISPLACERS, and the figure it put in place), the stored
@@ -1539,12 +1591,12 @@ def _mature_cohort_gaps(entry):
     if entry.get("basis") != "gross":
         gaps.append("the gross basis")
     displaced = entry.get("displaced")
-    if (not isinstance(displaced, dict)
-            or displaced.get("by") not in MATURE_COHORT_DISPLACERS + (MATURE_COHORT_COLUMN,)
+    kinds = MATURE_COHORT_DISPLACERS + (MATURE_COHORT_COLUMN,) + MATURE_COHORT_CORRECTIONS
+    if (not isinstance(displaced, dict) or displaced.get("by") not in kinds
             or not _is_number(displaced.get("figure_m"))):
-        gaps.append("what displaced the figure (displaced.by in %s, and displaced.figure_m)"
-                    % ", ".join(MATURE_COHORT_DISPLACERS + (MATURE_COHORT_COLUMN,)))
+        gaps.append("what displaced the figure (displaced.by in %s, and displaced.figure_m)" % ", ".join(kinds))
     gaps += _aggregated_column_gaps(entry)
+    gaps += _correction_gaps(entry)
     tri = entry.get("triangle")
     if not isinstance(tri, dict) or not isinstance(tri.get("underwriting_years"), list) \
             or not tri["underwriting_years"] or "stored_source_page" not in tri:
@@ -1680,6 +1732,91 @@ def load_fx_untranslated_excluded(path=None):
     return out
 
 
+def _restated_reading_gaps(entry, bucket):
+    """What the readings of a restated-base entry lack: at least two, from distinct readers, each with the year t
+    filing's pages and its verdict (the round-5 verdicts); an excluded entry's readings all say restated_base, and a
+    history_restated entry listed for a label disagreement holds readings of both validity classes."""
+    readings = entry.get("readings")
+    if not isinstance(readings, list) or len(readings) < 2 or not all(isinstance(r, dict) for r in readings):
+        return ["two readings"]
+    gaps = []
+    ids = [r.get("reader") for r in readings]
+    if any(not isinstance(i, str) or not i.strip() for i in ids) or len(set(ids)) < len(ids):
+        gaps.append("distinct readers")
+    verdicts = [r.get("verdict") for r in readings]
+    for i, r in enumerate(readings):
+        pages = r.get("pages")
+        if (not isinstance(pages, list) or not pages
+                or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
+            gaps.append("reading %d's pages" % i)
+        if r.get("verdict") not in RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS:
+            gaps.append("reading %d's verdict (%s)" % (i, ", ".join(RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS)))
+    if bucket == "excluded" and any(v != "restated_base" for v in verdicts):
+        gaps.append("readings that each find a restated base (verdicts %s)" % verdicts)
+    if bucket == "history_restated" and "label_disagreement" in (entry.get("clauses") or []):
+        if not (set(verdicts) & set(RESTATED_VALID_VERDICTS) and set(verdicts) & set(RESTATED_INVALID_VERDICTS)):
+            gaps.append("readings of both validity classes for the clause label_disagreement (verdicts %s)" % verdicts)
+    return gaps
+
+
+def _restated_entry_gaps(entry, bucket):
+    """What a data/restated_base_excluded.json entry lacks. Both buckets: the decision, the pages and a quote, and the
+    readings (_restated_reading_gaps). An excluded entry: rule 1's four conditions, each with its value (the first three
+    hold, the last does not) and the facts it rests on. A history_restated entry: its clauses (RESTATED_CLAUSES) and the
+    facts."""
+    gaps = []
+    if not isinstance(entry.get("decision"), str) or not entry["decision"].strip():
+        gaps.append("a decision")
+    gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
+    gaps += _restated_reading_gaps(entry, bucket)
+    if bucket == "excluded":
+        conds = entry.get("conditions")
+        if not isinstance(conds, dict):
+            return gaps + ["rule 1's conditions"]
+        for name, want in RESTATED_CONDITIONS:
+            c = conds.get(name)
+            if not isinstance(c, dict) or c.get("holds") is not want or not isinstance(c.get("facts"), str) \
+                    or not c["facts"].strip():
+                gaps.append("condition %s with holds %s and its facts" % (name, want))
+    else:
+        clauses = entry.get("clauses")
+        if not isinstance(clauses, list) or not clauses or any(c not in RESTATED_CLAUSES for c in clauses):
+            gaps.append("clauses (%s)" % ", ".join(RESTATED_CLAUSES))
+        if not isinstance(entry.get("facts"), str) or not entry["facts"].strip():
+            gaps.append("the facts")
+    return gaps
+
+
+def load_restated_base(path=None):
+    """The records data/restated_base_excluded.json removes from the primary sample (rule 1 of the round-5 decision rules,
+    decision of the Claude analysis session, 23 October 2026), as {key: entry}; every entry of both buckets ("excluded",
+    "history_restated") is validated, and a record in both is refused. ``path`` defaults to the committed register."""
+    path = Path(path or RESTATED_BASE_REGISTER)
+    with open(path, "r", encoding="utf-8") as f:
+        reg = json.load(f)
+    out = {}
+    for bucket in RESTATED_BUCKETS:
+        entries = reg.get(bucket)
+        if not isinstance(entries, dict):
+            raise ValueError("%s: no %r bucket" % (path.name, bucket))
+        for key, entry in entries.items():
+            gaps = _restated_entry_gaps(entry, bucket) if isinstance(entry, dict) else ["an entry object"]
+            if gaps:
+                raise ValueError("%s: entry %s of %r lacks %s; an entry is applied only with two readings of the "
+                                 "filing, the pages read and a quote" % (path.name, key, bucket, ", ".join(gaps)))
+            if bucket == "excluded":
+                out[key] = entry
+    both = set(reg["excluded"]) & set(reg["history_restated"])
+    if both:
+        raise ValueError("%s: %s are both excluded and listed" % (path.name, ", ".join(sorted(both))))
+    return out
+
+
+def restated_register_keys(path=None):
+    """The keys of both buckets of data/restated_base_excluded.json (the loader applies one and validates both)."""
+    return raw_register_keys(Path(path or RESTATED_BASE_REGISTER), RESTATED_BUCKETS)
+
+
 def mature_cohort_block_defect(block, entry):
     """Why one model block cannot take the entry's mature-cohort figure, or None when it can: the block must hold the
     stored gross RAG triangle the entry names (its underwriting years and source page), its own route must not be a
@@ -1705,6 +1842,11 @@ def mature_cohort_block_defect(block, entry):
         # nothing was displaced: the adopted figure is the triangle's own, with the aggregated column in it
         if source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
             return "its route is %r, not a deterministic triangle's, whose figure carries the aggregated column" % source
+        return None
+    if by in MATURE_COHORT_CORRECTIONS:
+        # nothing was displaced: the adopted figure is the printed table's own, which the correction replaces
+        if source not in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
+            return "its route is %r, not a deterministic triangle's, whose figure the correction replaces" % source
         return None
     if source in UNRECONCILED_TRIANGLE_ROUTE_SOURCES:
         return "its route is %r: a triangle's figure stands, and nothing displaced it" % source
@@ -1768,6 +1910,10 @@ def apply_mature_cohort_figure(cm, entry, key=None, *, blocks):
     by = entry["displaced"]["by"]
     if by == MATURE_COHORT_COLUMN:
         why = "the triangle's own figure with the column"
+    elif by in MATURE_COHORT_CORRECTIONS:
+        out["_pyd_route"]["correction"] = entry["correction"]["cause"]
+        why = "the printed table's own figure, corrected (%s: %s)" % (entry["correction"]["rule"],
+                                                                     entry["correction"]["cause"])
     else:
         why = "which the %s put in its place" % ("provisions sign-disagreement override" if by == "sign_override"
                                                  else "model-agreement veto")
@@ -2292,12 +2438,17 @@ def load_and_classify(outcome=None):
         # the author's rule B (22 October 2026): a gross reliable record whose table is not retranslated across a
         # sterling/dollar move of 5% or more, with an exchange line of 5% or more of R, leaves the primary
         counters["fx_untranslated_excluded"] = 0
+        # rule 1 of the round-5 decision rules (23 October 2026): a gross reliable record whose table restates its
+        # history without explanation and fails the year's accounts leaves the primary
+        counters["restated_base_excluded"] = 0
     classification_log = []
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
     mature_figures = load_mature_cohort_figures() if mature else {}
     fx_register = load_fx_untranslated_excluded() if mature else {}
     fx_applied = set()
+    restated_register = load_restated_base() if mature else {}
+    restated_applied = set()
     takeon_all = load_takeon_register()
     takeon_register = scoped_to_outcome(takeon_all, outcome)
     opening_register = load_opening_reserves_confirmed()
@@ -2313,6 +2464,7 @@ def load_and_classify(outcome=None):
         "data/pyd_confirmed_figures.json": confirmed_figures,
         "data/mature_cohort_figures.json": mature_figures,
         "data/fx_untranslated_excluded.json": fx_register_keys() if mature else (),
+        "data/restated_base_excluded.json": restated_register_keys() if mature else (),
         "data/takeon_not_development.json": takeon_all,
         "data/opening_reserves_confirmed.json": opening_register,
         "data/opening_reserves_takeon_base.json": takeon_base_all,
@@ -2597,6 +2749,17 @@ def load_and_classify(outcome=None):
             is_reliable = False
             pyd_pct = None
             fx_applied.add(basis_key)
+        # rule 1 of the round-5 decision rules: a reliable gross record the restated-base register excludes leaves the
+        # primary at the same step; an entry that finds no such record is stale and stops the run
+        restated = (basis_key in restated_register and is_reliable and not is_takeon and basis == "gross")
+        if basis_key in restated_register and not restated:
+            raise ValueError("data/restated_base_excluded.json: %s is no reliable gross record of the primary sample at "
+                             "the exclusion step (%s)" % (basis_key, "a take-on" if is_takeon else
+                                                          "basis %s, reliable %s" % (basis, is_reliable)))
+        if restated:
+            is_reliable = False
+            pyd_pct = None
+            restated_applied.add(basis_key)
         if is_reliable and is_takeon:
             is_reliable = False
             dq_tag = TAKEON_TAG
@@ -2640,6 +2803,16 @@ def load_and_classify(outcome=None):
                                                  "(data/fx_untranslated_excluded.json, the author's rule B)"
                                                  % (100.0 * fx_entry["fx_line_gross_m"]
                                                     / fx_entry["opening_gross_claims_outstanding_m"])})
+        elif restated:
+            dq_tag = RESTATED_BASE_TAG
+            counters["restated_base_excluded"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the development table restates its history beyond the exchange rate "
+                                                 "with no explanation in either filing and fails the year's accounts "
+                                                 "while the year t-1 control ties, and the year t-1 printed base gives "
+                                                 "no figure that reconciles either: the primary carries no severity for "
+                                                 "it (data/restated_base_excluded.json, rule 1 of the round-5 decision "
+                                                 "rules)"})
         elif provision_movement:
             dq_tag = PROVISION_MOVEMENT_TAG
             counters["provision_movement_unusable"] += 1
@@ -2668,7 +2841,8 @@ def load_and_classify(outcome=None):
             counters["incomplete_pre"] += 1
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
-        pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure or fx_untranslated) else safe_float(
+        pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure or fx_untranslated
+                             or restated) else safe_float(
             cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
@@ -2872,6 +3046,10 @@ def load_and_classify(outcome=None):
     stale = sorted(k for k in set(fx_register) - fx_applied if "syndicate_%s.json" % k in in_corpus)
     if stale:
         raise ValueError("data/fx_untranslated_excluded.json: %s reached no reliable gross record of the primary "
+                         "sample, so the exclusion did not happen" % ", ".join(stale))
+    stale = sorted(k for k in set(restated_register) - restated_applied if "syndicate_%s.json" % k in in_corpus)
+    if stale:
+        raise ValueError("data/restated_base_excluded.json: %s reached no reliable gross record of the primary "
                          "sample, so the exclusion did not happen" % ", ".join(stale))
     unused = sorted(set(composition_readings) - composition_readings_used)
     if unused:

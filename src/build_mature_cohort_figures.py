@@ -26,7 +26,10 @@ entry is assembled from committed evidence:
     reconciliation census and route;
   - the extraction error-rate study's earlier readings that recomputed the same printed triangle
     (results/extraction_error_rate/);
-  - NO_FIGURE below, the records the register keeps without a figure, with the reason.
+  - NO_FIGURE below, the records the register keeps without a figure, with the reason;
+  - results/extraction_error_rate/mature-cohort/round5/readings/<reader>.json, the round-5 readings of 23 October 2026
+    (arms P and Q, and the round-6 tie-break readers Z5 and Z6), for CORRECTIONS below: the records whose printed
+    table's own figure rules 3 and 4 of the round-5 decision rules (round5/rules.md) correct.
 
 Usage:
   python src/build_mature_cohort_figures.py            # check the register against a rebuild; exit 1 on a difference
@@ -292,6 +295,82 @@ NOTES = {
     ),
 }
 
+#: Rules 3 and 4 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026;
+#: results/extraction_error_rate/mature-cohort/round5/rules.md and adjudication.md): the records whose printed table's
+#: own figure (the adopted block's, a deterministic triangle's route) is replaced by the corrected figure the readings
+#: give. No precedence rule displaced it; displaced.by names the correction (run_analysis.MATURE_COHORT_CORRECTIONS).
+#: Each reader's figure is read from the archived reading: `field` names the reader's own figure, or `terms` a verbatim
+#: snippet whose signed terms (one per underwriting year) the build sums, or `misprint` the snippets of the cells from
+#: which the build recomputes the figure (1274/2016). `superseded` keeps a reading whose figure the tie-break overruled.
+ROUND5_READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round5" / "readings"
+ROUND5_ROUND = "round-5 readings of 23 October 2026 (tables whose history moved between reports)"
+ROUND6_ROUND = "round-6 tie-break readings of 23 October 2026"
+CORRECTIONS = {
+    "318_2024": {
+        "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+        "cause": ("the 2024 gross table's body is printed transposed against its labels (p69): each printed row is one "
+                  "underwriting year, as the 2023 report's columns show at a uniform 1.0097-1.0137 retranslation"),
+        "derivation": ("u <= 2022 read by rows (one underwriting year per row), latest less end-2023 cell: both readers "
+                       "give -27.990m; the table read by its printed column labels gives -67.098m"),
+        "readers": {"P5": {"field": "m_recomputed_m", "cells": "m_detail"},
+                    "Q4": {"field": "m_recomputed_m", "cells": "m_detail"}},
+    },
+    "1609_2024": {
+        "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+        "cause": ("the 2024 gross table's row and column labels are swapped against its body (p51): each printed row is "
+                  "one underwriting year, as the 2023 report's columns show cell for cell at 0.984-0.991; the tie-break "
+                  "readers Z5 and Z6 settle the disagreement of P3 (literal reading) and Q2"),
+        "derivation": ("u <= 2022 read by rows: 2021 57,359 - 43,731 = +13,628; 2022 107,543 - 107,236 = +307; +13.935m "
+                       "USD (Z5, Z6, Q2); read by the printed labels, -0.185m (P3, superseded)"),
+        "readers": {"Z5": {"field": "M_m_usd", "cells": "cells", "round": ROUND6_ROUND},
+                    "Z6": {"field": "recomputed_mature_figure_m", "cells": "m_cells_correct_orientation",
+                           "round": ROUND6_ROUND},
+                    "Q2": {"field": "m_recomputed_m", "cells": "m_recomputed_detail"}},
+        "superseded": {"P3": {"field": "m_recomputed_m", "cells": "m_calc"}},
+    },
+    "2232_2020": {
+        "by": "previous_report_base", "rule": "rule 3 of the round-5 decision rules (corrected to the previous report's base)",
+        "cause": ("the 2020 table's end-2019 diagonal is restated 44.7m below the 2019 report's printed cells with no "
+                  "stated reason, and the table taken on its own implies gross incurred 31% above the accounts (190.0m "
+                  "against 144.9m), the 2019 control tying; the 2019 report's printed cells as the base reproduce the "
+                  "2020 accounts within 0.3% (incurred) and 1.7% (paid)"),
+        "derivation": ("u <= 2018, the 2020 table's latest cells less the 2019 report's printed latest cells: 2013 -926; "
+                       "2014 +453; 2015 +6,174; 2016 -6,209; 2017 +3,950; 2018 +15,889; +19.331m (both readers); the "
+                       "2020 table's own end-2019 cells give +55.227m"),
+        "readers": {"P7": {"terms": ("2013 -926; 2014 +453; 2015 +6,174; 2016 -6,209; 2017 +3,950; 2018 +15,889; sum "
+                                     "19,331"), "cells": "m_working"},
+                    "Q8": {"terms": "-926+453+6,174-6,209+3,950+15,889 = +19,331", "cells": "m_derivation"}},
+    },
+    "1274_2016": {
+        "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+        "cause": ("a misprinted cell: the 2016 table's 2012 column prints 141,355 at three years later between 174,440 "
+                  "and 185,418 (p41), a reserve of 12,005 against 47,564 in the 2015 report, whose own cell is 178,987; "
+                  "both readers read it as a misprint, which the filing does not correct"),
+        "derivation": ("the 2015 report's 2012 cell (178,987) at the year's exchange factor (the 2008 column's "
+                       "end-2015 cell over the 2015 report's: 209,137 / 213,518 = 0.97948, the record's common factor) "
+                       "replaces the misprinted 141,355: the 2012 term is 185,418 - 175,314.5 = +10,103.5 and M "
+                       "= +13,440 (the other six years) + 10,103.5 = +23.5435m USD. Derived by the build from the cells "
+                       "both readings quote; P3 calls the cell not correctable from the filing and Q4 gives the same "
+                       "replacement without the exchange factor (+19.871m); both give +57.503m as printed"),
+        "readers": {
+            "P3": {"misprint": {
+                "terms": ("2008 208,456-209,137=-681; 2009 165,974-165,410=+564; 2010 208,906-206,415=+2,491; 2011 "
+                          "178,142-174,535=+3,607; 2012 185,418-141,355=+44,063; 2013 180,767-183,933=-3,166; 2014 "
+                          "203,214-192,589=+10,625"),
+                "latest": "185,418 is right", "t_2008": "2008 'Seven years later' 209,137",
+                "prev_cells": "latest cells 213,518 (2008, seven years later); 167,218; 212,521; 180,368; 178,987"},
+                "cells": "m_recomputed_cells"},
+            "Q4": {"misprint": {
+                "terms": "2008 -681; 2009 +564; 2010 +2,491; 2011 +3,607; 2012 +44,063; 2013 -3,166; 2014 +10,625",
+                "latest": "141,355 (3y), 185,418 (4y)", "t_2008": "209,137 (7y)",
+                "prev_cells": "latest cells (2008..2015): 213,518; 167,218; 212,521; 180,368; 178,987"},
+                "cells": "m_detail"},
+        },
+    },
+}
+#: the misprinted underwriting year of 1274/2016 and the year whose cells give the exchange factor
+MISPRINT_YEAR, FACTOR_YEAR = 2012, 2008
+
 OWNER = ("owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of "
          "Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement "
          "has the other sign")
@@ -513,6 +592,16 @@ def column_blocks(data):
     return out
 
 
+def gross_blocks(data, by):
+    """{model: [by]} for every block of a CORRECTIONS record that holds a gross RAG triangle."""
+    out = {}
+    for mk, block in sorted((data.get("models") or {}).items()):
+        tri = block.get("_rag_triangle") if isinstance(block, dict) else None
+        if isinstance(tri, dict) and tri.get("type") == "gross" and tri.get("underwriting_years"):
+            out[mk] = [by]
+    return out
+
+
 def load_column_readings():
     out = {}
     for rid in COLUMN_READERS:
@@ -660,6 +749,113 @@ def column_entry(entry, key, tri, year, fn, figure_with, model, printed_page, co
     return entry
 
 
+_NUM = r"[\d,]+(?:\.\d+)?"
+#: a printed cell in thousands with its separators (209,137): not a year, an age or a page
+_CELL = r"\d{1,3}(?:,\d{3})+"
+
+
+def _n(s):
+    return float(s.replace(",", ""))
+
+
+def _snip(text, snippet, key, rid, what):
+    if snippet not in text:
+        raise SystemExit("%s: reader %s's %s snippet is not in the archived reading: %r" % (key, rid, what, snippet))
+    return snippet
+
+
+def _terms(snippet):
+    """{year: signed term} from a snippet of per-year signed terms ('2013 -926; 2014 +453' or '2008 208,456-209,137=-681'),
+    or [terms] from a bare sum ('-926+453+6,174 = +19,331', the part before '=')."""
+    by_year = re.findall(r"(20\d\d) (?:%s-%s=)?([+-]%s)" % (_NUM, _NUM, _NUM), snippet)
+    if by_year:
+        return {int(y): _n(v) for y, v in by_year}
+    return [_n(v) for v in re.findall(r"([+-]?%s)" % _NUM, snippet.split("=")[0])]
+
+
+def misprint_figure(spec, text, key, rid):
+    """1274/2016: the figure with the misprinted MISPRINT_YEAR cell replaced by the previous report's cell at the year's
+    exchange factor (FACTOR_YEAR's end-(t-1) cell over the previous report's), from the reader's own quoted cells."""
+    terms = _terms(_snip(text, spec["terms"], key, rid, "terms"))
+    latest = _n(re.findall(_CELL, _snip(text, spec["latest"], key, rid, "latest cell"))[-1])
+    t_factor = _n(re.findall(_CELL, _snip(text, spec["t_2008"], key, rid, "factor year's cell"))[-1])
+    prev = [_n(x) for x in re.findall(_CELL, _snip(text, spec["prev_cells"], key, rid, "previous report's cells"))]
+    prev_factor, prev_misprint = prev[0], prev[MISPRINT_YEAR - FACTOR_YEAR]
+    other = sum(v for y, v in terms.items() if y != MISPRINT_YEAR)
+    corrected = prev_misprint * t_factor / prev_factor
+    return round((other + latest - corrected) / 1000.0, 4), {
+        "other_years_k": other, "latest_cell_k": latest, "factor": round(t_factor / prev_factor, 6),
+        "previous_report_cell_k": prev_misprint, "corrected_cell_k": round(corrected, 1)}
+
+
+def correction_reading(key, rid, spec, round_name):
+    """One reading of a CORRECTIONS record in the register's reading form, with the figure the spec reads or derives."""
+    import build_restated_base_excluded as RB
+    with io.open(ROUND5_READINGS / ("%s.json" % rid), encoding="utf-8") as fh:
+        e = json.load(fh)[key]
+    text = json.dumps(e, ensure_ascii=False)
+    out = {"kind": "reading", "reader": rid, "round": round_name,
+           "source": "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % rid,
+           "pages": RB.split_pages(key, e.get("pages"))[0], "read_by": e.get("read_by"),
+           "verdict": e.get("verdict"), "reader_figure_m": None}
+    own = e.get("m_recomputed_m")
+    out["reader_figure_m"] = own if isinstance(own, (int, float)) else e.get(spec.get("field") or "m_recomputed_m")
+    if "field" in spec:
+        out["figure_m"] = _num(e[spec["field"]])
+        out["figure_from"] = "the reader's own figure (%s)" % spec["field"]
+    elif "terms" in spec:
+        t = _terms(_snip(text, spec["terms"], key, rid, "terms"))
+        out["figure_m"] = round(sum(t.values() if isinstance(t, dict) else t) / 1000.0, 4)
+        out["figure_from"] = "the sum of the reader's own terms: %s" % spec["terms"]
+    else:
+        out["figure_m"], parts = misprint_figure(spec["misprint"], text, key, rid)
+        out["figure_from"] = ("derived by the build from the reader's quoted cells (%s): %s"
+                              % ("; ".join(spec["misprint"].values()), json.dumps(parts)))
+    cells = e.get(spec["cells"]) or e.get("cells_check")
+    out["cells"] = cells if isinstance(cells, str) else json.dumps(cells, ensure_ascii=False)
+    out["table"] = {"page": (out["pages"] or [None])[0], "basis": e.get("basis") or "gross"}
+    out["note"] = e.get("note")
+    return out
+
+
+def correction_entry(entry, key, tri, year, figure_printed, details, model, printed_page):
+    """Complete the entry of a CORRECTIONS record: the corrected figure every reading gives, the correction object (with
+    the printed table's own figure, which the estimator recomputes from the stored grid and which is the adopted block's)
+    and the readings."""
+    c = CORRECTIONS[key]
+    if figure_printed is None or abs(figure_printed - entry["displaced"]["figure_m"]) > FIGURE_TOL:
+        raise SystemExit("%s: the stored grid's figure %s is not the adopted figure %s the correction replaces"
+                         % (key, figure_printed, entry["displaced"]["figure_m"]))
+    reads = [correction_reading(key, rid, spec, spec.get("round", ROUND5_ROUND)) for rid, spec in c["readers"].items()]
+    figure = round(reads[0]["figure_m"], 4)
+    for r in reads:
+        if r["figure_m"] is None or abs(r["figure_m"] - figure) > FIGURE_TOL:
+            raise SystemExit("%s: reader %s's corrected figure %s is not reader %s's %s" % (
+                key, r["reader"], r["figure_m"], reads[0]["reader"], figure))
+    currency, gbp = fx_gbp(key, figure)
+    entry.update({"figure_m": figure, "figure_gbp_m": gbp, "figure_kind": "triangle"})
+    entry["correction"] = {"rule": c["rule"], "cause": c["cause"], "derivation": c["derivation"],
+                           "figure_as_printed_m": figure_printed}
+    entry["readings"] = reads
+    if c.get("superseded"):
+        entry["superseded_readings"] = [correction_reading(key, rid, spec, ROUND5_ROUND)
+                                        for rid, spec in c["superseded"].items()]
+    gaps = independent_reading_gaps(entry)
+    if gaps:
+        raise SystemExit("%s: a figure entry needs two independent agent readings of the filing: %s" % (key, "; ".join(gaps)))
+    tr = table_read(model, tri, figure_printed, details, printed_page)
+    tr["verdict"] += "; the printed table's own figure, which the correction replaces"
+    entry["table_read"] = tr
+    entry["pages"] = sorted({p for r in reads for p in r["pages"]})
+    entry["quote"] = " | ".join("reader %s, p%s: %s" % (r["reader"], r["table"]["page"], r["cells"]) for r in reads)
+    entry["status"] = "primary"
+    entry["decision"] = ("decision of the Claude analysis session, 23 October 2026, applying %s: %s; the register carries "
+                         "the corrected figure the readings give (%s) in place of the printed table's own (%s); "
+                         "primary; under the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads),
+                                                    figure_printed, OWNER))
+    return entry
+
+
 def independent_reading_gaps(entry):
     """Why a figure entry does not rest on two independent agent readings of the filing, or []: every reading is an
     agent's (AGENT_READING_KINDS; the extraction's table read is not a reading), at least two distinct readers, at
@@ -716,6 +912,8 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study, col
     by = "sign_override" if "sign_override" in rules else ("veto" if "veto" in rules else None)
     if by is None and key in COLUMN_ONLY:
         by = "aggregated_column"
+    if by is None and key in CORRECTIONS:
+        by = CORRECTIONS[key]["by"]
     gate = None
     if by == "veto":
         m = [g for g in RAG_VETO.finditer(cm.get("data_quality_notes") or "")
@@ -766,6 +964,8 @@ def entry_for(key, data, pop_blocks, fn, decisions, design, readings, study, col
         if figure is None:
             raise SystemExit("%s: the estimator computes no figure on the stored grid: %s" % (key, details))
         return column_entry(entry, key, tri, year, fn, figure, model, printed_page, column_files, rr)
+    if key in CORRECTIONS:
+        return correction_entry(entry, key, tri, year, figure, details, model, printed_page)
     if dec is None:
         raise SystemExit("%s: a displaced record with neither a decision (decisions.csv) nor a NO_FIGURE reason" % key)
     if figure is None:
@@ -829,6 +1029,11 @@ def build():
     for key in COLUMN_ONLY:
         with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
             blocks[key] = column_blocks(json.load(fh))
+    if set(CORRECTIONS) & (set(pop) | set(COLUMN_ONLY) | set(NO_FIGURE)):
+        raise SystemExit("CORRECTIONS must be records no precedence rule displaced and no other list names")
+    for key in CORRECTIONS:
+        with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
+            blocks[key] = gross_blocks(json.load(fh), CORRECTIONS[key]["by"])
     reg = {"_purpose": PURPOSE}
     for key in sorted(blocks, key=lambda k: (int(k.split("_")[0]), int(k.split("_")[1]))):
         with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
@@ -867,7 +1072,11 @@ PURPOSE = (
     "and Z2 for 2022, archived in round2/readings/), figure_with_column_m is the grid's "
     "own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a "
     "precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure "
-    "is the triangle's own with the column in it (1945/2022 and 1945/2023).")
+    "is the triangle's own with the column in it (1945/2022 and 1945/2023). An entry with a correction object (rules 3 "
+    "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 1609/2024 and 2232/2020) replaces the "
+    "printed table's own figure, the adopted one, with the corrected figure its readings give (archived in "
+    "round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a misprinted "
+    "cell) or 'previous_report_base' (the year t-1 report's printed cells as the base).")
 
 
 def dumps(reg):

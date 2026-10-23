@@ -373,6 +373,13 @@ def classify_filings():
             evidence = ("the development table is not retranslated across a sterling/dollar move of 5% or more, and the "
                         "gross claims-outstanding roll-forward prints an exchange line of 5% or more of the opening "
                         "reserves (data/fx_untranslated_excluded.json)")
+        elif obs.get("data_quality_tag") == "RESTATED_BASE_TABLE":
+            # the primary outcome (rule 1 of the round-5 decision rules, 23 October 2026, run_analysis.RESTATED_BASE_TAG):
+            # the development table restates its history without explanation and fails the year's accounts
+            category, detail = "scientific_exclusion", "restated_base_table"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("the development table restates its history beyond the exchange rate with no explanation and "
+                        "fails the year's accounts while the year t-1 control ties (data/restated_base_excluded.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
@@ -500,7 +507,8 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                 if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
                                        "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
-                                       "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE")]
+                                       "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE",
+                                       "CORPUS:RESTATED_BASE_TABLE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

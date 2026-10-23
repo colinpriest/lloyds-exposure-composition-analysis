@@ -1,4 +1,4 @@
-"""Least-certain-records sensitivity (round 2 of the filing readings, 23 October 2026).
+"""Least-certain-records sensitivity (rounds 2 and 5 of the filing readings, 23 October 2026).
 
 Round 2 read the 64 older-years ("& prior") columns and the 97 exchange lines of the primary sample twice, and settled
 nearly all of them. Ten records could not be settled, and the primary keeps them under rules that stand without a
@@ -12,16 +12,22 @@ finding for them:
     (457/2015, 1301/2015, 4711/2017, 6105/2015); rule B excludes a record only when both conditions are shown, so they
     stay.
 
-The list is read from the two registers, never typed here: a record whose confidence or reason changes there changes
-the sensitivity. Every record must be in the primary working sample (sample_scope.refit_without refuses a key outside
-it), or nothing is written.
+Round 5 of the filing readings (decision rules of 23 October 2026, a decision of the Claude analysis session) adds the
+records whose development table restated its history and that stay in the primary under rule 6: the table ties to the
+year's accounts, but an underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of
+R, or the two readings disagree on the validity label but not on the facts. data/restated_base_excluded.json lists them
+under "history_restated" (25 records when the register was built). The least-certain set is the ten and these.
+
+The list is read from the three registers, never typed here: a record whose confidence, reason or bucket changes there
+changes the sensitivity. Every record must be in the primary working sample (sample_scope.refit_without refuses a key
+outside it), or nothing is written.
 
 The script refits the adopted model and transfers the vignettes without them (sample_scope.refit_without), and reports
 n, k, the floor, both tail indices and the year-shock scale, and Vignette 1's VaR99 and VaR99.5 and Vignette 2's VaR99
 and VaR99.5 before and after and their change, beside the primary's.
 
-The ten records are not the whole of what the readings left uncertain, so a WIDENED set is refitted beside them (review of
-23 October 2026). It adds, again by rule from the two registers and never typed:
+The least-certain records are not the whole of what the readings left uncertain, so a WIDENED set is refitted beside them
+(review of 23 October 2026). It adds, again by rule from the registers and never typed:
 
   * every read-and-kept exchange line within 0.5 percentage points of the 5% threshold of the opening gross claims
     outstanding, on either side (data/fx_untranslated_excluded.json, fx_line_pct_of_opening, absolute value): the lines
@@ -31,8 +37,8 @@ The ten records are not the whole of what the readings left uncertain, so a WIDE
     (data/aggregated_column_review.json): 1955/2015, whose two candidate figures differ by 0.319m, and any other the
     register marks so.
 
-The record holds the ten-record result as it was (the top-level keys) and the widened one (widened), and sets the fit, the
-vignette stresses and their change on the primary side by side (ten_and_widened_side_by_side).
+The record holds the least-certain result (the top-level keys) and the widened one (widened), and sets the fit, the
+vignette stresses and their change on the primary side by side (least_certain_and_widened_side_by_side).
 
 Writes check_low_confidence_sensitivity_results.json.
 Usage:  python src/check_low_confidence_sensitivity.py
@@ -49,6 +55,8 @@ from adopted_model import SD
 OUT = SD / "results" / "check_low_confidence_sensitivity_results.json"
 COLUMN_REGISTER = SD / "data" / "aggregated_column_review.json"
 FX_REGISTER = SD / "data" / "fx_untranslated_excluded.json"
+RESTATED_REGISTER = SD / "data" / "restated_base_excluded.json"
+RESTATED_BUCKET = "history_restated"
 COLUMN_CONFIDENCE = "low_confidence"
 EXCHANGE_REASON = "undeterminable_kept"
 #: the widened set: exchange lines within FX_BAND_PP percentage points of FX_THRESHOLD_PCT (absolute value of the line over
@@ -92,6 +100,26 @@ def named_records(column_register, fx_register):
     return out, sorted(cols, key=SS.order_key), sorted(fx, key=SS.order_key)
 
 
+def restated_records(register):
+    """{key: why} for the records rule 6 of the round-5 decision rules lists (the register's history_restated bucket)."""
+    out = {}
+    for key, e in (register.get(RESTATED_BUCKET) or {}).items():
+        out[key] = ("development table's history restated, kept under rule 6 (%s): %s"
+                    % (", ".join(e.get("clauses") or []), e.get("facts")))
+    return out
+
+
+def least_certain_records(column_register, fx_register, restated_register):
+    """(all, cols, fx, restated): the least-certain set {key: why} (the ten of named_records and the records of
+    restated_records; a record reached by two rules keeps both reasons) and the key lists of each part."""
+    ten, cols, fx = named_records(column_register, fx_register)
+    rs = restated_records(restated_register)
+    out = dict(ten)
+    for k, why in rs.items():
+        out[k] = (out[k] + " | " if k in out else "") + why
+    return out, cols, fx, sorted(rs, key=SS.order_key)
+
+
 def wide_column_records(register):
     """{key: why} for the older-years columns whose construction is undeterminable or whose confidence is medium or
     low_confidence, from the register's entries."""
@@ -117,11 +145,12 @@ def near_threshold_exchange_records(register):
     return out
 
 
-def widened_records(column_register, fx_register):
-    """(all, ten, near, wide): the widened set {key: why} (the ten records of named_records, the exchange lines near the
-    threshold and the columns that are undeterminable or of medium or low confidence; a record reached by two rules keeps
-    both reasons), and the key lists of the ten, of the lines near the threshold and of the wide columns."""
-    ten, _c, _f = named_records(column_register, fx_register)
+def widened_records(column_register, fx_register, restated_register=None):
+    """(all, least, near, wide): the widened set {key: why} (the least-certain records of least_certain_records, the
+    exchange lines near the threshold and the columns that are undeterminable or of medium or low confidence; a record
+    reached by two rules keeps both reasons), and the key lists of the least-certain records, of the lines near the
+    threshold and of the wide columns. With no restated register the least-certain records are the ten."""
+    ten = least_certain_records(column_register, fx_register, restated_register or {})[0]
     near, wide = near_threshold_exchange_records(fx_register), wide_column_records(column_register)
     out = dict(ten)
     for extra in (near, wide):
@@ -137,19 +166,19 @@ def widened_records(column_register, fx_register):
     return out, by(ten), by(near), by(wide)
 
 
-def side_by_side(ten, wide):
-    """The fit and the vignette stresses of the primary, of the ten-record refit and of the widened refit, with each
+def side_by_side(least, wide):
+    """The fit and the vignette stresses of the primary, of the least-certain refit and of the widened refit, with each
     refit's change on the primary."""
     return {
-        "fit": {v: {"primary": ten["primary_fit"][v]["mean"], "ten_records": ten["fit"][v]["mean"],
-                    "widened": wide["fit"][v]["mean"]} for v in SS.VARS if v in ten["primary_fit"]},
-        "n_fit": {"primary": ten["n_primary"], "ten_records": ten["n_fit"], "widened": wide["n_fit"]},
+        "fit": {v: {"primary": least["primary_fit"][v]["mean"], "least_certain": least["fit"][v]["mean"],
+                    "widened": wide["fit"][v]["mean"]} for v in SS.VARS if v in least["primary_fit"]},
+        "n_fit": {"primary": least["n_primary"], "least_certain": least["n_fit"], "widened": wide["n_fit"]},
         "vignette_centres": {
-            k: {"primary": ten["vignettes"]["primary_centre"][k], "ten_records": ten["vignettes"]["centre"][k],
+            k: {"primary": least["vignettes"]["primary_centre"][k], "least_certain": least["vignettes"]["centre"][k],
                 "widened": wide["vignettes"]["centre"][k],
-                "ten_records_relative_to_primary": ten["vignettes"]["relative_to_primary"][k],
+                "least_certain_relative_to_primary": least["vignettes"]["relative_to_primary"][k],
                 "widened_relative_to_primary": wide["vignettes"]["relative_to_primary"][k]}
-            for k in ten["vignettes"]["centre"]}}
+            for k in least["vignettes"]["centre"]}}
 
 
 def sha256(path):
@@ -159,52 +188,57 @@ def sha256(path):
 
 def compute():
     t0 = time.time()
-    named, cols, fx = named_records(SS.load_json(COLUMN_REGISTER), SS.load_json(FX_REGISTER))
+    registers = SS.load_json(COLUMN_REGISTER), SS.load_json(FX_REGISTER), SS.load_json(RESTATED_REGISTER)
+    named, cols, fx, restated = least_certain_records(*registers)
     if not named:
-        raise SystemExit("the two registers name no least-certain record: nothing to leave out")
+        raise SystemExit("the registers name no least-certain record: nothing to leave out")
     block = SS.refit_without(
         list(named), "low_confidence_records",
         "without the %d records the filing readings could not settle: %d older-years columns marked low_confidence in "
-        "data/aggregated_column_review.json and %d exchange lines marked undeterminable_kept in "
-        "data/fx_untranslated_excluded.json" % (len(named), len(cols), len(fx)))
+        "data/aggregated_column_review.json, %d exchange lines marked undeterminable_kept in "
+        "data/fx_untranslated_excluded.json and %d tables whose history restated, listed under history_restated in "
+        "data/restated_base_excluded.json" % (len(named), len(cols), len(fx), len(restated)))
     for row in block["left_out"]:
         row["why"] = named[row["record"]]
         row["register"] = " and ".join(r for r, ks in (("aggregated_column_review", cols),
-                                                       ("fx_untranslated_excluded", fx)) if row["record"] in ks)
-    wide_named, w_ten, w_near, w_cols = widened_records(SS.load_json(COLUMN_REGISTER), SS.load_json(FX_REGISTER))
+                                                       ("fx_untranslated_excluded", fx),
+                                                       ("restated_base_excluded", restated)) if row["record"] in ks)
+    wide_named, w_least, w_near, w_cols = widened_records(*registers)
     wide = SS.refit_without(
         list(wide_named), "low_confidence_records_widened",
-        "without the %d records of the widened set: the ten records the filing readings could not settle, %d exchange "
-        "lines within %g percentage points of the %g%% threshold, and %d older-years columns whose construction is "
-        "undeterminable or whose confidence is medium or low_confidence" % (
-            len(wide_named), len(w_near), FX_BAND_PP, FX_THRESHOLD_PCT, len(w_cols)))
+        "without the %d records of the widened set: the %d least-certain records, %d exchange lines within %g "
+        "percentage points of the %g%% threshold, and %d older-years columns whose construction is undeterminable or "
+        "whose confidence is medium or low_confidence" % (
+            len(wide_named), len(w_least), len(w_near), FX_BAND_PP, FX_THRESHOLD_PCT, len(w_cols)))
     for row in wide["left_out"]:
         row["why"] = wide_named[row["record"]]
-        row["rules"] = [r for r, ks in (("ten_least_certain", w_ten), ("exchange_line_near_threshold", w_near),
+        row["rules"] = [r for r, ks in (("least_certain", w_least), ("exchange_line_near_threshold", w_near),
                                         ("column_undeterminable_or_medium_confidence", w_cols)) if row["record"] in ks]
     return {
-        "question": ("what do the fit and the vignette stresses become without the records whose older-years column or "
-                     "exchange line the filing readings could not settle?"),
-        "source": "data/aggregated_column_review.json (confidence low_confidence) and data/fx_untranslated_excluded.json "
-                  "(reason undeterminable_kept); the readings are archived in "
-                  "results/extraction_error_rate/mature-cohort/round2/",
+        "question": ("what do the fit and the vignette stresses become without the records whose older-years column, "
+                     "exchange line or development-table history the filing readings could not settle?"),
+        "source": "data/aggregated_column_review.json (confidence low_confidence), data/fx_untranslated_excluded.json "
+                  "(reason undeterminable_kept) and data/restated_base_excluded.json (history_restated); the readings "
+                  "are archived in results/extraction_error_rate/mature-cohort/round2/ and round5/",
         "inputs_sha256": {"data/aggregated_column_review.json": sha256(COLUMN_REGISTER),
-                          "data/fx_untranslated_excluded.json": sha256(FX_REGISTER)},
+                          "data/fx_untranslated_excluded.json": sha256(FX_REGISTER),
+                          "data/restated_base_excluded.json": sha256(RESTATED_REGISTER)},
         "named_records": len(named),
         "older_years_columns_low_confidence": cols,
         "exchange_lines_undeterminable": fx,
+        "history_restated": restated,
         **block,
         "widened": {
             "question": ("the same, widened to the exchange lines within %g percentage points of the %g%% threshold and to "
                          "the older-years columns whose construction is undeterminable or whose confidence is medium"
                          % (FX_BAND_PP, FX_THRESHOLD_PCT)),
             "named_records": len(wide_named),
-            "ten_least_certain": w_ten,
+            "least_certain": w_least,
             "exchange_lines_near_threshold": w_near,
             "columns_undeterminable_or_medium_or_low_confidence": w_cols,
-            "added_to_the_ten": sorted(set(wide_named) - set(named), key=SS.order_key),
+            "added_to_the_least_certain": sorted(set(wide_named) - set(named), key=SS.order_key),
             **wide},
-        "ten_and_widened_side_by_side": side_by_side(block, wide),
+        "least_certain_and_widened_side_by_side": side_by_side(block, wide),
         "runtime_seconds": time.time() - t0,
     }
 
@@ -219,10 +253,11 @@ def main():
 
 
 def report(out):
-    print("  --- the ten least-certain records")
-    print("  %d left out (%d columns, %d exchange lines), %d fitted (%d syndicates) of the primary's %d"
-          % (out["n_left_out"], len(out["older_years_columns_low_confidence"]),
-             len(out["exchange_lines_undeterminable"]), out["n_fit"], out["n_syndicates_fit"], out["n_primary"]))
+    print("  --- the least-certain records")
+    print("  %d left out (%d columns, %d exchange lines, %d restated histories), %d fitted (%d syndicates) of the "
+          "primary's %d" % (out["n_left_out"], len(out["older_years_columns_low_confidence"]),
+                            len(out["exchange_lines_undeterminable"]), len(out["history_restated"]), out["n_fit"],
+                            out["n_syndicates_fit"], out["n_primary"]))
     for v in SS.VARS:
         if v in out["primary_fit"]:
             print("  %-9s %.4f [%.4f, %.4f]  primary %.4f  shift %+.4f (%+.2f primary sd)"
@@ -235,15 +270,16 @@ def report(out):
               % (q, vg["centre"][q], vg["primary_centre"][q], 100 * vg["relative_to_primary"][q],
                  "" if iv is None else "  resampling interval [%.4f, %.4f]" % (iv["lo"], iv["hi"])))
     w = out["widened"]
-    print("  --- widened: %d left out (%d added: %s), %d fitted" % (w["n_left_out"], len(w["added_to_the_ten"]),
-                                                                  ", ".join(w["added_to_the_ten"]), w["n_fit"]))
-    sb = out["ten_and_widened_side_by_side"]
+    print("  --- widened: %d left out (%d added: %s), %d fitted" % (
+        w["n_left_out"], len(w["added_to_the_least_certain"]), ", ".join(w["added_to_the_least_certain"]), w["n_fit"]))
+    sb = out["least_certain_and_widened_side_by_side"]
     for v, row in sb["fit"].items():
-        print("  %-9s primary %.4f   ten %.4f   widened %.4f" % (v, row["primary"], row["ten_records"], row["widened"]))
+        print("  %-9s primary %.4f   least certain %.4f   widened %.4f" % (v, row["primary"], row["least_certain"],
+                                                                         row["widened"]))
     for q, row in sb["vignette_centres"].items():
-        print("  %-12s primary %.4f   ten %.4f (%+.2f%%)   widened %.4f (%+.2f%%)"
-              % (q, row["primary"], row["ten_records"], 100 * row["ten_records_relative_to_primary"], row["widened"],
-                 100 * row["widened_relative_to_primary"]))
+        print("  %-12s primary %.4f   least certain %.4f (%+.2f%%)   widened %.4f (%+.2f%%)"
+              % (q, row["primary"], row["least_certain"], 100 * row["least_certain_relative_to_primary"],
+                 row["widened"], 100 * row["widened_relative_to_primary"]))
 
 
 if __name__ == "__main__":

@@ -164,6 +164,14 @@
     "table_retranslated": 10,
     "undeterminable_kept": 4
    }
+  },
+  "round5": {
+   "records_excluded": [
+    "3000_2022"
+   ],
+   "chosen_as": "the records of the round-5 readings of tables whose history moved between reports (results/extraction_error_rate/mature-cohort/round5/; the screen rebase_screen.py over the primary sample's 649 records at 35a259c) that rule 2 of the round-5 decision rules decides: a table whose history is retranslated while its end-(t-1) reserves are not, with an exchange line of 5% or more of R",
+   "readers": "P2 and Q1, two independent arms (round5/readings/; the brief round5/briefs/brief_r5.md)",
+   "decision": "decision of the Claude analysis session, 23 October 2026, applying the author's rule B"
   }
  },
  "excluded": {
@@ -540,6 +548,96 @@
    ],
    "table_retranslated": false,
    "decision": "the author's rule B (decision of 22 October 2026), applied to two independent readings of the filing (F1, F2): the development table is not retranslated across a sterling/dollar move of 5% or more, and the gross claims-outstanding roll-forward prints an exchange line of -6.9% of the opening gross claims outstanding (absolute value at least 5%), so the record leaves the primary sample; the 672 sensitivity keeps it"
+  },
+  "3000_2022": {
+   "report_currency": "GBP",
+   "opening_gross_claims_outstanding_m": 1146.474,
+   "fx_line_gross_m": 91.879,
+   "fx_line_pct_of_opening": 8.01,
+   "pages": [
+    21,
+    25,
+    42,
+    44
+   ],
+   "quote": "reader P2, p25: balance sheet 'Claims outstanding 17 | 1,310,517 | 1,146,474' (p25) | reader Q1, p42: note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 (8.0%) || reader P2, p42: Note 17 (p42): 'Movement in provision 72,164' and 'Movement due to foreign exchange 91,879' | reader Q1, p42: note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 (8.0%)",
+   "readings": [
+    {
+     "reader": "P2",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/P2.json",
+     "pages": [
+      21,
+      25,
+      42,
+      44
+     ],
+     "pages_as_read": {
+      "t": 44,
+      "prev": 43,
+      "accounts_t": [
+       21,
+       25,
+       42
+      ],
+      "accounts_prev": "2022 comparatives p21, p25, p42"
+     },
+     "read_by": "text layer and page images (2022 p44, 2021 p43); cell-by-cell arithmetic in Python",
+     "opening_gross_claims_outstanding": {
+      "value_m": 1146.474,
+      "page": 25,
+      "quote": "balance sheet 'Claims outstanding 17 | 1,310,517 | 1,146,474' (p25)"
+     },
+     "fx_line_gross": {
+      "value_m": 91.879,
+      "page": 42,
+      "quote": "Note 17 (p42): 'Movement in provision 72,164' and 'Movement due to foreign exchange 91,879'"
+     },
+     "fx_line_pct_of_opening": 8.01,
+     "table_retranslated": false,
+     "table_exchange_basis": "the paid history was re-stated up by about 8% (2013 paid ratio 1.0800), the reserve part was not retranslated",
+     "cells_compared": "in the 2022 table the end-2021 incurred cells and the end-2021 cumulative paid cells are both higher than the 2021 print by the SAME amount, column by column (2013: incurred 333,693 vs 313,157 = +20,536; paid (277,147) vs (256,611) = +20,536; 2014: 270,950 vs 251,173 = +19,777 and (230,948) vs (211,170) = +19,778; 2020: 324,795 vs 318,487 = +6,308 and (72,406) vs (66,099) = +6,307; 2021: 120,673 vs 120,156 = +517 and (7,806) vs (7,289) = +517)",
+     "reader_verdict": "restated_base",
+     "verdict": "exclude",
+     "verdict_by": "rule 2 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), which is the author's rule B (22 October 2026), applied to this reading's facts: the reader's own round-5 verdict is restated_base",
+     "note": "Reserves tie exactly, but the history in the 2022 table is a mixed-rate base: cumulative paid and incurred history were raised by the same amount per cell (about 8%, i.e. paid retranslated to 2022 rates) while the end-2021 reserve stayed at its 2021-rate value. M (+112.6m, 9.8% of opening reserves) as read from the table therefore includes the year's retranslation of reserves (about 8% of 846m on the matured years, or roughly 68m by a pro rata estimate) and the unexplained -58.7m on UY2013. Neither paid (-13.3%, with the 'All prior years' payments outside the table) nor incurred (+11.0%) is within 5% of the accounts, the control year is (-5.5%, +3.1%). The filing prints no movement for UY<=2020 alone; the stated prior-year line is net of reinsurance, all accident years: 'reduced by £25.4m' (Note 5), the opposite sign to the table's gross M."
+    },
+    {
+     "reader": "Q1",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/Q1.json",
+     "pages": [
+      21,
+      42,
+      44
+     ],
+     "pages_as_read": {
+      "t_table": 44,
+      "prev_table": "2021 PDF p.43",
+      "accounts_t": "2022 p.21",
+      "provisions_note": "2022 p.42"
+     },
+     "read_by": "text layer (2022 PDF pp.21, 42, 44; 2021 PDF p.43); table structure consistent row by row (10,9,...,1 cells per age)",
+     "opening_gross_claims_outstanding": {
+      "value_m": 1146.474,
+      "page": 42,
+      "quote": "note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 (8.0%)"
+     },
+     "fx_line_gross": {
+      "value_m": 91.879,
+      "page": 42,
+      "quote": "note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 (8.0%)"
+     },
+     "fx_line_pct_of_opening": 8.01,
+     "table_retranslated": false,
+     "table_exchange_basis": "So paid history was lifted (about +7% to +10% by UY) but the end-2021 outstanding was left at the 2021 amounts, whereas the end-2022 diagonal is at 2022 rates",
+     "cells_compared": "in every column the 2022 table's end-2021 incurred and cumulative paid are both higher than the 2021 report's by the SAME amount, so the implied provision (incurred less paid) at end-2021 is unchanged",
+     "reader_verdict": "restated_base",
+     "verdict": "exclude",
+     "verdict_by": "rule 2 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), which is the author's rule B (22 October 2026), applied to this reading's facts: the reader's own round-5 verdict is restated_base",
+     "note": "Unlike 2689/2023 the table ties to the balance sheet and its implied paid/incurred are of the right order (paid -13% with the prior-years column absent; reconciles fully with note 17), but the history was restated without explanation in the lopsided way described (paid and incurred lifted equally, outstanding left at 2021 rates), so (end-2022 less end-2021) mixes currency bases and overstates M for UY<=2020 by about 68m of FX (112.6m printed vs roughly 45m). M is not measurable from this table as printed; the filing prints only the all-years movement (72,164 and FX 91,879). Recommend treating the record as needing a currency-consistent base (e.g. end-2021 reserves translated at 2022 rates)."
+    }
+   ],
+   "table_retranslated": false,
+   "decision": "rule 2 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), which is the author's rule B (22 October 2026), applied to two independent readings of the filing (round 5: P2, Q1): the development table's history is retranslated while its end-(t-1) reserves are not, so the step from the t-1 diagonal to the t diagonal carries the translation of the reserves, and the gross claims-outstanding roll-forward prints an exchange line of 8.0% of the opening gross claims outstanding (absolute value at least 5%), so the record leaves the primary sample; the 672 sensitivity keeps it"
   }
  },
  "read_and_kept": {

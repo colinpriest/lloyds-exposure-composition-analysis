@@ -1,0 +1,540 @@
+{
+ "1301_2016": {
+  "key": "1301_2016",
+  "read_by": "OCR text and page images (both PDF page 40, printed page 39; images copied to renders/)",
+  "pages": {
+   "syndicate_1301_2016": [
+    40,
+    41,
+    11
+   ],
+   "syndicate_1301_2015": [
+    40
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED for u 2011-2014; the 2015 (t-1) cell is a different basis, see below. Both reports print the table in GBP m under '15. Claims development' (2016 report) / '16. Claims development' (2015 report): 'Claims development is shown in the tables below, both gross and net of reinsurance ceded, on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases.' (2015 likewise at 31 December 2015). 2016 table, 'Estimate of ultimate gross claims' (GBP m): at end of UY 30.4 27.5 53.6 52.2 66.1 74.2 (2011..2016); one year later 57.8 55.1 88.8 91.6 112.6; two years later 64.3 56.1 85.3 90.8; three years later 60.7 54.7 84.2; four years later 60.6 54.9; five years later 60.7. End-2015 cells = 60.6 (2011), 54.7 (2012), 85.3 (2013), 91.6 (2014), 66.1 (2015). 2015 table: at end of UY 65.8 57.7 82.5 87.3 102.7; one year later 61.5 50.2 81.3 81.9; two years later 61.4 50.2 76.9; three years later 56.2 49.0; four years later 56.0. Latest cells 56.0, 49.0, 76.9, 81.9, 102.7. Ratios 1.082, 1.116, 1.109, 1.118 for 2011-2014 (about the sterling retranslation); 0.644 for 2015.",
+  "explanation": [
+   "No restatement wording found in the 2016 report (searched restat / re-present / prior year adjust / change of basis / correction / RITC / merger / transfer).",
+   "Only change visible: the 2015 table ends 'Gross ultimate claims reserve ... 181.3; for 2010 and prior years 6.1; Gross unearned portion of ultimate claims (50.6); Gross claims reserves 136.8'; the 2016 table has no 'unearned portion' line and ends 'Gross ultimate claims reserve 199.0; ... 2010 and prior years 4.7; Gross claims reserves 203.7'. So the 2016 table is on an earned basis, 2015's on an ultimate (unearned included) basis. That explains why UY 2015's end-2015 cell is 66.1 in the 2016 table against 102.7 in the 2015 table (and the whole 'at end of underwriting year' row is lower)."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "GBP m",
+   "accounts": 71.329,
+   "page": 11,
+   "quote": "technical account 'Claims paid / Gross amount ... (71,329) (45,372)'; note 16 (p41) 'Claims paid during the year (71,329) 5,687 (65,642) (45,372) 2,979 (42,393)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: the table prints only 'Less gross claims paid' for the latest diagonal (59.2 53.0 65.0 54.4 41.4 5.4), no cumulative paid at end t-1."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 45.372,
+   "page": 11,
+   "quote": "same lines, 2015 column",
+   "diff_pct": null,
+   "working": "not possible, same reason ('Less gross claims paid' 54.3 46.6 51.4 28.9 4.0 only)"
+  },
+  "incurred_test": {
+   "basis": "2016 table: earned basis (no unearned portion line; reserve 203.7 = balance sheet); 2015 table: ultimate basis incl. unearned (unearned portion 50.6 deducted)",
+   "table_implied_m": 119.1,
+   "working": "2016 table (GBP m): 2011 60.7-60.6=0.1; 2012 54.9-54.7=0.2; 2013 84.2-85.3=-1.1; 2014 90.8-91.6=-0.8; 2015 112.6-66.1=46.5; 2016 74.2; total 119.1",
+   "accounts_m": 111.176,
+   "page": 41,
+   "quote": "Note 16 gross column: 'Change in prior year provisions (13,504)'; cost of current year 124,680 (derived: 136,846 - 13,504 + X - 71,329 + 27,024 = 203,717, X = 124,680, the printed line is OCR-garbled 'costof cumreniivear 124,680'); gross incurred = 124,680 - 13,504 = 111,176 (GBP '000), equal to paid 71,329 plus change in provision 39,847 (203,717-136,846-27,024)",
+   "diff_pct": 7.1,
+   "note": "the 7.1% excess is in the direction expected from retranslating the current year cell at the year-end rate (US dollar 1.23 year-end against 1.36 average, p43) while the accounts use transaction-date rates; the table's t-1 cells are all at the same year-end rates so the earlier years carry no such effect.",
+   "control_2015": "2015 table (GBP m): 2011 56.0-56.2=-0.2; 2012 49.0-50.2=-1.2; 2013 76.9-81.3=-4.4; 2014 81.9-87.3=-5.4; 2015 102.7; total 91.5 against 2015 gross incurred 81.677 (95,315-13,638 from the 2016 report note 16 comparative) = +12.0%, on an ultimate basis where an excess is expected"
+  },
+  "tie_of_outstanding": "2016 table 'Gross claims reserves 203.7' = note 16 closing 203,717 (p41); 2015 table 136.8 = 136,846. Both tie.",
+  "basis": "gross of reinsurance (a net table follows), underwriting-year, estimate of ULTIMATE gross claims, GBP m",
+  "m_recomputed_m": -1.6,
+  "m_working": "u<=2014, 2016 table (end-2016 less end-2015 cell): 2011 60.7-60.6=+0.1; 2012 54.9-54.7=+0.2; 2013 84.2-85.3=-1.1; 2014 90.8-91.6=-0.8; sum -1.6 (GBP m). Analysis figure not supplied in the batch.",
+  "verdict": "screen_misread",
+  "note": "The screen's only flagged year is 2015 (ratio 0.644), which is t-1, not in M (u<=2014). The cause is a change of basis in the 2016 table (earned, unearned portion removed) against 2015's ultimate basis, visible in the missing 'unearned portion' line and the lower 'at end of underwriting year' row, not a restatement of the mature years. For 2011-2014 the end-2015 cells are the 2015 cells times 1.08-1.12 (sterling retranslation; 2011's whole path is a little lower than FX-scaled). M(u<=2014) = -1.6m from the 2016 table alone is therefore unaffected and stands; the table's implied incurred (119.1m) is 7.1% above the accounts' 111.2m on an earned basis, a little over the 5% tolerance, which year-end versus average rates explains. Closest verdict: the screen misread a basis change on the t-1 column as a rebase; the table is usable for M (equivalent to valid)."
+ },
+ "1967_2022": {
+  "key": "1967_2022",
+  "read_by": "text layer (filing_pages.py); both gross triangles read as text, alignment checked by the staircase, the printed paid and balance-to-pay rows and the balance sheet",
+  "pages": {
+   "syndicate_1967_2022": [
+    36,
+    18,
+    20
+   ],
+   "syndicate_1967_2021": [
+    36,
+    18
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED as printed, but the flagged 2020 previous cell is a misprint in the 2021 report. 2022 report p36 (printed PAGE 32 OF 50), 'Gross Claims Development ... UK GAAP earned, underwriting year basis. All tables have been revalued to reflect the current year closing rate of exchange' ($'000, columns 2013..2022): end-2021 cells = 2013 'Eight years later' 104,245; 2014 'Seven' 134,383; 2015 'Six' 109,892; 2016 'Five' 189,095; 2017 'Four' 210,315; 2018 'Three' 159,158; 2019 'Two' 266,555; 2020 'One year later' 406,166; 2021 'At end of underwriting year' 127,099. 2020 column: 211,406 | 406,166 | 447,781. 2021 report p36 ($'000, 2012..2021): latest 2013 107,240; 2014 139,594; 2015 113,420; 2016 197,502; 2017 219,100; 2018 166,799; 2019 275,660; 2020 'One year later' 216,548 (current); 2021 130,820. Ratios 0.963-0.972 for every year (US dollar report, retranslation), but 1.876 for 2020. The 2020 cell is the exception because 216,548 is a misprint: the same 2021 table prints for 2020 'Cumulative payments 190,641' and 'Estimated balance to pay 225,907', which add to 416,548, not 216,548; 416,548 x 0.975 = 406,166, the 2022 report's cell, and the 2021 'At end of underwriting year' 216,880 is in line with the 2022 table's 211,406 (0.975). So the 2021 printed cell has a wrong leading digit.",
+  "explanation": [
+   "p36 (2022): \"All tables have been revalued to reflect the current year closing rate of exchange and are prepared on an undiscounted basis.\"",
+   "No restatement, RITC, portfolio transfer, change of basis or correction wording for the claims development found in either report (searched restat / re-present / prior year adjust / reclass / RITC / reinsurance to close). The only 're-presented' wording concerns class structure (2022 p34, 2021 p9/p34) and the cash flow statement, not the triangle.",
+   "The misprint itself is not acknowledged; it is shown by the 2021 table's own paid + balance-to-pay arithmetic (2020: 190,641 + 225,907 = 416,548)."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "USD m",
+   "accounts": 295.376,
+   "page": 18,
+   "quote": "technical account 'Claims paid / Gross amount (295,376) (329,643)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: the table prints cumulative payments for the latest diagonal only ('Cumulative payments 102,593 119,598 103,564 178,463 185,408 131,562 204,557 332,685 75,863 14,597'), no cumulative paid at end t-1."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 329.643,
+   "page": 18,
+   "quote": "2021 technical account 'Claims paid / Gross amount (329,643) (220,467)'",
+   "diff_pct": null,
+   "working": "not possible, same reason"
+  },
+  "incurred_test": {
+   "basis": "UK GAAP earned, underwriting-year basis (2022 p36 heading); table omits '2012 and prior' (balance to pay 811, p36), a small line",
+   "table_implied_m": 328.792,
+   "working": "2022 table ($'000, current estimate less end-2021 cell): 2013 103,899-104,245=-346; 2014 134,028-134,383=-355; 2015 110,697-109,892=+805; 2016 189,115-189,095=+20; 2017 217,007-210,315=+6,692; 2018 165,861-159,158=+6,703; 2019 256,878-266,555=-9,677; 2020 447,781-406,166=+41,615; 2021 260,225-127,099=+133,126; 2022 first-year 150,209; total 328,792",
+   "accounts_m": 337.697,
+   "page": 18,
+   "quote": "technical account: 'Claims paid Gross amount (295,376)' and 'Change in the provision for claims Gross amount 17 (42,321)'; sum 337,697",
+   "diff_pct": -2.6,
+   "control_2021": "2021 table ($'000, current less end-2020 cell): 2012 -1,100; 2013 -35; 2014 +64; 2015 +3,147; 2016 -3,722; 2017 +6,347; 2018 +5,913; 2019 +6,195; 2020 +199,668 if the cell is 416,548 (-332 if the misprinted 216,548 is used); 2021 130,820; total 347,297 (corrected) or 147,297 (as printed) against 2021 gross incurred 351,879 (329,643 + 22,236, 2021 p18) = -1.3% (corrected) or -58.1% (as printed). The control confirms the 2021 cell is a misprint."
+  },
+  "tie_of_outstanding": "2022 table 'Grand total 587,621' = balance sheet 'Claims outstanding 587,621' (p20, gross) ; 2021 table 561,739 = 2021 comparative 561,739. Both tie.",
+  "basis": "gross of reinsurance ('Gross Claims Development', a net table follows), underwriting-year, earned, estimate of cumulative claims, US dollar '000",
+  "m_recomputed_m": 45.457,
+  "m_working": "u<=2020, 2022 table only (current less end-2021 cell, USD '000): 2013 -346; 2014 -355; 2015 +805; 2016 +20; 2017 +6,692; 2018 +6,703; 2019 -9,677; 2020 +41,615; sum +45,457 = USD 45.5m. Analysis figure not supplied in the batch. Note: any figure built from the 2021 report's 2020 cell (216,548) would give about +231m for 2020 instead of +41.6m.",
+  "verdict": "valid",
+  "note": "The flag is a misprint in the PREVIOUS report's table (2020 cell 216,548 should read 416,548 by its own paid and balance rows), not a restatement. The 2022 table is internally consistent with its own history, the whole history is the 2021 history at closing-rate retranslation (0.96-0.97), implied incurred ties to the accounts (-2.6%, -1.3% for the corrected 2021 control), and outstanding ties to the balance sheet. M from the 2022 table stands (45.5m; the 2020 column contributes +41.6m real adverse development, and 2019 -9.7m). Any check or analysis that takes the 2021 printed cell as the base for 2020 is wrong, and the 2021 report's own M-years (u<=2019) are unaffected because 2020 is then t-1."
+ },
+ "2357_2024": {
+  "key": "2357_2024",
+  "read_by": "text layer for both; 2024 table also read from a page image (renders/syndicate_2357_2024_p27.png, 2023 table p26 image too)",
+  "pages": {
+   "syndicate_2357_2024": [
+    27,
+    14,
+    17,
+    19
+   ],
+   "syndicate_2357_2023": [
+    26,
+    14
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED; the 'ratio' of about 1000 is purely a units-label artefact. 2024 report p27 (printed 26 of 42) 'Claims development table gross of reinsurance', columns 2016..2024, NO unit label anywhere on the page: end-2023 cells = 2016 'Seven years later' 52,429; 2017 'Six years later' 489,508; 2018 'Five years later' 556,168; 2019 'Four years later' 405,748; 2020 'Three years later' 575,621; 2021 'Two years later' 534,108; 2022 'One year later' 275,681; 2023 'At end of first year' 136,218. 2023 report p26 (printed 25 of 37) 'Claims development table gross of reinsurance', column headers '$'000': latest cells 2016 'Seven years later' 52,482; 2017 'Six years later' 490,237; 2018 'Five years later' 563,622; 2019 'Four years later' 415,924; 2020 'Three years later' 579,167; 2021 'Two years later' 538,616; 2022 'One year later' 275,819; 2023 'At end of first year' 136,218. True ratios 0.9985, 0.9868, 0.9755, 0.9939, 0.9916, 0.9995, 1.0000 (2017 to 2023), 0.9990 for 2016: no rebase; history differs by at most about -2.5% (and by up to -3.8% in some first-year cells, e.g. 2019 318,374 vs 330,937). The screen's 'cell_t / cell_p' of 489,508 vs 490,237 are right; its ratio treats the 2024 grid as millions.",
+  "units_check": "The 2024 table has no unit label. Its scale is $'000: (a) the accounts are 'rounded to the nearest $'000' (2024 p19); (b) 'Total gross claims outstanding 657,519' (p27) equals the balance sheet gross claims outstanding 657,519 (p17, with 618,180 for 2023, the 2023 table's total); (c) the 2023 table is labelled $'000 and prints the same magnitudes. The stored extraction labels the 2024 _rag_triangle (page 27) 'millions' with units_evidence 'default' (both gemini-2.5-flash and gpt-5-mini), while its _claims_triangle has 'thousands' and the 2023 _rag_triangle has 'thousands'. So the 'millions' label is a default applied to an unlabelled table.",
+  "explanation": [
+   "p19 (2024): \"The financial statements are prepared in US dollars which is the functional and presentational currency of the Syndicate and rounded to the nearest $'000.\"",
+   "2024 report (txt, 'Restatement of comparative information'): \"During 2024, Lloyd's introduced changes to the syndicate accounts process ... certain comparative information has been represented to ensure consistency ... There have been no other restatements made to prior year disclosures.\" (presentation of accounts lines; not the triangle)",
+   "txt line 2632: \"Effective 31 December 2024 the 2022 year of account closed by way of reinsurance to close into the 2023\" (an internal year-of-account RITC; does not alter the table's columns or history)"
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "USD m",
+   "accounts": 267.492,
+   "page": 14,
+   "quote": "technical account 'Claims paid / gross amount (267,492) (214,631)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: only 'Less cumulative gross claims paid (52,411) (454,770) (542,328) (371,776) (480,335) (460,914) (198,230) (75,168) (41,300)' for the latest diagonal is printed."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 214.631,
+   "page": 14,
+   "quote": "2023 technical account 'Claims paid - gross amount (214,631) (439,470)'",
+   "diff_pct": null,
+   "working": "not possible, same reason"
+  },
+  "incurred_test": {
+   "basis": "underwriting-year basis; the 2024 first-year cell for UY 2024 330,341 is close to what the accounts' year looks like; tie is within 1%",
+   "table_implied_m": 309.27,
+   "working": "2024 table ($'000, latest less end-2023 cell): 2016 +8; 2017 -1,585; 2018 +3,275; 2019 -11,458; 2020 -20,582; 2021 -4,924; 2022 -29,491; 2023 +43,686; 2024 +330,341; total 309,270",
+   "accounts_m": 306.456,
+   "page": 14,
+   "quote": "technical account 'Claims paid gross amount (267,492)' and 'Change in the provision for claims: gross amount 5 (38,964)'; sum 306,456",
+   "diff_pct": 0.9,
+   "control_2023": "2023 table ($'000): 2016 +21; 2017 -1,445; 2018 -22,323; 2019 -6,982; 2020 -4,039; 2021 -38,222; 2022 +14,378; 2023 136,218; total 77,606 against 2023 gross incurred 72,930 (claims paid 214,631 less provision release 141,701, 2023 p14) = +6.4%, a looser tie than 2024 and in the same direction as expected from table versus accounts exchange conventions"
+  },
+  "tie_of_outstanding": "2024 table 'Total gross claims outstanding 657,519' = balance sheet 657,519 (p17); 2023 table 618,180 = comparative 618,180.",
+  "basis": "gross of reinsurance (heading 'Claims development table gross of reinsurance'), underwriting-year, estimate of gross claims incurred, USD '000 (unlabelled in 2024)",
+  "m_recomputed_m": -64.757,
+  "m_working": "u<=2022, 2024 table only, USD '000 (latest less end-2023 cell): 2016 +8; 2017 -1,585; 2018 +3,275; 2019 -11,458; 2020 -20,582; 2021 -4,924; 2022 -29,491; sum -64,757 = USD -64.8m (favourable). Without the 2016 column (the screen's years start at 2017): -64,765. Analysis figure not supplied in the batch; if the analysis used the 2024 grid under its 'millions' label, its M would be 1,000 times too large (about -64,757 million).",
+  "verdict": "units_slip",
+  "note": "The 2024 development table carries no unit label and the extraction defaulted it to 'millions' (units_evidence 'default'); the true scale is $'000 (balance sheet tie 657,519, same magnitudes as the 2023 table labelled $'000). With the right scale the history moves by at most -2.5% (no rebase), implied incurred ties to the accounts (+0.9%), outstanding ties, and M(u<=2022) = -64.8m. M's scale is affected only if the 'millions' label feeds the analysis (the _claims_triangle carries 'thousands' and the 2023 triangle is correct)."
+ },
+ "2488_2016": {
+  "key": "2488_2016",
+  "read_by": "2016 table and technical account from page images (scan; OCR of numbers cross-checked against the images, renders/); 2015 table from text layer; arithmetic in calc_2488.py",
+  "pages": {
+   "syndicate_2488_2016": [
+    51,
+    24,
+    11,
+    41
+   ],
+   "syndicate_2488_2015": [
+    42,
+    19
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED. 2016 report PDF p51 (printed 49) '16. CLAIMS DEVELOPMENT TABLES / Claims development as at 31 December 2016 - Gross' (GBP '000, 'translated into sterling at the current year-end rates'): End of underwriting year 151,255 | 136,384 | 101,409 | 99,192 | 103,313 | 107,829; One year later 319,204 | 273,527 | 263,112 | 245,827 | 235,665; Two years later 375,264 | 273,135 | 273,308 | 239,877; Three years later 307,111 | 245,716 | 262,311; Four years later 285,823 | 238,933; Five years later 282,798 (columns 2011..2016); current estimate 282,798 | 238,933 | 262,311 | 239,877 | 235,665 | 107,829; cumulative payments (229,569) (169,441) (159,393) (124,660) (83,296) (19,126); in balance sheet 53,229 | 69,492 | 102,917 | 115,217 | 152,368 | 88,703 = 581,928; provision for prior financial years 380,218; liability in the balance sheet 962,146. End-2015 cells: 2011 285,823; 2012 245,716; 2013 273,308; 2014 245,827; 2015 103,313. 2015 report PDF p42 (printed 40) 'Claims development as at 31 December 2015 - Gross' (GBP '000): End of UY 129,857 | 112,859 | 84,730 | 85,299 | 88,553; One year later 274,833 | 236,095 | 225,302 | 210,648; Two years later 322,209 | 235,838 | 233,691; Three years later 263,573 | 213,762; Four years later 220,173; current 220,173 | 213,762 | 233,691 | 210,648 | 88,553; payments (169,965) (127,529) (114,129) (56,865) (6,820); in balance sheet 50,208 | 86,233 | 119,562 | 153,783 | 81,733 = 491,519; prior years 424,765; liability 916,284. Latest cells 220,173; 213,762; 233,691; 210,648; 88,553. Ratios 1.298 (2011), 1.150, 1.170, 1.167, 1.167. All cells of the 2016 table for 2012-2015, and the 2011 column up to end-2014 (307,111 / 263,573 = 1.165), equal the 2015 report's times about 1.165 (sterling retranslation). The single exception is the 2011 end-2015 cell: 285,823 against 220,173 x 1.165 = 256,502, +29,321.",
+  "explanation": [
+   "p51 (2016): \"The cumulative claims estimates and payments for each underwriting year are translated into sterling at the current year-end rates.\" (explains the 1.165 uniform scaling, not the 2011 cell)",
+   "p11 (2016): \"Prior period reserve releases amounted to £141.3 million (2015 restated: £85.3 million) due primarily to favourable experience\" and note 5 (p41): \"2015 comparatives for this disclosure ... have been restated. Previously stated figures included the movement on the entire technical account. This movement has been restated to solely include movement on prior year claims outstanding.\" (a restatement of the prior-year surplus disclosure, not of the claims development table)",
+   "No wording found on a restatement, re-presentation or correction of the 2011 underwriting year, RITC, commutation, merger or portfolio transfer in the 2016 report (searched restat / re-present / correction / reclass / RITC / reinsurance to close / as if / merger / commut)."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "GBP m",
+   "accounts": 238.712,
+   "page": 24,
+   "quote": "technical account: 'Claims paid: Gross amount (238,712) (212,186)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE on the table alone: cumulative payments are printed for the latest diagonal only. Cross-report substitute (not the test asked for): 2016 cumulative payments 2011-2015 = 766,359; 2015 report's 475,308 x 1.165 = 553,734; paid in the year on those years 212,625 plus 19,126 for UY 2016 = 231,751 against 238,712 gross paid (-2.9%, within 5%); so the payment cells and the 1.165 factor are sound."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 212.186,
+   "page": 24,
+   "quote": "same line, 2015 column",
+   "diff_pct": null,
+   "working": "not possible, same reason (2015 report p42 prints cumulative payments for the latest diagonal only)"
+  },
+  "incurred_test": {
+   "basis": "earned by construction: 'In balance sheet' = estimate less payments and the total 581,928 + 380,218 (prior years) = 962,146 balance-sheet gross claims outstanding (p37); the table excludes UY 2010 and prior (the 380,218 line, no cells)",
+   "table_implied_m": 213.426,
+   "working": "2016 table (GBP '000, latest less end-2015 cell): 2011 -3,025; 2012 -6,783; 2013 -10,997; 2014 -5,950; 2015 +132,352; 2016 107,829; total 213,426",
+   "accounts_m": 133.821,
+   "page": 24,
+   "quote": "technical account: 'Claims paid ... Gross amount (238,712)' and 'Change in the provision for claims outstanding: Gross amount 104,891' (a release; incurred 238,712 - 104,891 = 133,821)",
+   "diff_pct": 59.5,
+   "caution": "The table leaves out UY 2010 and prior, whose reserve fell from 424,765 (x 1.165 = 494,880) to 380,218; the printed reserves and payments put the movement on those years near -107 and, with it, the total near 134, which matches the accounts. The same gap shows in 2015 (control: table 156.8 against 2015 gross incurred 113.4, +38%). So the incurred test does not condemn the table; it cannot see a single-column fault.",
+   "control_2015": "2015 table (GBP '000, latest less end-2014 cell): 2011 220,173-263,573=-43,400; 2012 213,762-235,838=-22,076; 2013 233,691-225,302=+8,389; 2014 210,648-85,299=+125,349; 2015 88,553; total 156,815 against 2015 gross incurred 113,404 (paid 212,186 less provision release 98,782, from the 2016 report's comparatives) = +38.3%"
+  },
+  "roll_check": "Independent of the history cells, from printed provisions and payments in both reports (GBP '000, 2015 figures x 1.165): 2011 provision 53,229 against 50,208 x 1.165 = 58,492 (-5,263); paid in year 229,569 - 169,965 x 1.165 = +31,560; estimate moved +26,296 (adverse). The 2016 table's own cells give -3,025 for 2011. For 2012-2015 the table and the roll agree within 3.3m (-6,783 v -10,100; -10,997 v -9,940; -5,950 v -5,528; +132,352 v +132,500). Equivalently the end-2015 reserve implied by the 2016 table's 2011 cell (285,823 less payments 169,965 x 1.165 = 87,814) exceeds the 2015 balance sheet's 50,208 x 1.165 = 58,492 by 29,321, whereas 2012-2015 agree within 3.4m.",
+  "tie_of_outstanding": "2016 table liability 962,146 = p37 'Claims outstanding ... 962,146'; 2015 table 916,284 = p37 comparative (916,284). Both tie.",
+  "basis": "gross of reinsurance ('Claims development as at 31 December 2016 - Gross', a net table follows), underwriting year, estimate of ultimates tied to the balance sheet (earned), GBP '000 at year-end rates",
+  "m_recomputed_m": -26.755,
+  "m_working": "u<=2014, 2016 table only (latest less end-2015 cell, GBP '000): 2011 282,798-285,823=-3,025; 2012 238,933-245,716=-6,783; 2013 262,311-273,308=-10,997; 2014 239,877-245,827=-5,950; sum -26,755 = GBP -26.8m. If the 2011 end-2015 cell were the 2015 report's value at the common retranslation (256,502) the 2011 term would be +26,296 and M +2.6m; the roll through printed provisions and payments gives M about +0.7m. The filing does not print the true figure. Analysis figure not supplied in the batch.",
+  "verdict": "restated_base",
+  "note": "Confined to the oldest column. The 2016 table agrees with the 2015 report (x 1.165) in every cell except the 2011 column's end-2015 estimate, which is 29.3m higher than it should be; 2011's own path (263,573 -> 220,173 in the 2015 report, 307,111 -> 285,823 in the 2016 table) shows the 2015 release only half as large. No explanation is given. The effect is that the table's 2011 movement for 2016 is -3.0m while the printed provisions and payments make it +26.3m (adverse), so M(u<=2014) is -26.8m on the table against about +0.7 to +2.6m otherwise: not measurable from the table as printed (a 3.2% of opening reserves 916.3m difference). The table is otherwise sound: other columns tie, payments tie cross-report (-2.9%), outstanding ties to the balance sheet; the incurred test cannot detect a one-column fault because UY 2010 and prior (no cells) carry about -107m of releases."
+ },
+ "3000_2016": {
+  "key": "3000_2016",
+  "read_by": "text layer (filing_pages.py); both gross tables read as text, column alignment checked by the staircase shape",
+  "pages": {
+   "syndicate_3000_2016": [
+    38,
+    16,
+    37,
+    10,
+    6
+   ],
+   "syndicate_3000_2015": [
+    36
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED on both gross tables. 2016 report p38 'Gross outstanding claims provision as at 31 December 2016 / Before the effect of reinsurance' (GBP '000): end-2015 cells = 2011 'Four years later' 584,362; 2012 'Three years later' 445,510; 2013 'Two years later' 343,050; 2014 'One year later' 230,985; 2015 'At end of underwriting year' 103,960. 2015 report p36 'Gross outstanding claims provision as at 31 December 2015 / Before the effect of reinsurance' (GBP '000): latest cells 2011 'Four years later' 226,131; 2012 'Three years later' 193,364; 2013 'Two years later' 176,227; 2014 'One year later' 219,634; 2015 'At end of underwriting year' 102,097. Ratios 2.584, 2.304, 1.947, 1.052, 1.018 (not one exchange factor; the older the year the larger the step).",
+  "explanation": [
+   "p38 (2016 report), above the table: \"The following gross and net loss tables have been restated to reflect the historical information for Syndicate 1400 following the RITC accepted as at 1 January 2016. These tables have also been revalued to reflect the current year end rates of exchange.\"",
+   "p6 (2016 report): \"With effect from the 1 January 2016, the Syndicate accepted the 2013 year of account Reinsurance to Close (\"RITC\") from Syndicate 1400; a syndicate previously managed by Markel Syndicate Management Limited\"",
+   "p37 (2016 report) provisions note line: \"RITC accepted from Syndicate 1400\" 248,822 (gross), 25,153 (reinsurers), 223,669 (net)"
+  ],
+  "paid_test": {
+   "table_implied": 176.026,
+   "units": "GBP m",
+   "accounts": 264.295,
+   "page": 16,
+   "quote": "Technical Account 2016: 'Claims paid / Gross amount (264,295) (204,536)'",
+   "diff_pct": -33.4,
+   "working": "per column, cumulative paid at end 2016 less at end 2015 (same 2016 table): 2011 506,472-498,669=7,803; 2012 317,331-301,822=15,509; 2013 205,604-189,334=16,270; 2014 117,427-69,541=47,886; 2015 77,356-11,644=65,712; plus 2016 'At end of underwriting year' 22,846; total 176,026 (GBP '000). The 'All prior years' column carries no paid or incurred cells (only the outstanding 324,217), so pre-2011 payments are not in the table."
+  },
+  "paid_test_prev": {
+   "table_implied": 143.021,
+   "units": "GBP m",
+   "accounts": 204.536,
+   "page": "36 (2015 table), 16 of 2016 report for the comparative",
+   "quote": "2016 report technical account comparative column: 'Gross amount (264,295) (204,536)'; the 2015 report's own technical account (txt line 617) reads 'Claims paid / Gross amount (204,536) (172,003)'",
+   "diff_pct": -30.1,
+   "working": "2015 table: 2011 174,996-152,622=22,374; 2012 106,644-81,981=24,663; 2013 82,491-46,219=36,272; 2014 57,251-7,187=50,064; 2015 9,648; total 143,021 (GBP '000)"
+  },
+  "tie_of_outstanding": "2016 table total 'Gross outstanding claims provision at 31 December 2016' 1,103,264 = balance sheet 'Claims outstanding 18 1,103,264' (p19-ish, txt line 836); 2015 table total 737,922 'per the Statement of Financial Position' equals the 2016 comparative.",
+  "basis": "gross of reinsurance, underwriting-year table, estimates of cumulative claims incurred plus cumulative paid; 'All prior years' column empty for the triangle rows",
+  "m_recomputed_m": 27.325,
+  "m_working": "u<=2014, 2016 table only (end-2016 less end-2015 cell): 2011 587,479-584,362=+3,117; 2012 443,952-445,510=-1,558; 2013 315,360-343,050=-27,690; 2014 284,441-230,985=+53,456; sum +27,325 (GBP '000) = GBP 27.3m. Excludes the 'All prior years' column (no triangle cells). Analysis figure not supplied in the batch (source mature-cohort-figure:register).",
+  "verdict": "restated_base",
+  "note": "The restatement is stated and legitimate in kind, but it is a take-on: the 2016 table folds Syndicate 1400's history (RITC of 248.8m gross) into the 2011-2014 columns and retranslates it, so the 2016 table's end-2015 cells (e.g. 2011: 584,362 against 226,131 printed in 2015) are not the 2015 report's estimates. M from the 2016 table alone is internally consistent (both diagonals are from one table) but is not the movement of Syndicate 3000's own prior-year estimates; the 2015 report's cells cannot serve as the opening base either. The paid test does not discriminate: both years fall about 30% short of the accounts because the 'All prior years' column carries no paid cells (control 2015 table 143.0m vs 204.5m, -30.1%; 2016 table 176.0m vs 264.3m, -33.4%). Outstanding ties to the balance sheet in both years (1,103,264 and 737,922). Explained by RITC wording, so not an unexplained restatement; M should be treated as contaminated by the 1400 take-on."
+ },
+ "382_2022": {
+  "key": "382_2022",
+  "read_by": "text layer (filing_pages.py); both tables read as text, row/column alignment checked by the staircase and the 'Current estimate' diagonal; arithmetic in calc_382.py",
+  "pages": {
+   "syndicate_382_2022": [
+    45,
+    44,
+    16,
+    38
+   ],
+   "syndicate_382_2021": [
+    46
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED, including the flagged 2018 cell. 2022 report p45 (printed p43) 'Claims development table gross of reinsurance ... 100% syndicate values' (GBP '000, columns 2012..2022): end-2021 cells = 2012 'Nine years later' 168,730; 2013 'Eight years later' 173,463; 2014 'Seven years later' 185,693; 2015 'Six years later' 222,266; 2016 'Five years later' 211,107; 2017 'Four years later' 300,190; 2018 'Three years later' 246,344; 2019 'Two years later' 165,496; 2020 'One year later' 156,508; 2021 'At end of first accounting year' 67,111. 'Current estimate of earned claims at 31 December 2022': 170,655 | 173,232 | 191,492 | 217,967 | 214,054 | 313,487 | 272,164 | 170,766 | 140,149 | 160,852 | 108,173. 2021 report p46 (printed p44) 'Current estimate of earned claims at 31 December 2021': 2011 221,075 | 2012 154,534 | 2013 158,851 | 2014 170,900 | 2015 203,976 | 2016 197,266 | 2017 272,672 | 2018 256,954 | 2019 151,782 | 2020 146,114 | 2021 62,390. Ratios 2022 end-2021 cell / 2021 latest: 1.092, 1.092, 1.087, 1.090, 1.070, 1.101, 0.959, 1.090, 1.071, 1.076. Every column's whole history is the 2021 history times about 1.09 (2012 column: ten cells all 1.085-1.097) EXCEPT 2018: 2022 history 86,573 | 215,068 | 233,767 | 246,344 against 2021 history 79,872 | 228,951 | 246,107 | 256,954. Times 1.0919 the 2021 cells would be 87,209 | 249,983 | 268,715 | 280,559; the 2022 table is -636 | -34,915 | -34,948 | -34,215 lower: a constant lowering of about 34.6m in the three history cells of the 2018 column (not in its first cell), after which the 2018 current estimate 272,164 is in line with the old level (272,164 vs 280,559 retranslated = -8.4m). Also the 2011 column (221,075) is dropped from the 2022 table, which starts at 2012.",
+  "explanation": [
+   "p44 (2022 report): \"Data from all years has been restated at the 2022 closing rates of exchange to remove fluctuations caused by movements in outward currency rates.\" (explains the uniform 1.09, not the 2018 column)",
+   "p44: \"Each table then provides a reconciliation of the syndicate level reserves to the liability provided in the Syndicate's balance sheet by including the Syndicate's share of liabilities for the pre-2012 underwriting years.\"",
+   "No wording found on a 2018 restatement, re-presentation, correction, RITC, portfolio transfer or change of basis in the 2022 report (searched restat / re-present / prior year adjust / change of basis / correction / reclass / RITC / merger / transfer / novation). The only transfer text is the 2020 Part VII Lloyd's Europe transfer in the 2021 report p8 ('The combined effect of the two transactions had no economic impact for the Syndicate')."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "GBP m",
+   "accounts": 134.474,
+   "page": 16,
+   "quote": "technical account 'Claims paid - gross amount 134,474 167,587'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: the table prints cumulative payments only for the latest diagonal ('Cumulative payments to date (162,774) ... (4,356) (1,528,434)'), no cumulative paid at end t-1."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 167.587,
+   "page": 16,
+   "quote": "same line, 2021 column (2022 report comparative)",
+   "diff_pct": null,
+   "working": "not possible (2021 table: cumulative payments to date only)"
+  },
+  "incurred_test": {
+   "basis": "underwriting-year table described as 'Current estimate of earned claims', which it reaches only for years 2012 onwards; pre-2012 years sit in a separate reconciling line ('Insurance liabilities in respect of prior underwriting years 26,579'), so the table can fall short of the accounts by the pre-2012 development",
+   "table_implied_m": 236.083,
+   "working": "2022 table (GBP '000, current estimate less end-2021 cell): 2012 +1,925; 2013 -231; 2014 +5,799; 2015 -4,299; 2016 +2,947; 2017 +13,297; 2018 +25,820; 2019 +5,270; 2020 -16,359; 2021 +93,741; plus 2022 first-year 108,173; total 236,083",
+   "accounts_m": 231.25,
+   "page": 16,
+   "quote": "technical account 'Claims paid - gross amount 134,474' and 'Change in the provision for claims: - gross amount 96,776' (sum 231,250)",
+   "diff_pct": 2.1,
+   "caution": "The 2.1% tie is partly coincidental and does not clear the 2018 column. Using the 2021 report's latest cells times the balance sheet's own sterling retranslation (opening claims outstanding 498,626 + foreign exchange revaluation 35,734, factor 1.0717, p44) the implied incurred is 230.3m (-0.4%), without the 34m lift from 2018; at the table's own factor 1.0919 it is 194.5m. The year's incurred cannot choose between the two, because the FX factor moves it by about 2% of the 1.5bn mature base. What does discriminate is the 2018 column itself (next).",
+   "control_2021": "2021 table (GBP '000): 2011 221,075-222,774=-1,699; 2012 154,534-156,750=-2,216; 2013 158,851-158,057=+794; 2014 170,900-187,147=-16,247; 2015 203,976-196,339=+7,637; 2016 197,266-196,903=+363; 2017 272,672-257,506=+15,166; 2018 256,954-246,107=+10,847; 2019 151,782-146,018=+5,764; 2020 146,114-75,937=+70,177; 2021 62,390; total 152,976 against 2021 gross incurred 167,597 (167,587 + 10, from the 2022 report comparative) = -8.7%, the table again omitting pre-2011 development"
+  },
+  "column_2018_roll": "Independent of the history cells, from the printed provision and cumulative-payment rows (GBP '000): 2018 provision 86,647 and cumulative payments 170,307 (2021 report p46); 67,477 and 204,687 (2022 report p45). At factor 1.0919: provision change -27,130, paid in year +18,735, so the estimate moved -8,395; at factor 1.0717: -3,214. The 2022 table's own cells give +25,820 for 2018. The 2018 history cells in the 2022 table therefore cannot be the end-2021 estimate that tied the 2021 accounts (2021 report: 256,954 - 170,307 = 86,647 provision, ties).",
+  "tie_of_outstanding": "2022 table 604,557 + prior-year line 26,579 = 631,136 = 'Insurance liabilities as at 31 December 2022' (p44 claims outstanding 631,136); 2021 table 499,100 - 474 = 498,626 = p44 'At 1 January 2022 ... 498,626'. Both tie.",
+  "basis": "gross of reinsurance (heading 'Claims development table gross of reinsurance'; a net table follows), underwriting-year, current estimate of earned claims, 100% syndicate values, restated at closing rates; GBP '000",
+  "m_recomputed_m": 34.169,
+  "m_working": "u<=2020, 2022 table (current estimate less end-2021 cell, GBP '000): 2012 +1,925; 2013 -231; 2014 +5,799; 2015 -4,299; 2016 +2,947; 2017 +13,297; 2018 +25,820; 2019 +5,270; 2020 -16,359; sum +34,169 = 34.2m. The 2018 column supplies +25.8m of it. Replacing the 2018 term by the roll figure gives about -0.05m (at 1.0919) or +5.1m (at 1.0717); the filing does not print the true 2018 movement. Analysis figure not supplied in the batch.",
+  "verdict": "restated_base",
+  "note": "Restricted to one column. Eight of the nine mature columns carry the 2021 history times a common retranslation (1.07-1.10), the first-row cells and current diagonal tie to the balance sheet, and no total-level restatement exists. The 2018 column's three history cells are about 34.6m lower than the 2021 report's, with no explanation anywhere in the 2022 report; the 2018 provision and cumulative-payment rows imply a favourable (or near nil) 2018 movement of -3 to -8m, whereas the 2022 table makes it +25.8m adverse. Because 2018 is within u<=2020, M (34.2m from the table) is overstated by about 29-34m, i.e. almost all of it; M is not measurable from the table as printed. The paid test cannot be run (no earlier cumulative paid) and the incurred test (+2.1%) does not detect it because the pre-2012 line and the FX factor are of the same size as the 2018 discrepancy."
+ },
+ "4472_2022": {
+  "key": "4472_2022",
+  "read_by": "page images of both tables (renders/syndicate_4472_2022_p53.png, syndicate_4472_2021_p51.png), text layer for the accounts; arithmetic in calc_4472.py",
+  "pages": {
+   "syndicate_4472_2022": [
+    53,
+    18,
+    41
+   ],
+   "syndicate_4472_2021": [
+    51
+   ]
+  },
+  "cells_check": "SCREEN MISREAD (basis mismatch): the screen's t cells are from the NET table, its p cells from the GROSS table. 2022 report p53 (printed 52) '15. Claims Development' prints two blocks: 'Gross Insurance contract outstanding claims provision as at 31 December 2022' (upper) and 'Net insurance contract outstanding claims provision as at 31 December 2022:' (lower), GBP m, columns 2012 and prior | 2013 .. 2022 (the 2012 and prior column holds only the balance to pay: gross 350.1, net 268.4). The screen's cell_t values 654.4, 741.8, 668.5, 677.6, 874.7, 920.3, 605.7, 462.3, 419.6 are the NET block's end-2021 cells ('Eight years later 654.4' for 2013 down to 'At end of underwriting year 419.6' for 2021). The stored 2022 _rag_triangle (page 53, labelled type 'gross') carries those net numbers (first row 356.5, 368.0, 320.0 ... 507.3), whereas its _claims_triangle carries the gross numbers (393.1, 405.2 ...). Correct GROSS end-2021 cells (2022 report, upper block): 2013 765.5 ('Eight years later'); 2014 919.5 ('Seven'); 2015 941.6 ('Six'); 2016 1,097.0 ('Five'); 2017 1,533.2 ('Four'); 2018 1,385.1 ('Three'); 2019 918.0 ('Two'); 2020 705.9 ('One year later'); 2021 518.5 ('At end of underwriting year'). 2021 report p51 (printed 50) gross block ('Gross Insurance contract outstanding claims provision as at 31 December 2021:', columns 2012..2021): latest cells 2013 700.8 ('Eight years later'); 2014 840.4; 2015 853.0; 2016 992.0; 2017 1,376.6; 2018 1,242.2; 2019 831.6; 2020 643.7; 2021 472.5 (these p cells the screen read correctly). Like-for-like gross ratios 1.092, 1.094, 1.104, 1.106, 1.114, 1.115, 1.104, 1.097, 1.097: one retranslation factor (both reports state 'translated into GBP at the period end rate'), balance-sheet foreign exchange 294.5 on opening 3,291.5 = 8.9%. No rebase.",
+  "explanation": [
+   "p53 (2022): \"The cumulative claims estimates and cumulative payments are translated into GBP at the period end rate as at 31 December 2022.\" (same wording in 2021 p51)",
+   "No restatement, RITC, portfolio transfer, change of basis or correction wording about claims found in the 2022 report (only '(restated)*' on 2021 net operating expenses, p35)."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "GBP m",
+   "accounts": 874.1,
+   "page": 18,
+   "quote": "technical account 'Claims paid / Gross amount (874.1) (759.2)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: cumulative payments are printed for the latest diagonal only (gross 702.6, 782.7, 792.6, 893.3, 1,233.5, 973.0, 519.0, 348.3, 209.6, 37.2)."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 759.2,
+   "page": 18,
+   "quote": "same line, 2021 column",
+   "diff_pct": null,
+   "working": "not possible, same reason"
+  },
+  "incurred_test": {
+   "basis": "earned by construction: 'Estimated balance to pay' = estimate less cumulative payments, and the gross total 3,851.9 = balance-sheet gross claims outstanding; the table has no cells for '2012 and prior' (balance to pay 350.1)",
+   "table_implied_m": 1209.3,
+   "working": "2022 GROSS table (GBP m, latest less end-2021 cell): 2013 -2.0; 2014 -26.3; 2015 +5.5; 2016 +3.3; 2017 +14.7; 2018 +63.4; 2019 +39.0; 2020 +24.7; 2021 +477.0; 2022 first-year 610.0; total 1,209.3",
+   "accounts_m": 1140.0,
+   "page": 41,
+   "quote": "p41 note 13 'Claims Outstanding ... Gross 2022: At 1 January 2022 3,291.5; Claims incurred during the year 1,140.0; Claims paid during the year (874.1); Foreign exchange 294.5; At 31 December 2022 3,851.9'; technical account gross paid (874.1) + change in provision (265.9) = 1,140.0",
+   "diff_pct": 6.1,
+   "control_2021": "2021 GROSS table (GBP m): 2012 +7.5; 2013 -0.7; 2014 +6.0; 2015 +9.6; 2016 +23.3; 2017 +19.3; 2018 +31.7; 2019 +25.9; 2020 +285.0; 2021 472.5; total 880.1 against 2021 gross incurred 815.3 (2022 report p41 comparative) = +8.0%. The same small excess in both years (table excludes the '2012 and prior' column, whose releases would offset it)."
+  },
+  "tie_of_outstanding": "2022 gross table total 3,851.9 = p41 'At 31 December 2022 3,851.9'; 2021 gross 3,291.5 = opening. Net: 2,346.0 and 2,059.3. All tie.",
+  "basis": "gross of reinsurance for the correct comparison (upper block of both reports); the screen's t cells were the net block",
+  "m_recomputed_m": 122.3,
+  "m_working": "GROSS, u<=2020, 2022 table only (latest less end-2021 cell, GBP m): 2013 -2.0; 2014 -26.3; 2015 +5.5; 2016 +3.3; 2017 +14.7; 2018 +63.4; 2019 +39.0; 2020 +24.7; sum +122.3 (adverse). For comparison the NET block gives -1.5 (2013 -2.8; 2014 -53.9; 2015 +28.9; 2016 -5.1; 2017 +11.5; 2018 +8.7; 2019 +16.9; 2020 -5.7). The stored 2022 _rag_triangle holds the net numbers labelled gross, so any M taken from it is net (-1.5) rather than gross (+122.3); the stored _claims_triangle has the gross block. Analysis figure not supplied in the batch (source confirmed-figure:register); it must be compared with +122.3.",
+  "verdict": "screen_misread",
+  "note": "There is no restatement: compared like for like (gross to gross) every cell moves by the retranslation factor 1.09-1.115. The apparent rebase (ratios 0.64-0.93) is a net-versus-gross mismatch created by the stored 2022 grid, which holds the net block under a 'gross' label. This is a live data issue, not just a screen artefact: if the analysis used that _rag_triangle for 4472/2022 its M would be net (-1.5m) where the paper wants gross (+122.3m). The gross table ties (incurred +6.1% on an earned basis with the '2012 and prior' column outside the test, control year +8.0%; outstanding ties to the balance sheet), so M (gross) = +122.3m stands."
+ },
+ "5678_2016": {
+  "key": "5678_2016",
+  "read_by": "text layer for both; 2016 table also read from a page image (renders/syndicate_5678_2016_p41.png)",
+  "pages": {
+   "syndicate_5678_2016": [
+    41,
+    13,
+    27
+   ],
+   "syndicate_5678_2015": [
+    41
+   ]
+  },
+  "cells_check": "SCREEN MISREAD. The screen's t cell 12,317 for UY 2015 is the END-2016 value (UY 2015 '12 months later'), not the end-2015 cell, and its p cell 2,051 is UY 2014's latest in the 2015 report, i.e. a UY mismatch (screen flagged alignment_uncertain, lag_p -1). Correct cells, gross tables (GBP '000). 2016 report p41 (printed 39) 'Gross insurance contract outstanding claims provision as at 31 December 2016 / 2016 Gross': columns Before 2012 | 2012 | 2013 | 2014 | 2015 | 2016; 'end of underwriting year' 2014 962, 2015 6,055, 2016 19,798; '12 months later' 2014 2,362, 2015 12,317; '24 months later' 2014 3,223; 'Current estimate of cumulative claims incurred' Before 2012 6,084,372, 2014 3,223, 2015 12,317, 2016 19,798 (2012 and 2013 columns blank). End-2015 cells in the 2016 table: UY 2014 2,362; UY 2015 6,055. 2015 report p41 (printed 39) 'Gross insurance contract outstanding claims provision as at 31 December 2015 / 2015 Gross': columns Before 2011 | 2011 | 2012 | 2013 | 2014 | 2015; 'end of underwriting year' 2014 859, 2015 5,368; '12 months later' 2014 2,051; 'Current estimate' 2014 2,051, 2015 5,368 (no estimate printed for 'Before 2011'). Like-for-like ratios: UY 2014 2,362/2,051 = 1.152; UY 2015 6,055/5,368 = 1.128, an ordinary retranslation (sterling fell in 2016; year-end 2016 foreign exchange +13,502 on opening 87,761, p27). No unexplained restatement.",
+  "explanation": [
+   "None needed for the triangle cells (retranslation only). The 2016 report says of the 2015 comparatives: \"The 2015 comparative information has been restated. The Syndicate has changed its accounting ...\" (txt line 824: deferred acquisition costs policy, 'Before restatement the deferred acquisition costs balance at 31 December 2015 was £2,635k'): not claims.",
+   "p6 (txt line 101): the syndicate writes contracts 'in the form of Reinsurance to Close (\"RITC\") for various syndicates' open years' (its business model; no RITC take-on is stated as altering the table history)."
+  ],
+  "paid_test": {
+   "table_implied": 4.275,
+   "units": "GBP m",
+   "accounts": 11.342,
+   "page": 13,
+   "quote": "technical account 'Claims paid / Gross amount (11,342) (8,304)'",
+   "diff_pct": -62.3,
+   "working": "2016 table cumulative paid: UY 2014 805-515=290; UY 2015 2,938-365=2,573; UY 2016 1,412; total 4,275 (GBP '000). The 'Before 2012' column prints only its current cumulative payments (6,003,684) with no earlier figure, so the dominant run-off pool is outside the test; the table can only be compared on the three live years."
+  },
+  "paid_test_prev": {
+   "table_implied": 0.746,
+   "accounts": 8.304,
+   "page": 13,
+   "quote": "same line, 2015 column",
+   "diff_pct": -91.0,
+   "working": "2015 table: UY 2014 441-16=425; UY 2015 321; total 746 (GBP '000); 'Before 2011' column has no estimate or paid printed"
+  },
+  "incurred_test": {
+   "basis": "underwriting-year basis (UY 2016 end-of-year cell 19,798 against only 3,200 'Claims incurred in current underwriting year' in the provisions note), pool of 'Before 2012' excluded",
+   "table_implied_m": 26.921,
+   "working": "2016 table: UY 2014 3,223-2,362=861; UY 2015 12,317-6,055=6,262; UY 2016 19,798; total 26,921 (GBP '000)",
+   "accounts_m": 21.95,
+   "page": 27,
+   "quote": "p27 provisions note, gross: 'Claims incurred in current underwriting year 3,200; Claims incurred in prior underwriting year 18,750'; technical account paid (11,342) + change in claims outstanding (10,608)",
+   "diff_pct": 22.6,
+   "note": "not informative: different bases, 'Before 2012' excluded, and the table's UY 2016 value reflects outstanding built on the balance sheet's gross basis"
+  },
+  "tie_of_outstanding": "2016 table total 111,871 = p27 'At 1 January 87,761 + 3,200 + 18,750 - 11,342 + 13,502' = 111,871; 2015 table total 87,761 = 'At 1 January 2016 87,761'. Both tie. One printed slip: Before 2012 'Current estimate 6,084,372' less 'Cumulative payments 6,003,684' = 80,688, but the provision printed is 81,688 (1,000 higher), and 81,688 is what makes the total tie.",
+  "basis": "gross of reinsurance (a net table follows), underwriting-year, estimate of cumulative claims incurred, GBP '000; the table shows only three live underwriting years (2014-2016) and the run-off pool 'Before 2012'",
+  "m_recomputed_m": 0.861,
+  "m_working": "u<=2014, 2016 table only: UY 2014 3,223 (24 months later) less 2,362 (12 months later) = +861 (GBP '000) = GBP 0.86m. The 'Before 2012' pool (provision 81,688, about 73% of the 111,871 total) has no end-2015 estimate in the 2016 table, and the 2015 report printed no estimate for 'Before 2011', so the largest part of the mature book has no triangle movement; the 0.86m covers UY 2014 only. Analysis figure not supplied in the batch.",
+  "verdict": "screen_misread",
+  "note": "The flag is a UY alignment error in the screen (UY 2015's end-2016 cell compared with UY 2014's latest cell). With the correct cells there is no unexplained rebase: UY 2014 and UY 2015 both move by a retranslation factor of 1.13-1.15. M is affected only in the sense that the table covers UY 2014 alone for u<=t-2 (+0.86m); the mature run-off pool 'Before 2012' is not in any development cells, so the paper's M for 5678/2016 cannot come from the table for that pool. The paid test is uninformative because the pool dominates the payments."
+ },
+ "6134_2022": {
+  "key": "6134_2022",
+  "read_by": "text layer (filing_pages.py); small tables, cell order checked against 'Current estimate' and outstanding rows",
+  "pages": {
+   "syndicate_6134_2022": [
+    45,
+    19,
+    37
+   ],
+   "syndicate_6134_2021": [
+    44,
+    18
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED. 2022 report p45 (printed p43), 'Gross and net insurance contract outstanding claims provision as at 31 December 2022' (GBP '000; syndicate has no reinsurers' share, so gross = net): 2019 col 13,380 / 41,799 / 41,615 / 41,966; 2020 col 45,941 / 108,774 / 119,986; 2021 col 24,418 / 61,814; 2022 col 24,756. End-2021 cells: 2019 '24 months later' 41,615; 2020 '12 months later' 108,774; 2021 'At end of underwriting year' 24,418. 2021 report p44: 2018 col 8,754 / 23,802 / 25,291 / 25,190; 2019 col 12,264 / 38,387 / 41,013; 2020 col 42,230 / 100,104; 2021 col 22,322. Latest cells 41,013 (2019), 100,104 (2020), 22,322 (2021). Ratios 1.015, 1.087, 1.094. Every other cell of the 2022 table is the 2021 cell times about 1.087 to 1.094 (2019 end-UY 13,380 vs 12,264 = 1.091; 2019 12m 41,799 vs 38,387 = 1.089; 2020 end-UY 45,941 vs 42,230 = 1.088), i.e. the table is retranslated to 31 Dec 2022 rates (p45: 'translated to sterling at the rate of exchange that applied at 31 December 2022'). Only the 2019 '24 months later' cell breaks the pattern (41,615 against 41,013 x 1.0866 = 44,566): the oldest-column flag is a real step of about -2.95m in that one cell, not a units or column slip.",
+  "explanation": [
+   "p45 (2022 report), under the table: \"The 2020 amounts above include the 2018 year of account, which was reinsured into Syndicate 2121 on closure at 31 December 2021. The 2018 year of account liabilities were subsequently reassumed by Syndicate 6134 as part of the 2020 quota share agreement.\"",
+   "p45: \"The cumulative claims estimates and cumulative payments are translated to sterling at the rate of exchange that applied at 31 December 2022.\"",
+   "p37 provisions note: 'Foreign exchange 17,837' on opening 185,764 (9.6%), consistent with the 1.087 retranslation"
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "GBP m",
+   "accounts": 22.082,
+   "page": 19,
+   "quote": "Technical account: 'Claims paid / Gross amount (22,082) (2,750)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE: the table prints one row 'Cumulative payments to date' 2,686 / 86 / 61 / 36 (total 2,869), no cumulative paid at end t-1. The row is also not a true cumulative paid: 2,869 is below the 22,082 paid in 2022 alone (and 2021 paid 2,750). Its values (2,686, 86, 61, 36) look like the 2021 row (2,732, 60, 49, 24) moved one column. Estimate less this row still ties to the balance-sheet outstanding (e.g. 41,966-2,686=39,280; total 245,653)."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 2.75,
+   "page": 18,
+   "quote": "2021 technical account 'Claims paid / Gross amount (2,750) (79)'",
+   "diff_pct": null,
+   "working": "not possible for the same reason (single 'Cumulative payments to date' row 2,732 / 60 / 49 / 24 = 2,865)"
+  },
+  "incurred_test": {
+   "basis": "underwriting-year basis, 'estimates of cumulative claims incurred, including both claims notified and IBNR for each successive underwriting year'; the current UY cell is close to the accounts' own current-UY incurred (24,756 vs 24,187), so it behaves near earned",
+   "table_implied_m": 73.715,
+   "working": "2022 table: 2019 41,966-41,615=351; 2020 119,986-108,774=11,212; 2021 61,814-24,418=37,396; 2022 24,756; total 73,715 (GBP '000)",
+   "accounts_m": 64.134,
+   "page": 19,
+   "quote": "Technical account: 'Claims paid Gross amount (22,082)', 'Change in the provision for claims Gross amount (42,052)', 'Claims incurred, net of reinsurance (64,134)'; p37: 'Claims incurred in current underwriting year 24,187; Claims incurred in prior underwriting years 39,947'",
+   "diff_pct": 14.9,
+   "control_2021": "2021 table (p44): 2018 25,190-25,291=-101; 2019 41,013-38,387=2,626; 2020 100,104-42,230=57,874; 2021 22,322; total 82,721 against 2021 claims incurred 81,985 (p18: paid (2,750) + change in provision (79,235)) = +0.9%. The 2021 table ties; the 2022 table does not."
+  },
+  "tie_of_outstanding": "2022 table total 245,653 = p37 'At 31 December 245,653'; 2021 table total 185,764 = p37 opening. Both tie, so the outstanding does not show the problem.",
+  "basis": "gross of reinsurance (no reinsurers' share; quota share of host Syndicate 2121 net of its protections), underwriting-year incurred table with a single payments row",
+  "m_recomputed_m": 11.563,
+  "m_working": "u<=2020, 2022 table (latest less end-2021 cell): 2019 41,966-41,615=+351; 2020 119,986-108,774=+11,212; sum +11,563 (GBP '000) = GBP 11.6m. Analysis figure not supplied in the batch (source triangle-route:gross).",
+  "verdict": "restated_base",
+  "note": "The screen's flag is small: apart from the retranslation (about 1.087 on every cell) the only break is the 2019 '24 months later' cell (-2.95m against its retranslated 2021 value). The real problem is structural: the 2022 table drops the 2018 column that the 2021 report printed (25,190 current estimate, 22,458 outstanding) and the note says the 2020 amounts now include the 2018 year of account. The end-2021 2020 cell (108,774 = 100,104 x 1.0866) does NOT include 2018, so the +11,212 for 2020 mixes the reassumed 2018 liabilities (about 25-27m) with an unknown underlying favourable development; the 2018 movement itself is in no printed column. The incurred test confirms it does not tie: 73.7m against 64.1m (+14.9%) while the 2021 control ties at +0.9%. M for u<=2020 therefore cannot be read from this table as a like-for-like movement. Confidence moderate: the split between 2018 and 2020 is not printed. Paid test not available (single cumulative payments row that does not behave as cumulative paid)."
+ },
+ "780_2016": {
+  "key": "780_2016",
+  "read_by": "page images only for the tables (both filings are scans rotated 270 degrees and the OCR of the tables is garbled); accounts lines from page image (p12) and OCR text (p26-28); images in renders/",
+  "pages": {
+   "syndicate_780_2016": [
+    30,
+    12,
+    26,
+    27,
+    28,
+    29,
+    15
+   ],
+   "syndicate_780_2015": [
+    28
+   ]
+  },
+  "cells_check": "Screen cells CONFIRMED; the 'units_differ' is genuine, not a slip. 2016 report PDF p30 (printed 29) '6. Insurance risk management (continued) / Gross earned claims / Year of account' (accounts say 'All amounts are shown in USD millions', p12; values to one decimal; header shows '$'): columns At the end of calendar year | One year later | ... | Five years later | Cumulative payments | Estimated balance to pay. Rows: 2011: 134.2 | 224.3 | 232.0 | 231.7 | 234.5 | 236.9 | (208.9) | 28.0; 2012: 44.8 | 94.9 | 100.1 | 104.6 | 109.0 | | (93.9) | 15.1; 2013: 37.9 | 78.1 | 83.7 | 87.1 | | | (73.4) | 13.7; 2014: 29.5 | 84.2 | 98.9 | | | | (76.4) | 22.5; 2015: 21.0 | 113.2 | | | | | (92.7) | 20.5; 2016: 29.2 | | | | | | (18.4) | 10.8; '2010 & prior' balance to pay 203.2, total 313.8. End-2015 cells = 234.5 (2011, 'Four years later'), 104.6 (2012, 'Three years later'), 83.7 (2013, 'Two years later'), 84.2 (2014, 'One year later'), 21.0 (2015, 'At the end of calendar year'). 2015 report PDF p28 (printed 27) '5. Insurance risk management (continued) / Earned gross claims / Year of account', $000: 2011: 241,898 | 273,675 | 271,086 | 258,337 | 255,730 | (218,915) | 36,815; 2012: 108,080 | 143,551 | 134,331 | 124,949 | | (90,546) | 34,403; 2013: 87,421 | 123,086 | 114,824 | | | (68,453) | 46,371; 2014: 75,551 | 130,878 | | | | (55,247) | 75,631; 2015: 75,192 | | | | | (9,406) | 65,786; 2010 & prior balance 89,477, total 348,483. Latest cells 255,730; 124,949; 114,824; 130,878; 75,192. Ratios in common units 0.917, 0.837, 0.729, 0.643, 0.279 (a genuine, large and age-ordered restatement, not a scale slip). The whole early history is lower in the 2016 table: first-calendar-year cells 134.2 / 44.8 / 37.9 / 29.5 / 21.0 against 241.9 / 108.1 / 87.4 / 75.6 / 75.2, and each row converges towards the old figure as it develops (2012 row: -63.3, -48.7, -34.2, -20.3 against the 2015 cells; sterling retranslation cannot explain it).",
+  "explanation": [
+   "p29 (2016), immediately above the table: \"The following table shows the adverse or favourable development of claims, on a gross and net basis, determined on a year of account basis, from the amounts originally estimated at the end of the preceding year. Claims in currencies other than US dollars have been reconverted at 31 December 2016 exchange rates for all years.\" (explains a retranslation of non-dollar claims, not the 40-65% lower first-year cells)",
+   "Note 3(j) (2016): \"In previous years balances relating to reinsurer's share of commission payments were netted off against outwards reinsurance premiums. In the current year, these balances are now shown gross, accordingly the equivalent prior year balances have been restated on the same basis.\" (premiums, not claims)",
+   "The 2016 accounts change presentation units: 2015 report is in $000 (p12-17), 2016 report 'USD millions' with one decimal. No statement about any restatement, re-cut or re-allocation of the claims triangle was found (searched restat / re-present / correction / reclass / RITC / reinsurance to close / as if / merger / portfolio / transfer)."
+  ],
+  "paid_test": {
+   "table_implied": null,
+   "units": "USD m",
+   "accounts": 163.9,
+   "page": 12,
+   "quote": "technical account '- gross amount (163.9) (116.2)'",
+   "diff_pct": null,
+   "working": "NOT POSSIBLE in the form asked: the table prints cumulative payments for the latest diagonal only. Partial, mixing the two reports: cumulative payments to date 2011-2015 years of account 208.9+93.9+73.4+76.4+92.7 = 545.3 in the 2016 report against 218.915+90.546+68.453+55.247+9.406 = 442.6 in the 2015 report, i.e. +102.7, plus 18.4 for 2016 = 121.1 against gross paid 163.9 (-26%); the difference of 42.8 would be paid on '2010 & prior', which has no cells. Cumulative payments for 2011 FELL from 218.9 to 208.9, consistent with dollar reconversion of non-dollar claims only in part."
+  },
+  "paid_test_prev": {
+   "table_implied": null,
+   "accounts": 116.2,
+   "page": 12,
+   "quote": "2016 report comparative '- gross amount (163.9) (116.2)'",
+   "diff_pct": null,
+   "working": "not possible (2015 table prints cumulative payments only for the latest diagonal)"
+  },
+  "incurred_test": {
+   "basis": "earned gross claims by year of account; '2010 & prior' carries a balance to pay but no estimate cells, so it is outside the test",
+   "table_implied_m": 146.3,
+   "working": "2016 table ($m, latest less end-2015 cell): 2011 236.9-234.5=2.4; 2012 109.0-104.6=4.4; 2013 87.1-83.7=3.4; 2014 98.9-84.2=14.7; 2015 113.2-21.0=92.2; 2016 29.2; total 146.3",
+   "accounts_m": 138.6,
+   "page": 12,
+   "quote": "technical account: 'Claims paid - gross amount (163.9)' and 'Change in the provision for claims - gross amount 25.3' (incurred 163.9 - 25.3 = 138.6); provisions note p26: 'Prior year (15.6)' gross, with an OCR-misread current-year figure that reconciles to 154.2 (348.5 - 9.4 + 154.2 - 15.6 - 163.9 = 313.8)",
+   "diff_pct": 5.6,
+   "control_2015": "2015 table ($000): 2011 255,730-258,337=-2,607; 2012 124,949-134,331=-9,382; 2013 114,824-123,086=-8,262; 2014 130,878-75,551=+55,327; 2015 75,192; total 110,268 against 2015 gross incurred 100.7 (paid 116.2 less provision release 15.5, 2016 report comparative) = +9.5%. Both years run above the accounts by about the amount a favourable '2010 & prior' would remove, so the totals do not condemn the table; the split by year does (below)."
+  },
+  "roll_check": "Independent of the history cells, from printed provisions and cumulative payments (USD m, no exchange adjustment): years of account 2011-2014 carried reserves 36.8 + 34.4 + 46.4 + 75.6 = 193.3 at end-2015 (2015 report) and 28.0 + 15.1 + 13.7 + 22.5 = 79.3 at end-2016 (2016 report); payments in 2016 on them (cumulative payments 2016 less 2015) = -10.0 + 3.4 + 4.9 + 21.2 = 19.5; so the estimate moved -94.5, against +24.9 from the 2016 table's own cells. Meanwhile '2010 & prior' reserves jump from 89.5 to 203.2 (+113.7). The 2016 table therefore seems to have re-allocated reserves between years of account (or restated the early history) without saying so; the sum over all years ties, the allocation does not.",
+  "tie_of_outstanding": "2016 table total 313.8 = p26-27 'Outstanding claims 313.8' (balance 'At 31 December 2016 ... 313.8', gross) and p15 balance sheet; 2015 table 348,483 = 348.5 comparative. Both tie.",
+  "basis": "gross of reinsurance ('Gross earned claims', net table follows), earned, year of account, USD (2016 in millions, 2015 in thousands)",
+  "m_recomputed_m": 24.9,
+  "m_working": "u<=2014, 2016 table only (latest less end-2015 cell, USD m): 2011 236.9-234.5=+2.4; 2012 109.0-104.6=+4.4; 2013 87.1-83.7=+3.4; 2014 98.9-84.2=+14.7; sum +24.9 (adverse). The same years against the 2015 report's printed latest cells (USD m, unconverted): 2011 236.9-255.7=-18.8; 2012 109.0-124.9=-15.9; 2013 87.1-114.8=-27.7; 2014 98.9-130.9=-32.0; sum -94.4 (favourable). The filing prints only an all-prior-years gross figure: 'Prior year (15.6)' (p26). Analysis figure not supplied in the batch (source mature-cohort-figure:register).",
+  "verdict": "restated_base",
+  "note": "The history in the 2016 table is not the 2015 report's: early cells are 40-65% lower with no explanation, the 2010 & prior balance rises by 113.7 while 2012-2015 reserves collapse, and the same years give +24.9 on the table's own cells and -94.5 on the printed reserves and payments (sign opposite). Totals tie roughly (incurred +5.6% on an earned basis, a little over the 5% limit, with 2010 & prior outside the test), so the table is not wrong in the way 2689/2023 is, but the year-of-account allocation is inconsistent across the two reports and M from the table cannot be taken as the movement of the mature years. The only printed anchor is the all-prior-years gross movement of -15.6 (p26), which includes UY 2015. Units are a genuine change ($000 to $m), not a label slip; the screen's ratios after rescaling stand. Confidence moderate: the allocation change is inferred from the numbers, not stated."
+ }
+}

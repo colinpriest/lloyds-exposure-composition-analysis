@@ -1,0 +1,88 @@
+{
+ "2689_2023": {
+  "read_by": "text layer (filing_pages.py) for all pages; page images (render.py) of 2023 p46 and 2022 p46 to confirm the column layout (copies in renders/). PDF page numbers; printed page = PDF page - 3.",
+  "pages": {
+   "2023": [5, 6, 7, 20, 21, 24, 34, 35, 46, 47],
+   "2022": [12, 24, 35, 46, 47]
+  },
+  "basis_2022": {
+   "page": "2022 PDF p46 (printed 43)",
+   "heading": "Claims development table: 'The tables below show the Syndicate's cumulative incurred claims development, including both claims notified and IBNR for each underwriting year, together with the cumulative payments to date on a gross and net of reinsurance basis at the balance sheet date. The Syndicate has elected to translate estimated claims and claims payments at a consistent rate of exchange as determined by the balance sheet date.'",
+   "table": "Underwriting year 2020 / 2021 / 2022, $'000; 'Estimate of cumulative gross claims incurred:' 'At end of first underwriting year 42,665 | 50,773 | 33,142'; 'One Year Later 85,339 | 77,230'; 'Two Years Later 81,688'; 'Less cumulative gross paid (47,796) | (32,909) | (2,418)'; 'Liability for gross outstanding claims (2020 to 2022) 33,892 | 44,321 | 30,724'; 'Total gross outstanding claims (all years) 108,937'",
+   "basis": "gross, USD'000, underwriting year, cumulative incurred (notified + IBNR), year-end balance-sheet FX rate; no unexpired-risk/UPR element mentioned. Net table on p47 (printed 44)."
+  },
+  "basis_2023": {
+   "page": "2023 PDF p46 (printed 43)",
+   "heading": "Same wording word for word: 'The tables below show the Syndicate's cumulative incurred claims development, including both claims notified and IBNR for each underwriting year, together with the cumulative payments to date on a gross and net of reinsurance basis at the balance sheet date. The Syndicate has elected to translate estimated claims and claims payments at a consistent rate of exchange as determined by the balance sheet date.'",
+   "table": "Underwriting year 2020 / 2021 / 2022 / 2023, $'000; 'Estimate of cumulative gross claims incurred:' 'At end of first underwriting year 42,665 | 51,034 | 33,254 | 21,300'; 'One Year Later 92,851 | 97,435 | 63,498'; 'Two Years Later 123,040 | 136,932'; 'Three Years Later 125,921'; 'Less cumulative gross paid (98,767) | (99,519) | (17,393) | (520)'; 'Liability for gross outstanding claims 27,154 | 37,413 | 46,105 | 20,780'; 'Total gross outstanding claims (all years) 131,452'",
+   "basis": "Same basis as the 2022 table on every stated point: gross, USD'000, underwriting year, cumulative incurred incl. IBNR, balance-sheet FX rate. Presentation differences only: a 2023 column is added, the row label 'Liability for gross outstanding claims (2020 to 2022)' loses its '(2020 to 2022)', and the net table's paid row reads 'cumulative net paid' (2022 net table printed 'cumulative gross paid' under a net heading). No basis note, restatement note or change of presentation in either filing.",
+   "same_basis": true,
+   "layout_check": "2023 p46 page image: the 2020 column has four entries (42,665 / 92,851 / 123,040 / 125,921), 2021 three (51,034 / 97,435 / 136,932), 2022 two (33,254 / 63,498), 2023 one (21,300). No misalignment. The end-2022 diagonal of the 2023 table is 123,040 (2020), 97,435 (2021), 33,254 (2022)."
+  },
+  "table_cells_compared": {
+   "2020 col, 2022 report": "42,665 -> 85,339 -> 81,688 (end 2020, 2021, 2022)",
+   "2020 col, 2023 report": "42,665 -> 92,851 -> 123,040 -> 125,921 (end 2020, 2021, 2022, 2023)",
+   "2021 col, 2022 report": "50,773 -> 77,230 (end 2021, 2022)",
+   "2021 col, 2023 report": "51,034 -> 97,435 -> 136,932 (end 2021, 2022, 2023)",
+   "2022 col, 2022 report": "33,142 (end 2022)",
+   "2022 col, 2023 report": "33,254 -> 63,498 (end 2022, 2023)",
+   "observation": "The 2023 report restates the whole history of the 2020 and 2021 years, not only the end-2022 diagonal: 2020 end-2021 is 92,851 in 2023 against 85,339 in 2022 and 2020 end-2022 is 123,040 against 81,688; 2021 end-2022 is 97,435 against 77,230. The first-year figures are nearly unchanged (2020 identical at 42,665; 2021 51,034 vs 50,773; 2022 33,254 vs 33,142)."
+  },
+  "mature_movement_recomputed_m": {
+   "from_2023_own_diagonal": "2020: 125,921 - 123,040 = +2,881; 2021: 136,932 - 97,435 = +39,497; total +42,378 (USD'000), i.e. +42.378m. Equals the restored figure.",
+   "from_2022_report_diagonal": "2020: 125,921 - 81,688 = +44,233; 2021: 136,932 - 77,230 = +59,702; total +103,935, i.e. about +103.9m. Equals the brief's roughly 104m."
+  },
+  "explanation": {
+   "found": false,
+   "searched": "filing_pages.py --find on both filings for restat|represent|prior year adjust|change in accounting|RITC|reinsurance to close|transfer|merge|novation|quota share|reclassif|1254|Asta|comparative|prior year|closed year|deteriorat|year of account|currency|exchange rate|translat. Neither filing has a restatement note, correction, change of reserving basis, merger, novation or change of presentation for the claims development table. Hits were only: (a) the 2022 RITC (below), (b) quota-share business description (2023 p9, p26-27: 'estimates of future premium for inwards quota share contracts', premium estimates, not claims), (c) 'Allocated investment return transferred', (d) the FX sentence in the table preamble.",
+   "ritc_2022": [
+    "2022 PDF p12 (printed 9) 'External RITC: Immediately following 31 December 2021, the 2019 and prior underwriting years were externally Reinsured-to-Close (RITC) to an external party, Syndicate 1254. All liabilities and assets on the 2019 and prior underwriting years were transferred to Syndicate 1254, and so neither the net assets nor the resulting income and losses feature in Syndicate 2689's 2022 calendar year financial statements.'",
+    "2022 PDF p35 (printed 32) and repeated as the 2022 comparative on 2023 PDF p35: 'Claims outstanding ... Balance at 1 January 184,618 | Change in claims outstanding 26,397 | Effect of movements in exchange rates (481) | External RITC (101,597) | Balance at 31 December 108,937' (gross provisions column)."
+   ],
+   "ritc_2023": "none. The 2023 gross claims-outstanding roll-forward (2023 p35) has no RITC or transfer line. No 2023 RITC, transfer, take-on, merger or novation was found in the 2023 text.",
+   "management_narrative": "2023 PDF p5 (printed 2): 'The 2021 (and prior) Year of Account has closed with a 21.8% loss on capacity ... This Year of Account has been impacted by loss deterioration on existing claims as well as recent satellite losses impacting the legacy specialty book.' 2023 PDF p7 (printed 4): 'This result has been heavily impacted by the deterioration on the 2021 year.' So some real deterioration on the 2021 year in 2023 is stated, but the amount is given in the table below, not by the table's cumulative figures."
+  },
+  "reconciliation_2022": {
+   "diagonal": "2022 table: 81,688 - 47,796 = 33,892; 77,230 - 32,909 = 44,321; 33,142 - 2,418 = 30,724; sum 108,937 (each column checks).",
+   "balance_sheet": "2022 PDF p24 (printed 21), 'Claims outstanding 4 | 108,937 | 184,618'; note 4 (2022 p35) closing gross 108,937. Table total 108,937 equals the balance sheet. Exact match.",
+   "calendar_flow_check": "Movement of the 2022 table's own diagonals in 2022: 2020 81,688 - 85,339 = -3,651; 2021 77,230 - 50,773 = +26,457; 2022 first year 33,142; sum +55,948 against gross claims incurred 2022 of 56,341 (2023 PDF p34 segmental, 2022 comparative: 'Reinsurance accepted ... (54,129)', total '(56,341)'). Within 0.4m (0.7%). The 2022 table ties to the 2022 accounts' flow."
+  },
+  "reconciliation_2023": {
+   "diagonal": "2023 table: 125,921 - 98,767 = 27,154; 136,932 - 99,519 = 37,413; 63,498 - 17,393 = 46,105; 21,300 - 520 = 20,780; sum 131,452 (each column checks).",
+   "balance_sheet": "2023 PDF p24 (printed 21), 'Claims outstanding 4 | 131,452 | 108,937'; note 4 (2023 p35) closing gross 131,452. Table total equals the balance sheet. Exact match.",
+   "flow_check_fails": {
+    "paid": "Table-implied gross paid in 2023 (all underwriting years) = (98,767 + 99,519 + 17,393 + 520) - (47,796 + 32,909 + 2,418) = 216,199 - 83,123 = 133,076, against gross claims paid in the 2023 income statement of 36,123 (2023 PDF p20, 'Claims paid, Gross amount (36,123)'). Excess 96,953.",
+    "incurred": "Latest diagonal total 347,651 less the 2022 report's end-2022 total 192,060 = 155,591, against gross claims incurred 2023 of 58,191 (2023 PDF p34, total '(58,191)'; also 36,123 + 22,068). Excess 97,400 = 96,953 + 447 (the FX effect in the roll-forward).",
+    "own_base": "Even against the 2023 table's own end-2022 diagonal (253,729), the 2023 movement is 347,651 - 253,729 = 93,922 (= 2020 +2,881, 2021 +39,497, 2022 +30,244, 2023 21,300), against 58,191 in the accounts.",
+    "meaning": "Cumulative paid and cumulative incurred of the 2020-2022 years are both higher in the 2023 table than in the 2022 table (and than the accounts' paid flow can carry) by about 97m, while outstanding (incurred less paid) is unchanged and reconciles to the balance sheet in both reports. The restatement sits in the paid and incurred history, not in the reserve."
+   }
+  },
+  "rollforward_2023": {
+   "page": "2023 PDF p35 (printed 32), note 4 Technical provisions, gross provisions column",
+   "opening": "Balance at 1 January 108,937",
+   "change_in_claims_outstanding": "22,068 (= claims incurred 58,191 less paid 36,123)",
+   "fx": "Effect of movements in exchange rates 447",
+   "ritc_or_transfers": "none (the 2022 comparative has 'External RITC (101,597)'; 2023 has no such line)",
+   "closing": "Balance at 31 December 131,452",
+   "check": "108,937 + 22,068 + 447 = 131,452",
+   "paid_and_incurred": "Gross claims paid 36,123 (p20); gross claims incurred 58,191 (p34, Reinsurance accepted (56,745) + Total Direct (1,446) + ... total '(58,191)').",
+   "prior_year_split": "Not printed gross. The note gives no current-year / prior-year split of gross claims incurred. The only stated prior-year amounts are: (i) 2023 PDF p47 (printed 44) 'In 2023, there has been an overall deterioration of $2.9m on closed year reserves (2022: nil)' (closed years, basis (gross or net) not stated; its size is close to the 2020 cell +2,881 but the sentence names no year); (ii) the Active Underwriter's table, 2023 PDF p7 (printed 4), 'Claims Incurred (net of Ri)' by year of account for calendar 2023: 2021 YOA (9,259,841), 2022 YOA (27,869,864), 2023 YOA (18,248,041), All YOAs (55,377,746). The 2021 YOA column is the '2021 (and prior)' account (p5). So net 2023 calendar-year incurred on 2021-and-prior is about +9.26m.",
+   "agrees_with": "Neither +42.378m nor about +104m. The accounts' flows (a total gross incurred of 58.2m, of which the table itself puts 21.3m on the 2023 year and 30.2m on the 2022 year) leave roughly +6.5m to +7m gross for the 2021-and-prior years, and the stated net figure is +9.26m (all net, 2021-and-prior). Sign positive (adverse) in all readings, magnitude 7-9m, not 42m or 104m."
+  },
+  "derived_gross_prior_movement": {
+   "label": "DERIVED by the reader, not printed by the filing",
+   "method_1": "Gross incurred 58,191 - 2023 year 21,300 - (2022 year 63,498 - 33,254 = 30,244) = 6,647 (6,535 if the 2022 report's 33,142 is the 2022-year base).",
+   "method_2": "Change in outstanding on 2020+2021: (27,154 + 37,413) - (33,892 + 44,321) = -13,646; plus paid in 2023 on them = 36,123 - 520 - (17,393 - 2,418 = 14,975) = 20,628; movement +6,982 (the 447 FX effect accounts for the gap to method 1).",
+   "m_range_m": "about +6.5 to +7.0 gross (derived); +9.26 net (stated, p7)",
+   "caveat": "Assumes the 2022-year and 2023-year table movements are right; the table's 2022 and 2023 columns reconcile to the flows (2022-year paid in 2023 14,975, o/s +15,381)."
+  },
+  "verdict": "restated_base",
+  "true_movement_m": {
+   "gross_stated": null,
+   "net_stated_2021_and_prior_m": 9.26,
+   "gross_derived_m": "about 6.5 to 7.0",
+   "note": "The filing gives no gross prior-year figure. The only stated figure is net (+9.259841m, 2021 YOA column = 2021 and prior, 2023 p7). The gross figure is derived from the filing's own flows."
+  },
+  "note": "Same basis, no explanation of the restatement anywhere in either filing. The 2023 table is an internally consistent restatement of the paid and incurred history of the 2020 and 2021 years (both inflated by about 97m in total versus the 2022 table and the 2023 accounts' paid/incurred flows) that leaves outstanding unchanged. M = +42.378m is therefore a difference of cumulative figures that the accounts' own gross flows (58.2m incurred, of which at most about 7m for the 2021-and-prior years) cannot support; and the 104m measured from the 2022 report's diagonal is worse. The 2023 net table (p47) shows the same restatement (2021 net one year later 94,274 and two years later 136,650, i.e. +42.4m in 2023 against the net 9.26m stated on p7). Neither the 2022 nor the 2023 report states what caused it. Not a 2023 transaction: no 2023 RITC or transfer; the only RITC (2019 and prior to Syndicate 1254, immediately after 31 December 2021) is in the 2022 opening balance and does not touch the 2020-2022 years. Whether the 2022 table or the 2023 table is the faulty one is not decidable from the pages, but the 2023 table does not tie to the 2023 flows. The 2023 table's M is not a genuine 2023 development of the 2020-2021 years."
+ }
+}

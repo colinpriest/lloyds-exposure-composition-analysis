@@ -120,8 +120,8 @@ Exchange rates (rule B): a record leaves when its development table is not retra
 reports across a sterling/dollar move of 5% or more and the filing's own gross claims-outstanding roll-forward prints an
 exchange line of at least 5% of the opening gross claims outstanding. `data/fx_untranslated_excluded.json`
 (`src/build_fx_untranslated_excluded.py`) holds the four records both conditions hold for (1897/2016, 2468/2016,
-5151/2016, 5151/2017; they leave at the unusable-severity step tagged `FX_UNTRANSLATED_TABLE`) and the nine candidates
-read and kept. Aggregated columns (Appendix 2.1): the figure leaves out a development-age column that adds older years
+5151/2016, 5151/2017; they leave at the unusable-severity step tagged `FX_UNTRANSLATED_TABLE`; round 5 adds 3000/2022,
+below) and the nine candidates read and kept. Aggregated columns (Appendix 2.1): the figure leaves out a development-age column that adds older years
 (`2014 & Prior`, `2013&Prior`), which moves 1945/2024 to +5.264 and 1945/2023 to -4.997 in
 `data/mature_cohort_figures.json`. The outward-transfer sensitivity register
 (`data/outbound_transfer_retained_base.json`) gained 2689/2022 and 1492/2023 from the same readings.
@@ -151,6 +151,30 @@ a third time by the tie-break readers Z1 and Z2 (`round2/readings/Z1.json`, `Z2.
 
 Both builders check the register against a rebuild from the archived readings
 (`python src/build_fx_untranslated_excluded.py`, `python src/build_aggregated_column_review.py`; `--write` rewrites them).
+
+Round 5 (23 October 2026) read the tables whose history moved between reports. A screen of the primary's 649 records at
+35a259c (`results/extraction_error_rate/mature-cohort/round5/screen/`) set each year t table's end-(t-1) cells against the
+year t-1 report's latest cells; the 82 records it asked to read were read twice, independently (arms P1 to P8 and Q1 to
+Q8), 2689/2023 by V1 and V2, and the two records whose readings disagreed on the facts (1609/2024, 4444/2017) by the
+tie-break readers Z5 and Z6. The decision rules (`round5/rules.md`, a decision of the Claude analysis session written
+before the adjudication) were applied record by record (`round5/adjudication.md`). Where each result lives:
+
+- Rule 1 (the table restates its history without explanation, fails the year's accounts while the year t-1 control ties,
+  and the year t-1 printed base gives no figure that reconciles): `data/restated_base_excluded.json`
+  (`src/build_restated_base_excluded.py`), bucket `excluded`: 780/2016, 2689/2023, 4242/2022, 4747/2024 and 6134/2022
+  leave the primary at the unusable-severity step tagged `RESTATED_BASE_TABLE`. The register is a hashed input of the run
+  identifier; the 672 construction does not read it.
+- Rule 2 (the author's rule B): 3000/2022 joins `data/fx_untranslated_excluded.json` ("excluded"; its history is
+  retranslated while its end-2021 reserves are not, and the exchange line is 8.0% of R).
+- Rules 3 and 4 (corrections): `data/mature_cohort_figures.json` carries 2232/2020 at +19.331m (the 2019 report's printed
+  base, `previous_report_base`), 318/2024 at -27.990m and 1609/2024 at +13.935m USD (tables printed transposed against
+  their labels) and 1274/2016 at +23.544m USD (a misprinted 2012 cell replaced by the 2015 report's at the year's exchange
+  factor), each with a `correction` object.
+- Rule 5 (take-on bases): every candidate whose transferred gross amount the readings print was already in
+  `data/opening_reserves_takeon_base.json`; for 1110/2022 and 1458/2024 neither reading gives the amount, and nothing is
+  added.
+- Rule 6 (least certain): 25 records stay in the primary and are listed under `history_restated` in
+  `data/restated_base_excluded.json`; `src/check_low_confidence_sensitivity.py` reads them from there.
 
 <!-- coverage:start -->
 Coverage is **68 % of active syndicate-years overall** (649 of 953; it was ~47 % on the

@@ -193,6 +193,8 @@ SCIENTIFIC_DETAIL_WORDS = {
     "fx_untranslated_table": ("the development table is not retranslated across a sterling/dollar move of 5% or more, "
                               "and the roll-forward prints an exchange line of 5% or more of the opening reserves "
                               "(the primary outcome, the author's rule B, 22 October 2026)"),
+    "restated_base_table": ("the development table restates its history without explanation and fails the year's "
+                            "accounts (the primary outcome, rule 1 of the round-5 decision rules, 23 October 2026)"),
     "mix_names_no_line_of_business": ("scope: the filing prints no premium amount for any non-life line of business "
                                      "(a contract form or distribution channels only)"),
     "life_book": "scope: life business",

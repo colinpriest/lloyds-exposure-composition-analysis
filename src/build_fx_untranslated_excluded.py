@@ -20,6 +20,14 @@ Round 2 (23 October 2026) adds 97 records to "read_and_kept", each read twice, i
 reader (archived under round2/readings/): no record is excluded, and four (457/2015, 1301/2015, 4711/2017, 6105/2015)
 are kept as 'undeterminable_kept' (decision of the Claude analysis session).
 
+Round 5 (23 October 2026, the readings of the tables whose history moved between reports, archived under
+round5/readings/) adds 3000/2022 to "excluded" under rule 2 of the round-5 decision rules (round5/rules.md), which is the
+author's rule B: both readers (P2, Q1) find the 2022 table's history retranslated while its end-2021 reserves are not
+(incurred and cumulative paid lifted by the same amount in every column, so the end-(t-1) diagonal mixes exchange
+bases), and the gross claims-outstanding roll-forward's exchange line, 91,879, is 8.0% of the opening 1,146,474 (note 17,
+p42). The readers' own verdict is restated_base; "exclude" is rule B applied to their facts (decision of the Claude
+analysis session). Each figure and page is a verbatim snippet of the archived reading (ROUND5_SNIPPETS), checked here.
+
 What the cells gate proves (moved_cell_pairs, which accepts a table as retranslated for the 10 records of reason
 table_retranslated) and what it does not is written in GATE and into data/fx_untranslated_excluded_evidence.json as
 _moved_cells_gate (not into the register, a hashed input of the run identifier that the loader reads): it proves that
@@ -188,6 +196,131 @@ UNDETERMINABLE_NOTE = {
     "6105_2015": ("the 2014 report prints no claims development table and the 2015 table states no exchange basis (the "
                   "policy note gives closing rates, p19); the line is 5.11% of R (X6, Y6)"),
 }
+
+
+#: Round 5 (23 October 2026): the records rule 2 of the round-5 decision rules excludes, each with two readings. Every
+#: field is a verbatim snippet of the archived reading (round5/readings/<reader>.json), from which the build takes the
+#: figure, and the page the snippet names (or the reader's own pages field names for that note).
+ROUND5 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round5"
+ROUND5_SNIPPETS = {
+    "3000_2022": {
+        "P2": {
+            "opening": (25, "balance sheet 'Claims outstanding 17 | 1,310,517 | 1,146,474' (p25)", "1,146,474"),
+            "fx_line": (42, "Note 17 (p42): 'Movement in provision 72,164' and 'Movement due to foreign exchange "
+                            "91,879'", "91,879"),
+            "not_retranslated": "the paid history was re-stated up by about 8% (2013 paid ratio 1.0800), the reserve "
+                                "part was not retranslated",
+            "mixed_cells": "in the 2022 table the end-2021 incurred cells and the end-2021 cumulative paid cells are both "
+                           "higher than the 2021 print by the SAME amount, column by column (2013: incurred 333,693 vs "
+                           "313,157 = +20,536; paid (277,147) vs (256,611) = +20,536; 2014: 270,950 vs 251,173 = +19,777 "
+                           "and (230,948) vs (211,170) = +19,778; 2020: 324,795 vs 318,487 = +6,308 and (72,406) vs "
+                           "(66,099) = +6,307; 2021: 120,673 vs 120,156 = +517 and (7,806) vs (7,289) = +517)",
+        },
+        "Q1": {
+            "opening": (42, "note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 "
+                            "(8.0%)", "1,146,474"),
+            "fx_line": (42, "note 17 'Movement due to foreign exchange 91,879' on opening gross provisions of 1,146,474 "
+                            "(8.0%)", "91,879"),
+            "not_retranslated": "So paid history was lifted (about +7% to +10% by UY) but the end-2021 outstanding was "
+                                "left at the 2021 amounts, whereas the end-2022 diagonal is at 2022 rates",
+            "mixed_cells": "in every column the 2022 table's end-2021 incurred and cumulative paid are both higher than "
+                           "the 2021 report's by the SAME amount, so the implied provision (incurred less paid) at "
+                           "end-2021 is unchanged",
+        },
+    },
+}
+ROUND5_RULE = ("rule 2 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), which "
+               "is the author's rule B (22 October 2026)")
+
+
+def load_round5():
+    """{key: [(reader, entry)]} of ROUND5_SNIPPETS's records, from the archived round-5 readings."""
+    out = {}
+    for key, readers in ROUND5_SNIPPETS.items():
+        for rid in readers:
+            with io.open(ROUND5 / "readings" / ("%s.json" % rid), encoding="utf-8") as fh:
+                out.setdefault(key, []).append((rid, json.load(fh)[key]))
+    return out
+
+
+def _r5_figure(text, rid, key, what, snippet, figure, page, own_pages):
+    if snippet not in text:
+        raise SystemExit("%s: reader %s's %s snippet is not in the archived reading" % (key, rid, what))
+    if figure not in snippet:
+        raise SystemExit("%s: reader %s's %s figure %s is not in its snippet" % (key, rid, what, figure))
+    if ("p%d" % page) not in snippet and ("p.%d" % page) not in json.dumps(own_pages):
+        raise SystemExit("%s: reader %s's %s page %d is named neither in its snippet nor in its pages" % (key, rid,
+                                                                                                         what, page))
+    return {"value_m": round(float(figure.replace(",", "")) / 1000.0, 3), "page": page, "quote": snippet}
+
+
+def reading_r5(rid, key, e):
+    """One round-5 reading of a rule-2 record, in the register's reading form (the fields the loader checks), built from
+    the verbatim snippets of ROUND5_SNIPPETS."""
+    text = json.dumps(e, ensure_ascii=False)
+    snip = ROUND5_SNIPPETS[key][rid]
+    for what in ("not_retranslated", "mixed_cells"):
+        if snip[what] not in text:
+            raise SystemExit("%s: reader %s's %s snippet is not in the archived reading" % (key, rid, what))
+    pages = e["pages"]
+    own = sorted({p for name, v in pages.items() if not name.startswith("prev") and "prev" not in name
+                  for p in ([v] if isinstance(v, int) else v if isinstance(v, list)
+                            else [int(x) for x in re.findall(r"p\.?(\d+)", v)])})
+    opening = _r5_figure(text, rid, key, "opening", snip["opening"][1], snip["opening"][2], snip["opening"][0], pages)
+    line = _r5_figure(text, rid, key, "exchange line", snip["fx_line"][1], snip["fx_line"][2], snip["fx_line"][0],
+                      pages)
+    return {
+        "reader": rid,
+        "source": "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % rid,
+        "pages": own,
+        "pages_as_read": pages,
+        "read_by": e["read_by"],
+        "opening_gross_claims_outstanding": opening,
+        "fx_line_gross": line,
+        "fx_line_pct_of_opening": pct_of(line["value_m"], opening["value_m"]),
+        "table_retranslated": False,
+        "table_exchange_basis": snip["not_retranslated"],
+        "cells_compared": snip["mixed_cells"],
+        "reader_verdict": e["verdict"],
+        "verdict": "exclude",
+        "verdict_by": ("%s, applied to this reading's facts: the reader's own round-5 verdict is %s" % (ROUND5_RULE,
+                                                                                                    e["verdict"])),
+        "note": e["note"],
+    }
+
+
+def entry_r5(key, reads):
+    """The 'excluded' entry of a round-5 rule-2 record: both readings give the same R and exchange line, a table whose
+    history is retranslated while its end-(t-1) reserves are not, and a line of at least 5% of R."""
+    r1 = reads[0]
+    for r in reads:
+        if (r["opening_gross_claims_outstanding"]["value_m"] != r1["opening_gross_claims_outstanding"]["value_m"]
+                or r["fx_line_gross"]["value_m"] != r1["fx_line_gross"]["value_m"]):
+            raise SystemExit("%s: the round-5 readers disagree on R or the exchange line" % key)
+    open_m, line_m = r1["opening_gross_claims_outstanding"]["value_m"], r1["fx_line_gross"]["value_m"]
+    pct = pct_of(line_m, open_m)
+    if abs(pct) < THRESHOLD_PCT:
+        raise SystemExit("%s: a line of %s%% of R is under the threshold" % (key, pct))
+    quote = " | ".join("reader %s, p%s: %s" % (r["reader"], r["opening_gross_claims_outstanding"]["page"],
+                                                r["opening_gross_claims_outstanding"]["quote"]) for r in reads)
+    quote += " || " + " | ".join("reader %s, p%s: %s" % (r["reader"], r["fx_line_gross"]["page"],
+                                                          r["fx_line_gross"]["quote"]) for r in reads)
+    return {
+        "report_currency": "GBP",
+        "opening_gross_claims_outstanding_m": open_m,
+        "fx_line_gross_m": line_m,
+        "fx_line_pct_of_opening": pct,
+        "pages": sorted({p for r in reads for p in r["pages"]}),
+        "quote": quote,
+        "readings": reads,
+        "table_retranslated": False,
+        "decision": ("%s, applied to two independent readings of the filing (round 5: %s): the development table's "
+                     "history is retranslated while its end-(t-1) reserves are not, so the step from the t-1 diagonal "
+                     "to the t diagonal carries the translation of the reserves, and the gross claims-outstanding "
+                     "roll-forward prints an exchange line of %.1f%% of the opening gross claims outstanding (absolute "
+                     "value at least 5%%), so the record leaves the primary sample; the 672 sensitivity keeps it"
+                     % (ROUND5_RULE, ", ".join(r["reader"] for r in reads), pct)),
+    }
 
 
 def load_reader(rid):
@@ -1425,6 +1558,10 @@ def split_evidence(out):
     for key, e in out["read_and_kept"].items():
         if "moved_cells" in e:
             evidence["read_and_kept"][key] = {"moved_cells": e.pop("moved_cells")}
+    # round 5: the cells that show condition (a), from each reading (the register's entry carries them too)
+    evidence["excluded"] = {key: {"mixed_base_cells": {r["reader"]: r["cells_compared"]
+                                                       for r in out["excluded"][key]["readings"]}}
+                            for key in ROUND5_SNIPPETS if key in out["excluded"]}
     return out, evidence
 
 
@@ -1484,6 +1621,21 @@ def build_all():
         if name == "outcome":
             ordered["undeterminable_kept"] = undet
     pop["round2"] = ordered
+    r5 = load_round5()
+    for key in sorted(r5, key=sort_key):
+        if key in out["excluded"] or key in out["read_and_kept"]:
+            raise SystemExit("%s was read in an earlier round" % key)
+        out["excluded"][key] = entry_r5(key, [reading_r5(rid, key, e) for rid, e in r5[key]])
+    pop["round5"] = {
+        "records_excluded": sorted(r5, key=sort_key),
+        "chosen_as": ("the records of the round-5 readings of tables whose history moved between reports "
+                      "(results/extraction_error_rate/mature-cohort/round5/; the screen rebase_screen.py over the "
+                      "primary sample's 649 records at 35a259c) that rule 2 of the round-5 decision rules decides: a "
+                      "table whose history is retranslated while its end-(t-1) reserves are not, with an exchange line "
+                      "of 5% or more of R"),
+        "readers": "P2 and Q1, two independent arms (round5/readings/; the brief round5/briefs/brief_r5.md)",
+        "decision": "decision of the Claude analysis session, 23 October 2026, applying the author's rule B",
+    }
     out, evidence = split_evidence(out)
     defects = register_defects(out)
     if defects:
