@@ -1,257 +1,11 @@
 {
  "_what": "Rule 4b applied to the readings of every record of rounds 5 to 8 (decision of the Claude analysis session, 24 October 2026; rules.md, rule 4b). Rule 4b: where rule 1's control does not tie, a record leaves the primary when (i) both readings report that the year t table prints, for an underwriting year u <= t-2, cumulative paid lower than the year t-1 report printed for the same year, by more than the exchange rate explains and with no explanation in either filing; (ii) the year t table fails the year's accounts by more than 10% (rule 1's test); and (iii) no base gives a figure that reconciles (rule 3 fails).",
- "_method": "scan_rule_4b.py lists every passage in every reading (round5/readings/*.json, round8/readings/Z7.json, Z8.json) that puts paid or payments near a word of decrease, in two passes (narrow and loose). 36 of the 83 records have such a passage; each was read against the precondition and conditions (i) to (iii), and the answers are under 'read'. The other 47 records have no reading that reports a cumulative paid figure falling, so condition (i) ('both readings report') fails for them by its wording. Three of them, 2488/2016, 382/2021 and 1967/2017, which review 8 named with 2232/2017 and 1729/2023 as records rule 1 does not reach, are answered under 'read' too (39 records in all); the other 44 are under 'no_fall_reported'.",
+ "_method": "scan_rule_4b.py reads every reading of the 83 records (round5/readings/*.json, round8/readings/Z7.json, Z8.json) three ways: a structural pass that takes every pair of paid cells a reading quotes against each other ('A-B=C', 'A vs B', 'A against B', 'A -> B', 'from A to B', 'A then B', 'prints B for the same', 'below B') with the later below the earlier, inside a passage about paid or payments that is not a table-against-accounts comparison; and two text passes (narrow and loose) for a paid figure near a word of decrease. Every record any pass flags is answered under 'read' against the precondition and conditions (i) to (iii), with the structural pairs it was flagged on ('structural_hits', reader by reader) and, where (i) holds on a reading, the cells. Records the review of the fixes named (435/2016, 1218/2016, 1084/2016) and those review 8 named (2488/2016, 382/2021, 1967/2017) are answered too. Every other record is under 'no_fall_reported': no reading quotes a falling pair of paid cells and no passage reports one, so condition (i) fails. (ii) is read incurred first (24 October 2026): the implied gross incurred test wherever the table gives one, the paid test only where it gives none.",
  "decides": [
   "2232_2017",
   "4747_2024"
  ],
  "read": {
-  "1110_2022": {
-   "readings": [
-    "P7",
-    "Q6",
-    "U1",
-    "U2"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: Q6's passage says the 2021 table's payments are on a different, smaller book (a take-on), not that a year's cumulative paid fell",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 5b, take_on_unmeasurable (out)"
-  },
-  "1176_2019": {
-   "readings": [
-    "P2",
-    "Q1"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: Q1 reports the '2010 and prior' column's paid rising (1,245 to 8,680), not falling",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "1416_2024": {
-   "readings": [
-    "P8",
-    "Q7"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: the passages say the 2023 print's UY2023 cumulative paid (42,779) exceeds the year's gross paid (a defect of the year t-1 print, u = t-1), not that a figure fell",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "1458_2024": {
-   "readings": [
-    "P1",
-    "Q8",
-    "U1",
-    "U2"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: U1 and U2 discuss the acquired paid-to-date as non-negative (the take-on bound); no year's paid falls",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 5b and 6, listed"
-  },
-  "1686_2022": {
-   "readings": [
-    "P6",
-    "Q7"
-   ],
-   "control_does_not_tie": "no: control +0.26% (P6), so rule 1 decides, not rule 4b",
-   "i": "not both: Q7 reports UY2018 cumulative gross paid 1,156,405 against 1,172,121 (-1.3%); P6 does not",
-   "ii": "no: incurred -9.5% (P6, Q7)",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "1729_2023": {
-   "readings": [
-    "P7",
-    "Q6"
-   ],
-   "control_does_not_tie": "yes: -27.3% (Q6), about -29% (P7)",
-   "i": "no: the UY2021 column's payments rose with its restated estimate; no reading reports a fall",
-   "ii": "no: incurred -0.4%; the cross-table paid +34.1% (Q6) is a proxy driven by the restated UY2021 column (P7)",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "1884_2021": {
-   "readings": [
-    "P3",
-    "Q2"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: P3's passage says the paid test cannot be run (take-on; paid printed at end t only)",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 5, take-on in R"
-  },
-  "1897_2019": {
-   "readings": [
-    "P1",
-    "Q2"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: both readings report UY2016 cumulative paid 74,555 (2018 table) against 53,844 (2019 table), but the filing explains it: the 2016 property class was transferred to the 2017 year by RITC and a cession raised to 100% (p33, P1, Q2)",
-   "ii": "no: incurred -6.1% (P1); the cross-report paid -29.7% is a proxy contaminated by that RITC",
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "1910_2016": {
-   "readings": [
-    "P7",
-    "Q8"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: P7's passage says the table prints cumulative paid at the latest date only; no fall reported",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "1945_2016": {
-   "readings": [
-    "P2",
-    "Q3"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: Q3's passage says the paid test cannot be run inside one table",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "1945_2018": {
-   "readings": [
-    "P2",
-    "Q3"
-   ],
-   "control_does_not_tie": "no: control +3.2% (P2, Q3), so rule 1 decides, not rule 4b",
-   "i": "both readings report UY2013 paid 33,349 (2018 table) against 44,165 (2017 report), but both read it as a misprint of the year t-1 report's 2013 column (estimate and paid about 11,000 too high there), not as a fault of the year t table",
-   "ii": "incurred +11.5% on an ultimate basis against earned accounts, which the basis explains; paid +1.5%",
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "2001_2016": {
-   "readings": [
-    "P6",
-    "Q7"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: Q7 reports the paid-to-date figures rising about 5% more than the year's gross paid (a retranslation), not falling",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "2001_2017": {
-   "readings": [
-    "P8",
-    "Q7"
-   ],
-   "control_does_not_tie": "no: control +3.1%",
-   "i": "not both: P8 reports a 46.8m fall in UY2015 cumulative paid between reports; Q7 reports the paid test not computable",
-   "ii": "no: incurred -4.4%; the cross-report paid -13.1% is a proxy (the 2017 table prints no end-2016 payments)",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "2232_2017": {
-   "readings": [
-    "P3",
-    "Q4"
-   ],
-   "control_does_not_tie": "yes: +7.4% (P3 incurred: 99,984 against 93,058); the year t miss is 1.4 times it, so the 10% branch fails; Q4's paid control +62.1% is confounded",
-   "i": "yes: the 2017 table (p40) prints UY2012 cumulative gross paid 19,393 against 22,799 in the 2016 report (p40), x0.851, and UY2013 43,200 against 47,658, x0.906; P3 names the fall ('with no stated reason'), Q4 quotes the same cells in its paid derivation; Q4 measures the retranslation of the same columns' earlier cells at x0.918-0.939, so UY2012's fall is beyond the exchange rate; neither filing explains it",
-   "ii": "yes, narrowly: implied incurred 264.9m against 296.0m, -10.5% in both readings (p14, p40); the ultimate basis would put the table above the earned accounts, not below; the cross-report paid -20.1% is a proxy and is set aside",
-   "iii": "yes: the end-2016 cells for u <= 2015 equal the 2016 report's latest exactly, so the previous report's base gives the same movement and the same miss; Q4's constant-currency M (about +34m) is an estimate, not printed",
-   "outcome": "CHANGED: rule 6 (least certain, in the primary) -> rule 4b (excluded)"
-  },
-  "2232_2020": {
-   "readings": [
-    "P7",
-    "Q8"
-   ],
-   "control_does_not_tie": null,
-   "i": "no fall reported (P7's passage is the cross-table paid test)",
-   "ii": null,
-   "iii": "no: rule 3 reconciles on the 2019 report's printed base",
-   "outcome": "unchanged: rule 3, corrected"
-  },
-  "2468_2020": {
-   "readings": [
-    "P1",
-    "Q2"
-   ],
-   "control_does_not_tie": null,
-   "i": "yes: both readings report UY2016 cumulative paid lower in the 2020 table than the 2019 report printed (36 months 56,391 against 74,943; 24 months 32,266 against 50,436), beyond the 0.982 factor, unexplained",
-   "ii": "no: the table ties (paid -4.3%, incurred -3.8%; P1, Q2)",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "2488_2019": {
-   "readings": [
-    "P7",
-    "Q8"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: P7's passage says the table prints no end-2018 cumulative paid",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 5, take-on in R"
-  },
-  "3000_2016": {
-   "readings": [
-    "P4",
-    "Q5"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: the passages concern the paid test's scope (the 'All prior years' column prints no paid); no fall reported",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rules 5 and 6, listed"
-  },
-  "3000_2018": {
-   "readings": [
-    "P7",
-    "Q6"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: Q6 reports paid rising (358,469 to 393,683); no fall",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
-  },
-  "3000_2022": {
-   "readings": [
-    "P2",
-    "Q1"
-   ],
-   "control_does_not_tie": null,
-   "i": "P2 reports UY2013 cumulative paid 271,249 against 277,147 (-2.1%)",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 2, excluded (out either way)"
-  },
-  "3500_2022": {
-   "readings": [
-    "P6",
-    "Q7"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: P6 reports UY2012's paid dropping out of the 2022 table (a dropped column), not a printed year's paid falling; Q7 reports the paid test not computable",
-   "ii": "no: incurred within about 3% of reserves once take-on provisions are stripped out (Q7)",
-   "iii": null,
-   "outcome": "unchanged: rules 5 and 6, listed"
-  },
-  "3500_2023": {
-   "readings": [
-    "P7",
-    "Q8"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: the passages concern a cross-report proxy inflated by the acquired portfolios' paid",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rules 5 and 6, listed"
-  },
   "382_2017": {
    "readings": [
     "P7",
@@ -291,10 +45,738 @@
     "Q1"
    ],
    "control_does_not_tie": "no: control +2.1%",
-   "i": "not both: Q1 reports UY2013 cumulative paid 161,152 against 169,328 and attributes it to different closing rates; P8 does not report it",
+   "i": "not both: Q1 quotes UY2013 cumulative paid 161,152 against 169,328 (and attributes it to different closing rates); P8 quotes neither cell",
    "ii": "no: incurred -8.1%; the paid -15.7% is a cross-report proxy",
    "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "Q1": [
+     [
+      "13,581",
+      "26,579"
+     ],
+     [
+      "161,152",
+      "169,328"
+     ]
+    ]
+   }
+  },
+  "435_2016": {
+   "readings": [
+    "P1",
+    "Q8"
+   ],
+   "control_does_not_tie": "yes: +41.6% (P1)",
+   "i": "no: no reading quotes a year t cumulative paid cell below the 2015 report's (P1 quotes the 2015 report's end-2015 payments 140,166, 111,238, 52,933, 40,718 and 2,556; the structural pass finds no falling pair)",
+   "ii": "incurred +36.1% (P1, Q8), the same gap as the control's (+41.6%), which the table's basis explains (both readings: screen_misread)",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands"
+  },
+  "510_2015": {
+   "readings": [
+    "P3",
+    "Q4"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: P3's passage says the paid test cannot be run",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands"
+  },
+  "780_2016": {
+   "readings": [
+    "P6",
+    "Q5",
+    "Z7",
+    "Z8"
+   ],
+   "control_does_not_tie": "yes: +9.4% (Z7; Z8 +9.44%), and the year t miss is 0.6 times it, so the 10% branch fails",
+   "i": "on three of the four readings: Q5, Z7 and Z8 quote UY2011 cumulative paid 208.9 (2016 table) against 218.9 (2015 report); P6 quotes only 208.9",
+   "ii": "no: incurred +5.6% (all four readings); P6's paid identity (+79.8%) is not like for like, the 2016 table having re-cut its history (Z7, Z8)",
+   "iii": null,
+   "outcome": "CHANGED: rule 1 (excluded) -> rule 6 (least certain, back in the primary at +24.9m USD)",
+   "cells": [
+    "208.9",
+    "218.9"
+   ],
+   "structural_hits": {
+    "Q5": [
+     [
+      "121.1",
+      "163.9"
+     ],
+     [
+      "208.9",
+      "218.9"
+     ]
+    ],
+    "Z7": [
+     [
+      "208.9",
+      "218.9"
+     ]
+    ]
+   }
+  },
+  "1084_2016": {
+   "readings": [
+    "P3",
+    "Q2"
+   ],
+   "control_does_not_tie": "yes on incurred: +17.0% (Q2)",
+   "i": "not both: P3 quotes the '2010 & prior' cumulative paid 527.7 (2016 table) against 533.9 (2015 report); Q2 quotes only 527.7",
+   "ii": "no: incurred +8.9% (P3, Q2)",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "P3": [
+     [
+      "527.7",
+      "533.9"
+     ]
+    ]
+   }
+  },
+  "1110_2022": {
+   "readings": [
+    "P7",
+    "Q6",
+    "U1",
+    "U2"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q6's passage says the 2021 table's payments are on a different, smaller book (a take-on), not that a year's cumulative paid fell",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 5b, take_on_unmeasurable (out)",
+   "structural_hits": {
+    "U2": [
+     [
+      "25,052",
+      "91,445"
+     ],
+     [
+      "4,650",
+      "123,833"
+     ]
+    ]
+   }
+  },
+  "1176_2019": {
+   "readings": [
+    "P2",
+    "Q1"
+   ],
+   "control_does_not_tie": null,
+   "i": "both readings quote UY2011 cumulative paid 13,453 (2019 table) against 13,601 (2018 report), -1.1%, in a table converted at the latest balance-sheet rate (P2); the '2010 and prior' column's paid rises (1,245 to 8,680)",
+   "ii": "no: the named columns' paid ties (-0.4%, P2, Q1); P2 gives the incurred test as -769 against the accounts, not a miss over 10%",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "cells": [
+    "13,453",
+    "13,601"
+   ],
+   "structural_hits": {
+    "P2": [
+     [
+      "2,915",
+      "3,530"
+     ]
+    ],
+    "Q1": [
+     [
+      "13,453",
+      "13,601"
+     ],
+     [
+      "2,915",
+      "3,530"
+     ]
+    ]
+   }
+  },
+  "1218_2016": {
+   "readings": [
+    "P1",
+    "Q2"
+   ],
+   "control_does_not_tie": "yes: the net control +55.9% (P1)",
+   "i": "no: the 2015 filing prints a net development table only (p35; P1, Q2), so no reading can quote a gross cumulative paid cell of the year t-1 report",
+   "ii": "incurred +50.6% (P1, Q2), as in the net control",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands"
+  },
+  "1274_2016": {
+   "readings": [
+    "P3",
+    "Q4"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q4's pair (12,005 against 47,564) is the 2012 column's implied reserve against the 2015 report's, not a paid cell; the 2012 paid cells (129,350 against 131,423) move by the column's exchange factor",
+   "ii": "incurred +12.8% as printed, -3.5% with the misprinted cell corrected (Q4)",
+   "iii": "no: rule 4's corrected figure reconciles (the session's derivation, -2.3%)",
+   "outcome": "unchanged: rules 4 and 6, corrected and listed",
+   "structural_hits": {
+    "Q4": [
+     [
+      "12,005",
+      "47,564"
+     ]
+    ]
+   }
+  },
+  "1274_2022": {
+   "readings": [
+    "P8",
+    "Q1"
+   ],
+   "control_does_not_tie": "no on incurred: the 2021 control ties at +0.2% (P8, Q1); the paid control's +20.4% comes from the same stale cell and is set aside under the incurred-first rule",
+   "i": "yes: both readings quote UY2016's end-2021 cumulative paid in the 2022 table, 279,946, against 397,367 in the 2021 report (-29.5%; the other ages move x0.96-0.98), unexplained; P8 reads the cell as stale or mis-keyed, Q1 as inconsistent",
+   "ii": "no on incurred: implied incurred +0.25% (P8, Q1). The same-table paid test fails (+33.4%, 354.7m against 265.8m) through that one cell, and is set aside under the incurred-first rule (24 October 2026): M is an incurred movement and does not use the cell",
+   "iii": null,
+   "cells": [
+    "279,946",
+    "397,367"
+   ],
+   "stale_cell": "the stale cell: UY2016, end-2021 cumulative paid, 279,946 in the 2022 table against 397,367 printed in the 2021 report (P8, Q1)",
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "P8": [
+     [
+      "266,572",
+      "397,367"
+     ]
+    ]
+   }
+  },
+  "1416_2024": {
+   "readings": [
+    "P8",
+    "Q7"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: the passages say the 2023 print's UY2023 cumulative paid (42,779) exceeds the year's gross paid (a defect of the year t-1 print, u = t-1), not that a figure fell",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "Q7": [
+     [
+      "17,948",
+      "60,348"
+     ],
+     [
+      "5,970",
+      "42,779"
+     ]
+    ]
+   }
+  },
+  "1458_2024": {
+   "readings": [
+    "P1",
+    "Q8",
+    "U1",
+    "U2"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: U1 and U2 discuss the acquired paid-to-date as non-negative (the take-on bound); no year's paid falls",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 5b and 6, listed"
+  },
+  "1492_2019": {
+   "readings": [
+    "P5",
+    "Q4"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q4 quotes UY2015 cumulative paid 2,982 (2019) against 3,071 (2018 report), x0.971, inside the rebasing both readings measure (about x0.97); the paid test after exchange ties (-2.8%, P5; -3.7%, Q4)",
+   "ii": "no: incurred -2.5% (P5, Q4)",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "Q4": [
+     [
+      "2,982",
+      "3,071"
+     ]
+    ]
+   }
+  },
+  "1609_2024": {
+   "readings": [
+    "P3",
+    "Q2",
+    "Z5",
+    "Z6"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q2's pair (49,801 against 50,124) is the table's cross-filing paid against the accounts' gross paid",
+   "ii": "no: incurred -1.2%",
+   "iii": "no: rule 4 corrects it (the transposed body)",
+   "outcome": "unchanged: rule 4, corrected",
+   "structural_hits": {
+    "Q2": [
+     [
+      "49,801",
+      "50,124"
+     ]
+    ]
+   }
+  },
+  "1686_2022": {
+   "readings": [
+    "P6",
+    "Q7"
+   ],
+   "control_does_not_tie": "no: control +0.26% (P6), so rule 1 decides, not rule 4b",
+   "i": "not both: Q7 quotes UY2018 cumulative gross paid 1,156,405 against 1,172,121 (-1.3%); P6 quotes only 1,156,405",
+   "ii": "no: incurred -9.5% (P6, Q7)",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "Q7": [
+     [
+      "1,156,405",
+      "1,172,121"
+     ]
+    ]
+   }
+  },
+  "1729_2023": {
+   "readings": [
+    "P7",
+    "Q6"
+   ],
+   "control_does_not_tie": "yes: -27.3% (Q6), about -29% (P7)",
+   "i": "no: the UY2021 column's payments rose with its restated estimate; no reading reports a fall",
+   "ii": "no: incurred -0.4%; the cross-table paid +34.1% (Q6) is a proxy driven by the restated UY2021 column (P7)",
+   "iii": null,
    "outcome": "unchanged: rule 6, least certain"
+  },
+  "1884_2021": {
+   "readings": [
+    "P3",
+    "Q2"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: P3's passage says the paid test cannot be run (take-on; paid printed at end t only)",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 5, take-on in R"
+  },
+  "1897_2019": {
+   "readings": [
+    "P1",
+    "Q2"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: both readings report UY2016 cumulative paid 74,555 (2018 table) against 53,844 (2019 table), but the filing explains it: the 2016 property class was transferred to the 2017 year by RITC and a cession raised to 100% (p33, P1, Q2)",
+   "ii": "no: incurred -6.1% (P1); the cross-report paid -29.7% is a proxy contaminated by that RITC",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "cells": [
+    "53,844",
+    "74,555"
+   ],
+   "structural_hits": {
+    "P1": [
+     [
+      "152,163",
+      "158,115"
+     ],
+     [
+      "43,184",
+      "55,393"
+     ],
+     [
+      "53,844",
+      "74,555"
+     ],
+     [
+      "68,233",
+      "102,295"
+     ]
+    ],
+    "Q2": [
+     [
+      "53,844",
+      "74,555"
+     ]
+    ]
+   }
+  },
+  "1910_2016": {
+   "readings": [
+    "P7",
+    "Q8"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: P7's passage says the table prints cumulative paid at the latest date only; no fall reported",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands"
+  },
+  "1945_2016": {
+   "readings": [
+    "P2",
+    "Q3"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q3's passage says the paid test cannot be run inside one table",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands"
+  },
+  "1945_2018": {
+   "readings": [
+    "P2",
+    "Q3"
+   ],
+   "control_does_not_tie": "no: control +3.2% (P2, Q3), so rule 1 decides, not rule 4b",
+   "i": "both readings report UY2013 paid 33,349 (2018 table) against 44,165 (2017 report), but both read it as a misprint of the year t-1 report's 2013 column (estimate and paid about 11,000 too high there), not as a fault of the year t table",
+   "ii": "incurred +11.5% on an ultimate basis against earned accounts, which the basis explains; paid +1.5%",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "cells": [
+    "33,349",
+    "44,165"
+   ],
+   "structural_hits": {
+    "Q3": [
+     [
+      "42,164",
+      "56,296"
+     ]
+    ]
+   }
+  },
+  "1947_2020": {
+   "readings": [
+    "P1",
+    "Q2"
+   ],
+   "control_does_not_tie": "yes: -28.1% (P1); -25.2% as printed (Q2)",
+   "i": "no: P1's pair (24,715 against 43,150) is UY2019's end-of-year incurred cell against the 2019 report's total outstanding provision, not paid cells; no reading quotes a paid cell falling",
+   "ii": "no: incurred -6.3% (P1, Q2)",
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "P1": [
+     [
+      "24,715",
+      "43,150"
+     ]
+    ]
+   }
+  },
+  "1967_2017": {
+   "readings": [
+    "P5",
+    "Q6"
+   ],
+   "control_does_not_tie": "yes: -7.6% (Q6)",
+   "i": "no: Q6's pair (1,737 against 2,647) is the 2011 balance to pay, not paid; the 2011 cumulative paid rises (73,793 to 85,816), estimates and payments scaled together",
+   "ii": "no: incurred +4.0%; P5's reserve-identity paid +1.7%",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "Q6": [
+     [
+      "1,737",
+      "2,647"
+     ]
+    ]
+   }
+  },
+  "2001_2016": {
+   "readings": [
+    "P6",
+    "Q7"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q7 reports the paid-to-date figures rising about 5% more than the year's gross paid (a retranslation), not falling",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain"
+  },
+  "2001_2017": {
+   "readings": [
+    "P8",
+    "Q7"
+   ],
+   "control_does_not_tie": "no: control +3.1%",
+   "i": "not both: P8 quotes UY2015 cumulative paid 565.1 (2017 table) against 611.9 (2016 report), a 46.8m fall; Q7 quotes neither cell (paid not computable)",
+   "ii": "no: incurred -4.4%; the cross-report paid -13.1% is a proxy (the 2017 table prints no end-2016 payments)",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "P8": [
+     [
+      "565.1",
+      "611.9"
+     ],
+     [
+      "918.4",
+      "1,164.0"
+     ]
+    ]
+   }
+  },
+  "2232_2017": {
+   "readings": [
+    "P3",
+    "Q4"
+   ],
+   "control_does_not_tie": "yes: +7.4% (P3 incurred: 99,984 against 93,058); the year t miss is 1.4 times it, so the 10% branch fails; Q4's paid control +62.1% is confounded",
+   "i": "yes: the 2017 table (p40) prints UY2012 cumulative gross paid 19,393 against 22,799 in the 2016 report (p40), x0.851, and UY2013 43,200 against 47,658, x0.906; P3 names the fall ('with no stated reason'), Q4 quotes the same cells in its paid derivation; Q4 measures the retranslation of the same columns' earlier cells at x0.918-0.939, so UY2012's fall is beyond the exchange rate; neither filing explains it",
+   "ii": "yes, narrowly: implied incurred 264.9m against 296.0m, -10.5% in both readings (p14, p40); the ultimate basis would put the table above the earned accounts, not below; the cross-report paid -20.1% is a proxy and is set aside",
+   "iii": "yes: the end-2016 cells for u <= 2015 equal the 2016 report's latest exactly, so the previous report's base gives the same movement and the same miss; Q4's constant-currency M (about +34m) is an estimate, not printed",
+   "outcome": "CHANGED: rule 6 (least certain, in the primary) -> rule 4b (excluded)",
+   "cells": [
+    "19,393",
+    "22,799"
+   ],
+   "structural_hits": {
+    "P3": [
+     [
+      "1,879",
+      "3,209"
+     ],
+     [
+      "19,393",
+      "22,799"
+     ],
+     [
+      "43,200",
+      "47,658"
+     ],
+     [
+      "64,631",
+      "69,352"
+     ]
+    ],
+    "Q4": [
+     [
+      "19,393",
+      "22,799"
+     ],
+     [
+      "43,200",
+      "47,658"
+     ]
+    ]
+   }
+  },
+  "2232_2020": {
+   "readings": [
+    "P7",
+    "Q8"
+   ],
+   "control_does_not_tie": null,
+   "i": "no fall reported (P7's passage is the cross-table paid test)",
+   "ii": null,
+   "iii": "no: rule 3 reconciles on the 2019 report's printed base",
+   "outcome": "unchanged: rule 3, corrected"
+  },
+  "2468_2020": {
+   "readings": [
+    "P1",
+    "Q2"
+   ],
+   "control_does_not_tie": null,
+   "i": "yes: both readings report UY2016 cumulative paid lower in the 2020 table than the 2019 report printed (36 months 56,391 against 74,943; 24 months 32,266 against 50,436), beyond the 0.982 factor, unexplained",
+   "ii": "no: the table ties (paid -4.3%, incurred -3.8%; P1, Q2)",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "cells": [
+    "56,391",
+    "74,943"
+   ],
+   "structural_hits": {
+    "P1": [
+     [
+      "17,605",
+      "17,822"
+     ],
+     [
+      "32,266",
+      "50,436"
+     ],
+     [
+      "56,391",
+      "74,943"
+     ],
+     [
+      "72,453",
+      "73,117"
+     ]
+    ],
+    "Q2": [
+     [
+      "32,266",
+      "50,436"
+     ],
+     [
+      "56,391",
+      "74,943"
+     ]
+    ]
+   }
+  },
+  "2488_2016": {
+   "readings": [
+    "P6",
+    "Q5"
+   ],
+   "control_does_not_tie": "yes: +38.3%",
+   "i": "no: the structural pairs (231,751 against 238,712; 380,218 against 424,765) are the paid proxy against the accounts and the '2010 & prior' reserve; no reading quotes a paid cell falling",
+   "ii": "no: the paid bridge ties (-3.3% with the factor, P6; -2.9%, Q5); the incurred +59.5% is the 2010-and-prior years outside the table",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "Q5": [
+     [
+      "231,751",
+      "238,712"
+     ],
+     [
+      "380,218",
+      "424,765"
+     ]
+    ]
+   }
+  },
+  "2488_2019": {
+   "readings": [
+    "P7",
+    "Q8"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: P7's passage says the table prints no end-2018 cumulative paid",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 5, take-on in R"
+  },
+  "3000_2016": {
+   "readings": [
+    "P4",
+    "Q5"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: the passages concern the paid test's scope (the 'All prior years' column prints no paid); no fall reported",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rules 5 and 6, listed"
+  },
+  "3000_2018": {
+   "readings": [
+    "P7",
+    "Q6"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: Q6 reports paid rising (358,469 to 393,683); no fall",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 7, stands",
+   "structural_hits": {
+    "P7": [
+     [
+      "208,959",
+      "294,073"
+     ]
+    ],
+    "Q6": [
+     [
+      "208,959",
+      "294,073"
+     ],
+     [
+      "322,593",
+      "368,502"
+     ]
+    ]
+   }
+  },
+  "3000_2022": {
+   "readings": [
+    "P2",
+    "Q1"
+   ],
+   "control_does_not_tie": null,
+   "i": "both readings quote UY2013 cumulative paid 271,249 against 277,147 (-2.1%)",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rule 2, excluded (out either way)",
+   "cells": [
+    "271,249",
+    "277,147"
+   ],
+   "structural_hits": {
+    "P2": [
+     [
+      "271,249",
+      "277,147"
+     ],
+     [
+      "274,979",
+      "333,693"
+     ],
+     [
+      "3,730",
+      "56,546"
+     ]
+    ],
+    "Q1": [
+     [
+      "271,249",
+      "277,147"
+     ]
+    ]
+   }
+  },
+  "3500_2022": {
+   "readings": [
+    "P6",
+    "Q7"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: P6 reports UY2012's paid dropping out of the 2022 table (a dropped column), not a printed year's paid falling; Q7 reports the paid test not computable",
+   "ii": "no: incurred within about 3% of reserves once take-on provisions are stripped out (Q7)",
+   "iii": null,
+   "outcome": "unchanged: rules 5 and 6, listed"
+  },
+  "3500_2023": {
+   "readings": [
+    "P7",
+    "Q8"
+   ],
+   "control_does_not_tie": null,
+   "i": "no: the passages concern a cross-report proxy inflated by the acquired portfolios' paid",
+   "ii": null,
+   "iii": null,
+   "outcome": "unchanged: rules 5 and 6, listed"
+  },
+  "4141_2022": {
+   "readings": [
+    "P8",
+    "Q1"
+   ],
+   "control_does_not_tie": "no: control +0.3%",
+   "i": "no: P8's pair (110,181 against 563,500) is a cross-report paid proxy against a retranslated total, not a year's cells",
+   "ii": "no: incurred -2.9%",
+   "iii": null,
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "P8": [
+     [
+      "110,181",
+      "563,500"
+     ]
+    ]
+   }
   },
   "4242_2017": {
    "readings": [
@@ -302,10 +784,14 @@
     "Q1"
    ],
    "control_does_not_tie": "no: control -0.6%",
-   "i": "not both: Q1 reports UY2011 cumulative paid 11,613 against 12,724 and UY2012 20,989 against 21,094; P8 does not",
+   "i": "yes on the cells: both readings quote UY2011 cumulative paid 11,613 (2017 table) against 12,724 (2016 report) (Q1 names the fall); a dollar table, so no exchange rate explains it, and neither filing does",
    "ii": "no: incurred -2.0%",
    "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
+   "outcome": "unchanged: rule 6, least certain",
+   "cells": [
+    "11,613",
+    "12,724"
+   ]
   },
   "4242_2022": {
    "readings": [
@@ -316,7 +802,25 @@
    "i": "P4 reports the merged '2016 & Prior' column's paid 152,111 below the 2021 report's 169,791; Q3 calls the column not measurable",
    "ii": "yes on the table's own base (+47%)",
    "iii": "no: rule 3 reconciles once the merged column is set aside (-80.015m USD, both readings)",
-   "outcome": "unchanged: rule 3, corrected"
+   "outcome": "unchanged: rule 3, corrected",
+   "cells": [
+    "152,111",
+    "169,791"
+   ],
+   "structural_hits": {
+    "P4": [
+     [
+      "41,642",
+      "143,438"
+     ]
+    ],
+    "Q3": [
+     [
+      "368,995",
+      "415,378"
+     ]
+    ]
+   }
   },
   "4444_2017": {
    "readings": [
@@ -353,7 +857,57 @@
    "i": "yes: the 2024 table (p48) prints UY2020 cumulative paid 213 against 4,843 in the 2023 report (p39), and UY2021 4,164 against 5,883 (P2, Q3, Z7, Z8); the estimates move by the exchange scale or less; the only restatement note (p31) concerns the management fee",
    "ii": "yes: incurred -81.9% (note 6 p35; all four readings); paid -60.7% (p17)",
    "iii": "yes: the 2023 printed cells give 45.3m against 61.9m (-27%); no base reconciles",
-   "outcome": "CHANGED: rule 1 (excluded) -> rule 4b (excluded); out either way"
+   "outcome": "CHANGED: rule 1 (excluded) -> rule 4b (excluded); out either way",
+   "cells": [
+    "213",
+    "4,843"
+   ],
+   "structural_hits": {
+    "P2": [
+     [
+      "21,135",
+      "22,111"
+     ],
+     [
+      "213",
+      "4,843"
+     ],
+     [
+      "4,164",
+      "5,883"
+     ]
+    ],
+    "Q3": [
+     [
+      "21,135",
+      "22,111"
+     ],
+     [
+      "4,164",
+      "5,883"
+     ]
+    ],
+    "Z7": [
+     [
+      "213",
+      "4,843"
+     ]
+    ],
+    "Z8": [
+     [
+      "2,215",
+      "6,863"
+     ],
+     [
+      "213",
+      "4,843"
+     ],
+     [
+      "7,482",
+      "92,087"
+     ]
+    ]
+   }
   },
   "5000_2023": {
    "readings": [
@@ -365,17 +919,6 @@
    "ii": null,
    "iii": null,
    "outcome": "unchanged: rule 6, least certain"
-  },
-  "510_2015": {
-   "readings": [
-    "P3",
-    "Q4"
-   ],
-   "control_does_not_tie": null,
-   "i": "no: P3's passage says the paid test cannot be run",
-   "ii": null,
-   "iii": null,
-   "outcome": "unchanged: rule 7, stands"
   },
   "5678_2016": {
    "readings": [
@@ -397,7 +940,15 @@
    "i": "no: Q4 reports the table's TOTAL cumulative payments not rolling (66,319 short) because the table's scope shrank with the 2014 column; no year's cumulative paid is reported lower (P3: not like for like)",
    "ii": "no: incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4); the paid -72.7% is a cross-report proxy",
    "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
+   "outcome": "unchanged: rule 6, least certain",
+   "structural_hits": {
+    "P3": [
+     [
+      "24,943",
+      "91,262"
+     ]
+    ]
+   }
   },
   "6134_2022": {
    "readings": [
@@ -408,63 +959,28 @@
    "i": "Q5 reports the payments row is not a true cumulative paid (below one year's paid)",
    "ii": null,
    "iii": null,
-   "outcome": "unchanged: rule 1, excluded (out either way)"
-  },
-  "780_2016": {
-   "readings": [
-    "P6",
-    "Q5",
-    "Z7",
-    "Z8"
-   ],
-   "control_does_not_tie": "yes: +9.4% (Z7; Z8 +9.44%), and the year t miss is 0.6 times it, so the 10% branch fails",
-   "i": "Q5, Z7 and Z8 report UY2011 cumulative paid 208.9 (2016 table) against 218.9 (2015 report); P6 does not",
-   "ii": "no: incurred +5.6% (all four readings); P6's paid identity (+79.8%) is not like for like, the 2016 table having re-cut its history (Z7, Z8)",
-   "iii": null,
-   "outcome": "CHANGED: rule 1 (excluded) -> rule 6 (least certain, back in the primary at +24.9m USD)"
-  },
-  "1967_2017": {
-   "readings": [
-    "P5",
-    "Q6"
-   ],
-   "control_does_not_tie": "yes: -7.6% (Q6)",
-   "i": "no: the history is 6-16% HIGHER (estimates and payments alike); no reading reports a fall",
-   "ii": "no: incurred +4.0%; P5's reserve-identity paid +1.7%",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
-  },
-  "2488_2016": {
-   "readings": [
-    "P6",
-    "Q5"
-   ],
-   "control_does_not_tie": "yes: +38.3%",
-   "i": "no: no reading reports a cumulative paid figure falling",
-   "ii": "no: the paid bridge ties (-3.3% with the factor, P6; -2.9%, Q5); the incurred +59.5% is the 2010-and-prior years outside the table",
-   "iii": null,
-   "outcome": "unchanged: rule 6, least certain"
+   "outcome": "unchanged: rule 1, excluded (out either way)",
+   "structural_hits": {
+    "Q5": [
+     [
+      "2,869",
+      "22,082"
+     ]
+    ]
+   }
   }
  },
  "no_fall_reported": [
   "318_2024",
   "382_2020",
-  "435_2016",
   "780_2017",
-  "1084_2016",
-  "1218_2016",
-  "1274_2016",
-  "1274_2022",
   "1274_2024",
   "1301_2016",
-  "1492_2019",
-  "1609_2024",
   "1686_2021",
   "1856_2021",
   "1856_2024",
   "1880_2015",
   "1910_2018",
-  "1947_2020",
   "1947_2022",
   "1955_2023",
   "1967_2018",
@@ -483,7 +999,6 @@
   "3624_2018",
   "4000_2022",
   "4020_2018",
-  "4141_2022",
   "4444_2022",
   "4444_2023",
   "4472_2022",
@@ -491,5 +1006,6 @@
   "5000_2018",
   "5151_2020",
   "6107_2023"
- ]
+ ],
+ "_reports_standard": "A reading reports the fall when it quotes both cells, the year t table's cumulative paid and the year t-1 report's, for the same underwriting year, whether or not it names the fall (rules.md, rule 4b)."
 }

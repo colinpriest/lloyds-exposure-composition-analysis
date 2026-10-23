@@ -592,12 +592,13 @@ def _round5_text(name):
         return fh.read()
 
 
-def test_rule_1s_control_clause_is_exact_and_decided_no_record():
+def test_rule_1s_control_clause_is_exact_and_moved_no_record_on_23_october():
     """rules.md, the register's _rule text, the build's docstring, the adjudication and data-provenance.md state the exact
     clause (within 5%, or within 10% when the same basis gap explains both years and the year t miss is at least three
-    times the control's), say it decided no record (4242/2022 moved to rule 3 on review 8's decision; 780/2016 and
-    4747/2024 both fail it on the round-8 readings), and name what was added after the rules were written. No text may
-    say the clause changed or kept an outcome (final review 2, R4 F1 and F2)."""
+    times the control's), say that on 23 October it moved no record and that, applied to the round-8 readings, it takes
+    780/2016 and 4747/2024 out of rule 1, state the incurred-first rule, and name what was added after the rules were
+    written. No text may say the clause changed or kept an outcome, or that it decided no record (final review 2, R4 F1
+    and F2; the review of the fixes, items 1 and 4)."""
     rules, adj = _round5_text("rules.md"), _round5_text("adjudication.md")
     flat, adj_flat = " ".join(rules.split()), " ".join(adj.split())
     reg_rule = " ".join(_register()["_rule"].split())
@@ -609,14 +610,22 @@ def test_rule_1s_control_clause_is_exact_and_decided_no_record():
         assert "Rules 1 to 7 were written before the adjudication" in text or "rules 1 to 7 were written before the " \
             "adjudication" in text, name
         assert "exact control clause" in text and "rule 4b" in text.lower(), name
-        assert "decided no record" in text, name
-        assert "4242/2022" in text and "780/2016 and 4747/2024" in text, name
-        for retracted in ("no outcome but 4242", "meet it only through its 10% branch", "changed no outcome"):
+        low = text.lower()
+        assert "on 23 october" in low and "moved no record" in low, name
+        assert "takes 780/2016 and 4747/2024 out of rule 1" in text, name
+        assert "4242/2022" in text, name
+        assert "incurred first" in low and "a paid cell m does not use cannot make m unmeasured" in low, name
+        assert "paid where computable" not in text, name
+        for retracted in ("no outcome but 4242", "meet it only through its 10% branch", "changed no outcome",
+                          "decided no record"):
             assert retracted not in text, (name, retracted)
     assert "ties when it is within 5%, or within 10% when the same basis gap explains" in flat
     assert "at least three times the control's" in flat
     assert "Expected: 2689/2023, 6134/2022 (both tie within 5%)" in flat
     assert "within 10% when the same basis gap explains both years" in reg_rule
+    # 780/2016's two ratios (Z7 on the percentages, Z8 on the absolute misses) are both disclosed
+    for name in ("rules.md", "provenance"):
+        assert "0.6 times the control's on the percentages" in texts[name] and "0.81" in texts[name], name
     first = adj.splitlines()[2]
     assert "rules 1 to 7 were written before the adjudication" in first and "exact control clause" in first
 
@@ -690,10 +699,31 @@ def test_2232_2017_meets_rule_4b_narrowly_and_the_scan_found_it():
     assert "(ii) is narrow" in rules
 
 
-def test_the_rule_4b_scan_answers_every_record_of_the_round():
-    """round8/rule_4b_scan.json answers every one of the 83 records once: each record the scan flags is read against the
-    conditions, the rest fail (i) because no reading reports a fall; the records it decides are the register's rule-4b
-    entries, and each answer's outcome names the record's rule in the register."""
+def _incurred_t(reading):
+    """A reading's year t implied gross incurred miss, in per cent, wherever it gives one (the readers name the field in
+    several ways), else None."""
+    inc = reading.get("incurred_test")
+    cands = []
+    if isinstance(inc, dict):
+        for f in ("diff_pct", "t_diff_pct", "diff_pct_t", "diff_pct_t_gross"):
+            cands.append(inc.get(f))
+        for f in ("year_t", "t"):
+            if isinstance(inc.get(f), dict):
+                cands.append(inc[f].get("diff_pct"))
+    for f in ("year_t_diff_pct",):
+        cands.append(reading.get(f))
+    for c in cands:
+        if isinstance(c, (int, float)) and not isinstance(c, bool):
+            return float(c)
+    return None
+
+
+def test_the_rule_4b_scan_answers_every_structural_hit_with_its_cells():
+    """round8/rule_4b_scan.json answers every one of the 83 records once. The scan is structural: in every reading it
+    compares the paid cells quoted against each other, and every record with a falling pair (or a passage reporting a
+    fall) is answered under 'read' with those pairs, reader by reader; the rest are 'no_fall_reported' and have none. An
+    answer that finds the fall on the cells quotes them, and each reading it rests on quotes both. The records it decides
+    are the register's rule-4b entries, and each answer's outcome names the record's rule in the register."""
     reg = _register()
     adj = reg["_adjudicated"]
     with io.open(str(rb.RULE_4B_SCAN), encoding="utf-8") as fh:
@@ -705,22 +735,65 @@ def test_the_rule_4b_scan_answers_every_record_of_the_round():
         sys.path.remove(str(rb.ROUND8))
     hits = S.scan()
     assert set(hits) == set(adj) and len(adj) == 83
-    flagged = {k for k, h in hits.items() if h}
+    structural = {k: {r: [list(p) for p in v] for r, v in h["structural"].items()} for k, h in hits.items()
+                  if h["structural"]}
+    flagged = {k for k, h in hits.items() if h["structural"] or h["text"]}
+    assert len(structural) >= 20, "the structural pass finds the falling pairs the readings quote"
+    for k, by_reader in structural.items():
+        assert k in scan["read"] and scan["read"][k]["structural_hits"] == by_reader, k
     assert set(scan["read"]) >= flagged
     assert sorted(scan["no_fall_reported"]) == sorted(set(adj) - set(scan["read"]))
-    # a record answered by hand although the scan does not flag it fails (i) in its own answer
-    for k in set(scan["read"]) - flagged:
-        assert scan["read"][k]["i"].startswith("no"), k
-    assert not set(scan["read"]) & set(scan["no_fall_reported"])
-    assert set(scan["read"]) | set(scan["no_fall_reported"]) == set(adj)
+    assert not set(scan["no_fall_reported"]) & flagged
+    for k in set(scan["read"]) - set(structural):
+        assert "structural_hits" not in scan["read"][k], k
     assert sorted(scan["decides"]) == sorted(RULE_4B) == sorted(k for k, e in reg["excluded"].items() if e["rule"] == "4b")
+    reads = S.readings()
     for k, ans in scan["read"].items():
         assert ans["readings"] == adj[k]["readers"], k
-        assert ("rule %s" % adj[k]["rule"]) in ans["outcome"].split("->")[-1] or (
-            "rules %s" % adj[k]["rule"]) in ans["outcome"].split("->")[-1], k
+        tail = ans["outcome"].split("->")[-1]
+        assert ("rule %s" % adj[k]["rule"]) in tail or ("rules %s" % adj[k]["rule"]) in tail, k
         assert ans["outcome"].startswith("CHANGED") == (k in ("780_2016", "2232_2017", "4747_2024")), k
-    for k in ("2232_2017", "2488_2016", "382_2021", "1967_2017", "1729_2023", "780_2016", "2468_2020"):
+        if ans["i"].startswith("yes") or k == "780_2016":
+            later, earlier = ans["cells"]
+            assert later in ans["i"] and earlier in ans["i"], k
+            quoting = [r for r, e in reads[k].items()
+                       if all(re.search(r"(?<![\d.,])%s(?!\d|,\d|\.\d)" % re.escape(c), json.dumps(e, ensure_ascii=False))
+                              for c in (later, earlier))]
+            assert len(quoting) >= 2, (k, quoting)
+    assert "quotes both cells" in scan["_reports_standard"]
+    for k in ("2232_2017", "2488_2016", "382_2021", "1967_2017", "1729_2023", "780_2016", "2468_2020", "1274_2022",
+              "435_2016", "1218_2016", "1084_2016"):
         assert k in scan["read"], k
+    # 1274/2022: (i) holds on its stale UY2016 cell, (ii) fails on incurred; it stands
+    a = scan["read"]["1274_2022"]
+    assert a["i"].startswith("yes") and a["ii"].startswith("no on incurred") and a["cells"] == ["279,946", "397,367"]
+    assert "stale" in a["stale_cell"] and adj["1274_2022"]["outcome"] == "stands"
+    # 780/2016 meets (i) on three of its four readings, said once and the same way
+    assert scan["read"]["780_2016"]["i"].startswith("on three of the four readings")
+
+
+def test_condition_ii_is_read_on_incurred_wherever_a_reading_gives_it():
+    """Incurred first (24 October 2026): every exclusion under rules 1 and 4b whose readings give an implied incurred
+    miss rests on it (each such miss is over 10%, and the entry's accounts facts quote one), and no record whose readings'
+    incurred misses are all within 10% is excluded under either rule, however its paid test reads (1274/2022: paid
+    +33.4%, incurred +0.25%, stands)."""
+    reg = _register()
+    reads = rb.load_readings()
+    for k, e in reg["excluded"].items():
+        incs = [x for x in (_incurred_t(r) for _rid, r in reads[k]) if x is not None]
+        if not incs:
+            continue
+        assert all(abs(x) > 10 for x in incs), (k, incs)
+        f = e["conditions"]["year_t_fails_accounts"]["facts"]
+        assert any("%+.1f%%" % x in f or "%.1f%%" % abs(x) in f for x in incs), (k, incs)
+    assert {k for k, e in reg["excluded"].items()} >= {"4747_2024", "2232_2017", "6134_2022"}
+    for k, a in reg["_adjudicated"].items():
+        incs = [x for x in (_incurred_t(r) for _rid, r in reads[k]) if x is not None]
+        if incs and all(abs(x) <= 10 for x in incs):
+            assert not (a["outcome"] == "excluded" and a["rule"] in ("1", "4b")), (k, incs)
+    incs = [_incurred_t(r) for _rid, r in reads["1274_2022"]]
+    assert incs == [0.25, 0.25] and reg["_adjudicated"]["1274_2022"]["outcome"] == "stands"
+
 
 
 @pytest.mark.parametrize("key,needles", [

@@ -15,11 +15,14 @@ named in rules.md: rule 5b (23 October, after the round-7 readings U1 and U2 of 
 take-on clause, take_on_table_unreconciled (23 October, after the readings of 3500/2023, and applied to 3500/2022 after
 review 8); rule 1's exact control clause (23 October, after review 8: the year t-1 control ties within 5%, or within
 10% when the same basis gap explains both years and the year t miss is at least three times the control's); and rule 4b
-(24 October, after the round-8 readings Z7 and Z8, round8/). The exact control clause decided no record: 4242/2022 moved
-from rule 1 to rule 3 on review 8's decision to set aside its merged '2016 & Prior' column (its control ties at -1.1%
-under either reading), and 780/2016 and 4747/2024, excluded under rule 1 until then, both fail the clause on the
-round-8 readings (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t miss +5.6%, 0.6 times
-it). 780/2016 returns to the primary under rule 6 (+24.9m USD as printed); 4747/2024 stays out under rule 4b, a table
+(24 October, after the round-8 readings Z7 and Z8, round8/). On 23 October the exact control clause moved no record
+(4242/2022 moved from rule 1 to rule 3 on review 8's decision to set aside its merged '2016 & Prior' column; its control
+ties at -1.1% under either reading); applied to the round-8 readings it takes 780/2016 and 4747/2024 out of rule 1
+(4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t miss +5.6%, 0.6 times it on the
+percentages, Z7, and 0.81 on the absolute misses, Z8). Incurred first (24 October, after the review of the fixes): rule
+1's accounts test and rule 4b's (ii) use the implied gross incurred test wherever the table gives one; the paid test
+decides only where the table gives none, because M is an incurred movement and a paid cell M does not use cannot make M
+unmeasured. 780/2016 returns to the primary under rule 6 (+24.9m USD as printed); 4747/2024 stays out under rule 4b, a table
 its own cells prove inconsistent (its cumulative paid falls between reports). Rule 4b was applied to the readings of
 every record of rounds 5 to 8 (round8/rule_4b_scan.json): it also takes 2232/2017 out of the primary, which rule 6
 listed until then. Review 8 also added the rule-6 clause derived_correction (1274/2016, whose corrected figure is the
@@ -30,11 +33,13 @@ its pages and quote, the facts the rule rests on and the decision:
 
   * "excluded": rule 1 or rule 4b, each entry naming its rule. Rule 1: the year t table's history differs from the
     year t-1 report beyond the exchange rate with no explanation in either filing, the table fails the year's accounts
-    by more than 10% beyond what its basis explains while the year t-1 control ties (within 5%, or within 10% when the
+    by more than 10% beyond what its basis explains (implied gross incurred first; paid only where the table gives no
+    implied incurred) while the year t-1 control ties (within 5%, or within 10% when the
     same basis gap explains both years and the year t miss is at least three times the control's), and the year t-1
     printed base gives no figure that reconciles either. Rule 4b: the control does not tie, but both readings report
     that the year t table prints, for a year u <= t-2, cumulative paid lower than the year t-1 report printed, beyond
-    the exchange rate and unexplained; the table fails the year's accounts by more than 10%; and no base reconciles. The
+    the exchange rate and unexplained; the table fails the year's accounts by more than 10% (incurred first); and no
+    base reconciles. A reading reports the fall when it quotes both cells for the same underwriting year. The
     loader (run_analysis.py) removes the record from the primary at the unusable-severity step with the tag
     RESTATED_BASE_TABLE; under outcome 'precedence_672' the register is not read.
   * "history_restated": rule 6. The table ties to the year's accounts (or its basis explains the gap), but an
@@ -104,21 +109,26 @@ RULE = (
     "rule). Rule 1: a record leaves the PRIMARY "
     "sample (outcome 'mature_cohort') when its year t development table's history (an underwriting year u <= t-2, or "
     "the table as a whole) differs from the year t-1 report beyond the exchange rate with no explanation in either "
-    "filing; AND the year t table fails the year's accounts (implied gross incurred, or paid where computable, off by "
-    "more than 10% beyond what its basis explains) while the year t-1 control ties (within 5%; or within 10% when the "
+    "filing; AND the year t table fails the year's accounts (implied gross incurred off by more than 10% beyond what "
+    "its basis explains; the paid test decides only where the table gives no implied incurred) while the year t-1 control ties (within 5%; or within 10% when the "
     "same basis gap explains both years, an '& prior' column outside the cells or an ultimate basis against earned "
     "accounts, and the year t miss is at least three times the control's); AND the year t-1 report's "
     "printed base does not give a figure that reconciles either. Rule 4b (a table its own cells prove inconsistent, "
     "added 24 October 2026 after the round-8 readings): where rule 1's control does not tie, a record still leaves the "
     "PRIMARY sample when (i) both readings report that the year t table prints, for an underwriting year u <= t-2, "
     "cumulative paid lower than the year t-1 report printed for the same year, by more than the exchange rate explains "
-    "and with no explanation in either filing; (ii) the year t table fails the year's accounts by more than 10% (rule "
-    "1's test); and (iii) no base gives a figure that reconciles (rule 3 fails). Rules 1 to 7 were written before the "
+    "and with no explanation in either filing (a reading reports the fall when it quotes both cells for the same "
+    "underwriting year, whether or not it names it); (ii) the year t table fails the year's accounts by more than 10% "
+    "(rule 1's test); and (iii) no base gives a figure that reconciles (rule 3 fails). Incurred first (added 24 October "
+    "2026 after the review of the fixes): rule 1's accounts test and rule 4b's (ii) use the implied gross incurred test "
+    "wherever the table gives one; the paid test decides only where the table gives no implied incurred, because M is an "
+    "incurred movement and a paid cell M does not use cannot make M unmeasured. Rules 1 to 7 were written before the "
     "adjudication; rule 5b, rule 6's take-on clause (take_on_table_unreconciled), rule 1's exact control clause and "
     "rule 4b were added after particular readings or review 8 (rules.md names them). The exact control clause, made "
-    "exact on 23 October 2026 after review 8 and re-applied to every record, decided no record: 4242/2022 moved from "
-    "rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column (its control, -1.1%, ties "
-    "under either reading), and 780/2016 and 4747/2024 both fail it on the round-8 readings Z7 and Z8. Rule 4b, applied "
+    "exact on 23 October 2026 after review 8 and re-applied to every record: on 23 October it moved no record "
+    "(4242/2022 moved from rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column; its "
+    "control, -1.1%, ties under either reading); applied to the round-8 readings Z7 and Z8 it takes 780/2016 and "
+    "4747/2024 out of rule 1. Rule 4b, applied "
     "to the readings of every record of rounds 5 to 8 (round8/rule_4b_scan.json), decides two records: 4747/2024 and "
     "2232/2017. "
     "The loader (run_analysis.py) removes an 'excluded' "
@@ -302,10 +312,10 @@ HISTORY_RESTATED = {
                  "like for like: the 2016 table re-cuts its history, so its own end-2015 diagonal is not the base the 2015 "
                  "balance sheet was struck on (Z7, Z8). Rule 1's exact control clause: not met (Z7, Z8). The control miss "
                  "is +9.4% (the 2015 table's 110.268m against 100.753m), over 5%, and the year t miss, +5.6%, is 0.6 "
-                 "times it (Z7; 0.8 on Z8's absolute misses), so the 10% branch fails whatever the basis (shared basis "
-                 "gap: undeterminable, Z7, Z8). Rule 4b: not met. Q5, Z7 and Z8 report UY2011's cumulative paid at "
-                 "208.9 against 218.9 in the 2015 report, but the table does not fail the accounts by more than 10% "
-                 "(condition (ii)). M as printed, +24.9m USD (2011 +2.4, 2012 +4.4, 2013 +3.4, 2014 +14.7; P6, Q5), "
+                 "times it on the percentages (Z7; 0.81 on Z8's absolute misses, 7.7m against 9.5m), so the 10% branch fails whatever the basis (shared basis "
+                 "gap: undeterminable, Z7, Z8). Rule 4b: not met. Three of the four readings (Q5, Z7, Z8) report "
+                 "UY2011's cumulative paid at 208.9 against 218.9 in the 2015 report (P6 quotes only 208.9), but the "
+                 "table does not fail the accounts by more than 10% on incurred (condition (ii), incurred first). M as printed, +24.9m USD (2011 +2.4, 2012 +4.4, 2013 +3.4, 2014 +14.7; P6, Q5), "
                  "stands: the record returns to the primary sample (decision of the Claude analysis session, 24 October "
                  "2026, after the round-8 readings) and stays least certain"),
     "780_2017": (["unexplained_history_move", "label_disagreement"],

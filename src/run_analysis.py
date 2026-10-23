@@ -551,7 +551,9 @@ FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed", "table_retranslat
 #: Rule 1 of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), under the primary only:
 #: a record whose year t development table carries a history (an underwriting year u <= t-2, or the table as a whole)
 #: that differs from the year t-1 report beyond the exchange rate with no explanation in either filing, whose table fails
-#: the year's accounts by more than 10% beyond what its basis explains while the year t-1 control ties within 5%, and
+#: the year's accounts by more than 10% beyond what its basis explains (incurred first, 24 October 2026: the implied gross
+#: incurred test wherever the table gives one, the paid test only where it gives none, because M is an incurred movement
+#: and a paid cell M does not use cannot make M unmeasured) while the year t-1 control ties within 5%, and
 #: whose year t-1 printed base gives no figure that reconciles either, leaves the primary sample: its table cannot give
 #: the year's movement. Rule 4b (24 October 2026, after the round-8 readings): where the control does not tie, a record
 #: still leaves when both readings report that the year t table prints, for a year u <= t-2, cumulative paid lower than

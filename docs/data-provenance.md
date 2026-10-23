@@ -164,6 +164,11 @@ applied to 3500/2022 after review 8), rule 1's exact control clause (after revie
 the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_error_rate/mature-cohort/round8/`); review
 8 also added rule 6's `derived_correction` clause (1274/2016). Where each result lives:
 
+- Incurred first (24 October 2026, after the review of the fixes): rule 1's accounts test and rule 4b's (ii) use the
+  implied gross incurred test wherever the table gives one; the paid test decides only where the table gives no implied
+  incurred. M is an incurred movement, and a paid cell M does not use cannot make M unmeasured (780/2016 had been
+  excluded on a +80% paid identity while its incurred missed by 5.6%). Every exclusion under rules 1 and 4b rests on
+  incurred; 1274/2022 (same-table paid +33.4% through one stale cell, incurred +0.25%) stands.
 - Rule 1 (the table restates its history without explanation, fails the year's accounts while the year t-1 control ties,
   and the year t-1 printed base gives no figure that reconciles): `data/restated_base_excluded.json`
   (`src/build_restated_base_excluded.py`), bucket `excluded`, entries with `rule` "1": 2689/2023 and 6134/2022 leave the
@@ -171,14 +176,16 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   identifier; the 672 construction does not read it. The control clause was made exact on 23 October 2026, after review 8,
   and re-applied to every record: the year t-1 control ties within 5%, or within 10% when the same basis gap explains both
   years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at least
-  three times the control's. It decided no record: 4242/2022 moved to rule 3 on review 8's decision to set aside the
-  merged '2016 & Prior' column (its control, -1.1%, ties under either reading), and 780/2016 and 4747/2024, which stayed
-  under rule 1 on the session's reading that their controls met the 10% branch, both fail it on the round-8 readings
-  (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t miss +5.6%, 0.6 times it).
+  three times the control's. On 23 October it moved no record (4242/2022 moved to rule 3 on review 8's decision to set
+  aside the merged '2016 & Prior' column; its control, -1.1%, ties under either reading); applied to the round-8
+  readings it takes 780/2016 and 4747/2024 out of rule 1, where they had stayed on the session's reading that their
+  controls met the 10% branch (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t miss
+  +5.6%, 0.6 times the control's on the percentages, Z7, and 0.81 on the absolute misses, Z8: 7.7m against 9.5m).
   2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 either.
 - Rule 4b (a table its own cells prove inconsistent; 24 October 2026): where rule 1's control does not tie, a record
   leaves when both readings report that the year t table prints, for a year u <= t-2, cumulative paid lower than the year
-  t-1 report printed, beyond the exchange rate and unexplained; the table fails the year's accounts by more than 10%;
+  t-1 report printed, beyond the exchange rate and unexplained (a reading reports the fall when it quotes both cells
+  for the same underwriting year, named or not); the table fails the year's accounts by more than 10% (incurred first);
   and no base reconciles. Same bucket, entries with `rule` "4b", same tag: 4747/2024 (UY2020 cumulative paid 4,843 to 213;
   year t -81.9%) and 2232/2017 (UY2012 cumulative paid 22,799 to 19,393, beyond the columns' x0.918-0.939
   retranslation; year t -10.5% in both readings, narrowly over 10%). Rule 4b was applied to the readings of every record

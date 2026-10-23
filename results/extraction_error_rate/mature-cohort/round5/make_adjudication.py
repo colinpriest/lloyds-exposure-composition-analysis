@@ -100,7 +100,11 @@ WHY = {
     "1084_2016": "the only flagged year is u = 2015 (t-1, outside M); mature years 1.03-1.075 (translation); M +3.4m.",
     "1218_2016": "screen compared the 2016 gross table with the 2015 net table; net to net a uniform 1.12-1.15; M -8.941m.",
     "1274_2022": "screen took the year t net table; on the gross table a stated 2-3% retranslation, incurred +0.25% "
-                 "(control 0.2%); M +8.96m.",
+                 "(control 0.2%); M +8.96m. The paid anomaly: both readings quote UY2016's end-2021 cumulative paid in "
+                 "the 2022 table, 279,946, against 397,367 in the 2021 report (-29.5%; other ages x0.96-0.98), a stale "
+                 "or mis-keyed cell (P8, Q1), so the same-table paid test fails (+33.4%) and the paid control too "
+                 "(+20.4%). Under the incurred-first rule (24 October 2026) the incurred test decides, and it ties: rule "
+                 "4b's (i) holds but its (ii) does not, and M, an incurred movement, does not use the cell.",
     "1274_2024": "screen compared with the 2023 net table (its row label misprinted 'gross'); gross history moves by a "
                  "uniform 0.986 (stated retranslation); incurred -0.4%; M +53.399m.",
     "1301_2016": "the only flagged year is u = 2015 (t-1): a change from ultimate to earned basis; mature columns move by the "
@@ -227,7 +231,9 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "(take_on_table_unreconciled) and rule 1's exact control clause were added after particular readings or the "
          "review (`rules.md` names them).", "",
          "Round 8 (24 October 2026, same session): 780/2016 and 4747/2024 were read again for rule 1's year t-1 control "
-         "(readings Z7 and Z8, `../round8/briefs/brief_r8.md`), which agree on every fact: neither control ties. "
+         "(readings Z7 and Z8, `../round8/briefs/brief_r8.md`), which agree on every cell and figure: neither control "
+         "ties (780/2016's year t miss is 0.6 times its control's on the percentages, Z7, and 0.81 on the absolute "
+         "misses, Z8). "
          "780/2016 returns to the primary under rule 6 (+24.9m USD as printed); rule 4b was added to `rules.md` before "
          "it was applied, and takes 4747/2024 and 2232/2017 out of the primary. The outcomes below are those after "
          "round 8.", "",
@@ -245,16 +251,19 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "- Rule 1's control (made exact on 23 October 2026, after review 8, and re-applied to every record). The year "
          "t-1 control ties within 5%; or within 10% when the same basis gap explains both years (an '& prior' column "
          "outside the cells, an ultimate basis against earned accounts) and the year t miss is at least three times the "
-         "control's. The clause decided no record: 4242/2022 moved from rule 1 to rule 3 on review 8's decision to set "
-         "aside the merged '2016 & Prior' column (its control, -1.1%, ties either way), and 780/2016 and 4747/2024, "
-         "which stayed under rule 1 on the session's reading that their controls met the 10% branch, both fail it on the "
-         "round-8 readings Z7 and Z8 (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t "
-         "miss +5.6%, 0.6 times it). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 either, "
+         "control's. On 23 October it moved no record (4242/2022 moved from rule 1 to rule 3 on review 8's decision "
+         "to set aside the merged '2016 & Prior' column; its control, -1.1%, ties either way); applied to the round-8 "
+         "readings Z7 and Z8 it takes 780/2016 and 4747/2024 out of rule 1, where they had stayed on the session's "
+         "reading that their controls met the 10% branch (4747/2024: control -7.2%, no shared basis gap; 780/2016: "
+         "control +9.4%, year t miss +5.6%, 0.6 times it on the percentages and 0.81 on the absolute misses). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 either, "
          "each entry saying why.",
+         "- Incurred first (24 October 2026, after the review of the fixes): rule 1's accounts test and rule 4b's (ii) "
+         "use the implied gross incurred test wherever the table gives one; the paid test decides only where the table "
+         "gives no implied incurred. M is an incurred movement, and a paid cell M does not use cannot make M unmeasured.",
          "- Rule 4b (24 October 2026, after the round-8 readings): where the control does not tie, a table whose cumulative "
          "paid for a year u <= t-2 is lower than the year t-1 report printed, beyond the exchange rate and unexplained "
-         "(both readings), and which fails the accounts by more than 10% with no base that reconciles, leaves the "
-         "primary. Applied to the readings of every record (`../round8/rule_4b_scan.json`): it decides 4747/2024 and "
+         "(both readings report it: each quotes both cells for the same underwriting year), and which fails the accounts "
+         "by more than 10% (incurred first) with no base that reconciles, leaves the primary. Applied to the readings of every record (`../round8/rule_4b_scan.json`): it decides 4747/2024 and "
          "2232/2017 (found by the scan; its condition (ii) is narrow, -10.5% in both readings).",
          "- Rule 1 does not reach a year t-1 column: 2015/2022's table restates only its UY2021 column (outside M) and "
          "stands.", ""]

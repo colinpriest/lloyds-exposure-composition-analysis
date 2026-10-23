@@ -13,8 +13,8 @@ labels), a third reading decides.
 
 1. **Invalid table: leaves the primary.** The year t table's history (an underwriting year u <= t-2, or the table as a
    whole) differs from the year t-1 report beyond the exchange rate, with no explanation in either filing; AND the year t
-   table fails the year's accounts (implied gross incurred, or paid where computable, off by more than 10% beyond what
-   its basis explains) while the year t-1 control ties; AND the year t-1 report's printed base does not give a figure
+   table fails the year's accounts (implied gross incurred off by more than 10% beyond what its basis explains; the
+   paid test decides only where the table gives no implied incurred) while the year t-1 control ties; AND the year t-1 report's printed base does not give a figure
    that reconciles either. The year t-1 control ties when it is within 5%, or within 10% when the same basis gap explains
    both years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at
    least three times the control's. Expected: 2689/2023, 6134/2022 (both tie within 5%). (4242/2022 was expected here
@@ -22,14 +22,23 @@ labels), a third reading decides.
    both readers call unreadable as a cohort, is set aside. 780/2016 and 4747/2024 were expected here until the round-8
    readings, and are decided under rules 6 and 4b.)
 
-   The control clause was made exact on 23 October 2026, after review 8, and re-applied to every record. It decided no
-   record. 4242/2022 moved from rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column
-   (its control, -1.1%, ties under the old and the exact clause alike). 780/2016 and 4747/2024, which stayed under rule 1
-   on the session's reading that their controls met the 10% branch, both fail it on the round-8 readings Z7 and Z8
-   (`../round8/`, brief_r8.md), which agree on every fact: 4747/2024's control misses by -7.2% with no shared basis gap
-   (a shortfall, which an ultimate or underwriting basis cannot give); 780/2016's misses by +9.4% and its year t
-   incurred by +5.6%, 0.6 times the control's, so the 10% branch fails whatever the basis (P6's +80% paid identity is
-   not like for like: the 2016 table re-cuts its history). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not
+   Incurred first (added 24 October 2026, after the review of the fixes). Rule 1's accounts test and rule 4b's (ii) use
+   the implied gross incurred test wherever the table gives one; the paid test decides only where the table gives no
+   implied incurred. M is an incurred movement, and a paid cell M does not use cannot make M unmeasured: 780/2016 had
+   been excluded on a +80% paid identity while its incurred missed by 5.6%. Every exclusion under rules 1 and 4b rests
+   on incurred (2689/2023 +61%, 6134/2022 +14.9%, 4747/2024 -81.9%, 2232/2017 -10.5%); 1274/2022, whose same-table paid
+   test fails by +33.4% through one stale cell while its incurred ties (+0.25%), stays.
+
+   The control clause was made exact on 23 October 2026, after review 8, and re-applied to every record. On 23 October
+   it moved no record; applied to the round-8 readings it takes 780/2016 and 4747/2024 out of rule 1. 4242/2022 moved
+   from rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column (its control, -1.1%, ties
+   under the old and the exact clause alike). 780/2016 and 4747/2024 had stayed under rule 1 on the session's reading
+   that their controls met the 10% branch; the round-8 readings Z7 and Z8 (`../round8/`, brief_r8.md) agree on every
+   cell and figure, and neither control meets it: 4747/2024's control misses by -7.2% with no shared basis gap (a
+   shortfall, which an ultimate or underwriting basis cannot give); 780/2016's misses by +9.4% and its year t incurred
+   by +5.6%, so the year t miss is 0.6 times the control's on the percentages (Z7) and 0.81 times on the absolute misses
+   (Z8: 7.7m against 9.5m), and the 10% branch fails whatever the basis (P6's +80% paid identity is not like for like:
+   the 2016 table re-cuts its history). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not
    meet rule 1 either (their entries in the register say why).
 2. **Exchange rule B: leaves the primary.** The table mixes exchange bases (history not retranslated while the year end
    is) and the year's exchange effect on gross reserves is at least 5% of R (the author's rule B). Expected: 3000/2022.
@@ -52,11 +61,14 @@ labels), a third reading decides.
    Where rule 1's control does not tie, a record still leaves the primary when (i) both readings report that the year t
    table prints, for an underwriting year u <= t-2, cumulative paid lower than the year t-1 report printed for the same
    year, by more than the exchange rate explains and with no explanation in either filing; and (ii) the year t table
-   fails the year's accounts by more than 10% (rule 1's test); and (iii) no base gives a figure that reconciles (rule 3
-   fails). A cumulative paid figure cannot fall, so the table is not one consistent cumulative table, and no figure from
+   fails the year's accounts by more than 10% (rule 1's test, incurred first: the implied gross incurred wherever the
+   table gives one); and (iii) no base gives a figure that reconciles (rule 3 fails). A reading reports the fall when it
+   quotes both cells, the year t table's cumulative paid and the year t-1 report's, for the same underwriting year,
+   whether or not it names the fall. A cumulative paid figure cannot fall, so the table is not one consistent cumulative table, and no figure from
    it measures the year's movement. Applied to the readings of every record of rounds 5 to 8 (`../round8/
-   scan_rule_4b.py` lists every passage that reports a paid figure falling; `../round8/rule_4b_scan.json` records each
-   record's answer to (i) to (iii) with its readings). It decides two records:
+   scan_rule_4b.py` compares the paid cells every reading quotes against each other and lists every passage that
+   reports a paid figure falling; `../round8/rule_4b_scan.json` records each record's answer to (i) to (iii) with its
+   readings and cells). It decides two records:
    - 4747/2024 (rule 1 until round 8): UY2020 cumulative paid 213 in the 2024 table (p48) against 4,843 in the 2023
      report (p39), and UY2021 4,164 against 5,883 (P2, Q3, Z7, Z8); year t miss -81.9%; no base reconciles (-27% on the
      2023 printed base).
@@ -65,7 +77,10 @@ labels), a third reading decides.
      columns' earlier cells (P3 names the fall; Q4 quotes the cells); (ii) is narrow: implied incurred -10.5% in both
      readings (264.9m against 296.0m), on an ultimate basis that would put the table above the earned accounts, not
      below; the previous report's base gives the same cells, so no base reconciles.
-   780/2016 meets (i) on Q5, Z7 and Z8 (UY2011 218.9 to 208.9) but fails (ii) (+5.6%), so it stays under rule 6. 2468/2020
+   780/2016 meets (i) on three of its four readings (Q5, Z7 and Z8 quote UY2011 218.9 and 208.9; P6 quotes only 208.9)
+   but fails (ii) (incurred +5.6%), so it stays under rule 6. 1274/2022 meets (i) (both readings quote UY2016's end-2021
+   cumulative paid 279,946 against the 2021 report's 397,367, -29.5%: a stale cell) but fails (ii) on incurred (+0.25%),
+   so it stands. 2468/2020
    meets (i) on both readings but its table ties (incurred -3.8%, paid -4.3%), so it stays under rule 6.
 5. **Take-on base.** An RITC, LPT or merger effective in year t whose acquired history the table shows "as if always":
    the movement is development on the combined book, so R must include the acquired gross reserves. If the analysis's

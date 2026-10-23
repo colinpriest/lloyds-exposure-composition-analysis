@@ -7,17 +7,17 @@ working-sample filings that say so, from the review's pattern scan, each hit rea
 carried), conditional ("a margin may be applied"), contradicting ("no margin ..."), or unclear.
 
 This refits the adopted model (adopted_model.scale_block; nothing changed but which observations are included):
-  * without every syndicate that states a held margin in any year (31 syndicates flagged at the PC rescan of
-    5 October 2026; 30 of them in the 643-record primary);
-  * without those and the syndicates whose filings say only that a margin may be applied (35 flagged; 34 in it);
-  * without every syndicate the scan hit (37 flagged; 36 in it);
-and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample, 36% to 40% of the records
-and 39% to 41% of the size proxy, can be told from a margin effect:
+  * without every syndicate that states a held margin in any year (held_margin);
+  * without those and the syndicates whose filings say only that a margin may be applied (held_or_conditional);
+  * without every syndicate the scan hit (any_scan_hit);
+and, for EACH variant, two controls over N_CONTROL draws each, so that the loss of sample can be told from a margin
+effect. The counts (syndicates flagged and in the sample, records and share of the size proxy left out) are in the
+results (syndicates_left_out; each variant's spec, n_left_out and share_of_R_left_out), not in this text:
   * a record-level control: the same number of records drawn at random, matched on the size proxy's deciles (the
     opening reserves R). It leaves out the variant's number of records but keeps many more syndicates than the
     variant, and fewer RITC records on the 643-record primary (it leaves out RITC records at about their share of
-    the sample, while the flagged syndicates hold fewer than their share of them). The counts are in the results (controls_design.record.caveat,
-    computed from the fits by record_control_caveat), not in this text;
+    the sample, while the flagged syndicates hold fewer than their share of them). The counts are in the results
+    (controls_design.record.caveat, computed from the fits by record_control_caveat), not in this text;
   * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
     on the syndicates' size (their total R, in quartiles; a quartile whose unflagged syndicates cannot supply the
     variant's draws is merged with the adjacent quartile nearer the middle, and the results record which) and, by
