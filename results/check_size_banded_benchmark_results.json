@@ -5,9 +5,9 @@
  "question": "what do the donors whose own reserves are close to the target's say about the target's tail, read with little or no rescaling, beside the operator's transferred quantiles; and where are they too few to say anything?",
  "operator_rescaling_factor_definition": "band_operator / band_raw donor by donor: the transferred severity over the donor's own. For a clean donor it is sigma(target)/sigma(donor), the size scale; for an assumed-business donor (RITC or inward transfer) it also carries the de-RITC tail map. Donors whose own severity is 0 are left out (the ratio is undefined)",
  "pool": {
-  "n_donors": 649,
+  "n_donors": 643,
   "n_syndicates": 118,
-  "n_assumed_business": 34,
+  "n_assumed_business": 33,
   "definition": "the vignette donor pool (the shipped tool's donors, vignette_uncertainty.load_pool)"
  },
  "levels": [
@@ -55,63 +55,63 @@
       250.0,
       1000.0
      ],
-     "n_donors": 292,
+     "n_donors": 291,
      "n_syndicates": 65,
      "n_assumed_business": 14,
      "donor_R_gbp_m": {
       "min": 250.46,
-      "median": 498.28999999999996,
+      "median": 498.5,
       "max": 991.5
      },
      "operator_rescaling_factor": {
-      "min": 0.8173407538812208,
-      "median": 0.999077543857085,
-      "max": 1.3192331722133408
+      "min": 0.8209354324397724,
+      "median": 0.9992118261665961,
+      "max": 1.3271609181931745
      },
      "band_raw": {
       "var": {
-       "0.9": 0.11070827,
-       "0.95": 0.13861271,
+       "0.9": 0.10394157,
+       "0.95": 0.13582738,
        "0.99": 0.21125951,
        "0.995": 0.21228215
       },
       "counts": {
        "0.9": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 30,
-        "expected_beyond": 29.199999999999992,
-        "reading": "readable: 29.2 donors expected beyond the VaR"
+        "expected_beyond": 29.099999999999994,
+        "reading": "readable: 29.1 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 15,
-        "expected_beyond": 14.600000000000012,
+        "expected_beyond": 14.550000000000013,
         "reading": "readable: 14.6 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 3,
-        "expected_beyond": 2.9200000000000026,
-        "reading": "thin: the VaR is the 3rd largest of 292 donors (2.9 expected beyond it)"
+        "expected_beyond": 2.910000000000003,
+        "reading": "thin: the VaR is the 3rd largest of 291 donors (2.9 expected beyond it)"
        },
        "0.995": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 2,
-        "expected_beyond": 1.4600000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 292 donors (1.5 expected beyond it)"
+        "expected_beyond": 1.4550000000000014,
+        "reading": "thin: the VaR is the 2nd largest of 291 donors (1.5 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08715586,
-        "hi": 0.12802118,
-        "median": 0.11070827,
+        "lo": 0.0824794,
+        "hi": 0.12163706,
+        "median": 0.10394157,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.11946437,
+        "lo": 0.11597176,
         "hi": 0.1455538,
-        "median": 0.13861271,
+        "median": 0.13582738,
         "n_replicates": 4000
        },
        "0.99": {
@@ -130,48 +130,48 @@
      },
      "band_raw_clean": {
       "var": {
-       "0.9": 0.11286093,
-       "0.95": 0.13861271,
+       "0.9": 0.10426959,
+       "0.95": 0.13582738,
        "0.99": 0.21125951,
        "0.995": 0.21228215
       },
       "counts": {
        "0.9": {
-        "n": 278,
+        "n": 277,
         "k_from_top": 28,
-        "expected_beyond": 27.799999999999994,
-        "reading": "readable: 27.8 donors expected beyond the VaR"
+        "expected_beyond": 27.699999999999992,
+        "reading": "readable: 27.7 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 278,
+        "n": 277,
         "k_from_top": 14,
-        "expected_beyond": 13.900000000000013,
+        "expected_beyond": 13.850000000000012,
         "reading": "readable: 13.9 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 278,
+        "n": 277,
         "k_from_top": 3,
-        "expected_beyond": 2.7800000000000025,
-        "reading": "thin: the VaR is the 3rd largest of 278 donors (2.8 expected beyond it)"
+        "expected_beyond": 2.7700000000000022,
+        "reading": "thin: the VaR is the 3rd largest of 277 donors (2.8 expected beyond it)"
        },
        "0.995": {
-        "n": 278,
+        "n": 277,
         "k_from_top": 2,
-        "expected_beyond": 1.3900000000000012,
-        "reading": "thin: the VaR is the 2nd largest of 278 donors (1.4 expected beyond it)"
+        "expected_beyond": 1.3850000000000011,
+        "reading": "thin: the VaR is the 2nd largest of 277 donors (1.4 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08718002,
-        "hi": 0.12802118,
-        "median": 0.11070827,
+        "lo": 0.0824794,
+        "hi": 0.12163706,
+        "median": 0.10426959,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.12035053,
+        "lo": 0.11467998,
         "hi": 0.14529068,
-        "median": 0.13582738,
+        "median": 0.13566884,
         "n_replicates": 4000
        },
        "0.99": {
@@ -190,142 +190,142 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.10951729113014079,
-       "0.95": 0.13631385633054485,
-       "0.99": 0.18259453504036088,
-       "0.995": 0.26667142928033827
+       "0.9": 0.10426359512618251,
+       "0.95": 0.13637538959292517,
+       "0.99": 0.18321945342864615,
+       "0.995": 0.26827395368310686
       },
       "counts": {
        "0.9": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 30,
-        "expected_beyond": 29.199999999999992,
-        "reading": "readable: 29.2 donors expected beyond the VaR"
+        "expected_beyond": 29.099999999999994,
+        "reading": "readable: 29.1 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 15,
-        "expected_beyond": 14.600000000000012,
+        "expected_beyond": 14.550000000000013,
         "reading": "readable: 14.6 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 3,
-        "expected_beyond": 2.9200000000000026,
-        "reading": "thin: the VaR is the 3rd largest of 292 donors (2.9 expected beyond it)"
+        "expected_beyond": 2.910000000000003,
+        "reading": "thin: the VaR is the 3rd largest of 291 donors (2.9 expected beyond it)"
        },
        "0.995": {
-        "n": 292,
+        "n": 291,
         "k_from_top": 2,
-        "expected_beyond": 1.4600000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 292 donors (1.5 expected beyond it)"
+        "expected_beyond": 1.4550000000000014,
+        "reading": "thin: the VaR is the 2nd largest of 291 donors (1.5 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08729873170696123,
-        "hi": 0.1235725105269055,
-        "median": 0.10898647189297295,
+        "lo": 0.08351800151984493,
+        "hi": 0.12184476123835104,
+        "median": 0.10542390662024029,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.1174765431770658,
-        "hi": 0.15294733483340725,
-        "median": 0.13551926540043913,
+        "lo": 0.11439194933945832,
+        "hi": 0.1526917712797982,
+        "median": 0.13555670737203318,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.15491156183821278,
-        "hi": 0.3554729052934825,
-        "median": 0.1828025205477261,
+        "lo": 0.15442759379886772,
+        "hi": 0.3570551626989317,
+        "median": 0.18325769358583754,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.169208233491493,
-        "hi": 0.37192045035499544,
-        "median": 0.21035704279713768,
+        "lo": 0.16998370513596453,
+        "hi": 0.3792887898587885,
+        "median": 0.20912357289426747,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.10242946703183543,
-       "0.95": 0.14249166380627148,
-       "0.99": 0.26667142928033827,
-       "0.995": 0.33048897717077363
+       "0.9": 0.10081376354008811,
+       "0.95": 0.1411911937722622,
+       "0.99": 0.26827395368310686,
+       "0.995": 0.33403593971572976
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08857445003071546,
-        "hi": 0.12459235130873668,
-        "median": 0.10333539347890808,
+        "lo": 0.0861734388822847,
+        "hi": 0.1216719027206728,
+        "median": 0.1009126068109341,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.12259487816011375,
-        "hi": 0.1857632020002131,
-        "median": 0.1423391558678908,
+        "lo": 0.11975092959932092,
+        "hi": 0.18427339809110785,
+        "median": 0.14154313659722806,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.18482931773419115,
-        "hi": 0.35783367282388606,
-        "median": 0.26239942814139217,
+        "lo": 0.1826284056155477,
+        "hi": 0.3618929549738657,
+        "median": 0.2656484296716975,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.21324764290710882,
-        "hi": 0.4885426679500062,
-        "median": 0.3362589634264308,
+        "lo": 0.19766660660594637,
+        "hi": 0.4914067374811421,
+        "median": 0.34148365952411625,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.08082442687699909,
-       "0.95": -0.027222320960089474,
-       "0.99": -0.2077909861955496,
-       "0.995": -0.3576725256700244
+       "0.9": 0.03102558966234925,
+       "0.95": -0.037989718968690744,
+       "0.99": -0.2125232170337863,
+       "0.995": -0.36449308364646116
       },
       "band_raw_clean": {
-       "0.9": 0.10184044953511706,
-       "0.95": -0.027222320960089474,
-       "0.99": -0.2077909861955496,
-       "0.995": -0.3576725256700244
+       "0.9": 0.03427931205581558,
+       "0.95": -0.037989718968690744,
+       "0.99": -0.2125232170337863,
+       "0.995": -0.36449308364646116
       },
       "band_operator": {
-       "0.9": 0.06919711977123177,
-       "0.95": -0.043355571201174614,
-       "0.99": -0.3152827225131477,
-       "0.995": -0.19310038245983285
+       "0.9": 0.0342198472207873,
+       "0.95": -0.034108389132999295,
+       "0.99": -0.3170434516163638,
+       "0.995": -0.19687098965634497
       }
      },
      "replicates_with_an_empty_band": 0
@@ -339,63 +339,63 @@
       400.0,
       1600.0
      ],
-     "n_donors": 258,
+     "n_donors": 257,
      "n_syndicates": 53,
      "n_assumed_business": 17,
      "donor_R_gbp_m": {
       "min": 402.9,
-      "median": 715.795,
+      "median": 713.18,
       "max": 1586.05
      },
      "operator_rescaling_factor": {
-      "min": 0.8367344298716383,
-      "median": 0.9785843073492291,
-      "max": 1.2179151478571424
+      "min": 0.8408015449186577,
+      "median": 0.9791367969833509,
+      "max": 1.212866704868986
      },
      "band_raw": {
       "var": {
-       "0.9": 0.09792283,
+       "0.9": 0.09289952,
        "0.95": 0.1308208,
        "0.99": 0.15572567,
        "0.995": 0.19324901
       },
       "counts": {
        "0.9": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 26,
-        "expected_beyond": 25.799999999999994,
-        "reading": "readable: 25.8 donors expected beyond the VaR"
+        "expected_beyond": 25.699999999999996,
+        "reading": "readable: 25.7 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 13,
-        "expected_beyond": 12.900000000000011,
+        "expected_beyond": 12.850000000000012,
         "reading": "readable: 12.9 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 3,
-        "expected_beyond": 2.5800000000000023,
-        "reading": "thin: the VaR is the 3rd largest of 258 donors (2.6 expected beyond it)"
+        "expected_beyond": 2.570000000000002,
+        "reading": "thin: the VaR is the 3rd largest of 257 donors (2.6 expected beyond it)"
        },
        "0.995": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 2,
-        "expected_beyond": 1.2900000000000011,
-        "reading": "thin: the VaR is the 2nd largest of 258 donors (1.3 expected beyond it)"
+        "expected_beyond": 1.285000000000001,
+        "reading": "thin: the VaR is the 2nd largest of 257 donors (1.3 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.0792152,
-        "hi": 0.11070827,
-        "median": 0.09792283,
+        "lo": 0.07808437,
+        "hi": 0.11417906,
+        "median": 0.09289952,
         "n_replicates": 4000
        },
        "0.95": {
         "lo": 0.10345073,
         "hi": 0.14021371,
-        "median": 0.12897573,
+        "median": 0.1308208,
         "n_replicates": 4000
        },
        "0.99": {
@@ -414,42 +414,42 @@
      },
      "band_raw_clean": {
       "var": {
-       "0.9": 0.09792283,
+       "0.9": 0.09289952,
        "0.95": 0.12897573,
        "0.99": 0.1555904,
        "0.995": 0.15572567
       },
       "counts": {
        "0.9": {
-        "n": 241,
+        "n": 240,
         "k_from_top": 25,
-        "expected_beyond": 24.099999999999994,
-        "reading": "readable: 24.1 donors expected beyond the VaR"
+        "expected_beyond": 23.999999999999993,
+        "reading": "readable: 24.0 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 241,
+        "n": 240,
         "k_from_top": 13,
-        "expected_beyond": 12.050000000000011,
-        "reading": "readable: 12.1 donors expected beyond the VaR"
+        "expected_beyond": 12.00000000000001,
+        "reading": "readable: 12.0 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 241,
+        "n": 240,
         "k_from_top": 3,
-        "expected_beyond": 2.410000000000002,
-        "reading": "thin: the VaR is the 3rd largest of 241 donors (2.4 expected beyond it)"
+        "expected_beyond": 2.400000000000002,
+        "reading": "thin: the VaR is the 3rd largest of 240 donors (2.4 expected beyond it)"
        },
        "0.995": {
-        "n": 241,
+        "n": 240,
         "k_from_top": 2,
-        "expected_beyond": 1.205000000000001,
-        "reading": "thin: the VaR is the 2nd largest of 241 donors (1.2 expected beyond it)"
+        "expected_beyond": 1.200000000000001,
+        "reading": "thin: the VaR is the 2nd largest of 240 donors (1.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08092192,
+        "lo": 0.0792152,
         "hi": 0.11417906,
-        "median": 0.09792283,
+        "median": 0.09289952,
         "n_replicates": 4000
        },
        "0.95": {
@@ -474,142 +474,142 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.09098216066517628,
-       "0.95": 0.12107970037275276,
-       "0.99": 0.16773636066819902,
-       "0.995": 0.22139027302172926
+       "0.9": 0.09003738598615899,
+       "0.95": 0.12154537843538378,
+       "0.99": 0.1671436242043335,
+       "0.995": 0.22032008921695712
       },
       "counts": {
        "0.9": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 26,
-        "expected_beyond": 25.799999999999994,
-        "reading": "readable: 25.8 donors expected beyond the VaR"
+        "expected_beyond": 25.699999999999996,
+        "reading": "readable: 25.7 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 13,
-        "expected_beyond": 12.900000000000011,
+        "expected_beyond": 12.850000000000012,
         "reading": "readable: 12.9 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 3,
-        "expected_beyond": 2.5800000000000023,
-        "reading": "thin: the VaR is the 3rd largest of 258 donors (2.6 expected beyond it)"
+        "expected_beyond": 2.570000000000002,
+        "reading": "thin: the VaR is the 3rd largest of 257 donors (2.6 expected beyond it)"
        },
        "0.995": {
-        "n": 258,
+        "n": 257,
         "k_from_top": 2,
-        "expected_beyond": 1.2900000000000011,
-        "reading": "thin: the VaR is the 2nd largest of 258 donors (1.3 expected beyond it)"
+        "expected_beyond": 1.285000000000001,
+        "reading": "thin: the VaR is the 2nd largest of 257 donors (1.3 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.0750791924206024,
-        "hi": 0.10983943380608456,
-        "median": 0.09104060342908263,
+        "lo": 0.07376558200564265,
+        "hi": 0.10989297048959983,
+        "median": 0.09016105291880802,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10405452084099348,
-        "hi": 0.13786748525536852,
-        "median": 0.11995553477239851,
+        "lo": 0.10218387034362598,
+        "hi": 0.1380883892361354,
+        "median": 0.12051104390352735,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.13440995349143628,
-        "hi": 0.2490436664724188,
-        "median": 0.16282707086741166,
+        "lo": 0.13532402123128925,
+        "hi": 0.24569749132305668,
+        "median": 0.16259294263362678,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.13888364312260462,
-        "hi": 0.3343486908412426,
-        "median": 0.1925342955376241,
+        "lo": 0.13897706971873286,
+        "hi": 0.3433209722509827,
+        "median": 0.19219237299145053,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.09098216066517628,
-       "0.95": 0.12656708880308007,
-       "0.99": 0.2368687793333447,
-       "0.995": 0.29355420945103305
+       "0.9": 0.08985086735628277,
+       "0.95": 0.12583749260052335,
+       "0.99": 0.23910075947061818,
+       "0.995": 0.2977115213013014
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.07874955815525979,
-        "hi": 0.11020206593243419,
-        "median": 0.09198745795666825,
+        "lo": 0.07660181198829885,
+        "hi": 0.10935284910941968,
+        "median": 0.09048590642494907,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10981665668723078,
-        "hi": 0.1663386731919951,
-        "median": 0.1266246623004864,
+        "lo": 0.1074748368012928,
+        "hi": 0.16558656396045437,
+        "median": 0.1265794992957714,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.1652909752290615,
-        "hi": 0.32243069217882825,
-        "median": 0.23223693419790986,
+        "lo": 0.1627411187108422,
+        "hi": 0.3298760327206085,
+        "median": 0.23661313252637722,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.18826941388442806,
-        "hi": 0.4283971451482773,
-        "median": 0.29671977203772476,
+        "lo": 0.1772107544097117,
+        "hi": 0.43315061338359345,
+        "median": 0.302468946914148,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.07628604645218418,
-       "0.95": 0.033608351405933545,
-       "0.99": -0.34256565834348407,
-       "0.995": -0.3416922538382632
+       "0.9": 0.03393014150468354,
+       "0.95": 0.03960113394261899,
+       "0.99": -0.3487027379386626,
+       "0.995": -0.35088501393797
       },
       "band_raw_clean": {
-       "0.9": 0.07628604645218418,
-       "0.95": 0.01903054909216917,
-       "0.99": -0.34313673402674094,
-       "0.995": -0.4695164811595858
+       "0.9": 0.03393014150468354,
+       "0.95": 0.024938810640793063,
+       "0.99": -0.3492684826912076,
+       "0.995": -0.47692427448114594
       },
       "band_operator": {
-       "0.9": 0.0,
-       "0.95": -0.0433555712011745,
-       "0.99": -0.29185956401563506,
-       "0.995": -0.2458283141783435
+       "0.9": 0.0020758689967523836,
+       "0.95": -0.034108389132999295,
+       "0.99": -0.30094900336411146,
+       "0.995": -0.25995444095030384
       }
      },
      "replicates_with_an_empty_band": 0
@@ -623,63 +623,63 @@
       325.0,
       1300.0
      ],
-     "n_donors": 284,
+     "n_donors": 283,
      "n_syndicates": 59,
      "n_assumed_business": 17,
      "donor_R_gbp_m": {
       "min": 326.04,
-      "median": 593.44,
+      "median": 591.08,
       "max": 1299.77
      },
      "operator_rescaling_factor": {
-      "min": 0.8274204823991758,
-      "median": 0.980917070945612,
-      "max": 1.2322886793352992
+      "min": 0.831302772080332,
+      "median": 0.9795793576480896,
+      "max": 1.2420060983747765
      },
      "band_raw": {
       "var": {
-       "0.9": 0.09823685,
-       "0.95": 0.1308208,
+       "0.9": 0.09143385,
+       "0.95": 0.12897573,
        "0.99": 0.15572567,
        "0.995": 0.18304204
       },
       "counts": {
        "0.9": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 29,
-        "expected_beyond": 28.399999999999995,
-        "reading": "readable: 28.4 donors expected beyond the VaR"
+        "expected_beyond": 28.299999999999994,
+        "reading": "readable: 28.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 15,
-        "expected_beyond": 14.200000000000014,
+        "expected_beyond": 14.150000000000013,
         "reading": "readable: 14.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 3,
-        "expected_beyond": 2.8400000000000025,
-        "reading": "thin: the VaR is the 3rd largest of 284 donors (2.8 expected beyond it)"
+        "expected_beyond": 2.8300000000000027,
+        "reading": "thin: the VaR is the 3rd largest of 283 donors (2.8 expected beyond it)"
        },
        "0.995": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 2,
-        "expected_beyond": 1.4200000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 284 donors (1.4 expected beyond it)"
+        "expected_beyond": 1.4150000000000014,
+        "reading": "thin: the VaR is the 2nd largest of 283 donors (1.4 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08175803,
-        "hi": 0.11749612,
-        "median": 0.09823685,
+        "lo": 0.07843949,
+        "hi": 0.11417906,
+        "median": 0.09143385,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10426959,
-        "hi": 0.13927466,
-        "median": 0.1308208,
+        "lo": 0.10345073,
+        "hi": 0.13876159,
+        "median": 0.12897573,
         "n_replicates": 4000
        },
        "0.99": {
@@ -698,48 +698,48 @@
      },
      "band_raw_clean": {
       "var": {
-       "0.9": 0.09847396,
-       "0.95": 0.1308208,
+       "0.9": 0.09289952,
+       "0.95": 0.12897573,
        "0.99": 0.1555904,
        "0.995": 0.15572567
       },
       "counts": {
        "0.9": {
-        "n": 267,
+        "n": 266,
         "k_from_top": 27,
-        "expected_beyond": 26.699999999999996,
-        "reading": "readable: 26.7 donors expected beyond the VaR"
+        "expected_beyond": 26.599999999999994,
+        "reading": "readable: 26.6 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 267,
+        "n": 266,
         "k_from_top": 14,
-        "expected_beyond": 13.350000000000012,
-        "reading": "readable: 13.4 donors expected beyond the VaR"
+        "expected_beyond": 13.300000000000011,
+        "reading": "readable: 13.3 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 267,
+        "n": 266,
         "k_from_top": 3,
-        "expected_beyond": 2.6700000000000026,
-        "reading": "thin: the VaR is the 3rd largest of 267 donors (2.7 expected beyond it)"
+        "expected_beyond": 2.6600000000000024,
+        "reading": "thin: the VaR is the 3rd largest of 266 donors (2.7 expected beyond it)"
        },
        "0.995": {
-        "n": 267,
+        "n": 266,
         "k_from_top": 2,
-        "expected_beyond": 1.3350000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 267 donors (1.3 expected beyond it)"
+        "expected_beyond": 1.3300000000000012,
+        "reading": "thin: the VaR is the 2nd largest of 266 donors (1.3 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.0824794,
-        "hi": 0.11749612,
-        "median": 0.09847396,
+        "lo": 0.08092192,
+        "hi": 0.11417906,
+        "median": 0.09289952,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10426959,
-        "hi": 0.13927466,
-        "median": 0.1308208,
+        "lo": 0.10345073,
+        "hi": 0.13876159,
+        "median": 0.12897573,
         "n_replicates": 4000
        },
        "0.99": {
@@ -758,142 +758,142 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.10207864674582888,
-       "0.95": 0.12269762062872541,
-       "0.99": 0.1690363440893433,
-       "0.995": 0.1763952061613443
+       "0.9": 0.09410181942960916,
+       "0.95": 0.12308914790567331,
+       "0.99": 0.16860031367525818,
+       "0.995": 0.17550419956501195
       },
       "counts": {
        "0.9": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 29,
-        "expected_beyond": 28.399999999999995,
-        "reading": "readable: 28.4 donors expected beyond the VaR"
+        "expected_beyond": 28.299999999999994,
+        "reading": "readable: 28.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 15,
-        "expected_beyond": 14.200000000000014,
+        "expected_beyond": 14.150000000000013,
         "reading": "readable: 14.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 3,
-        "expected_beyond": 2.8400000000000025,
-        "reading": "thin: the VaR is the 3rd largest of 284 donors (2.8 expected beyond it)"
+        "expected_beyond": 2.8300000000000027,
+        "reading": "thin: the VaR is the 3rd largest of 283 donors (2.8 expected beyond it)"
        },
        "0.995": {
-        "n": 284,
+        "n": 283,
         "k_from_top": 2,
-        "expected_beyond": 1.4200000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 284 donors (1.4 expected beyond it)"
+        "expected_beyond": 1.4150000000000014,
+        "reading": "thin: the VaR is the 2nd largest of 283 donors (1.4 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.07860529766814062,
-        "hi": 0.11412713092357751,
-        "median": 0.10148361416823909,
+        "lo": 0.07448207624491873,
+        "hi": 0.1120826052686162,
+        "median": 0.09378556364656854,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10941364160737423,
-        "hi": 0.13632078176912188,
-        "median": 0.12373004063984405,
+        "lo": 0.1029784575059142,
+        "hi": 0.1367167919852815,
+        "median": 0.12360372668650471,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.14283126499443644,
-        "hi": 0.24078581779757882,
-        "median": 0.16326846487051197,
+        "lo": 0.14193701836459577,
+        "hi": 0.23061413106350478,
+        "median": 0.1641800030665448,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.14544457704398323,
-        "hi": 0.3475742936591215,
-        "median": 0.1713548762467526,
+        "lo": 0.14537044414846764,
+        "hi": 0.3565237652344052,
+        "median": 0.17079846221620804,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.0956788195690298,
-       "0.95": 0.13310070418675307,
-       "0.99": 0.24909636167879975,
-       "0.995": 0.3087079932422943
+       "0.9": 0.09434523530678367,
+       "0.95": 0.13213192258607473,
+       "0.99": 0.2510606528130393,
+       "0.995": 0.31260314293168373
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08300203481596043,
-        "hi": 0.11619912705131741,
-        "median": 0.09652788236638557,
+        "lo": 0.0805471621027316,
+        "hi": 0.1143032101688869,
+        "median": 0.09486804968708251,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.1150422777608747,
-        "hi": 0.17426073695540692,
-        "median": 0.13293701520266304,
+        "lo": 0.11260293369462056,
+        "hi": 0.1732705589318588,
+        "median": 0.13280582296773874,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.1730992928342253,
-        "hi": 0.33673809622067,
-        "median": 0.24484539621397527,
+        "lo": 0.171154607933153,
+        "hi": 0.3435601525628308,
+        "median": 0.24841806757405954,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.19772426674032553,
-        "hi": 0.45277745414728704,
-        "median": 0.31319312820967227,
+        "lo": 0.18565748797949966,
+        "hi": 0.45752179411703897,
+        "median": 0.3185330941761199,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.02673559772677425,
-       "0.95": -0.017129166976864063,
-       "0.99": -0.37483763732847164,
-       "0.995": -0.40707061687146995
+       "0.9": -0.03085884832781094,
+       "0.95": -0.02388667722607818,
+       "0.99": -0.3797288891940931,
+       "0.995": -0.41445873421687895
       },
       "band_raw_clean": {
-       "0.9": 0.02921378465537594,
-       "0.95": -0.017129166976864063,
-       "0.99": -0.3753806801858155,
-       "0.995": -0.4955567286598366
+       "0.9": -0.015323670581589122,
+       "0.95": -0.02388667722607818,
+       "0.99": -0.38026768330015626,
+       "0.995": -0.5018422766336924
       },
       "band_operator": {
-       "0.9": 0.06688865106850295,
-       "0.95": -0.0781594930063716,
-       "0.99": -0.3214017942690419,
-       "0.995": -0.4286017530394888
+       "0.9": -0.0025800547996196466,
+       "0.95": -0.06843747145592827,
+       "0.99": -0.3284478798801975,
+       "0.995": -0.438571864892073
       }
      },
      "replicates_with_an_empty_band": 0
@@ -919,20 +919,20 @@
      }
     },
     "band_operator": {
-     "centre": -0.04499506686038496,
+     "centre": -0.04481588965194516,
      "resampling_interval": {
-      "lo": -0.07266596834113005,
-      "hi": 0.019617181584745246,
-      "median": 0.006484237291407943,
+      "lo": -0.07041416296804479,
+      "hi": 0.019855976472726314,
+      "median": 0.006210679165703337,
       "n_replicates": 4000
      }
     },
     "operator_full_pool": {
-     "centre": 0.015153783791261255,
+     "centre": 0.014891621630382323,
      "resampling_interval": {
-      "lo": 0.008370331920344223,
-      "hi": 0.020598054514518387,
-      "median": 0.014207995828259712,
+      "lo": 0.007782706972785295,
+      "hi": 0.020247185551319113,
+      "median": 0.01379022318345191,
       "n_replicates": 4000
      }
     }
@@ -962,14 +962,14 @@
       "max": 749.99
      },
      "operator_rescaling_factor": {
-      "min": 0.8927342828479319,
+      "min": 0.8951064192348703,
       "median": 1.0,
-      "max": 1.3192331722133408
+      "max": 1.3271609181931745
      },
      "band_raw": {
       "var": {
-       "0.9": 0.10394157,
-       "0.95": 0.13582738,
+       "0.9": 0.09289952,
+       "0.95": 0.13198185,
        "0.99": 0.18304204,
        "0.995": 0.20214124
       },
@@ -1001,15 +1001,15 @@
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08092192,
-        "hi": 0.12802118,
-        "median": 0.10394157,
+        "lo": 0.07741913,
+        "hi": 0.11946437,
+        "median": 0.09289952,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.11467998,
+        "lo": 0.10426959,
         "hi": 0.14002868,
-        "median": 0.13582738,
+        "median": 0.13198185,
         "n_replicates": 4000
        },
        "0.99": {
@@ -1028,8 +1028,8 @@
      },
      "band_raw_clean": {
       "var": {
-       "0.9": 0.10394157,
-       "0.95": 0.13198185,
+       "0.9": 0.09289952,
+       "0.95": 0.12897573,
        "0.99": 0.15572567,
        "0.995": 0.18304204
       },
@@ -1061,19 +1061,19 @@
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.082440463,
-        "hi": 0.12802118,
-        "median": 0.10394157,
+        "lo": 0.07843949,
+        "hi": 0.11946437,
+        "median": 0.09289952,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.11467998,
+        "lo": 0.10426959,
         "hi": 0.14002868,
-        "median": 0.13198185,
+        "median": 0.12897573,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.13927466,
+        "lo": 0.13876159,
         "hi": 0.18304204,
         "median": 0.15572567,
         "n_replicates": 4000
@@ -1088,10 +1088,10 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.1092808359112606,
-       "0.95": 0.13305586065910122,
-       "0.99": 0.1707119502612784,
-       "0.995": 0.26667142928033827
+       "0.9": 0.10055365850559878,
+       "0.95": 0.13302789983548863,
+       "0.99": 0.1710010164064407,
+       "0.995": 0.26827395368310686
       },
       "counts": {
        "0.9": {
@@ -1121,109 +1121,109 @@
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08000584103262759,
-        "hi": 0.12807122546424055,
-        "median": 0.1086143478500046,
+        "lo": 0.07896675211019451,
+        "hi": 0.12540861107946638,
+        "median": 0.10074541418873834,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.11116721307375285,
-        "hi": 0.14263876748283716,
-        "median": 0.1329754660299245,
+        "lo": 0.10905822477701253,
+        "hi": 0.14258946802340858,
+        "median": 0.13294812790728863,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.14126848399101505,
-        "hi": 0.3544637800557678,
-        "median": 0.1618928741911854,
+        "lo": 0.14113982199943212,
+        "hi": 0.36038929343623943,
+        "median": 0.16173298004671582,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.14341843494615414,
-        "hi": 0.4165808012392466,
-        "median": 0.1726124763890617,
+        "lo": 0.143270319242495,
+        "hi": 0.42762638670470204,
+        "median": 0.1730365208331699,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.10242946703183543,
-       "0.95": 0.14249166380627148,
-       "0.99": 0.26667142928033827,
-       "0.995": 0.33048897717077363
+       "0.9": 0.10081376354008811,
+       "0.95": 0.1411911937722622,
+       "0.99": 0.26827395368310686,
+       "0.995": 0.33403593971572976
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08857445003071546,
-        "hi": 0.12459235130873668,
-        "median": 0.10333539347890808,
+        "lo": 0.0861734388822847,
+        "hi": 0.1216719027206728,
+        "median": 0.1009126068109341,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.12259487816011375,
-        "hi": 0.1857632020002131,
-        "median": 0.1423391558678908,
+        "lo": 0.11975092959932092,
+        "hi": 0.18427339809110785,
+        "median": 0.14154313659722806,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.18482931773419115,
-        "hi": 0.35783367282388606,
-        "median": 0.26239942814139217,
+        "lo": 0.1826284056155477,
+        "hi": 0.3618929549738657,
+        "median": 0.2656484296716975,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.21324764290710882,
-        "hi": 0.4885426679500062,
-        "median": 0.3362589634264308,
+        "lo": 0.19766660660594637,
+        "hi": 0.4914067374811421,
+        "median": 0.34148365952411625,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.014762382466508406,
-       "0.95": -0.04676963990912553,
-       "0.99": -0.31360460888527697,
-       "0.995": -0.3883570891517283
+       "0.9": -0.07850360171248894,
+       "0.95": -0.065226049346368,
+       "0.99": -0.3177047660161051,
+       "0.995": -0.39485182291454746
       },
       "band_raw_clean": {
-       "0.9": 0.014762382466508406,
-       "0.95": -0.07375739412068616,
-       "0.99": -0.41603916692442733,
-       "0.995": -0.44614782142819653
+       "0.9": -0.07850360171248894,
+       "0.95": -0.08651717891106869,
+       "0.99": -0.41952743506383117,
+       "0.995": -0.45202890396832185
       },
       "band_operator": {
-       "0.9": 0.06688865106850295,
-       "0.95": -0.06622003628225559,
-       "0.99": -0.35984161962165995,
-       "0.995": -0.19310038245983285
+       "0.9": -0.0025800547996197576,
+       "0.95": -0.057817302330772424,
+       "0.99": -0.3625880781239309,
+       "0.995": -0.19687098965634497
       }
      },
      "replicates_with_an_empty_band": 0
@@ -1237,18 +1237,18 @@
       533.3333333333333,
       1200.0
      ],
-     "n_donors": 147,
+     "n_donors": 146,
      "n_syndicates": 39,
      "n_assumed_business": 13,
      "donor_R_gbp_m": {
       "min": 533.79,
-      "median": 738.96,
+      "median": 738.885,
       "max": 1192.3
      },
      "operator_rescaling_factor": {
-      "min": 0.9038846046797755,
-      "median": 0.9827609375255675,
-      "max": 1.1717983887570131
+      "min": 0.9065377530246286,
+      "median": 0.983505530665902,
+      "max": 1.182840074942739
      },
      "band_raw": {
       "var": {
@@ -1259,39 +1259,39 @@
       },
       "counts": {
        "0.9": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 15,
-        "expected_beyond": 14.699999999999998,
-        "reading": "readable: 14.7 donors expected beyond the VaR"
+        "expected_beyond": 14.599999999999996,
+        "reading": "readable: 14.6 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 8,
-        "expected_beyond": 7.350000000000007,
-        "reading": "thin: the VaR is the 8th largest of 147 donors (7.4 expected beyond it)"
+        "expected_beyond": 7.300000000000006,
+        "reading": "thin: the VaR is the 8th largest of 146 donors (7.3 expected beyond it)"
        },
        "0.99": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 2,
-        "expected_beyond": 1.4700000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 147 donors (1.5 expected beyond it)"
+        "expected_beyond": 1.4600000000000013,
+        "reading": "thin: the VaR is the 2nd largest of 146 donors (1.5 expected beyond it)"
        },
        "0.995": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 1,
-        "expected_beyond": 0.7350000000000007,
-        "reading": "no estimate: 0.74 donors expected beyond it, so the VaR is the band's largest severity and the band says nothing about this level beyond its maximum"
+        "expected_beyond": 0.7300000000000006,
+        "reading": "no estimate: 0.73 donors expected beyond it, so the VaR is the band's largest severity and the band says nothing about this level beyond its maximum"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.06736394,
-        "hi": 0.11467998,
+        "lo": 0.06216847,
+        "hi": 0.11946437,
         "median": 0.09907333,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.09907333,
+        "lo": 0.10381986400000004,
         "hi": 0.1455538,
         "median": 0.12802118,
         "n_replicates": 4000
@@ -1319,39 +1319,39 @@
       },
       "counts": {
        "0.9": {
-        "n": 134,
+        "n": 133,
         "k_from_top": 14,
-        "expected_beyond": 13.399999999999997,
-        "reading": "readable: 13.4 donors expected beyond the VaR"
+        "expected_beyond": 13.299999999999997,
+        "reading": "readable: 13.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 134,
+        "n": 133,
         "k_from_top": 7,
-        "expected_beyond": 6.700000000000006,
-        "reading": "thin: the VaR is the 7th largest of 134 donors (6.7 expected beyond it)"
+        "expected_beyond": 6.650000000000006,
+        "reading": "thin: the VaR is the 7th largest of 133 donors (6.7 expected beyond it)"
        },
        "0.99": {
-        "n": 134,
+        "n": 133,
         "k_from_top": 2,
-        "expected_beyond": 1.3400000000000012,
-        "reading": "thin: the VaR is the 2nd largest of 134 donors (1.3 expected beyond it)"
+        "expected_beyond": 1.3300000000000012,
+        "reading": "thin: the VaR is the 2nd largest of 133 donors (1.3 expected beyond it)"
        },
        "0.995": {
-        "n": 134,
+        "n": 133,
         "k_from_top": 1,
-        "expected_beyond": 0.6700000000000006,
+        "expected_beyond": 0.6650000000000006,
         "reading": "no estimate: 0.67 donors expected beyond it, so the VaR is the band's largest severity and the band says nothing about this level beyond its maximum"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.07437148,
+        "lo": 0.06216847,
         "hi": 0.11467998,
         "median": 0.09907333,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.09907333,
+        "lo": 0.10381986400000004,
         "hi": 0.14021371,
         "median": 0.12802118,
         "n_replicates": 4000
@@ -1372,142 +1372,142 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.09826046894095179,
-       "0.95": 0.12161243587711089,
-       "0.99": 0.16073872864928995,
-       "0.995": 0.2368687793333447
+       "0.9": 0.09750740803718733,
+       "0.95": 0.12180152158972711,
+       "0.99": 0.16056862194474855,
+       "0.995": 0.23910075947061818
       },
       "counts": {
        "0.9": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 15,
-        "expected_beyond": 14.699999999999998,
-        "reading": "readable: 14.7 donors expected beyond the VaR"
+        "expected_beyond": 14.599999999999996,
+        "reading": "readable: 14.6 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 8,
-        "expected_beyond": 7.350000000000007,
-        "reading": "thin: the VaR is the 8th largest of 147 donors (7.4 expected beyond it)"
+        "expected_beyond": 7.300000000000006,
+        "reading": "thin: the VaR is the 8th largest of 146 donors (7.3 expected beyond it)"
        },
        "0.99": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 2,
-        "expected_beyond": 1.4700000000000013,
-        "reading": "thin: the VaR is the 2nd largest of 147 donors (1.5 expected beyond it)"
+        "expected_beyond": 1.4600000000000013,
+        "reading": "thin: the VaR is the 2nd largest of 146 donors (1.5 expected beyond it)"
        },
        "0.995": {
-        "n": 147,
+        "n": 146,
         "k_from_top": 1,
-        "expected_beyond": 0.7350000000000007,
-        "reading": "no estimate: 0.74 donors expected beyond it, so the VaR is the band's largest severity and the band says nothing about this level beyond its maximum"
+        "expected_beyond": 0.7300000000000006,
+        "reading": "no estimate: 0.73 donors expected beyond it, so the VaR is the band's largest severity and the band says nothing about this level beyond its maximum"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.06734682794960017,
-        "hi": 0.11272624089239576,
-        "median": 0.09825508721120207,
+        "lo": 0.06404551491516307,
+        "hi": 0.11293022103762748,
+        "median": 0.09787481931276604,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.1027082772630575,
-        "hi": 0.1414264940116021,
-        "median": 0.12161050315766544,
+        "lo": 0.09825084904624336,
+        "hi": 0.14129031546521725,
+        "median": 0.1220708666657265,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.1358005585591251,
-        "hi": 0.33414648368806693,
-        "median": 0.1595906372286653,
+        "lo": 0.13644757434120391,
+        "hi": 0.34189154128517457,
+        "median": 0.15947388156509557,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.13940515752987326,
-        "hi": 0.38341727537780623,
-        "median": 0.17205197508240672,
+        "lo": 0.13967356644095746,
+        "hi": 0.39367972471615137,
+        "median": 0.17415982818132997,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.09098216066517628,
-       "0.95": 0.12656708880308007,
-       "0.99": 0.2368687793333447,
-       "0.995": 0.29355420945103305
+       "0.9": 0.08985086735628277,
+       "0.95": 0.12583749260052335,
+       "0.99": 0.23910075947061818,
+       "0.995": 0.2977115213013014
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.07874955815525979,
-        "hi": 0.11020206593243419,
-        "median": 0.09198745795666825,
+        "lo": 0.07660181198829885,
+        "hi": 0.10935284910941968,
+        "median": 0.09048590642494907,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10981665668723078,
-        "hi": 0.1663386731919951,
-        "median": 0.1266246623004864,
+        "lo": 0.1074748368012928,
+        "hi": 0.16558656396045437,
+        "median": 0.1265794992957714,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.1652909752290615,
-        "hi": 0.32243069217882825,
-        "median": 0.23223693419790986,
+        "lo": 0.1627411187108422,
+        "hi": 0.3298760327206085,
+        "median": 0.23661313252637722,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.18826941388442806,
-        "hi": 0.4283971451482773,
-        "median": 0.29671977203772476,
+        "lo": 0.1772107544097117,
+        "hi": 0.43315061338359345,
+        "median": 0.302468946914148,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.08893138254432165,
-       "0.95": 0.011488699081815046,
-       "0.99": -0.34256565834348407,
-       "0.995": -0.3114006425660927
+       "0.9": 0.10264188777552574,
+       "0.95": 0.017353233558212056,
+       "0.99": -0.3487027379386626,
+       "0.995": -0.32101640166145506
       },
       "band_raw_clean": {
-       "0.9": 0.08893138254432165,
-       "0.95": 0.011488699081815046,
-       "0.99": -0.34313673402674094,
-       "0.995": -0.4695164811595858
+       "0.9": 0.10264188777552574,
+       "0.95": 0.017353233558212056,
+       "0.99": -0.3492684826912076,
+       "0.995": -0.47692427448114594
       },
       "band_operator": {
-       "0.9": 0.07999709198554239,
-       "0.95": -0.03914645562937691,
-       "0.99": -0.3214017942690419,
-       "0.995": -0.19310038245983285
+       "0.9": 0.0852138761281438,
+       "0.95": -0.03207288167770961,
+       "0.99": -0.32844787988019764,
+       "0.995": -0.19687098965634497
       }
      },
      "replicates_with_an_empty_band": 0
@@ -1530,9 +1530,9 @@
       "max": 963.99
      },
      "operator_rescaling_factor": {
-      "min": 0.902776417505738,
-      "median": 0.9912326739798095,
-      "max": 1.2322886793352992
+      "min": 0.9052318233465851,
+      "median": 0.9914837156707145,
+      "max": 1.2420060983747765
      },
      "band_raw": {
       "var": {
@@ -1656,10 +1656,10 @@
      },
      "band_operator": {
       "var": {
-       "0.9": 0.10233929423577949,
-       "0.95": 0.1278902833760675,
-       "0.99": 0.1690363440893433,
-       "0.995": 0.24909636167879975
+       "0.9": 0.10238475850149652,
+       "0.95": 0.12789407106712328,
+       "0.99": 0.16860031367525818,
+       "0.995": 0.2510606528130393
       },
       "counts": {
        "0.9": {
@@ -1689,109 +1689,109 @@
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.07766548216673702,
-        "hi": 0.12280351243275185,
-        "median": 0.10226412519090292,
+        "lo": 0.0777656752243927,
+        "hi": 0.12279703529596006,
+        "median": 0.10230987660229339,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.10593377843465888,
-        "hi": 0.14345233915902939,
-        "median": 0.1278865613271498,
+        "lo": 0.10575489618797841,
+        "hi": 0.1435123633033166,
+        "median": 0.12789664402743134,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.13356079343836288,
-        "hi": 0.3364330526669192,
-        "median": 0.16400968646624436,
+        "lo": 0.13347719628790222,
+        "hi": 0.34631124878138364,
+        "median": 0.16376514829109345,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.14423885532485176,
-        "hi": 0.39278605070210687,
-        "median": 0.17196660230027125,
+        "lo": 0.14415944014183976,
+        "hi": 0.40521136825427967,
+        "median": 0.17161282361922936,
         "n_replicates": 4000
        }
       }
      },
      "operator_full_pool": {
       "var": {
-       "0.9": 0.0956788195690298,
-       "0.95": 0.13310070418675307,
-       "0.99": 0.24909636167879975,
-       "0.995": 0.3087079932422943
+       "0.9": 0.09434523530678367,
+       "0.95": 0.13213192258607473,
+       "0.99": 0.2510606528130393,
+       "0.995": 0.31260314293168373
       },
       "counts": {
        "0.9": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 65,
-        "expected_beyond": 64.89999999999999,
-        "reading": "readable: 64.9 donors expected beyond the VaR"
+        "expected_beyond": 64.29999999999998,
+        "reading": "readable: 64.3 donors expected beyond the VaR"
        },
        "0.95": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 33,
-        "expected_beyond": 32.45000000000003,
-        "reading": "readable: 32.5 donors expected beyond the VaR"
+        "expected_beyond": 32.15000000000003,
+        "reading": "readable: 32.2 donors expected beyond the VaR"
        },
        "0.99": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 7,
-        "expected_beyond": 6.4900000000000055,
-        "reading": "thin: the VaR is the 7th largest of 649 donors (6.5 expected beyond it)"
+        "expected_beyond": 6.430000000000006,
+        "reading": "thin: the VaR is the 7th largest of 643 donors (6.4 expected beyond it)"
        },
        "0.995": {
-        "n": 649,
+        "n": 643,
         "k_from_top": 4,
-        "expected_beyond": 3.2450000000000028,
-        "reading": "thin: the VaR is the 4th largest of 649 donors (3.2 expected beyond it)"
+        "expected_beyond": 3.215000000000003,
+        "reading": "thin: the VaR is the 4th largest of 643 donors (3.2 expected beyond it)"
        }
       },
       "resampling_interval": {
        "0.9": {
-        "lo": 0.08300203481596043,
-        "hi": 0.11619912705131741,
-        "median": 0.09652788236638557,
+        "lo": 0.0805471621027316,
+        "hi": 0.1143032101688869,
+        "median": 0.09486804968708251,
         "n_replicates": 4000
        },
        "0.95": {
-        "lo": 0.1150422777608747,
-        "hi": 0.17426073695540692,
-        "median": 0.13293701520266304,
+        "lo": 0.11260293369462056,
+        "hi": 0.1732705589318588,
+        "median": 0.13280582296773874,
         "n_replicates": 4000
        },
        "0.99": {
-        "lo": 0.1730992928342253,
-        "hi": 0.33673809622067,
-        "median": 0.24484539621397527,
+        "lo": 0.171154607933153,
+        "hi": 0.3435601525628308,
+        "median": 0.24841806757405954,
         "n_replicates": 4000
        },
        "0.995": {
-        "lo": 0.19772426674032553,
-        "hi": 0.45277745414728704,
-        "median": 0.31319312820967227,
+        "lo": 0.18565748797949966,
+        "hi": 0.45752179411703897,
+        "median": 0.3185330941761199,
         "n_replicates": 4000
        }
       }
      },
      "relative_to_operator_full_pool": {
       "band_raw": {
-       "0.9": 0.08122916300574734,
-       "0.95": -0.008406072631916395,
-       "0.99": -0.37483763732847164,
-       "0.995": -0.34520244235676045
+       "0.9": 0.09651250180899829,
+       "0.95": -0.0011357784185495046,
+       "0.99": -0.3797288891940931,
+       "0.995": -0.35336145982327527
       },
       "band_raw_clean": {
-       "0.9": 0.08122916300574734,
-       "0.95": -0.030991377633624917,
-       "0.99": -0.3753806801858155,
-       "0.995": -0.4955567286598366
+       "0.9": 0.09651250180899829,
+       "0.95": -0.02388667722607818,
+       "0.99": -0.38026768330015626,
+       "0.995": -0.5018422766336924
       },
       "band_operator": {
-       "0.9": 0.06961284322643979,
-       "0.95": -0.03914645562937702,
-       "0.99": -0.3214017942690419,
-       "0.995": -0.19310038245983296
+       "0.9": 0.0852138761281438,
+       "0.95": -0.0320728816777095,
+       "0.99": -0.3284478798801975,
+       "0.995": -0.19687098965634497
       }
      },
      "replicates_with_an_empty_band": 0
@@ -1817,20 +1817,20 @@
      }
     },
     "band_operator": {
-     "centre": 0.012227582345455068,
+     "centre": 0.011959893342421118,
      "resampling_interval": {
-      "lo": -0.08551847690164677,
-      "hi": 0.019223736702345427,
-      "median": 0.008737807311963885,
+      "lo": -0.07452287995398284,
+      "hi": 0.019242030903032815,
+      "median": 0.008413202095183703,
       "n_replicates": 4000
      }
     },
     "operator_full_pool": {
-     "centre": 0.015153783791261255,
+     "centre": 0.014891621630382323,
      "resampling_interval": {
-      "lo": 0.008370331920344223,
-      "hi": 0.020598054514518387,
-      "median": 0.014207995828259712,
+      "lo": 0.007782706972785295,
+      "hi": 0.020247185551319113,
+      "median": 0.01379022318345191,
       "n_replicates": 4000
      }
     }
@@ -1845,92 +1845,92 @@
    "x0.5_to_x2": {
     "V1": {
      "band_operator": {
-      "0.9": 0.10027934180810112,
-      "0.95": 0.12746722731631385,
-      "0.99": 0.176366288683496,
-      "0.995": 0.2462261900166892
+      "0.9": 0.09788023578324177,
+      "0.95": 0.12808452340020648,
+      "0.99": 0.17776193136152266,
+      "0.995": 0.25077330284390204
      },
      "operator_full_pool": {
-      "0.9": 0.09666079352838157,
-      "0.95": 0.1298556368235911,
-      "0.99": 0.2462261900166892,
-      "0.995": 0.31539461067400704
+      "0.9": 0.09557888559835588,
+      "0.95": 0.13164915194124277,
+      "0.99": 0.2512194419825878,
+      "0.995": 0.32093826513390644
      }
     },
     "V2_old": {
      "band_operator": {
-      "0.9": 0.08796528493832592,
-      "0.95": 0.11737055261693818,
-      "0.99": 0.1618926603758826,
-      "0.995": 0.21010732269202387
+      "0.9": 0.08615867226326535,
+      "0.95": 0.11797970705226889,
+      "0.99": 0.1618539152702517,
+      "0.995": 0.21015707102367623
      },
      "operator_full_pool": {
-      "0.9": 0.08900429539166654,
-      "0.95": 0.11956977628914559,
-      "0.99": 0.2267226219591843,
-      "0.995": 0.29041221439100473
+      "0.9": 0.08803849695441167,
+      "0.95": 0.12126311569413561,
+      "0.99": 0.23140029243292937,
+      "0.995": 0.29561887335953224
      }
     },
     "V2_new": {
      "band_operator": {
-      "0.9": 0.09552303942846309,
-      "0.95": 0.12122307453052704,
-      "0.99": 0.16131295826002445,
-      "0.995": 0.17242440713147128
+      "0.9": 0.08818721606633124,
+      "0.95": 0.12125656197640687,
+      "0.99": 0.16167885801846923,
+      "0.995": 0.1718178759490577
      },
      "operator_full_pool": {
-      "0.9": 0.0947943707233601,
-      "0.95": 0.12734825494639834,
-      "0.99": 0.24147180967833867,
-      "0.995": 0.3093046576283599
+      "0.9": 0.09345827392063603,
+      "0.95": 0.12872824815354142,
+      "0.99": 0.24564562848807572,
+      "0.995": 0.31381759796343867
      }
     }
    },
    "x0.667_to_x1.5": {
     "V1": {
      "band_operator": {
-      "0.9": 0.09740380911798974,
-      "0.95": 0.1261028990162739,
-      "0.99": 0.1588572758823899,
-      "0.995": 0.2462261900166892
+      "0.9": 0.09353805624170436,
+      "0.95": 0.1267979918347198,
+      "0.99": 0.16041196141983977,
+      "0.995": 0.25077330284390204
      },
      "operator_full_pool": {
-      "0.9": 0.09666079352838157,
-      "0.95": 0.1298556368235911,
-      "0.99": 0.2462261900166892,
-      "0.995": 0.31539461067400704
+      "0.9": 0.09557888559835588,
+      "0.95": 0.13164915194124277,
+      "0.99": 0.2512194419825878,
+      "0.995": 0.32093826513390644
      }
     },
     "V2_old": {
      "band_operator": {
-      "0.9": 0.09605236182308419,
-      "0.95": 0.11839068341005947,
-      "0.99": 0.1514599029237574,
-      "0.995": 0.2267226219591843
+      "0.9": 0.09563634938208013,
+      "0.95": 0.11929316169997513,
+      "0.99": 0.15230287327304076,
+      "0.995": 0.2309893500060896
      },
      "operator_full_pool": {
-      "0.9": 0.08900429539166654,
-      "0.95": 0.11956977628914559,
-      "0.99": 0.2267226219591843,
-      "0.995": 0.29041221439100473
+      "0.9": 0.08803849695441167,
+      "0.95": 0.12126311569413561,
+      "0.99": 0.23140029243292937,
+      "0.995": 0.29561887335953224
      }
     },
     "V2_new": {
      "band_operator": {
-      "0.9": 0.10137121396251242,
-      "0.95": 0.12609245749296635,
-      "0.99": 0.16131295826002445,
-      "0.995": 0.24147180967833867
+      "0.9": 0.10152386111212688,
+      "0.95": 0.12663702094764492,
+      "0.99": 0.16167885801846923,
+      "0.995": 0.24520938785219698
      },
      "operator_full_pool": {
-      "0.9": 0.0947943707233601,
-      "0.95": 0.12734825494639834,
-      "0.99": 0.24147180967833867,
-      "0.995": 0.3093046576283599
+      "0.9": 0.09345827392063603,
+      "0.95": 0.12872824815354142,
+      "0.99": 0.24564562848807572,
+      "0.995": 0.31381759796343867
      }
     }
    }
   }
  },
- "runtime_seconds": 17.25929546356201
+ "runtime_seconds": 17.16888976097107
 }

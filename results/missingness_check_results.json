@@ -2,7 +2,7 @@
   "definition": {
     "supported_disclosure_defined_target": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved. A year the filing states was whole-year run-off, with or without a development figure, unless in the assumed-business regime, is a run-off scientific exclusion. A record whose extracted premium mix names no line of business (only a contract form or distribution channels) and a life record are outside a non-life line-of-business composition model and are scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for a record no page has been read for, another model reads a line with a positive amount (readers_disagree), the extraction lost the lines: the record stays in the target as composition unavailable and gets no weights",
     "broader_potential_target": "the supported target plus every eligibility-unresolved filing, under the sensitivity assumption that all such filings were economically eligible",
-    "selection_response": "membership in the 649-record model sample",
+    "selection_response": "membership in the 643-record model sample",
     "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
   "n_filings": 1065,
@@ -10,13 +10,13 @@
     "eligibility_unresolved": 20,
     "eligible_observed_composition_unavailable": 24,
     "eligible_outcome_unavailable": 9,
-    "scientific_exclusion": 256,
+    "scientific_exclusion": 262,
     "structural_no_eligible_outcome": 107,
-    "working_sample": 649
+    "working_sample": 643
   },
   "disposition_detail_counts": {
     "first_year_nil_opening": 2,
-    "fx_untranslated_table": 4,
+    "fx_untranslated_table": 5,
     "gross_development_unavailable": 5,
     "gross_triangle_does_not_reconcile": 1,
     "in_runoff": 28,
@@ -29,12 +29,14 @@
     "no_positive_reserve_base": 4,
     "no_usable_development_reading": 4,
     "non_gross_or_unstated_development": 104,
-    "observed_eligible_complete": 649,
+    "observed_eligible_complete": 643,
     "provision_movement_not_development": 1,
+    "restated_base_table": 4,
+    "takeon_base_unmeasurable": 1,
     "takeon_not_development": 8
   },
   "scientific_exclusion_detail_counts": {
-    "fx_untranslated_table": 4,
+    "fx_untranslated_table": 5,
     "gross_triangle_does_not_reconcile": 1,
     "in_runoff": 28,
     "life_book": 13,
@@ -43,6 +45,8 @@
     "no_positive_reserve_base": 4,
     "non_gross_or_unstated_development": 104,
     "provision_movement_not_development": 1,
+    "restated_base_table": 4,
+    "takeon_base_unmeasurable": 1,
     "takeon_not_development": 8
   },
   "composition_scope_exclusion_counts": {
@@ -60,20 +64,20 @@
     "other_labels": 1,
     "unreconciled": 2
   },
-  "n_supported_target_population": 682,
-  "n_target_population": 682,
+  "n_supported_target_population": 676,
+  "n_target_population": 676,
   "n_eligibility_unresolved": 20,
-  "n_broader_potential_target_if_all_unresolved_eligible": 702,
-  "n_model_sample": 649,
+  "n_broader_potential_target_if_all_unresolved_eligible": 696,
+  "n_model_sample": 643,
   "n_eligible_outcome_unavailable": 9,
   "n_distinct_syndicates_with_unavailable_outcome": 7,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 2,
   "model_sample_selection_by_size": {
-    "median_size_included": 418.878,
+    "median_size_included": 425.362,
     "median_size_not_included": 29.50388055288639,
-    "n_included": 649,
+    "n_included": 643,
     "n_not_included": 33,
-    "mann_whitney_p": 2.5851172256591032e-12
+    "mann_whitney_p": 2.3339053689270426e-12
   },
   "model_sample_by_year": {
     "2014": {
@@ -85,8 +89,8 @@
       "target_population": 64
     },
     "2016": {
-      "model_sample": 61,
-      "target_population": 63
+      "model_sample": 60,
+      "target_population": 62
     },
     "2017": {
       "model_sample": 63,
@@ -109,24 +113,24 @@
       "target_population": 63
     },
     "2022": {
-      "model_sample": 61,
-      "target_population": 63
+      "model_sample": 58,
+      "target_population": 60
     },
     "2023": {
-      "model_sample": 72,
-      "target_population": 73
+      "model_sample": 71,
+      "target_population": 72
     },
     "2024": {
-      "model_sample": 76,
-      "target_population": 79
+      "model_sample": 75,
+      "target_population": 78
     }
   },
   "outcome_given_size": {
-    "signed_S_unavailable_history_coef": -0.03922913614014787,
-    "signed_S_p": 0.11375919308617033,
-    "abs_S_unavailable_history_coef": -0.008659374232413586,
-    "abs_S_p": 0.6607403697569683,
-    "n": 649
+    "signed_S_unavailable_history_coef": -0.04319223390509369,
+    "signed_S_p": 0.07727660479384801,
+    "abs_S_unavailable_history_coef": -0.003352854470753963,
+    "abs_S_p": 0.8637617518318166,
+    "n": 643
   },
   "eligible_unavailable_records": [
     "syndicate_3330_2014.json",
@@ -383,16 +387,18 @@
     ],
     "inferential_basis_exclusions": 104,
     "identity_basis": "98 + 6 = 104",
-    "flow_unusable_severity_step": 73,
+    "flow_unusable_severity_step": 79,
     "unusable_severity_components": {
-      "fx_untranslated_table": 4,
+      "fx_untranslated_table": 5,
       "gross_development_unavailable": 5,
       "gross_triangle_does_not_reconcile": 1,
       "no_mature_cohort_figure": 56,
       "non_gross_or_unstated_development": 6,
-      "provision_movement_not_development": 1
+      "provision_movement_not_development": 1,
+      "restated_base_table": 4,
+      "takeon_base_unmeasurable": 1
     },
-    "identity_unusable_severity": "4 + 5 + 1 + 56 + 6 + 1 = 73"
+    "identity_unusable_severity": "5 + 5 + 1 + 56 + 6 + 1 + 4 + 1 = 79"
   },
   "assumed_business_regime": {
     "note": "composition counts each regime row once: RITC-flagged first, then a confirmed inward transfer the scan did not flag, then a confirmed take-on in neither",
@@ -421,10 +427,10 @@
       "takeons": 18
     },
     "working_sample": {
-      "n_rows": 649,
-      "n_regime": 34,
+      "n_rows": 643,
+      "n_regime": 33,
       "composition": {
-        "ritc_flagged": 27,
+        "ritc_flagged": 26,
         "confirmed_transfer_not_flagged": 5,
         "takeon_only": 2
       },

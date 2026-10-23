@@ -17,12 +17,12 @@
     "frac_draws_k_le_1": 1.0,
     "frac_draws_gamma_ge_0": 1.0,
     "k_support": [
-      0.5015190920217187,
-      0.8203333136991122
+      0.501759612560887,
+      0.7745370028170335
     ],
     "gamma_support": [
-      7.730633268608715e-06,
-      1.793126177475426
+      6.60234036624545e-06,
+      1.8388583681302415
     ],
     "fits": "k: the headline fit's draws; gamma: the gamma-free fit's (the headline fixes gamma at 0 in the likelihood)"
   },
@@ -31,15 +31,15 @@
   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "gamma_in_force_posterior_mean": 0.0,
   "scale_ratio_new_over_old": {
-    "min": 1.0150483739960692,
-    "max": 1.0828883640726203,
-    "mean": 1.0497822776863388,
-    "q2.5": 1.032474143974411,
-    "q97.5": 1.0662490567365004,
+    "min": 1.0186415505063446,
+    "max": 1.08000223955122,
+    "mean": 1.0481678535570553,
+    "q2.5": 1.0309951151812542,
+    "q97.5": 1.065204060947543,
     "frac_draws_above_one": 1.0
   },
   "channel_ratios": {
-    "size_only_mean": 1.0497822776863388,
+    "size_only_mean": 1.0481678535570553,
     "size_only_frac_above_one": 1.0,
     "concentration_only_mean": 1.0,
     "concentration_only_frac_above_one": 0.0
@@ -49,35 +49,35 @@
     "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
     "negative_old_quantile_actual_pool": {
       "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
-      "old_quantile": -0.0037096425584657432,
-      "new_quantile": -0.0039011408216961608,
-      "change": -0.0001914982632304175,
-      "scale_ratio": 1.051621756062023,
+      "old_quantile": -0.003743141109720333,
+      "new_quantile": -0.0039303741763864735,
+      "change": -0.00018723306666614068,
+      "scale_ratio": 1.0500203067899114,
       "direction": "fall"
     }
   },
   "reversal": {
-    "k_at_which_direction_reverses": 0.9999999999999991,
-    "posterior_mean_k": 0.6006574501873941,
+    "k_at_which_direction_reverses": 0.9999999999999989,
+    "posterior_mean_k": 0.6014381260411611,
     "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
   },
   "overlay_sensitivity": {
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
-    "gamma_in_force_posterior_mean": 0.40819697301035224,
+    "gamma_in_force_posterior_mean": 0.3727033377834854,
     "scale_ratio_new_over_old": {
-      "min": 1.0200377268089087,
-      "max": 1.1337802036917124,
-      "mean": 1.061498284286473,
-      "q2.5": 1.0360596502936283,
-      "q97.5": 1.0935756025942867,
+      "min": 1.0220020971617831,
+      "max": 1.1194297447168422,
+      "mean": 1.0585532549115277,
+      "q2.5": 1.0350817182789172,
+      "q97.5": 1.089706099772162,
       "frac_draws_above_one": 1.0
     },
     "channel_ratios": {
-      "size_only_mean": 1.0427330670044352,
+      "size_only_mean": 1.041819359021136,
       "size_only_frac_above_one": 1.0,
-      "concentration_only_mean": 1.016683348122378,
+      "concentration_only_mean": 1.0148584602992918,
       "concentration_only_frac_above_one": 1.0
     },
     "sign_cases": {
@@ -85,16 +85,16 @@
       "zero_old_quantile": "change is zero and the new/old quantile ratio is undefined",
       "negative_old_quantile_actual_pool": {
         "weighting": "positive syndicate masses: 1 for syndicate 318 and 1e-8 for every other syndicate, divided equally over each syndicate's rows",
-        "old_quantile": -0.0034554552844628006,
-        "new_quantile": -0.0036802460803934366,
-        "change": -0.00022479079593063596,
-        "scale_ratio": 1.065053886514287,
+        "old_quantile": -0.0035186648500230675,
+        "new_quantile": -0.0037352789377884848,
+        "change": -0.00021661408776541729,
+        "scale_ratio": 1.061561443615182,
         "direction": "fall"
       }
     },
     "reversal": {
-      "k_at_which_direction_reverses": 0.9999999999999998,
-      "posterior_mean_k": 0.6064937436663327,
+      "k_at_which_direction_reverses": 0.9999999999999996,
+      "posterior_mean_k": 0.6062774958715219,
       "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
     }
   }

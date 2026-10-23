@@ -1,11 +1,12 @@
 {
- "question": "what do the fit and the vignette stresses become without the records whose older-years column or exchange line the filing readings could not settle?",
- "source": "data/aggregated_column_review.json (confidence low_confidence) and data/fx_untranslated_excluded.json (reason undeterminable_kept); the readings are archived in results/extraction_error_rate/mature-cohort/round2/",
+ "question": "what do the fit and the vignette stresses become without the records whose older-years column, exchange line or development-table history the filing readings could not settle?",
+ "source": "data/aggregated_column_review.json (confidence low_confidence), data/fx_untranslated_excluded.json (reason undeterminable_kept) and data/restated_base_excluded.json (history_restated); the readings are archived in results/extraction_error_rate/mature-cohort/round2/ and round5/",
  "inputs_sha256": {
   "data/aggregated_column_review.json": "bb1e33341f560fcbf5f2156aedf5f9fcef0c0917c457e1a5029ceebbcd646dc5",
-  "data/fx_untranslated_excluded.json": "18dfed0628176f244ea284d19974e2215b5904db0c43f6d158b955aa36065ff5"
+  "data/fx_untranslated_excluded.json": "0e8e272f8f5ec7d38dd171d8f47b0a2a178255e6fcdf6d18ad2bb167280c0398",
+  "data/restated_base_excluded.json": "abe994cb91cce59a3d9b3cabace857d71683dde991590c7a3b0d6a86da817e9b"
  },
- "named_records": 10,
+ "named_records": 39,
  "older_years_columns_low_confidence": [
   "33_2015",
   "1200_2015",
@@ -20,15 +21,46 @@
   "4711_2017",
   "6105_2015"
  ],
+ "history_restated": [
+  "382_2021",
+  "382_2022",
+  "382_2023",
+  "780_2017",
+  "1176_2019",
+  "1274_2016",
+  "1458_2024",
+  "1686_2022",
+  "1729_2023",
+  "1910_2018",
+  "1947_2022",
+  "1967_2017",
+  "1967_2018",
+  "2001_2016",
+  "2001_2017",
+  "2232_2017",
+  "2232_2019",
+  "2468_2019",
+  "2468_2020",
+  "2488_2016",
+  "3000_2016",
+  "3500_2022",
+  "3500_2023",
+  "4020_2018",
+  "4141_2022",
+  "4242_2017",
+  "4444_2017",
+  "5000_2023",
+  "6118_2018"
+ ],
  "operator": "size_only",
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "sensitivity": "low_confidence_records",
- "rule": "without the 10 records the filing readings could not settle: 6 older-years columns marked low_confidence in data/aggregated_column_review.json and 4 exchange lines marked undeterminable_kept in data/fx_untranslated_excluded.json",
- "n_primary": 649,
- "n_left_out": 10,
- "n_fit": 639,
- "n_syndicates_fit": 117,
+ "rule": "without the 39 records the filing readings could not settle: 6 older-years columns marked low_confidence in data/aggregated_column_review.json, 4 exchange lines marked undeterminable_kept in data/fx_untranslated_excluded.json and 29 tables whose history restated, listed under history_restated in data/restated_base_excluded.json",
+ "n_primary": 643,
+ "n_left_out": 39,
+ "n_fit": 604,
+ "n_syndicates_fit": 116,
  "left_out": [
   {
    "record": "33_2015",
@@ -39,12 +71,52 @@
    "register": "aggregated_column_review"
   },
   {
+   "record": "382_2021",
+   "severity": 0.04097493399720931,
+   "opening_reserves_gbp_m": 498.085,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2014's end-2020 cell in the 2021 table (187,147) is 10.3m above the 2020 report's printed estimate and out of line with its own column (169,537 -> 187,147 -> 170,900), unexplained in the filing (P1, Q8): 2.1% of R (498.1m). The rest moves by the stated retranslation; the table ties to the balance sheet and its incurred gap (-8.7%) is the 2020 control's (-6.9%), the pre-2011 years outside the table. M as printed (+20.409m) stands. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is -6.9% (over 5%, within 10%, the same pre-2011 years outside the table in both years), but the year t miss, -8.7%, is 1.3 times the control's, not three times, and is itself under 10%. The record stays least certain",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "382_2022",
+   "severity": 0.06860074083740726,
+   "opening_reserves_gbp_m": 498.085,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2018 column's end-2021 cell moved against the common 1.09 retranslation (ratio 0.959; 34.2m, 6.9% of R 498.1m), unexplained (p44 states only the all-years retranslation at 2022 closing rates; P4, Q5). The table ties: implied incurred 236.1m against 231.25m (+2.1%, p16) and outstanding 631,136 to the balance sheet. P4 valid, Q5 restated_base on the same cells",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "382_2023",
+   "severity": -0.012506020889317042,
+   "opening_reserves_gbp_m": 631.136,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2022 cells of 2016, 2019 and 2020 sit 2.8%, 2.8% and 7.1% above the 2022 report's latest in a year sterling strengthened, against 0.95-0.99 for the other years (10.9m, 8.8m and 13.1m beyond the common factor; 1.4-2.1% of R 631.1m), and the early rows were rebuilt beyond the stated retranslation (P8: 2016 first year 88,722 against 72,750); p44 states only the closing-rate retranslation (P8, Q1; Q1 attributes the moves to it). Incurred -8.1% with UY <= 2012 outside the table (control +2.1%); outstanding ties",
+   "register": "restated_base_excluded"
+  },
+  {
    "record": "457_2015",
    "severity": 0.015040937187631841,
    "opening_reserves_gbp_m": 571.241,
    "v1_top_donor_rank": null,
    "why": "exchange line 10.31% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table, so condition (a) cannot be tested on cells; the 2015 table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' and the 2016 report prints the 2011 column retranslated (X6, Y7), which points to retranslation but is not a comparison of cells of the year t-1 and year t reports",
    "register": "fx_untranslated_excluded"
+  },
+  {
+   "record": "780_2017",
+   "severity": -0.005098789037603569,
+   "opening_reserves_gbp_m": 231.94618966664203,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2017 table's end-2016 estimates are 165.6m (24.6%) above the 2016 report's, mirrored by a -170.4m fall in the '2010 & prior' balance to pay, with only the generic reconversion sentence (p30) (P5, Q6); 2011, 2012 and 2015 move 59.2m, 17.8m and 16.1m beyond the common factor (5-19% of R 313.8m). Implied incurred 279.0m against 257.3m (+8.4%, control +5.6%) and cross-report paid +5.8%: within rule 1's 10%, so rule 1 does not apply. P5 restated_base, Q6 valid",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1176_2019",
+   "severity": -0.2128035097450896,
+   "opening_reserves_gbp_m": 39.661,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column's end-2018 cell is 17,001 against 14,924 in the 2018 report, 2.1m (5.2% of R 39.7m), unexplained (P2, Q1). Paid ties (2,904 against 2,915) and reserves tie",
+   "register": "restated_base_excluded"
   },
   {
    "record": "1200_2015",
@@ -63,12 +135,60 @@
    "register": "aggregated_column_review"
   },
   {
+   "record": "1274_2016",
+   "severity": 0.04749788612713376,
+   "opening_reserves_gbp_m": 387.2870227770122,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (derived_correction): added after review 8 (decision of the Claude analysis session, 23 October 2026). Rule 4 corrects the misprinted 2012 cell (141,355 for 178,987 in the 2015 report), but the corrected figure, +22.6943m USD, is the session's derivation from cells both readers quote, not a figure either gives (P3: not correctable from the filing, +57.503m as printed; Q4: +19.871m with the 2015 report's cell unretranslated): the 2015 cell at the 2012 column's own paid factor, 129,350 / 131,423 = 0.98423 (data/mature_cohort_figures.json, correction.derived_figure_m). The factor is a choice: the other columns' end-2015 ratios (0.96766 to 0.98919) give +21.806m to +25.659m (review 8: +21.8m to +25.6m), and the 2008 column's factor 0.97948 gives +23.5435m, the figure carried before review 8. Both readers call the table otherwise valid (paid -1.9%, the stated retranslation); the record stays at the derived figure and joins the least-certain list",
+   "register": "restated_base_excluded"
+  },
+  {
    "record": "1301_2015",
    "severity": -0.06057694316211643,
    "opening_reserves_gbp_m": 95.746,
    "v1_top_donor_rank": null,
    "why": "exchange line 5.01% of the opening gross claims outstanding with no year t-1 table to test condition (a): no year t-1 report table exists; the table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' (p40) and the 2016 report prints different 2011 cells (Y7); the line is 5.008% of R, 7.7 thousand pounds over the threshold (X7)",
    "register": "fx_untranslated_excluded"
+  },
+  {
+   "record": "1458_2024",
+   "severity": -0.016218825893161936,
+   "opening_reserves_gbp_m": 1637.712642760163,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (take_on_base_bounded): rule 5b (U1, U2). An external RITC 'in the year' of reserves relating only to the 2020 and 2021 underwriting years (p47); counterparty, date and amount are not printed, and note 4's gross roll-forward (p31) has no transfer row (2,050,580 + 733,886 - 79,491 - 544,404 - 10,867 = 2,149,704, USD 000). The only ADC is outward, bought in 2020 (p49), so not a take-on. R is the opening USD 2,050.580m (p31), which is the analysis's opening (GBP 1,637.71m) and includes no acquired reserves. The filing bounds the take-on: the 2024 table's 2020 and 2021 columns exceed the 2023 filing's at every age while the control columns move about -1%, and the acquired cumulative incurred at the latest comparable ages is 105.138m + 58.940m = USD 164.078m (U1, U2); the reserves taken on are that incurred less the acquired paid to date, so they cannot exceed it: at most 8.0% of R (U2 puts it at about 2 to 3% on a low-confidence indicative range). The table carries the acquired years as if always, so the movement within the table (-33.258m USD = -26.56m GBP, u <= 2022, equal to the analysis figure) excludes the take-on and only the divisor is short; the acquired years' own pre-acquisition development (-22.091m of it) is in the figure. Bounded at or below 10% of R: the record stays and joins the least-certain list",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1686_2022",
+   "severity": -0.009868223728957464,
+   "opening_reserves_gbp_m": 1794.4506085948497,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2016-2018 history is cut by 175.0m in both incurred and paid (reserve-neutral) with 2019-2021 untouched, unexplained (p32 states only balance-sheet-rate translation; P6, Q7): 8.1% of R (2,167.2m). Implied incurred is 9.5% below the accounts, the gap equal to the stated FX line (72,783, note 4 p24) to within 5k (both readings): the basis explains it; control +0.3%. Not a year t take-on: the RITC of Syndicates 2007 and 6129 is of 1 January 2021 and in R, the 1 December 2022 LPR is ceded. P6 valid, Q7 restated_base",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1729_2023",
+   "severity": 0.049059684503448456,
+   "opening_reserves_gbp_m": 268.18410107510005,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2021's end-2022 estimate is 58.3m USD above the 2022 report's at the common presentation factor (17.1% of R), unexplained in the filing (P7, Q6; Q6 judges the 2022 print faulty, which the filing does not say). The 2023 table ties (incurred -0.4%). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t incurred ties (-0.4%); the cross-table paid (+35%, P7; +34.1%, Q6) comes, P7 shows, entirely from the restated UY2021 column, and the control does not tie under either bound (-27.3%, Q6; about -29%, P7). The record stays least certain",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1910_2018",
+   "severity": 0.0059298354548276925,
+   "opening_reserves_gbp_m": 322.1,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2016 column was lowered (end-2017 73.0 against 76.5, ratio 0.954) while the other years rose 2.5-5.6% by the stated retranslation, unexplained (Q7: 'not explained anywhere'; P8): 6.8m, 2.1% of R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1947_2022",
+   "severity": -0.12400978414796378,
+   "opening_reserves_gbp_m": 116.515,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2018 column (oldest) is about 14% above the year's retranslation ratio at every age (about 4.3m, 3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%)",
+   "register": "restated_base_excluded"
   },
   {
    "record": "1955_2018",
@@ -79,12 +199,108 @@
    "register": "aggregated_column_review"
   },
   {
+   "record": "1967_2017",
+   "severity": 0.06909009488768396,
+   "opening_reserves_gbp_m": 122.14354349914997,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R 165.2m). The table ties (+4.0% incurred, reserves exact). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t table does not fail the accounts: incurred +4.0% and P5's reserve-identity paid test +1.7% (the like-for-like test used for 780/2016); Q6's cross-report paid +55.2% is the proxy that the restated history itself distorts. The control miss is -7.6% (Q6), over 5% and within 10%. The record stays least certain",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "1967_2018",
+   "severity": 0.12689059922141038,
+   "opening_reserves_gbp_m": 192.81203478805924,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column (oldest) is 26% higher between reports while the others are 3-9% lower (retranslation), unexplained (P6, Q7): 28.9m, 11.8% of R (246.1m). Incurred ties (-4.5%, control +4.0%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2001_2016",
+   "severity": 0.05502810743285446,
+   "opening_reserves_gbp_m": 1601.0,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2013 and UY2014 fall at end-2015 against an exchange uplift (P6: unexplained; Q7: the 2013-2015 columns look mis-allocated, the 2017 report re-allocates them); the stated basis is year-end conversion (p35). Incurred ties (+3.1%, control +4.8%). Share of R, checked after review 8 against rule 6's 1% of R (opening gross claims outstanding 1,601.0m, note 9(a), so 16.01m): the 2016 table's end-2015 cells are 761.5 (UY2013) and 804.7 (UY2014) against 786.4 and 821.4 in the 2015 report, falls of 24.9m (1.56% of R) and 16.7m (1.04% of R), 41.6m together (2.60%), both cells that the exchange uplift (ratios 1.016, 1.074, 0.968, 0.980 for UY2011-UY2014, no common factor) should have raised, so the move beyond the exchange rate is at least the fall; P6's own measure, about 2% of the year's gross incurred (1,089.5m), is 21.8m or 1.4% of R. Every measure is over 1% of R: rule 6 is met and the record stays on the list (decision of the Claude analysis session, 23 October 2026)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2001_2017",
+   "severity": 0.05382011605415861,
+   "opening_reserves_gbp_m": 2068.0,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2016 history is re-allocated across 2013 (+11.9%), 2014 (+9.7%) and 2015 (-21.1%) beyond the stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control +3.1%)",
+   "register": "restated_base_excluded"
+  },
+  {
    "record": "2007_2015",
    "severity": -0.0017203487146844664,
    "opening_reserves_gbp_m": 1162.555,
    "v1_top_donor_rank": null,
    "why": "older-years column, construction could not be settled (development_age): X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence.",
    "register": "aggregated_column_review"
+  },
+  {
+   "record": "2232_2017",
+   "severity": 0.05648669820798683,
+   "opening_reserves_gbp_m": 225.947,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (label_disagreement): the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows miss (incurred -10.5%, cross-report paid -20.1%) and the control does not tie within 5% (P3 incurred +7.4%; Q4 paid +62.1%, confounded), so rule 1 does not apply; no exchange line is reported, so rule 2 cannot be tested. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +7.4% (P3 incurred), within 10% with a basis that is the same in both years (an ultimate underwriting-year table against earned accounts, Q4), but the year t miss is not three times the control's (22.2%): incurred -10.5% is 1.4 times it and the cross-report paid -20.1% 2.7 times it; the control's sign (table above the accounts, as the basis predicts) is the opposite of the year t miss's (below), so the basis gap does not explain the year t miss either; Q4's paid control +62.1% is confounded (the 2015 report's cells are 19% lower than the 2016 report's for the same year). The record stays least certain. P3 valid, Q4 restated_base",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2232_2019",
+   "severity": 0.034273556035522304,
+   "opening_reserves_gbp_m": 373.174,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2013 column (oldest) is 6.3% higher between reports with no wording, in tables translated at each year's own end rate, so no retranslation moves history (Q6; P5): 4.5m, 1.2% of R (373.2m). The table ties (paid -0.8%, incurred -3.3%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2468_2019",
+   "severity": 0.1358273791155316,
+   "opening_reserves_gbp_m": 337.016,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2018 estimates and paid of UY2016 and UY2017 are re-allocated (about +17m each, +15.7% and +4.6% on the diagonal), unexplained (P5, Q4); 2016 moves 10.4m beyond the common factor (3.1% of R 337.0m). The table ties (paid -3.0%, incurred -3.0%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2468_2020",
+   "severity": 0.18304203758781928,
+   "opening_reserves_gbp_m": 389.009,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2016 (oldest, closed) history is 16.5-18.6m lower in estimate and paid alike, unexplained (P1, Q2): 4.2% of R (389.0m). The table ties (paid -4.3%, incurred -3.8%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "2488_2016",
+   "severity": -0.02919946217548271,
+   "opening_reserves_gbp_m": 916.284,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2011 column's end-2015 estimate is 28.9-29.3m above the 2015 report at the stated 1.165 retranslation, unexplained (P6, Q5): 3.2% of R (916.3m). The paid bridge ties (-3.3%, -2.9%); incurred +59.5% against a +38.3% control, the 2010-and-prior years outside the table. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +38.3%, over 10%, so the control ties under neither bound (the same 2010-and-prior gap makes the year t incurred test uninformative, P6, Q5); the year t incurred miss, +59.5%, is 1.6 times the control's, not three times; and the year t paid test ties (-3.3% with the factor, P6; -2.9%, Q5). The record stays least certain. P6 valid, Q5 restated_base",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "3000_2016",
+   "severity": 0.027692086295938965,
+   "opening_reserves_gbp_m": 986.744,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (label_disagreement): P4 valid, Q5 restated_base on the same facts: the 2016 table carries Syndicate 1400's history (RITC accepted 1 January 2016, 248.822m gross, p37), stated on p38 and retranslated; rule 5 applies and R already carries the take-on (data/opening_reserves_takeon_base.json). Paid -33.4% against a -30.1% control, the 'All prior years' column printing no paid: the basis explains it",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "3500_2022",
+   "severity": -0.07376806079324003,
+   "opening_reserves_gbp_m": 3274.857166514863,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (take_on_table_unreconciled): added after review 8 (decision of the Claude analysis session, 23 October 2026), on the same all-prior-years scope as 3500/2023. RITCs of Syndicates 1897, 2468 and 1980/2014/2001 effective 1 January 2022 and loss portfolio transfers (p4; note 7 p30 'Reinsurance of new liabilities 1,728,476'), the history carried as if always (the 2018 column about double the 2021 report's, Q7). The RITCs are in R (3,955.045m USD = 2,615.345 + 1,339.7, data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile with note 7's change in estimates including foreign exchange of -293.1m (-293,072, p30) on that scope: the movement on every column that existed at end-2021 (2013-2019 and 2021) is -291.756m - 98.057m = -389.8m (review 8; P6's workings), and the whole table (those columns plus the new 2022 column, +363.424m) is -26.4m, a gap of 266.7m (P6; Q7 -26.389m); only the 2013-2019 columns alone (-291.8m, the adopted figure) are within 0.4% of it. LPT placement conflict: P6 reads the mid-2022 loss portfolio transfers of Syndicates 1200 (293.8m) and 1686 (67.1m) as entering the history as if always, while the ninth census (data/opening_reserves_takeon_base.json) places all four LPTs (also 2468's 22.6m and 2001's 5.2m: 388.7m) in the 2022 column, outside M and outside R. Either way the acquired share outside R is at most 9.1% of R for the two mid-2022 LPTs (360.9m of 3,955.045m) and 9.8% with all four (388.7m), at or below rule 5b's 10%, so rule 5b would list the record too. Rule 1 does not reach it (the history change is explained). It stays and joins the least-certain list",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "3500_2023",
+   "severity": -0.008213834726602995,
+   "opening_reserves_gbp_m": 4553.979439692381,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (take_on_table_unreconciled): RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new liabilities 3,225,818'), the history carried as if always (2 to 3.6 times the 2022 report's). The take-on is explained and is in R (5,803.136m USD = 2,962.436 + 2,840.7, data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile with the filing's own roll-forward: its movement on the old years is -52.1m against -184.8m of change in estimates in note 7 (P7; Q8: neither 136.6m nor -62.3m ties). Rule 1 does not reach it (the history change is explained) and no rule covers an explained take-on table that fails the tie; it stays and joins the least-certain list",
+   "register": "restated_base_excluded"
   },
   {
    "record": "3624_2015",
@@ -95,6 +311,38 @@
    "register": "aggregated_column_review"
   },
   {
+   "record": "4020_2018",
+   "severity": 0.08820761357009271,
+   "opening_reserves_gbp_m": 497.27,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the history is re-spread across underwriting years without explanation (2012 -20.3m, 2013 +36.0m, 2014 -23.1m between reports, P5; Q6: re-allocations inside a near-constant total), each above 1% of R (497.3m). The table ties (+4.0%, control +7.2% on the underwriting-year basis)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "4141_2022",
+   "severity": -0.06719980037670847,
+   "opening_reserves_gbp_m": 248.468,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): a 24.7m cross-year move between UY2018 and UY2019 on the end-2021 diagonal, sum-preserving and unexplained (P8, Q1): 9.9% of R (248.5m) each. The table ties (-2.9%, control +0.3%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "4242_2017",
+   "severity": 0.02654521795705921,
+   "opening_reserves_gbp_m": 22.721561090989724,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column's history is lowered by about 1.4m between reports, unexplained (P8, Q1): 4.3-4.5% of R (30.7m). The table ties (-2.0%, control -0.6%)",
+   "register": "restated_base_excluded"
+  },
+  {
+   "record": "4444_2017",
+   "severity": 0.09847396342210017,
+   "opening_reserves_gbp_m": 1200.561,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the end-2016 cells of 2011, 2012 and 2013 sit 4.7%, 4.7% and 3.9% above the 2016 report (16.1m, 16.7m, 14.2m; 1.2-1.4% of R 1,200.6m each; +40.7m on the 2011-2016 diagonal) in a year sterling strengthened against the dollar, unexplained (Q8, Z5, Z6; p25 states only year-end rates). Rule 1 does not apply: on the table's own base implied incurred is +6.3% (control -1.1%), within its 10%, and the paid +30.8% is a cross-report proxy because the 2017 table prints no end-2016 payments (Z6). P1 valid; Q8 restated_base; the tie-break readers Z5 and Z6 confirm the facts (restated_base, moderate confidence). M as printed (+118.224m) stands",
+   "register": "restated_base_excluded"
+  },
+  {
    "record": "4711_2017",
    "severity": -0.01848076983190775,
    "opening_reserves_gbp_m": 607.821,
@@ -103,57 +351,73 @@
    "register": "fx_untranslated_excluded"
   },
   {
+   "record": "5000_2023",
+   "severity": 0.023482803239668365,
+   "opening_reserves_gbp_m": 625.99,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2014 column (oldest) from two years later onward sits about 9.7-9.8m above the translated 2022 values, unexplained (P4, Q3): 1.2% of R. The table ties (incurred +3.0%)",
+   "register": "restated_base_excluded"
+  },
+  {
    "record": "6105_2015",
    "severity": 0.018846638794876896,
    "opening_reserves_gbp_m": 15.069,
    "v1_top_donor_rank": null,
    "why": "exchange line -5.11% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table and the 2015 table states no exchange basis (the policy note gives closing rates, p19); the line is 5.11% of R (X6, Y6)",
    "register": "fx_untranslated_excluded"
+  },
+  {
+   "record": "6118_2018",
+   "severity": 0.04133128285670658,
+   "opening_reserves_gbp_m": 183.372,
+   "v1_top_donor_rank": null,
+   "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R 183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into Syndicate 1955; Q4: unexplained). Incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4): within rule 1's 10%. P3 valid, Q4 restated_base",
+   "register": "restated_base_excluded"
   }
  ],
  "fit": {
   "k": {
-   "mean": 0.5984008926162139,
-   "sd": 0.05127233694285731,
-   "hdi_2.5%": 0.5065388658847801,
-   "hdi_97.5%": 0.6918774525946186
+   "mean": 0.5996357509960515,
+   "sd": 0.05312780038752514,
+   "hdi_2.5%": 0.5093035659415712,
+   "hdi_97.5%": 0.7001006404671405
   },
   "sd_undiv": {
-   "mean": 0.030603329940414977,
-   "sd": 0.007049483855550201,
-   "hdi_2.5%": 0.01567863883450839,
-   "hdi_97.5%": 0.04302955112321866
+   "mean": 0.03068444470156023,
+   "sd": 0.00679282083294235,
+   "hdi_2.5%": 0.016343490016866254,
+   "hdi_97.5%": 0.04286002389188607
   },
   "sd_div": {
-   "mean": 0.04413250509395347,
-   "sd": 0.005827207902386542,
-   "hdi_2.5%": 0.03310430431148341,
-   "hdi_97.5%": 0.0555986931021859
+   "mean": 0.04248513275470748,
+   "sd": 0.005914332229511171,
+   "hdi_2.5%": 0.0313409189879692,
+   "hdi_97.5%": 0.0541111080520153
   },
   "nu_clean": {
-   "mean": 4.081127196176191,
-   "sd": 0.7178467300082217,
-   "hdi_2.5%": 2.7996775242974024,
-   "hdi_97.5%": 5.498359215128882
+   "mean": 3.9301543174162896,
+   "sd": 0.6842591525645865,
+   "hdi_2.5%": 2.794430474085586,
+   "hdi_97.5%": 5.349867702172408
   },
   "nu_ritc": {
-   "mean": 6.341421742521524,
-   "sd": 4.142064441817262,
-   "hdi_2.5%": 1.446851145750938,
-   "hdi_97.5%": 13.801108254159113
+   "mean": 5.915472181419842,
+   "sd": 3.6405087922962656,
+   "hdi_2.5%": 1.4485983677931933,
+   "hdi_97.5%": 12.725652877645382
   },
   "tau_s": {
-   "mean": 0.12633881977406503,
-   "sd": 0.06991682982153277,
-   "hdi_2.5%": 0.00019839913466185766,
-   "hdi_97.5%": 0.251520633220617
+   "mean": 0.11172587229871862,
+   "sd": 0.07123869621500285,
+   "hdi_2.5%": 3.585026988405482e-05,
+   "hdi_97.5%": 0.2394188184211946
   }
  },
  "fit_convergence": {
   "divergences": 0,
-  "max_rhat": 1.000991277748177,
-  "min_ess_bulk": 1581.4528891936263,
-  "min_ess_tail": 2105.8461152772234,
+  "max_rhat": 1.0017501189841997,
+  "min_ess_bulk": 1511.9278838469897,
+  "min_ess_tail": 1548.9041291283572,
   "parameters": [
    "k",
    "sd_undiv",
@@ -167,141 +431,141 @@
  },
  "primary_fit": {
   "k": {
-   "mean": 0.6006574501873941,
-   "sd": 0.051552315623160705,
+   "mean": 0.6014381260411611,
+   "sd": 0.05282547883713455,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_undiv": {
-   "mean": 0.03045540942341745,
-   "sd": 0.006907716727490988,
+   "mean": 0.030762042142973636,
+   "sd": 0.0068215130181328324,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_div": {
-   "mean": 0.04381679898057507,
-   "sd": 0.005883724036639554,
+   "mean": 0.04268655357040366,
+   "sd": 0.005986048269560089,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_clean": {
-   "mean": 4.046712003297214,
-   "sd": 0.7176202485369287,
+   "mean": 4.0428729066149405,
+   "sd": 0.6976130101211386,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_ritc": {
-   "mean": 6.298062098280871,
-   "sd": 4.0165180330456,
+   "mean": 6.320100522705791,
+   "sd": 4.207937553599638,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "tau_s": {
-   "mean": 0.143,
-   "sd": 0.073,
+   "mean": 0.138,
+   "sd": 0.074,
    "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
   }
  },
  "shift_vs_primary": {
-  "k": -0.002256557571180262,
-  "sd_undiv": 0.00014792051699752742,
-  "sd_div": 0.0003157061133784028,
-  "nu_clean": 0.034415192878976875,
-  "nu_ritc": 0.04335964424065253,
-  "tau_s": -0.016661180225934963
+  "k": -0.0018023750451096054,
+  "sd_undiv": -7.759744141340799e-05,
+  "sd_div": -0.00020142081569617803,
+  "nu_clean": -0.11271858919865085,
+  "nu_ritc": -0.4046283412859486,
+  "tau_s": -0.02627412770128139
  },
  "shift_vs_primary_in_primary_sd": {
-  "k": -0.04377218644600452,
-  "sd_undiv": 0.021413807605752084,
-  "sd_div": 0.05365753244244882,
-  "nu_clean": 0.04795738825533693,
-  "nu_ritc": 0.010795331648934306,
-  "tau_s": -0.22823534556075292
+  "k": -0.03411942654919383,
+  "sd_undiv": -0.011375400326458333,
+  "sd_div": -0.03364837813293816,
+  "nu_clean": -0.16157753304955935,
+  "nu_ritc": -0.0961583521931815,
+  "tau_s": -0.35505577974704583
  },
  "vignettes": {
   "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
   "seed": 20240704,
   "B": 4000,
   "pool": {
-   "n_donors": 639,
-   "n_assumed_business": 34
+   "n_donors": 604,
+   "n_assumed_business": 30
   },
   "centre": {
-   "V1_v99": 0.2644501677450632,
-   "V1_v995": 0.32881109527575797,
-   "V2_old_v99": 0.2347016132608569,
-   "V2_old_v995": 0.2918224449518444,
-   "V2_new_v99": 0.24690231569815296,
-   "V2_new_v995": 0.3069925103208645,
-   "V2_d99": 0.012200702437296068,
-   "V2_d995": 0.015170065369020103
+   "V1_v99": 0.2659484593776002,
+   "V1_v995": 0.33303124065337714,
+   "V2_old_v99": 0.2369602879997029,
+   "V2_old_v995": 0.29673109926189456,
+   "V2_new_v99": 0.2488393620089825,
+   "V2_new_v995": 0.31160654830334467,
+   "V2_d99": 0.011879074009279594,
+   "V2_d995": 0.014875449041450106
   },
   "intervals": {
    "V1_v99": {
-    "mean": 0.2639545994526419,
-    "sd": 0.04680638346246355,
-    "lo": 0.18447259334749744,
-    "hi": 0.3571597678348192
+    "mean": 0.2696181672907029,
+    "sd": 0.05277873841901747,
+    "lo": 0.18430245766502254,
+    "hi": 0.36635599147228975
    },
    "V1_v995": {
-    "mean": 0.3215758018541413,
-    "sd": 0.057946609636804626,
-    "lo": 0.21094633580837488,
-    "hi": 0.48161492429483654
+    "mean": 0.3348583282191712,
+    "sd": 0.06578212521458467,
+    "lo": 0.20048420274263262,
+    "hi": 0.5115056266106346
    },
    "V2_d995": {
-    "mean": 0.014269129079181557,
-    "sd": 0.0031639458049900026,
-    "lo": 0.008268976652538127,
-    "hi": 0.020435616488512148
+    "mean": 0.01436333507595405,
+    "sd": 0.0035170435285866073,
+    "lo": 0.007869295248367963,
+    "hi": 0.022475865189404226
    }
   },
   "primary_centre": {
-   "V1_v99": 0.26667142928033827,
-   "V1_v995": 0.33048897717077363,
-   "V2_old_v99": 0.2368687793333447,
-   "V2_old_v995": 0.29355420945103305,
-   "V2_new_v99": 0.24909636167879975,
-   "V2_new_v995": 0.3087079932422943,
-   "V2_d99": 0.012227582345455068,
-   "V2_d995": 0.015153783791261255
+   "V1_v99": 0.26827395368310686,
+   "V1_v995": 0.33403593971572976,
+   "V2_old_v99": 0.23910075947061818,
+   "V2_old_v995": 0.2977115213013014,
+   "V2_new_v99": 0.2510606528130393,
+   "V2_new_v995": 0.31260314293168373,
+   "V2_d99": 0.011959893342421118,
+   "V2_d995": 0.014891621630382323
   },
   "primary_intervals": {
    "V1_v99": {
-    "mean": 0.26342833618926975,
-    "sd": 0.04713768614073163,
-    "lo": 0.18482931773419115,
-    "hi": 0.35783367282388606
+    "mean": 0.2650083495912919,
+    "sd": 0.051896049663213595,
+    "lo": 0.1826284056155477,
+    "hi": 0.3618929549738657
    },
    "V1_v995": {
-    "mean": 0.3221542816369329,
-    "sd": 0.05777559624480831,
-    "lo": 0.21324764290710882,
-    "hi": 0.4885426679500062
+    "mean": 0.32564980206553973,
+    "sd": 0.06112734295444072,
+    "lo": 0.19766660660594637,
+    "hi": 0.4914067374811421
    },
    "V2_d995": {
-    "mean": 0.01424114517777335,
-    "sd": 0.00319724499179802,
-    "lo": 0.008370331920344223,
-    "hi": 0.020598054514518387
+    "mean": 0.01384710802436258,
+    "sd": 0.003238483298915585,
+    "lo": 0.007782706972785295,
+    "hi": 0.020247185551319113
    }
   },
   "relative_to_primary": {
-   "V1_v99": -0.008329581992602475,
-   "V1_v995": -0.005076967798985477,
-   "V2_old_v99": -0.009149226329392857,
-   "V2_old_v995": -0.005899300515660011,
-   "V2_new_v99": -0.008808020983766651,
-   "V2_new_v995": -0.005556976038788131,
-   "V2_d99": -0.0021983011358734927,
-   "V2_d995": 0.0010744232584496416
+   "V1_v99": -0.008668356631645335,
+   "V1_v995": -0.003007757378465481,
+   "V2_old_v99": -0.008952173450449963,
+   "V2_old_v995": -0.003293194818666745,
+   "V2_new_v99": -0.008847626177850176,
+   "V2_new_v995": -0.0031880505710617513,
+   "V2_d99": -0.006757529588902078,
+   "V2_d995": -0.0010860193290985753
   },
   "centre_decomposition": {
    "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
    "primary_fit_on_reduced_pool": {
-    "V1_v99": 0.26667142928033827,
-    "V1_v995": 0.33048897717077363,
-    "V2_old_v99": 0.2368687793333447,
-    "V2_old_v995": 0.29355420945103305,
-    "V2_new_v99": 0.24909636167879975,
-    "V2_new_v995": 0.3087079932422943,
-    "V2_d99": 0.012227582345455068,
-    "V2_d995": 0.015153783791261255
+    "V1_v99": 0.26827395368310686,
+    "V1_v995": 0.33403593971572976,
+    "V2_old_v99": 0.23910075947061818,
+    "V2_old_v995": 0.2977115213013014,
+    "V2_new_v99": 0.2510606528130393,
+    "V2_new_v995": 0.31260314293168373,
+    "V2_d99": 0.011959893342421118,
+    "V2_d995": 0.014891621630382323
    },
    "primary_fit_on_reduced_pool_relative": {
     "V1_v99": 0.0,
@@ -314,24 +578,24 @@
     "V2_d995": 0.0
    },
    "reduced_fit_on_primary_pool": {
-    "V1_v99": 0.2644501677450632,
-    "V1_v995": 0.32881109527575797,
-    "V2_old_v99": 0.2347016132608569,
-    "V2_old_v995": 0.2918224449518444,
-    "V2_new_v99": 0.24690231569815296,
-    "V2_new_v995": 0.3069925103208645,
-    "V2_d99": 0.012200702437296068,
-    "V2_d995": 0.015170065369020103
+    "V1_v99": 0.2659484593776002,
+    "V1_v995": 0.33303124065337714,
+    "V2_old_v99": 0.2369602879997029,
+    "V2_old_v995": 0.29673109926189456,
+    "V2_new_v99": 0.2488393620089825,
+    "V2_new_v995": 0.31160654830334467,
+    "V2_d99": 0.011879074009279594,
+    "V2_d995": 0.014875449041450106
    },
    "reduced_fit_on_primary_pool_relative": {
-    "V1_v99": -0.008329581992602475,
-    "V1_v995": -0.005076967798985477,
-    "V2_old_v99": -0.009149226329392857,
-    "V2_old_v995": -0.005899300515660011,
-    "V2_new_v99": -0.008808020983766651,
-    "V2_new_v995": -0.005556976038788131,
-    "V2_d99": -0.0021983011358734927,
-    "V2_d995": 0.0010744232584496416
+    "V1_v99": -0.008668356631645335,
+    "V1_v995": -0.003007757378465481,
+    "V2_old_v99": -0.008952173450449963,
+    "V2_old_v995": -0.003293194818666745,
+    "V2_new_v99": -0.008847626177850176,
+    "V2_new_v995": -0.0031880505710617513,
+    "V2_d99": -0.006757529588902078,
+    "V2_d995": -0.0010860193290985753
    }
   },
   "order_statistics": {
@@ -347,18 +611,47 @@
  },
  "widened": {
   "question": "the same, widened to the exchange lines within 0.5 percentage points of the 5% threshold and to the older-years columns whose construction is undeterminable or whose confidence is medium",
-  "named_records": 19,
-  "ten_least_certain": [
+  "named_records": 48,
+  "least_certain": [
    "33_2015",
+   "382_2021",
+   "382_2022",
+   "382_2023",
    "457_2015",
+   "780_2017",
+   "1176_2019",
    "1200_2015",
    "1200_2017",
+   "1274_2016",
    "1301_2015",
+   "1458_2024",
+   "1686_2022",
+   "1729_2023",
+   "1910_2018",
+   "1947_2022",
    "1955_2018",
+   "1967_2017",
+   "1967_2018",
+   "2001_2016",
+   "2001_2017",
    "2007_2015",
+   "2232_2017",
+   "2232_2019",
+   "2468_2019",
+   "2468_2020",
+   "2488_2016",
+   "3000_2016",
+   "3500_2022",
+   "3500_2023",
    "3624_2015",
+   "4020_2018",
+   "4141_2022",
+   "4242_2017",
+   "4444_2017",
    "4711_2017",
-   "6105_2015"
+   "5000_2023",
+   "6105_2015",
+   "6118_2018"
   ],
   "exchange_lines_near_threshold": [
    "727_2015",
@@ -382,7 +675,7 @@
    "2007_2015",
    "3624_2015"
   ],
-  "added_to_the_ten": [
+  "added_to_the_least_certain": [
    "727_2015",
    "1458_2015",
    "1945_2022",
@@ -397,11 +690,11 @@
   "operator_role": "headline",
   "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
   "sensitivity": "low_confidence_records_widened",
-  "rule": "without the 19 records of the widened set: the ten records the filing readings could not settle, 10 exchange lines within 0.5 percentage points of the 5% threshold, and 8 older-years columns whose construction is undeterminable or whose confidence is medium or low_confidence",
-  "n_primary": 649,
-  "n_left_out": 19,
-  "n_fit": 630,
-  "n_syndicates_fit": 117,
+  "rule": "without the 48 records of the widened set: the 39 least-certain records, 10 exchange lines within 0.5 percentage points of the 5% threshold, and 8 older-years columns whose construction is undeterminable or whose confidence is medium or low_confidence",
+  "n_primary": 643,
+  "n_left_out": 48,
+  "n_fit": 595,
+  "n_syndicates_fit": 116,
   "left_out": [
    {
     "record": "33_2015",
@@ -410,8 +703,38 @@
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (calendar_year): X1 and Y2 calendar_year, from the shape of the year t table alone (no year t-1 table in the corpus: the column is a flat stock re-estimated at successive year ends, and the 2016 report's 'Provision in respect of prior years' covers the same pre-2011 set). The adopted -118.31 (column in) stands; with the column out the figure would be -86.114. The evidence is structural only, so the record is low confidence. | older-years column, construction calendar_year, confidence low_confidence: X1 and Y2 calendar_year, from the shape of the year t table alone (no year t-1 table in the corpus: the column is a flat stock re-estimated at successive year ends, and the 2016 report's 'Provision in respect of prior years' covers the same pre-2011 set). The adopted -118.31 (column in) stands; with the column out the figure would be -86.114. The evidence is structural only, so the record is low confidence.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "382_2021",
+    "severity": 0.04097493399720931,
+    "opening_reserves_gbp_m": 498.085,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2014's end-2020 cell in the 2021 table (187,147) is 10.3m above the 2020 report's printed estimate and out of line with its own column (169,537 -> 187,147 -> 170,900), unexplained in the filing (P1, Q8): 2.1% of R (498.1m). The rest moves by the stated retranslation; the table ties to the balance sheet and its incurred gap (-8.7%) is the 2020 control's (-6.9%), the pre-2011 years outside the table. M as printed (+20.409m) stands. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is -6.9% (over 5%, within 10%, the same pre-2011 years outside the table in both years), but the year t miss, -8.7%, is 1.3 times the control's, not three times, and is itself under 10%. The record stays least certain",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "382_2022",
+    "severity": 0.06860074083740726,
+    "opening_reserves_gbp_m": 498.085,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2018 column's end-2021 cell moved against the common 1.09 retranslation (ratio 0.959; 34.2m, 6.9% of R 498.1m), unexplained (p44 states only the all-years retranslation at 2022 closing rates; P4, Q5). The table ties: implied incurred 236.1m against 231.25m (+2.1%, p16) and outstanding 631,136 to the balance sheet. P4 valid, Q5 restated_base on the same cells",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "382_2023",
+    "severity": -0.012506020889317042,
+    "opening_reserves_gbp_m": 631.136,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2022 cells of 2016, 2019 and 2020 sit 2.8%, 2.8% and 7.1% above the 2022 report's latest in a year sterling strengthened, against 0.95-0.99 for the other years (10.9m, 8.8m and 13.1m beyond the common factor; 1.4-2.1% of R 631.1m), and the early rows were rebuilt beyond the stated retranslation (P8: 2016 first year 88,722 against 72,750); p44 states only the closing-rate retranslation (P8, Q1; Q1 attributes the moves to it). Incurred -8.1% with UY <= 2012 outside the table (control +2.1%); outstanding ties",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -421,7 +744,7 @@
     "v1_top_donor_rank": null,
     "why": "exchange line 10.31% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table, so condition (a) cannot be tested on cells; the 2015 table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' and the 2016 report prints the 2011 column retranslated (X6, Y7), which points to retranslation but is not a comparison of cells of the year t-1 and year t reports",
     "rules": [
-     "ten_least_certain"
+     "least_certain"
     ]
    },
    {
@@ -435,13 +758,33 @@
     ]
    },
    {
+    "record": "780_2017",
+    "severity": -0.005098789037603569,
+    "opening_reserves_gbp_m": 231.94618966664203,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2017 table's end-2016 estimates are 165.6m (24.6%) above the 2016 report's, mirrored by a -170.4m fall in the '2010 & prior' balance to pay, with only the generic reconversion sentence (p30) (P5, Q6); 2011, 2012 and 2015 move 59.2m, 17.8m and 16.1m beyond the common factor (5-19% of R 313.8m). Implied incurred 279.0m against 257.3m (+8.4%, control +5.6%) and cross-report paid +5.8%: within rule 1's 10%, so rule 1 does not apply. P5 restated_base, Q6 valid",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "1176_2019",
+    "severity": -0.2128035097450896,
+    "opening_reserves_gbp_m": 39.661,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column's end-2018 cell is 17,001 against 14,924 in the 2018 report, 2.1m (5.2% of R 39.7m), unexplained (P2, Q1). Paid ties (2,904 against 2,915) and reserves tie",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
     "record": "1200_2015",
     "severity": 0.0011627906976744186,
     "opening_reserves_gbp_m": 430.0,
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (calendar_year): X2 undeterminable (no year t-1 table); Y3 calendar_year; the tie-break readers Z1 and Z2 both find it restated by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a single underwriting year, 2010, at the same factor as 2011), so the record is low confidence. | older-years column, construction calendar_year, confidence low_confidence: X2 undeterminable (no year t-1 table); Y3 calendar_year; the tie-break readers Z1 and Z2 both find it restated by calendar year, each with medium confidence. The adopted 0.5 (column in) stands; with the column left out the figure would be 8.4. The construction rests on an inference from the 2016 report (the oldest column there is a single underwriting year, 2010, at the same factor as 2011), so the record is low confidence.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "column_undeterminable_or_medium_confidence"
     ]
    },
@@ -452,8 +795,18 @@
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (development_age): X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry (rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would leave the column out (40.5); Z1 (medium) would keep 44.9. | older-years column, construction development_age, confidence low_confidence: X3, Y4, Z1 and Z2 all find the column built by development age (the 2017 cell at age a is the 2016 report's 2010 column plus UY2011 at age a), so the rule leaves it out (40.5). The structured fields of this entry (rule_includes_column, rule_figure_m, last_step_like_for_like, consistent) are the readers' application of the rule. The primary adopts 44.9 (the column in) against it, by a decision recorded in decision_override. Z2 would leave the column out (40.5); Z1 (medium) would keep 44.9.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1274_2016",
+    "severity": 0.04749788612713376,
+    "opening_reserves_gbp_m": 387.2870227770122,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (derived_correction): added after review 8 (decision of the Claude analysis session, 23 October 2026). Rule 4 corrects the misprinted 2012 cell (141,355 for 178,987 in the 2015 report), but the corrected figure, +22.6943m USD, is the session's derivation from cells both readers quote, not a figure either gives (P3: not correctable from the filing, +57.503m as printed; Q4: +19.871m with the 2015 report's cell unretranslated): the 2015 cell at the 2012 column's own paid factor, 129,350 / 131,423 = 0.98423 (data/mature_cohort_figures.json, correction.derived_figure_m). The factor is a choice: the other columns' end-2015 ratios (0.96766 to 0.98919) give +21.806m to +25.659m (review 8: +21.8m to +25.6m), and the 2008 column's factor 0.97948 gives +23.5435m, the figure carried before review 8. Both readers call the table otherwise valid (paid -1.9%, the stated retranslation); the record stays at the derived figure and joins the least-certain list",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -463,7 +816,7 @@
     "v1_top_donor_rank": null,
     "why": "exchange line 5.01% of the opening gross claims outstanding with no year t-1 table to test condition (a): no year t-1 report table exists; the table states 'Balances have been translated at exchange rates prevailing at 31 December 2015 in all cases' (p40) and the 2016 report prints different 2011 cells (Y7); the line is 5.008% of R, 7.7 thousand pounds over the threshold (X7) | exchange line 5.01% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason undeterminable_kept)",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "exchange_line_near_threshold"
     ]
    },
@@ -478,6 +831,46 @@
     ]
    },
    {
+    "record": "1458_2024",
+    "severity": -0.016218825893161936,
+    "opening_reserves_gbp_m": 1637.712642760163,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (take_on_base_bounded): rule 5b (U1, U2). An external RITC 'in the year' of reserves relating only to the 2020 and 2021 underwriting years (p47); counterparty, date and amount are not printed, and note 4's gross roll-forward (p31) has no transfer row (2,050,580 + 733,886 - 79,491 - 544,404 - 10,867 = 2,149,704, USD 000). The only ADC is outward, bought in 2020 (p49), so not a take-on. R is the opening USD 2,050.580m (p31), which is the analysis's opening (GBP 1,637.71m) and includes no acquired reserves. The filing bounds the take-on: the 2024 table's 2020 and 2021 columns exceed the 2023 filing's at every age while the control columns move about -1%, and the acquired cumulative incurred at the latest comparable ages is 105.138m + 58.940m = USD 164.078m (U1, U2); the reserves taken on are that incurred less the acquired paid to date, so they cannot exceed it: at most 8.0% of R (U2 puts it at about 2 to 3% on a low-confidence indicative range). The table carries the acquired years as if always, so the movement within the table (-33.258m USD = -26.56m GBP, u <= 2022, equal to the analysis figure) excludes the take-on and only the divisor is short; the acquired years' own pre-acquisition development (-22.091m of it) is in the figure. Bounded at or below 10% of R: the record stays and joins the least-certain list",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "1686_2022",
+    "severity": -0.009868223728957464,
+    "opening_reserves_gbp_m": 1794.4506085948497,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2016-2018 history is cut by 175.0m in both incurred and paid (reserve-neutral) with 2019-2021 untouched, unexplained (p32 states only balance-sheet-rate translation; P6, Q7): 8.1% of R (2,167.2m). Implied incurred is 9.5% below the accounts, the gap equal to the stated FX line (72,783, note 4 p24) to within 5k (both readings): the basis explains it; control +0.3%. Not a year t take-on: the RITC of Syndicates 2007 and 6129 is of 1 January 2021 and in R, the 1 December 2022 LPR is ceded. P6 valid, Q7 restated_base",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "1729_2023",
+    "severity": 0.049059684503448456,
+    "opening_reserves_gbp_m": 268.18410107510005,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2021's end-2022 estimate is 58.3m USD above the 2022 report's at the common presentation factor (17.1% of R), unexplained in the filing (P7, Q6; Q6 judges the 2022 print faulty, which the filing does not say). The 2023 table ties (incurred -0.4%). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t incurred ties (-0.4%); the cross-table paid (+35%, P7; +34.1%, Q6) comes, P7 shows, entirely from the restated UY2021 column, and the control does not tie under either bound (-27.3%, Q6; about -29%, P7). The record stays least certain",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "1910_2018",
+    "severity": 0.0059298354548276925,
+    "opening_reserves_gbp_m": 322.1,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2016 column was lowered (end-2017 73.0 against 76.5, ratio 0.954) while the other years rose 2.5-5.6% by the stated retranslation, unexplained (Q7: 'not explained anywhere'; P8): 6.8m, 2.1% of R (322.1m). The table ties to the provision; incurred +5.3% on an ultimate basis (control -3.8%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
     "record": "1945_2022",
     "severity": -0.08270645219159242,
     "opening_reserves_gbp_m": 167.23,
@@ -485,6 +878,16 @@
     "why": "older-years column, construction development_age, confidence medium: X4, Y5, Z1 and Z2 all find the '2012&Prior' column built by development age (the 2021 report's UY2011 column plus UY2012 at each age, at a uniform factor of 1.0606 on ages 4 to 9). The column is left out: the figure moves from -13.840 to -13.831 (data/mature_cohort_figures.json, decision of the Claude analysis session, 23 October 2026).",
     "rules": [
      "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1947_2022",
+    "severity": -0.12400978414796378,
+    "opening_reserves_gbp_m": 116.515,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2018 column (oldest) is about 14% above the year's retranslation ratio at every age (about 4.3m, 3.7% of R 116.5m), unexplained (P2, Q3). Incurred ties (-0.5%, control +0.8%)",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -504,9 +907,29 @@
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (calendar_year): X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the column left out the figure would be 18.5. The construction could not be settled, so the record is low confidence. | exchange line 4.50% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct) | older-years column, construction calendar_year, confidence low_confidence: X6 development_age (rule 18.5); Y7 undeterminable; Z1 (medium) and Z2 (low) calendar_restated. No year t-1 report is in the corpus (the 2019 report is used as year t+1). The adopted 16.7 (column in) stands; with the column left out the figure would be 18.5. The construction could not be settled, so the record is low confidence.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "exchange_line_near_threshold",
      "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "1967_2017",
+    "severity": 0.06909009488768396,
+    "opening_reserves_gbp_m": 122.14354349914997,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R 165.2m). The table ties (+4.0% incurred, reserves exact). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t table does not fail the accounts: incurred +4.0% and P5's reserve-identity paid test +1.7% (the like-for-like test used for 780/2016); Q6's cross-report paid +55.2% is the proxy that the restated history itself distorts. The control miss is -7.6% (Q6), over 5% and within 10%. The record stays least certain",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "1967_2018",
+    "severity": 0.12689059922141038,
+    "opening_reserves_gbp_m": 192.81203478805924,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column (oldest) is 26% higher between reports while the others are 3-9% lower (retranslation), unexplained (P6, Q7): 28.9m, 11.8% of R (246.1m). Incurred ties (-4.5%, control +4.0%)",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -520,14 +943,94 @@
     ]
    },
    {
+    "record": "2001_2016",
+    "severity": 0.05502810743285446,
+    "opening_reserves_gbp_m": 1601.0,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2013 and UY2014 fall at end-2015 against an exchange uplift (P6: unexplained; Q7: the 2013-2015 columns look mis-allocated, the 2017 report re-allocates them); the stated basis is year-end conversion (p35). Incurred ties (+3.1%, control +4.8%). Share of R, checked after review 8 against rule 6's 1% of R (opening gross claims outstanding 1,601.0m, note 9(a), so 16.01m): the 2016 table's end-2015 cells are 761.5 (UY2013) and 804.7 (UY2014) against 786.4 and 821.4 in the 2015 report, falls of 24.9m (1.56% of R) and 16.7m (1.04% of R), 41.6m together (2.60%), both cells that the exchange uplift (ratios 1.016, 1.074, 0.968, 0.980 for UY2011-UY2014, no common factor) should have raised, so the move beyond the exchange rate is at least the fall; P6's own measure, about 2% of the year's gross incurred (1,089.5m), is 21.8m or 1.4% of R. Every measure is over 1% of R: rule 6 is met and the record stays on the list (decision of the Claude analysis session, 23 October 2026)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "2001_2017",
+    "severity": 0.05382011605415861,
+    "opening_reserves_gbp_m": 2068.0,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2016 history is re-allocated across 2013 (+11.9%), 2014 (+9.7%) and 2015 (-21.1%) beyond the stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control +3.1%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
     "record": "2007_2015",
     "severity": -0.0017203487146844664,
     "opening_reserves_gbp_m": 1162.555,
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (development_age): X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence. | older-years column, construction development_age, confidence low_confidence: X1, Y2 and Z2 development_age; Z1 undeterminable. No year t-1 table exists; the call rests on the paid pattern (4% paid at the first step, as a single underwriting year) and on the filing's net release on the 2013 and prior years (p7). The adopted -2.0 (column out, the code triangle's figure) stands; with the column in the figure would be 148.8. The construction rests on inference, so the record is low confidence.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "column_undeterminable_or_medium_confidence"
+    ]
+   },
+   {
+    "record": "2232_2017",
+    "severity": 0.05648669820798683,
+    "opening_reserves_gbp_m": 225.947,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (label_disagreement): the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows miss (incurred -10.5%, cross-report paid -20.1%) and the control does not tie within 5% (P3 incurred +7.4%; Q4 paid +62.1%, confounded), so rule 1 does not apply; no exchange line is reported, so rule 2 cannot be tested. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +7.4% (P3 incurred), within 10% with a basis that is the same in both years (an ultimate underwriting-year table against earned accounts, Q4), but the year t miss is not three times the control's (22.2%): incurred -10.5% is 1.4 times it and the cross-report paid -20.1% 2.7 times it; the control's sign (table above the accounts, as the basis predicts) is the opposite of the year t miss's (below), so the basis gap does not explain the year t miss either; Q4's paid control +62.1% is confounded (the 2015 report's cells are 19% lower than the 2016 report's for the same year). The record stays least certain. P3 valid, Q4 restated_base",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "2232_2019",
+    "severity": 0.034273556035522304,
+    "opening_reserves_gbp_m": 373.174,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2013 column (oldest) is 6.3% higher between reports with no wording, in tables translated at each year's own end rate, so no retranslation moves history (Q6; P5): 4.5m, 1.2% of R (373.2m). The table ties (paid -0.8%, incurred -3.3%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "2468_2019",
+    "severity": 0.1358273791155316,
+    "opening_reserves_gbp_m": 337.016,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the end-2018 estimates and paid of UY2016 and UY2017 are re-allocated (about +17m each, +15.7% and +4.6% on the diagonal), unexplained (P5, Q4); 2016 moves 10.4m beyond the common factor (3.1% of R 337.0m). The table ties (paid -3.0%, incurred -3.0%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "2468_2020",
+    "severity": 0.18304203758781928,
+    "opening_reserves_gbp_m": 389.009,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): UY2016 (oldest, closed) history is 16.5-18.6m lower in estimate and paid alike, unexplained (P1, Q2): 4.2% of R (389.0m). The table ties (paid -4.3%, incurred -3.8%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "2488_2016",
+    "severity": -0.02919946217548271,
+    "opening_reserves_gbp_m": 916.284,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2011 column's end-2015 estimate is 28.9-29.3m above the 2015 report at the stated 1.165 retranslation, unexplained (P6, Q5): 3.2% of R (916.3m). The paid bridge ties (-3.3%, -2.9%); incurred +59.5% against a +38.3% control, the 2010-and-prior years outside the table. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +38.3%, over 10%, so the control ties under neither bound (the same 2010-and-prior gap makes the year t incurred test uninformative, P6, Q5); the year t incurred miss, +59.5%, is 1.6 times the control's, not three times; and the year t paid test ties (-3.3% with the factor, P6; -2.9%, Q5). The record stays least certain. P6 valid, Q5 restated_base",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "3000_2016",
+    "severity": 0.027692086295938965,
+    "opening_reserves_gbp_m": 986.744,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (label_disagreement): P4 valid, Q5 restated_base on the same facts: the 2016 table carries Syndicate 1400's history (RITC accepted 1 January 2016, 248.822m gross, p37), stated on p38 and retranslated; rule 5 applies and R already carries the take-on (data/opening_reserves_takeon_base.json). Paid -33.4% against a -30.1% control, the 'All prior years' column printing no paid: the basis explains it",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -541,13 +1044,33 @@
     ]
    },
    {
+    "record": "3500_2022",
+    "severity": -0.07376806079324003,
+    "opening_reserves_gbp_m": 3274.857166514863,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (take_on_table_unreconciled): added after review 8 (decision of the Claude analysis session, 23 October 2026), on the same all-prior-years scope as 3500/2023. RITCs of Syndicates 1897, 2468 and 1980/2014/2001 effective 1 January 2022 and loss portfolio transfers (p4; note 7 p30 'Reinsurance of new liabilities 1,728,476'), the history carried as if always (the 2018 column about double the 2021 report's, Q7). The RITCs are in R (3,955.045m USD = 2,615.345 + 1,339.7, data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile with note 7's change in estimates including foreign exchange of -293.1m (-293,072, p30) on that scope: the movement on every column that existed at end-2021 (2013-2019 and 2021) is -291.756m - 98.057m = -389.8m (review 8; P6's workings), and the whole table (those columns plus the new 2022 column, +363.424m) is -26.4m, a gap of 266.7m (P6; Q7 -26.389m); only the 2013-2019 columns alone (-291.8m, the adopted figure) are within 0.4% of it. LPT placement conflict: P6 reads the mid-2022 loss portfolio transfers of Syndicates 1200 (293.8m) and 1686 (67.1m) as entering the history as if always, while the ninth census (data/opening_reserves_takeon_base.json) places all four LPTs (also 2468's 22.6m and 2001's 5.2m: 388.7m) in the 2022 column, outside M and outside R. Either way the acquired share outside R is at most 9.1% of R for the two mid-2022 LPTs (360.9m of 3,955.045m) and 9.8% with all four (388.7m), at or below rule 5b's 10%, so rule 5b would list the record too. Rule 1 does not reach it (the history change is explained). It stays and joins the least-certain list",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "3500_2023",
+    "severity": -0.008213834726602995,
+    "opening_reserves_gbp_m": 4553.979439692381,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (take_on_table_unreconciled): RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new liabilities 3,225,818'), the history carried as if always (2 to 3.6 times the 2022 report's). The take-on is explained and is in R (5,803.136m USD = 2,962.436 + 2,840.7, data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile with the filing's own roll-forward: its movement on the old years is -52.1m against -184.8m of change in estimates in note 7 (P7; Q8: neither 136.6m nor -62.3m ties). Rule 1 does not reach it (the history change is explained) and no rule covers an explained take-on table that fails the tie; it stays and joins the least-certain list",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
     "record": "3624_2015",
     "severity": 0.014481351477530132,
     "opening_reserves_gbp_m": 346.998,
     "v1_top_donor_rank": null,
     "why": "older-years column, construction could not be settled (undeterminable): X7 and Y8 undeterminable: no year t-1 table exists and the 2016 report prints no older-years column. The adopted 5.025 includes the column (the column carries the whole pre-2011 gross balance, 393,088 in all with the other years); excluding it would give -0.912. The construction could not be settled, so the record is low confidence and its adopted figure stands. | older-years column, construction undeterminable, confidence low_confidence: X7 and Y8 undeterminable: no year t-1 table exists and the 2016 report prints no older-years column. The adopted 5.025 includes the column (the column carries the whole pre-2011 gross balance, 393,088 in all with the other years); excluding it would give -0.912. The construction could not be settled, so the record is low confidence and its adopted figure stands.",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "column_undeterminable_or_medium_confidence"
     ]
    },
@@ -562,13 +1085,53 @@
     ]
    },
    {
+    "record": "4020_2018",
+    "severity": 0.08820761357009271,
+    "opening_reserves_gbp_m": 497.27,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the history is re-spread across underwriting years without explanation (2012 -20.3m, 2013 +36.0m, 2014 -23.1m between reports, P5; Q6: re-allocations inside a near-constant total), each above 1% of R (497.3m). The table ties (+4.0%, control +7.2% on the underwriting-year basis)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "4141_2022",
+    "severity": -0.06719980037670847,
+    "opening_reserves_gbp_m": 248.468,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): a 24.7m cross-year move between UY2018 and UY2019 on the end-2021 diagonal, sum-preserving and unexplained (P8, Q1): 9.9% of R (248.5m) each. The table ties (-2.9%, control +0.3%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "4242_2017",
+    "severity": 0.02654521795705921,
+    "opening_reserves_gbp_m": 22.721561090989724,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2011 column's history is lowered by about 1.4m between reports, unexplained (P8, Q1): 4.3-4.5% of R (30.7m). The table ties (-2.0%, control -0.6%)",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
+    "record": "4444_2017",
+    "severity": 0.09847396342210017,
+    "opening_reserves_gbp_m": 1200.561,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the end-2016 cells of 2011, 2012 and 2013 sit 4.7%, 4.7% and 3.9% above the 2016 report (16.1m, 16.7m, 14.2m; 1.2-1.4% of R 1,200.6m each; +40.7m on the 2011-2016 diagonal) in a year sterling strengthened against the dollar, unexplained (Q8, Z5, Z6; p25 states only year-end rates). Rule 1 does not apply: on the table's own base implied incurred is +6.3% (control -1.1%), within its 10%, and the paid +30.8% is a cross-report proxy because the 2017 table prints no end-2016 payments (Z6). P1 valid; Q8 restated_base; the tie-break readers Z5 and Z6 confirm the facts (restated_base, moderate confidence). M as printed (+118.224m) stands",
+    "rules": [
+     "least_certain"
+    ]
+   },
+   {
     "record": "4711_2017",
     "severity": -0.01848076983190775,
     "opening_reserves_gbp_m": 607.821,
     "v1_top_donor_rank": null,
     "why": "exchange line -7.35% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2016 report is not in the corpus; the 2017 table states translation at the 31 December 2017 rate, as the 2015 and 2018 reports state theirs (X5, Y5), which points to retranslation but is not a comparison of cells",
     "rules": [
-     "ten_least_certain"
+     "least_certain"
     ]
    },
    {
@@ -579,6 +1142,16 @@
     "why": "exchange line 4.83% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason fx_line_under_5pct)",
     "rules": [
      "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "5000_2023",
+    "severity": 0.023482803239668365,
+    "opening_reserves_gbp_m": 625.99,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move): the 2014 column (oldest) from two years later onward sits about 9.7-9.8m above the translated 2022 values, unexplained (P4, Q3): 1.2% of R. The table ties (incurred +3.0%)",
+    "rules": [
+     "least_certain"
     ]
    },
    {
@@ -598,54 +1171,64 @@
     "v1_top_donor_rank": null,
     "why": "exchange line -5.11% of the opening gross claims outstanding with no year t-1 table to test condition (a): the 2014 report prints no claims development table and the 2015 table states no exchange basis (the policy note gives closing rates, p19); the line is 5.11% of R (X6, Y6) | exchange line -5.11% of the opening gross claims outstanding, within 0.5 percentage points of the 5% threshold (reason undeterminable_kept)",
     "rules": [
-     "ten_least_certain",
+     "least_certain",
      "exchange_line_near_threshold"
+    ]
+   },
+   {
+    "record": "6118_2018",
+    "severity": 0.04133128285670658,
+    "opening_reserves_gbp_m": 183.372,
+    "v1_top_donor_rank": null,
+    "why": "development table's history restated, kept under rule 6 (unexplained_history_move, label_disagreement): the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R 183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into Syndicate 1955; Q4: unexplained). Incurred -2.0% raw (P3), +9.5% earned-equivalent (Q4): within rule 1's 10%. P3 valid, Q4 restated_base",
+    "rules": [
+     "least_certain"
     ]
    }
   ],
   "fit": {
    "k": {
-    "mean": 0.6004768337464834,
-    "sd": 0.05252615157402355,
-    "hdi_2.5%": 0.5080369926737163,
-    "hdi_97.5%": 0.6964647066080372
+    "mean": 0.6049639053169565,
+    "sd": 0.05503503798015313,
+    "hdi_2.5%": 0.5082030539379574,
+    "hdi_97.5%": 0.7057896299223916
    },
    "sd_undiv": {
-    "mean": 0.030354158609702534,
-    "sd": 0.006958527297855296,
-    "hdi_2.5%": 0.014594302556499007,
-    "hdi_97.5%": 0.042078402177133926
+    "mean": 0.03017527434650756,
+    "sd": 0.0070967225182305,
+    "hdi_2.5%": 0.014911312053683913,
+    "hdi_97.5%": 0.04302423503788946
    },
    "sd_div": {
-    "mean": 0.044647887121798666,
-    "sd": 0.005815259749393984,
-    "hdi_2.5%": 0.03403132703596807,
-    "hdi_97.5%": 0.05620431608791825
+    "mean": 0.04331088405202674,
+    "sd": 0.005810437349345757,
+    "hdi_2.5%": 0.03246842839889714,
+    "hdi_97.5%": 0.05470900009124884
    },
    "nu_clean": {
-    "mean": 4.075494225710771,
-    "sd": 0.7239113794214915,
-    "hdi_2.5%": 2.7423206809932656,
-    "hdi_97.5%": 5.46501356269086
+    "mean": 3.921170765651747,
+    "sd": 0.6980943011649557,
+    "hdi_2.5%": 2.6612421637189407,
+    "hdi_97.5%": 5.2664310688615235
    },
    "nu_ritc": {
-    "mean": 6.294635623705183,
-    "sd": 3.99706993688975,
-    "hdi_2.5%": 1.4039032644895566,
-    "hdi_97.5%": 14.004162836785827
+    "mean": 5.9666655492124265,
+    "sd": 3.5539186924338737,
+    "hdi_2.5%": 1.3721722192146102,
+    "hdi_97.5%": 12.768519275143914
    },
    "tau_s": {
-    "mean": 0.10541381687345185,
-    "sd": 0.06593101294463095,
-    "hdi_2.5%": 0.00014622407650445091,
-    "hdi_97.5%": 0.22725996328858353
+    "mean": 0.09059657537201372,
+    "sd": 0.064333440998968,
+    "hdi_2.5%": 5.5670024575942564e-06,
+    "hdi_97.5%": 0.20957569652705307
    }
   },
   "fit_convergence": {
    "divergences": 0,
-   "max_rhat": 1.0021214408646435,
-   "min_ess_bulk": 1855.0463976457459,
-   "min_ess_tail": 2557.404469574345,
+   "max_rhat": 1.0021906011615551,
+   "min_ess_bulk": 1543.8613918595156,
+   "min_ess_tail": 2267.9811151807216,
    "parameters": [
     "k",
     "sd_undiv",
@@ -659,281 +1242,281 @@
   },
   "primary_fit": {
    "k": {
-    "mean": 0.6006574501873941,
-    "sd": 0.051552315623160705,
+    "mean": 0.6014381260411611,
+    "sd": 0.05282547883713455,
     "source": "model/dispersion_posterior_draws_ritc.npz"
    },
    "sd_undiv": {
-    "mean": 0.03045540942341745,
-    "sd": 0.006907716727490988,
+    "mean": 0.030762042142973636,
+    "sd": 0.0068215130181328324,
     "source": "model/dispersion_posterior_draws_ritc.npz"
    },
    "sd_div": {
-    "mean": 0.04381679898057507,
-    "sd": 0.005883724036639554,
+    "mean": 0.04268655357040366,
+    "sd": 0.005986048269560089,
     "source": "model/dispersion_posterior_draws_ritc.npz"
    },
    "nu_clean": {
-    "mean": 4.046712003297214,
-    "sd": 0.7176202485369287,
+    "mean": 4.0428729066149405,
+    "sd": 0.6976130101211386,
     "source": "model/dispersion_posterior_draws_ritc.npz"
    },
    "nu_ritc": {
-    "mean": 6.298062098280871,
-    "sd": 4.0165180330456,
+    "mean": 6.320100522705791,
+    "sd": 4.207937553599638,
     "source": "model/dispersion_posterior_draws_ritc.npz"
    },
    "tau_s": {
-    "mean": 0.143,
-    "sd": 0.073,
+    "mean": 0.138,
+    "sd": 0.074,
     "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
    }
   },
   "shift_vs_primary": {
-   "k": -0.00018061644091071916,
-   "sd_undiv": -0.00010125081371491554,
-   "sd_div": 0.000831088141223596,
-   "nu_clean": 0.028782222413556546,
-   "nu_ritc": -0.003426474575688232,
-   "tau_s": -0.03758618312654814
+   "k": 0.0035257792757954487,
+   "sd_undiv": -0.0005867677964660756,
+   "sd_div": 0.000624330481623081,
+   "nu_clean": -0.12170214096319354,
+   "nu_ritc": -0.35343497349336417,
+   "tau_s": -0.04740342462798629
   },
   "shift_vs_primary_in_primary_sd": {
-   "k": -0.003503556314152731,
-   "sd_undiv": -0.014657638364347306,
-   "sd_div": 0.14125206009802355,
-   "nu_clean": 0.04010787386815969,
-   "nu_ritc": -0.0008530957778596213,
-   "tau_s": -0.5148792209116184
+   "k": 0.06674391512220318,
+   "sd_undiv": -0.0860172508512905,
+   "sd_div": 0.1042976022759273,
+   "nu_clean": -0.17445509071291587,
+   "nu_ritc": -0.08399244736676802,
+   "tau_s": -0.640586819297112
   },
   "vignettes": {
    "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
    "seed": 20240704,
    "B": 4000,
    "pool": {
-    "n_donors": 630,
-    "n_assumed_business": 33
+    "n_donors": 595,
+    "n_assumed_business": 29
    },
    "centre": {
-    "V1_v99": 0.2644459311650971,
-    "V1_v995": 0.32859238642909994,
-    "V2_old_v99": 0.23443052147567758,
-    "V2_old_v995": 0.2912961608602671,
-    "V2_new_v99": 0.24675196841028868,
-    "V2_new_v995": 0.3066064121266241,
-    "V2_d99": 0.012321446934611097,
-    "V2_d995": 0.015310251266356989
+    "V1_v99": 0.271379786365914,
+    "V1_v995": 0.3487016606988208,
+    "V2_old_v99": 0.24138717221535097,
+    "V2_old_v995": 0.3101635127289546,
+    "V2_new_v99": 0.25370238327132233,
+    "V2_new_v995": 0.3259875894023861,
+    "V2_d99": 0.012315211055971359,
+    "V2_d995": 0.015824076673431497
    },
    "intervals": {
     "V1_v99": {
-     "mean": 0.2651466145214406,
-     "sd": 0.0480719344490587,
-     "lo": 0.18493320298954727,
-     "hi": 0.3595200767223569
+     "mean": 0.2722336467711259,
+     "sd": 0.053159789217617104,
+     "lo": 0.18411943966311123,
+     "hi": 0.36902281388020086
     },
     "V1_v995": {
-     "mean": 0.32265225170485407,
-     "sd": 0.05899027794820765,
-     "lo": 0.20970064549216696,
-     "hi": 0.48998716061750947
+     "mean": 0.33944920118846617,
+     "sd": 0.06726892704388956,
+     "lo": 0.20182529046830266,
+     "hi": 0.5168755510064441
     },
     "V2_d995": {
-     "mean": 0.014407510287589307,
-     "sd": 0.003265216049211901,
-     "lo": 0.008460889306143925,
-     "hi": 0.02084861663873293
+     "mean": 0.01477259883161191,
+     "sd": 0.003595115145442904,
+     "lo": 0.008282814038562836,
+     "hi": 0.02382016282664391
     }
    },
    "primary_centre": {
-    "V1_v99": 0.26667142928033827,
-    "V1_v995": 0.33048897717077363,
-    "V2_old_v99": 0.2368687793333447,
-    "V2_old_v995": 0.29355420945103305,
-    "V2_new_v99": 0.24909636167879975,
-    "V2_new_v995": 0.3087079932422943,
-    "V2_d99": 0.012227582345455068,
-    "V2_d995": 0.015153783791261255
+    "V1_v99": 0.26827395368310686,
+    "V1_v995": 0.33403593971572976,
+    "V2_old_v99": 0.23910075947061818,
+    "V2_old_v995": 0.2977115213013014,
+    "V2_new_v99": 0.2510606528130393,
+    "V2_new_v995": 0.31260314293168373,
+    "V2_d99": 0.011959893342421118,
+    "V2_d995": 0.014891621630382323
    },
    "primary_intervals": {
     "V1_v99": {
-     "mean": 0.26342833618926975,
-     "sd": 0.04713768614073163,
-     "lo": 0.18482931773419115,
-     "hi": 0.35783367282388606
+     "mean": 0.2650083495912919,
+     "sd": 0.051896049663213595,
+     "lo": 0.1826284056155477,
+     "hi": 0.3618929549738657
     },
     "V1_v995": {
-     "mean": 0.3221542816369329,
-     "sd": 0.05777559624480831,
-     "lo": 0.21324764290710882,
-     "hi": 0.4885426679500062
+     "mean": 0.32564980206553973,
+     "sd": 0.06112734295444072,
+     "lo": 0.19766660660594637,
+     "hi": 0.4914067374811421
     },
     "V2_d995": {
-     "mean": 0.01424114517777335,
-     "sd": 0.00319724499179802,
-     "lo": 0.008370331920344223,
-     "hi": 0.020598054514518387
+     "mean": 0.01384710802436258,
+     "sd": 0.003238483298915585,
+     "lo": 0.007782706972785295,
+     "hi": 0.020247185551319113
     }
    },
    "relative_to_primary": {
-    "V1_v99": -0.00834546888373855,
-    "V1_v995": -0.005738741297546146,
-    "V2_old_v99": -0.010293707193195556,
-    "V2_old_v995": -0.007692100872914276,
-    "V2_new_v99": -0.00941159177400619,
-    "V2_new_v995": -0.00680766666777155,
-    "V2_d99": 0.007676463466297356,
-    "V2_d995": 0.01032530734574455
+    "V1_v99": 0.011577093639421276,
+    "V1_v995": 0.04390461995069095,
+    "V2_old_v99": 0.009562549068413695,
+    "V2_old_v995": 0.04182569546930992,
+    "V2_new_v99": 0.01052227989007215,
+    "V2_new_v995": 0.042816096937411174,
+    "V2_d99": 0.029709103867167963,
+    "V2_d995": 0.06261608481555503
    },
    "centre_decomposition": {
     "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
     "primary_fit_on_reduced_pool": {
-     "V1_v99": 0.26667142928033827,
-     "V1_v995": 0.33048897717077363,
-     "V2_old_v99": 0.2368687793333447,
-     "V2_old_v995": 0.29355420945103305,
-     "V2_new_v99": 0.24909636167879975,
-     "V2_new_v995": 0.3087079932422943,
-     "V2_d99": 0.012227582345455068,
-     "V2_d995": 0.015153783791261255
+     "V1_v99": 0.27066754888474115,
+     "V1_v995": 0.3493045168153816,
+     "V2_old_v99": 0.2412340654539937,
+     "V2_old_v995": 0.31131973160439624,
+     "V2_new_v99": 0.25330066741618007,
+     "V2_new_v995": 0.326892040089001,
+     "V2_d99": 0.012066601962186368,
+     "V2_d995": 0.01557230848460478
     },
     "primary_fit_on_reduced_pool_relative": {
-     "V1_v99": 0.0,
-     "V1_v995": 0.0,
-     "V2_old_v99": 0.0,
-     "V2_old_v995": 0.0,
-     "V2_new_v99": 0.0,
-     "V2_new_v995": 0.0,
-     "V2_d99": 0.0,
-     "V2_d995": 0.0
+     "V1_v99": 0.008922204965382763,
+     "V1_v995": 0.0457093841837668,
+     "V2_old_v99": 0.008922204965382763,
+     "V2_old_v995": 0.0457093841837668,
+     "V2_new_v99": 0.008922204965382985,
+     "V2_new_v995": 0.0457093841837668,
+     "V2_d99": 0.008922204965387204,
+     "V2_d995": 0.04570938418376813
     },
     "reduced_fit_on_primary_pool": {
-     "V1_v99": 0.2644459311650971,
-     "V1_v995": 0.32859238642909994,
-     "V2_old_v99": 0.23443052147567758,
-     "V2_old_v995": 0.2912961608602671,
-     "V2_new_v99": 0.24675196841028868,
-     "V2_new_v995": 0.3066064121266241,
-     "V2_d99": 0.012321446934611097,
-     "V2_d995": 0.015310251266356989
+     "V1_v99": 0.2668004995338561,
+     "V1_v995": 0.3335387036136769,
+     "V2_old_v99": 0.23731398344195057,
+     "V2_old_v995": 0.29667635002527976,
+     "V2_new_v99": 0.24942138652306198,
+     "V2_new_v995": 0.3118123319100876,
+     "V2_d99": 0.012107403081111412,
+     "V2_d995": 0.015135981884807859
     },
     "reduced_fit_on_primary_pool_relative": {
-     "V1_v99": -0.00834546888373855,
-     "V1_v995": -0.005738741297546146,
-     "V2_old_v99": -0.010293707193195556,
-     "V2_old_v995": -0.007692100872914276,
-     "V2_new_v99": -0.00941159177400619,
-     "V2_new_v995": -0.00680766666777155,
-     "V2_d99": 0.007676463466297356,
-     "V2_d995": 0.01032530734574455
+     "V1_v99": -0.0054923488807685494,
+     "V1_v995": -0.0014885706684018007,
+     "V2_old_v99": -0.007472899846172054,
+     "V2_old_v995": -0.003477095113742723,
+     "V2_new_v99": -0.006529363608394845,
+     "V2_new_v995": -0.0025297603030464133,
+     "V2_d99": 0.012333700181680118,
+     "V2_d995": 0.016409244103206655
     }
    },
    "order_statistics": {
     "v99": {
      "primary_pool": 7,
-     "reduced_pool": 7
+     "reduced_pool": 6
     },
     "v995": {
      "primary_pool": 4,
-     "reduced_pool": 4
+     "reduced_pool": 3
     }
    }
   }
  },
- "ten_and_widened_side_by_side": {
+ "least_certain_and_widened_side_by_side": {
   "fit": {
    "k": {
-    "primary": 0.6006574501873941,
-    "ten_records": 0.5984008926162139,
-    "widened": 0.6004768337464834
+    "primary": 0.6014381260411611,
+    "least_certain": 0.5996357509960515,
+    "widened": 0.6049639053169565
    },
    "sd_undiv": {
-    "primary": 0.03045540942341745,
-    "ten_records": 0.030603329940414977,
-    "widened": 0.030354158609702534
+    "primary": 0.030762042142973636,
+    "least_certain": 0.03068444470156023,
+    "widened": 0.03017527434650756
    },
    "sd_div": {
-    "primary": 0.04381679898057507,
-    "ten_records": 0.04413250509395347,
-    "widened": 0.044647887121798666
+    "primary": 0.04268655357040366,
+    "least_certain": 0.04248513275470748,
+    "widened": 0.04331088405202674
    },
    "nu_clean": {
-    "primary": 4.046712003297214,
-    "ten_records": 4.081127196176191,
-    "widened": 4.075494225710771
+    "primary": 4.0428729066149405,
+    "least_certain": 3.9301543174162896,
+    "widened": 3.921170765651747
    },
    "nu_ritc": {
-    "primary": 6.298062098280871,
-    "ten_records": 6.341421742521524,
-    "widened": 6.294635623705183
+    "primary": 6.320100522705791,
+    "least_certain": 5.915472181419842,
+    "widened": 5.9666655492124265
    },
    "tau_s": {
-    "primary": 0.143,
-    "ten_records": 0.12633881977406503,
-    "widened": 0.10541381687345185
+    "primary": 0.138,
+    "least_certain": 0.11172587229871862,
+    "widened": 0.09059657537201372
    }
   },
   "n_fit": {
-   "primary": 649,
-   "ten_records": 639,
-   "widened": 630
+   "primary": 643,
+   "least_certain": 604,
+   "widened": 595
   },
   "vignette_centres": {
    "V1_v99": {
-    "primary": 0.26667142928033827,
-    "ten_records": 0.2644501677450632,
-    "widened": 0.2644459311650971,
-    "ten_records_relative_to_primary": -0.008329581992602475,
-    "widened_relative_to_primary": -0.00834546888373855
+    "primary": 0.26827395368310686,
+    "least_certain": 0.2659484593776002,
+    "widened": 0.271379786365914,
+    "least_certain_relative_to_primary": -0.008668356631645335,
+    "widened_relative_to_primary": 0.011577093639421276
    },
    "V1_v995": {
-    "primary": 0.33048897717077363,
-    "ten_records": 0.32881109527575797,
-    "widened": 0.32859238642909994,
-    "ten_records_relative_to_primary": -0.005076967798985477,
-    "widened_relative_to_primary": -0.005738741297546146
+    "primary": 0.33403593971572976,
+    "least_certain": 0.33303124065337714,
+    "widened": 0.3487016606988208,
+    "least_certain_relative_to_primary": -0.003007757378465481,
+    "widened_relative_to_primary": 0.04390461995069095
    },
    "V2_old_v99": {
-    "primary": 0.2368687793333447,
-    "ten_records": 0.2347016132608569,
-    "widened": 0.23443052147567758,
-    "ten_records_relative_to_primary": -0.009149226329392857,
-    "widened_relative_to_primary": -0.010293707193195556
+    "primary": 0.23910075947061818,
+    "least_certain": 0.2369602879997029,
+    "widened": 0.24138717221535097,
+    "least_certain_relative_to_primary": -0.008952173450449963,
+    "widened_relative_to_primary": 0.009562549068413695
    },
    "V2_old_v995": {
-    "primary": 0.29355420945103305,
-    "ten_records": 0.2918224449518444,
-    "widened": 0.2912961608602671,
-    "ten_records_relative_to_primary": -0.005899300515660011,
-    "widened_relative_to_primary": -0.007692100872914276
+    "primary": 0.2977115213013014,
+    "least_certain": 0.29673109926189456,
+    "widened": 0.3101635127289546,
+    "least_certain_relative_to_primary": -0.003293194818666745,
+    "widened_relative_to_primary": 0.04182569546930992
    },
    "V2_new_v99": {
-    "primary": 0.24909636167879975,
-    "ten_records": 0.24690231569815296,
-    "widened": 0.24675196841028868,
-    "ten_records_relative_to_primary": -0.008808020983766651,
-    "widened_relative_to_primary": -0.00941159177400619
+    "primary": 0.2510606528130393,
+    "least_certain": 0.2488393620089825,
+    "widened": 0.25370238327132233,
+    "least_certain_relative_to_primary": -0.008847626177850176,
+    "widened_relative_to_primary": 0.01052227989007215
    },
    "V2_new_v995": {
-    "primary": 0.3087079932422943,
-    "ten_records": 0.3069925103208645,
-    "widened": 0.3066064121266241,
-    "ten_records_relative_to_primary": -0.005556976038788131,
-    "widened_relative_to_primary": -0.00680766666777155
+    "primary": 0.31260314293168373,
+    "least_certain": 0.31160654830334467,
+    "widened": 0.3259875894023861,
+    "least_certain_relative_to_primary": -0.0031880505710617513,
+    "widened_relative_to_primary": 0.042816096937411174
    },
    "V2_d99": {
-    "primary": 0.012227582345455068,
-    "ten_records": 0.012200702437296068,
-    "widened": 0.012321446934611097,
-    "ten_records_relative_to_primary": -0.0021983011358734927,
-    "widened_relative_to_primary": 0.007676463466297356
+    "primary": 0.011959893342421118,
+    "least_certain": 0.011879074009279594,
+    "widened": 0.012315211055971359,
+    "least_certain_relative_to_primary": -0.006757529588902078,
+    "widened_relative_to_primary": 0.029709103867167963
    },
    "V2_d995": {
-    "primary": 0.015153783791261255,
-    "ten_records": 0.015170065369020103,
-    "widened": 0.015310251266356989,
-    "ten_records_relative_to_primary": 0.0010744232584496416,
-    "widened_relative_to_primary": 0.01032530734574455
+    "primary": 0.014891621630382323,
+    "least_certain": 0.014875449041450106,
+    "widened": 0.015824076673431497,
+    "least_certain_relative_to_primary": -0.0010860193290985753,
+    "widened_relative_to_primary": 0.06261608481555503
    }
   }
  },
- "runtime_seconds": 92.35855960845947
+ "runtime_seconds": 99.5696656703949
 }
