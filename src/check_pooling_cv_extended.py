@@ -151,6 +151,23 @@ def held_out_lppd(S_t, R_t, H_t, dr, thin=800):
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])
 
 
+#: the band of opening reserves (GBP m) over which the floored and floorless curves lie within about 5% of each other
+#: (sigma_over_size_range); the paper counts the observations in it (final review 2, R2 11)
+COINCIDE_BAND_M = (50.0, 1000.0)
+
+
+def size_range_block(R):
+    """The observed range of the opening gross reserves R (GBP m), and the number of observations with R in
+    COINCIDE_BAND_M, both ends included."""
+    R = np.asarray(R, float)
+    lo, hi = COINCIDE_BAND_M
+    return {"min": float(R.min()), "max": float(R.max()), "median": float(np.median(R)),
+            "p95": float(np.percentile(R, 95)),
+            "band_m": [lo, hi], "n_in_band": int(np.sum((R >= lo) & (R <= hi))), "n": int(R.size),
+            "band_note": ("observations with opening gross reserves R from 50m to 1bn GBP inclusive, where the two "
+                          "full-sample fits' scale curves lie within about 5% of each other (sigma_over_size_range)")}
+
+
 def main():
     S, R, H, syn = load()
     uniq = np.array(sorted(set(syn)))
@@ -217,9 +234,7 @@ def main():
         "models": {n: MODELS[n]["label"] for n in MODELS},
         "held_out_ELPD": totals,
         "pairwise": pairs,
-        "observed_size_range_m": {"min": float(R.min()), "max": float(R.max()),
-                                  "median": float(np.median(R)),
-                                  "p95": float(np.percentile(R, 95))},
+        "observed_size_range_m": size_range_block(R),
         "full_sample_params": full,
         "sigma_over_size_range": {"H_at_median": Hbar, "rows": sigma_tab},
         "size_ratio_100_2000": size_ratio,

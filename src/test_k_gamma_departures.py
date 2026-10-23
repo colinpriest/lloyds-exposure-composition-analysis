@@ -227,6 +227,33 @@ def _moved(rc, names):
     return sorted(q for q in names if abs(rc[q]) >= 0.02)
 
 
+def _gap_block_is_the_draws(block):
+    """The record's gap_in_sd_unrounded block: for each shared parameter, |mean(gamma-free draws) - mean(headline
+    draws)| / sd(headline draws), ddof 0, recomputed here from the npz files the block names."""
+    assert block["draws"] == {"headline": os.path.relpath(str(TO.SOURCE[TO.HEADLINE][1]), HERE).replace(os.sep, "/"),
+                              "gamma_free": os.path.relpath(str(TO.SOURCE[TO.OVERLAY][1]), HERE).replace(os.sep, "/")}
+    with np.load(os.path.join(HERE, block["draws"]["headline"])) as h, \
+            np.load(os.path.join(HERE, block["draws"]["gamma_free"])) as g:
+        for p in ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc"):
+            want = abs(float(g[p].mean()) - float(h[p].mean())) / float(h[p].std())
+            assert block[p] == pytest.approx(want, rel=1e-12), p
+    assert set(block) == {"definition", "draws", "k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc"}
+    assert "unrounded" in block["definition"] and "ddof 0" in block["definition"]
+
+
+def test_the_unrounded_gap_is_the_distance_in_the_headlines_population_sd():
+    """On known draws: means 1 and 2, the headline's population sd 1 (ddof 0), so the gap is 1.0 (ddof 1 would give
+    0.707); a parameter with no spread is refused."""
+    h = {p: np.array([0.0, 2.0]) for p in G.GAP_PARAMS}
+    g = {p: np.array([1.0, 3.0]) for p in G.GAP_PARAMS}
+    assert G.gap_in_sd_unrounded(h, g) == {p: 1.0 for p in G.GAP_PARAMS}
+    g["sd_div"] = np.array([-1.0, 1.0])
+    assert G.gap_in_sd_unrounded(h, g)["sd_div"] == 1.0, "the distance is absolute"
+    h["k"] = np.array([0.5, 0.5])
+    with pytest.raises(SystemExit, match="no spread"):
+        G.gap_in_sd_unrounded(h, g)
+
+
 @pytest.fixture(scope="module")
 def g():
     """results/check_gamma_free_fit_results.json is written by the regeneration."""
@@ -255,6 +282,11 @@ class TestTheGammaFreeFit:
         gf = _json("model/dispersion_calibration_ritc_gamma_free.json")
         assert g["gamma_free_fit"]["posterior_prob"]["gamma_gt_0.05"] == gf["posterior_prob"]["gamma_gt_0.05"]
         assert g["gamma_free_fit"]["prior_prob"]["gamma_gt_0.05"] == gf["prior_prob"]["gamma_gt_0.05"]
+
+    def test_the_record_carries_the_unrounded_gap_column(self, g):
+        """App 3's table of the two fits reads its gap column from this block (final review 2, R2 9). Pending until the
+        regeneration pass rewrites the record with the fixed writer."""
+        _gap_block_is_the_draws(g["gap_in_sd_unrounded"])
 
     def test_the_sampler_is_the_headline_calibrations(self):
         import re
@@ -366,6 +398,8 @@ class TestTheGammaFreeCheckRefuses:
         assert rec["vignettes"]["B"] == self.B
         assert rec["vignettes"]["headline"]["intervals"] == small_record[TO.HEADLINE]["intervals"]
         assert rec["vignettes"]["overlay_sensitivity"]["centre"] == small_record[TO.OVERLAY]["centre"]
+        # the gap column of App 3's table of the two fits, unrounded from the draws (final review 2, R2 9)
+        _gap_block_is_the_draws(rec["gap_in_sd_unrounded"])
 
     @pytest.mark.parametrize("change", [{"gamma_prior": "halfnormal"}, {"gamma": 0.1}])
     def test_a_headline_that_is_not_the_gamma0_fit_is_refused(self, monkeypatch, tmp_path, small_record, change):

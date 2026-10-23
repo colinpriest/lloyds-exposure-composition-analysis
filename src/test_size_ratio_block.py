@@ -71,3 +71,25 @@ def test_the_recorded_block_is_the_fitted_comparator():
     for name in ("M1_free_k_floor", "M7_free_k_nofloor"):
         assert set(blk[name]) == {"ratio_mean_over_draws", "ratio_hdi95", "ratio_at_posterior_means"}
     assert blk["M7_free_k_nofloor"]["ratio_at_posterior_means"] < blk["adopted_k_floor_deleted"]["ratio"]
+
+
+def test_the_band_count_includes_both_ends_and_only_the_band():
+    """The observations with R from 50m to 1bn GBP, both ends included (final review 2, R2 11: the paper's 'roughly 460'
+    is this count)."""
+    blk = P.size_range_block([10.0, 50.0, 49.99, 300.0, 1000.0, 1000.01, 5000.0])
+    assert blk["band_m"] == [50.0, 1000.0] and P.COINCIDE_BAND_M == (50.0, 1000.0)
+    assert (blk["n_in_band"], blk["n"]) == (3, 7)
+    assert (blk["min"], blk["max"]) == (10.0, 5000.0) and blk["median"] == 300.0
+    assert "50m to 1bn" in blk["band_note"] and "inclusive" in blk["band_note"]
+
+
+def test_the_recorded_band_count_is_the_working_samples():
+    """DEFERRED-TO-REFIT: results/check_pooling_cv_extended_results.json carries the band count, and it is the count on
+    the sample the fits read (oos_validation.load): 455 of 643 on the primary at faf8b41b."""
+    from oos_validation import load
+    with io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"), encoding="utf-8") as _fh:
+        rec = json.load(_fh)
+    R = load()[1]
+    blk = rec["observed_size_range_m"]
+    assert blk["n"] == len(R) and blk["n_in_band"] == int(np.sum((R >= 50.0) & (R <= 1000.0)))
+    assert (blk["n_in_band"], blk["n"]) == (455, 643)

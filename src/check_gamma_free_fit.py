@@ -72,8 +72,30 @@ RETIRED = ("retired size-only construction: the gamma-free fit with gamma set to
            "the figures printed then")
 
 
+#: the shared parameters App 3's table of the two fits (tab:gammafree) prints a gap for
+GAP_PARAMS = ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc")
+GAP_DEFINITION = ("the distance between the two fits' posterior means in the headline's posterior standard deviations, "
+                  "|mean of the gamma-free fit's draws - mean of the headline's draws| / sd of the headline's draws "
+                  "(population sd, ddof 0), all unrounded from the npz draws: the gap column of App 3's table of the "
+                  "two fits (final review 2, R2 9). headline_guard's gap_in_sd divides by the sd its params block "
+                  "rounds to three places, and is not this column")
+
+
 def relative(new, old):
     return new / old - 1.0
+
+
+def gap_in_sd_unrounded(draws_h, draws_g):
+    """{param: gap} for GAP_PARAMS: |mean(gamma-free draws) - mean(headline draws)| / sd(headline draws), ddof 0, from
+    the unrounded draws (the paper's tablenote: 'both read unrounded from the draws')."""
+    out = {}
+    for p in GAP_PARAMS:
+        h, g = np.asarray(draws_h[p], float), np.asarray(draws_g[p], float)
+        sd = float(np.std(h))
+        if not sd > 0.0:
+            raise SystemExit("the headline's draws of %s have no spread" % p)
+        out[p] = abs(float(np.mean(g)) - float(np.mean(h))) / sd
+    return out
 
 
 def fit_params(cal):
@@ -214,6 +236,10 @@ def main():
                                        "factor its scale carries; the rows are recorded so the size of each gap can "
                                        "be read"),
                            "within_tolerance": bool(guard_ok), "rows": guard_rows},
+        "gap_in_sd_unrounded": {"definition": GAP_DEFINITION,
+                                "draws": {"headline": "model/dispersion_posterior_draws_ritc.npz",
+                                          "gamma_free": "model/dispersion_posterior_draws_ritc_gamma_free.npz"},
+                                **gap_in_sd_unrounded(draws_h, draws_g)},
         "vignettes": vignettes,
         "size_ratio_100_2000_size_only": {
             "scale_law": "the headline's posterior-mean scale law at H = %g (gamma = 0 in the likelihood)" % H_RATIO,
