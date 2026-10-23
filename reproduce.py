@@ -943,7 +943,7 @@ OUTPUTS = {
                               "paper_pack/fig_corpus_coverage.png", "paper_pack/fig_goodness_of_fit.png",
                               "paper_pack/fig_hhi_dispersion.png", "paper_pack/fig_size_dispersion.png"),
     "build_current_results.py": ("docs/current-results.md", "docs/data-provenance.md",
-                                 "docs/referee-checks.md"),
+                                 "docs/referee-checks.md", "README.md"),
     "generate_data_audit.py": ("docs/appendix-data-audit.md",),
 }
 REPORT = os.path.join(HERE, "reproduce-run-report.json")
