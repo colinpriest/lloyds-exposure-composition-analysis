@@ -398,9 +398,17 @@ def test_the_kept_candidates_stay_in_the_primary(loaded):
     ws = _ws(loaded[ra.MATURE_COHORT_OUTCOME]["records"])
     for key in KEPT:
         assert key in ws, key
-    # round 2: the 97 records read twice and kept, the four undeterminable ones among them, are in the primary's sample
+    # round 2: the 97 records read twice and kept, the four undeterminable ones among them, are in the primary's sample,
+    # unless another rule takes them out: 4242/2022 leaves under rule 1 of the round-5 decision rules (its exchange line
+    # is under 5% of R, so rule B keeps it; data/restated_base_excluded.json excludes it)
+    prim = loaded[ra.MATURE_COHORT_OUTCOME]
+    restated = ra.load_restated_base()
     for key in _register()["_population"]["round2"]["records_are"]:
+        if key in restated:
+            assert prim["by_key"][key]["data_quality_tag"] == ra.RESTATED_BASE_TAG, key
+            continue
         assert key in ws, key
+    assert sorted(set(restated) & set(_register()["read_and_kept"])) == ["4242_2022"]
 
 
 def test_the_672_construction_does_not_read_the_register(loaded, monkeypatch, tmp_path):

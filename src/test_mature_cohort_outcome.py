@@ -223,9 +223,10 @@ def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
             assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
         tr = e["table_read"]
         assert tr["kind"] == "extraction_table_read" and "stored grid" in tr["reader"], key
-        assert tr["figure_m"] == e["figure_m"], key
+        # a correction's table read is the printed table's own figure, the one the correction replaces
+        assert tr["figure_m"] == (e["correction"]["figure_as_printed_m"] if "correction" in e else e["figure_m"]), key
         assert bm.independent_reading_gaps(e) == [], key
-        first = [r["reader"] for r in e["readings"] if r["kind"] == "reading" and r["reader"] not in second]
+        first =[r["reader"] for r in e["readings"] if r["kind"] == "reading" and r["reader"] not in second]
         c = [rid for rid in second if key in second[rid]]
         if c and key not in bm.AGGREGATED_COLUMN:
             mine = [r for r in e["readings"] if r["reader"] in second]
