@@ -612,6 +612,7 @@ NO_OVERLAY_LEG = {
     "check_donor_influence.py": "the fits with and without the donor: " + _REFIT,
     "check_outbound_transfer_sensitivity.py": "the retained-base fit: " + _REFIT,
     "check_cohort_scope.py": "the 672 construction's fit: " + _REFIT,
+    "check_cohort_depth_sensitivity.py": "the u <= t-2 and u <= t-3 refits, through check_cohort_scope.fit: " + _REFIT,
     "check_missingness_sensitivity.py": "the unweighted and selection-weighted fits: " + _REFIT,
 }
 
@@ -622,16 +623,58 @@ _GAMMA0_FITS = ("scale_block", "fit_adopted_config")
 _OVERLAY_NAMES = ("SENSITIVITY", "OVERLAY", "MODES", "SOURCE")
 
 
+def _fitting_functions(module):
+    """The names of the functions defined in src/<module>.py whose own body fits the model with gamma = 0 (a call to
+    one of _GAMMA0_FITS): a refit helper that another producer imports and calls, as check_cohort_scope.fit is by
+    check_cohort_depth_sensitivity. Empty where the module is not a source file under src/."""
+    import ast
+    path = os.path.join(SRC, module + ".py")
+    if not os.path.isfile(path):
+        return set()
+    with io.open(path, encoding="utf-8") as _fh:
+        tree = ast.parse(_fh.read())
+    names = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            for sub in ast.walk(node):
+                if isinstance(sub, ast.Call) and getattr(sub.func, "id", getattr(sub.func, "attr", None)) in _GAMMA0_FITS:
+                    names.add(node.name)
+    return names
+
+
+def _imported_fits(tree):
+    """True where the script uses a refit helper of a source module it imports (`import M as A`, then `A.fit(...)`,
+    or a name taken by `from M import fit`): the gamma = 0 refit is then the script's, done through the helper."""
+    import ast
+    alias, direct = {}, {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                alias[a.asname or a.name] = a.name
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            for a in node.names:
+                direct[a.asname or a.name] = (node.module, a.name)
+    for f in ast.walk(tree):
+        # a reference, not only a call: `fit = CS.fit if fit is None else fit` hands the helper on before it is called
+        if isinstance(f, ast.Attribute) and isinstance(f.value, ast.Name) and f.value.id in alias:
+            if f.attr in _fitting_functions(alias[f.value.id]):
+                return True
+        if isinstance(f, ast.Name) and f.id in direct and direct[f.id][1] in _fitting_functions(direct[f.id][0]):
+            return True
+    return False
+
+
 def _scripts_with_no_gamma():
     """Every manifest producer under src/ that fits the model only with gamma = 0 (a scale_block call without
-    gamma_prior='halfnormal', or a use of fx_sensitivity.fit_adopted_config) and never names the overlay
-    (transfer_operator.SENSITIVITY, OVERLAY, MODES or SOURCE), found from the sources."""
+    gamma_prior='halfnormal', a use of fx_sensitivity.fit_adopted_config, or a call to a helper of an imported source
+    module that does either) and never names the overlay (transfer_operator.SENSITIVITY, OVERLAY, MODES or SOURCE),
+    found from the sources."""
     import ast
     found = set()
     for fn in sorted({s for s, _ in PRODUCERS}):
         with io.open(os.path.join(SRC, fn), encoding="utf-8") as _fh:
             tree = ast.parse(_fh.read())
-        fits, free, overlay = False, False, False
+        fits, free, overlay = _imported_fits(tree), False, False
         for node in ast.walk(tree):
             if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", None)) in _GAMMA0_FITS:
                 fits = True
@@ -646,6 +689,20 @@ def _scripts_with_no_gamma():
         if fits and not free and not overlay:
             found.add(fn)
     return found
+
+
+def test_a_refit_through_an_imported_helper_is_a_gamma_zero_refit():
+    """The scan follows a script into the source modules it imports: check_cohort_scope.fit refits with scale_block
+    (gamma = 0), so a script that hands it on or calls it is a gamma = 0 refitter; numpy's `fit`-named attribute and
+    an import of a module with no such function are not."""
+    import ast
+    assert "fit" in _fitting_functions("check_cohort_scope")
+    assert _fitting_functions("no_such_source_module") == set()
+    assert _imported_fits(ast.parse("import check_cohort_scope as CS\nf = CS.fit if g is None else g\n"))
+    assert _imported_fits(ast.parse("import check_cohort_scope\ncheck_cohort_scope.fit(1)\n"))
+    assert _imported_fits(ast.parse("from check_cohort_scope import fit\nfit(1)\n"))
+    assert not _imported_fits(ast.parse("import numpy as np\nnp.fit(1)\n"))
+    assert not _imported_fits(ast.parse("import check_cohort_scope as CS\nCS.arrays(1)\n"))
 
 
 def test_the_overlay_exemption_is_exactly_the_scripts_with_no_gamma():

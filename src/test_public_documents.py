@@ -502,6 +502,47 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
         bcr.sensitivity_sentences(broad, m0)
 
 
+def _papers_unresolved_subject_gate():
+    """The manuscript's gate H (paper/audit_numbers.required_context), loaded from the paper repository, or None."""
+    import importlib.util
+    root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
+                                                                "BAJ - Lloyds reserves rescaling")
+    path = os.path.join(root, "paper", "audit_numbers.py")
+    if not os.path.exists(path):
+        return None
+    sys.path.insert(0, os.path.dirname(path))
+    try:
+        spec = importlib.util.spec_from_file_location("audit_numbers_for_gate_h", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    finally:
+        sys.path.remove(os.path.dirname(path))
+    return mod, path
+
+
+def test_the_open_questions_are_clear_of_the_manuscripts_unresolved_subject_gate(tmp_path):
+    """23 October 2026: gate H flagged docs/current-results.md line 96. The long-tail sentence said the share's slope is
+    resolved in sample and an out-of-sample gain is not established, as the paper does, but named the slope
+    $\\beta_{\\text{LT}}$, which the gate's RITC-scale subject (beta_\\{) matches, and 'not established' then asserts that
+    subject. The generated text names the slope in words. This runs the paper's own gate on the generated document, and on
+    a copy with the notation put back, which it must flag."""
+    loaded = _papers_unresolved_subject_gate()
+    if loaded is None:
+        pytest.skip("no manuscript at LLOYDS_PAPER_REPO (or the default path): the paper's gate H is not available")
+    gate, path = loaded
+    doc = _read("docs", "current-results.md")
+    (tmp_path / "docs").mkdir()
+    with io.open(tmp_path / "docs" / "current-results.md", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(doc)
+    assert gate.required_context([str(tmp_path)], path) == []
+    old = re.sub(r"posterior mean \$([+-][0-9.]+)\$, 95% credible interval", r"$\\beta_{\\text{LT}} = \1$", doc)
+    assert old != doc, "the generated document names the long-tail slope in the words the test replaces"
+    with io.open(tmp_path / "docs" / "current-results.md", "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(old)
+    hits = gate.required_context([str(tmp_path)], path)
+    assert hits and all(h[0] == "current-results.md" for h in hits), hits
+
+
 def test_the_open_questions_follow_the_records():
     """The generated documents are rewritten from the regenerated records (option B)."""
     doc = _read("docs", "current-results.md")

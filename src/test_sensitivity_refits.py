@@ -285,10 +285,24 @@ def test_the_skewed_ritc_map_is_deritc_resid_at_delta_zero():
     assert moved[3] == z[3] and not np.allclose(moved[ritc], VU.deritc_resid(z, th, ritc)[ritc])
 
 
+#: the agreement of check_skew_t's Jones-Faddy rank map at delta = 0 with vignette_uncertainty's Student-t map, on a
+#: VaR of order 0.2 (see test_the_estimator_is_the_headlines_at_delta_zero)
+RITC_MAP_TOL = 1e-9
+
+
 def test_the_estimator_is_the_headlines_at_delta_zero():
     """With the published draws and delta = 0, the replicates are vignette_uncertainty's own: the same pool,
     weights, posterior indices and quantile give the published V1 and V2 VaR99.5 replicate summaries.
-    The published draws and record are the regeneration's."""
+    The published draws and record are the regeneration's.
+
+    The summaries agree to RITC_MAP_TOL, not to the last bit. check_skew_t carries the Jones-Faddy family, whose rank map
+    for RITC donors (deritc_skew: jf_cdf, jf_ppf) is the Student-t map of vignette_uncertainty.deritc_resid at
+    delta = 0 but computed through a different special-function route, so a donor's transferred residual differs in
+    the 9th significant figure (measured at up to 6e-9 relative over 200,000 residuals, for the headline's nu pair
+    among others); test_the_skewed_ritc_map_is_deritc_resid_at_delta_zero holds that map to atol 1e-9. A replicate
+    summary that lands on one such replicate (the 2.5% point of Vignette 2's old VaR99.5 moved by 1.7e-12 on the
+    649-donor regeneration) is therefore equal only to a few parts in 1e9 of its own size, and 1e-12 absolute was a
+    tolerance below the two implementations' own disagreement. The probability P_rise is a count, so it stays exact."""
     draws, *_ = VU.load_draws()
     out = CK.vignette_vars(draws)
     with io.open(os.path.join(HERE, "results", "vignette_uncertainty_results.json"), encoding="utf-8") as fh:
@@ -296,13 +310,13 @@ def test_the_estimator_is_the_headlines_at_delta_zero():
     for key, block in (("V1_adj_v995", rec["vignette1"]["adjusted"]["var995"]),
                        ("V2_old_v995", rec["vignette2"]["adjusted_old"]["var995"]),
                        ("V2_new_v995", rec["vignette2"]["adjusted_new"]["var995"])):
-        assert out[key]["mean"] == pytest.approx(block["mean"], abs=1e-12)
-        assert out[key]["interval_95"] == pytest.approx([block["lo"], block["hi"]], abs=1e-12)
+        assert out[key]["mean"] == pytest.approx(block["mean"], abs=RITC_MAP_TOL)
+        assert out[key]["interval_95"] == pytest.approx([block["lo"], block["hi"]], abs=RITC_MAP_TOL)
     # Vignette 2's sign: the share of replicates in which the VaR99.5 rises is the published one at delta = 0
     assert out["V2_change_v995"]["P_rise"] == pytest.approx(
         rec["robustness"]["P_sign_by_estimator"]["V2_rise_bayesian_bootstrap"], abs=1e-12)
     ch = rec["robustness"]["V2_change995_CI_by_clustering"]["bayesian_bootstrap_primary"]
-    assert out["V2_change_v995"]["mean"] == pytest.approx(ch["mean"], abs=1e-12)
+    assert out["V2_change_v995"]["mean"] == pytest.approx(ch["mean"], abs=RITC_MAP_TOL)
 
 
 def _fit_record(delta_mean, ok=True):

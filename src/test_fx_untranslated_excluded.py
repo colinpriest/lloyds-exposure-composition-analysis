@@ -1422,7 +1422,9 @@ def test_the_register_holds_no_evidence_and_the_build_refuses_one_that_would_put
     ev = _evidence()
     assert ev["_rule_addition"] == bf.RULE_ADDITION and "_moved_cells_gate" in bf.RULE_ADDITION
     assert set(ev["read_and_kept"]) == {k for k, e in reg["read_and_kept"].items() if e.get("reason") == "table_retranslated"}
-    assert "fx_untranslated_excluded_evidence" not in io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8").read()
+    with io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8") as _fh:
+        _run_analysis_text = _fh.read()
+    assert "fx_untranslated_excluded_evidence" not in _run_analysis_text
     # a builder that leaves the provenance in the entries, puts the gate in, or adds the sentence to the rule
     monkeypatch.setattr(bf, "split_evidence", lambda out: (out, {}))
     with pytest.raises(SystemExit, match="the register would not be the loader-facing bytes: .*read_and_kept/"):

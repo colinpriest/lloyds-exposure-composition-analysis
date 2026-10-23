@@ -117,6 +117,8 @@ def test_no_legend_covers_a_plotted_point(figures, name):
     assert legends, "no legend read from %s" % name
     for ax, legend in legends:
         assert MPF.points_under_legend(fig, ax, legend) == 0, name
+        # and no connected line, band or bar under it either (a series joined by a line is not a point)
+        assert PFS.data_under_legend(fig, ax, legend) == [], name
 
 
 @pytest.mark.parametrize("build, which, old_loc", [("size_figure", 5, "lower left"), ("hhi_figure", 6, "upper right")])

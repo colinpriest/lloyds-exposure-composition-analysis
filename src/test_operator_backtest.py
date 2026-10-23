@@ -556,7 +556,9 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     Re-pinned on the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded):
     0.29505437438720905, 0.2951 to four places.
     Re-pinned on the regeneration of 23 October 2026 on the primary sample (649 donors): 0.3303768219054808, 0.3304 to
-    four places."""
+    four places.
+    Re-pinned on 23 October 2026 to the recorded 0.33048897717077363, 0.3305 to four places: the primary moved when
+    1945/2022's figure was repaired, and the record's V1 follows the primary (the paper prints $0.3305$)."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -567,7 +569,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3304
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3305
 
 
 def test_the_draw_based_block_is_beside_the_plug_in_and_reads_the_same_targets(rec):

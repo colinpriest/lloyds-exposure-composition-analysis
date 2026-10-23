@@ -145,7 +145,9 @@ def long_tail_question(c, lt):
         raise SystemExit("the composition records are missing: the open question on the long-tail share cannot be written")
     b = c["beta_LT"]
     lo, hi = b["hdi"]
-    slope = "$\\beta_{\\text{LT}} = %+.2f$ $[%+.2f, %+.2f]$" % (b["mean"], lo, hi)
+    # the slope is named in words and not as $\beta_{...}$: the manuscript's gate H reads any beta_{ as the RITC scale term
+    # (UNRESOLVED_SUBJECTS "beta_ritc|beta_\{|..."), which this sentence's "not established" then asserts about
+    slope = "posterior mean $%+.2f$, 95%% credible interval $[%+.2f, %+.2f]$" % (b["mean"], lo, hi)
     if lo <= 0 <= hi:
         return "the long-tail share slope, not distinguishable from zero (%s);" % slope
     if hi < 0:

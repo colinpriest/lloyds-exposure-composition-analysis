@@ -13,6 +13,7 @@ uncropped and drawn from the line width less PRINT_MARGIN (30 September 2026: dr
 at 7.94 pt against the gate's 8 pt floor).
 """
 import matplotlib.pyplot as plt
+import numpy as np
 
 #: the text width both documents print at, in PDF points: cup-journal's medium layout (journal=aas) is 174 mm wide
 #: with margins of 18 mm and 15 mm, so 141 mm = 399.69 pt. The built main.pdf and supplement.pdf place all six
@@ -75,6 +76,58 @@ def plain_log_ticks(ax):
         if scale == "log":
             axis.set_major_formatter(FuncFormatter(lambda v, _pos: "%g" % v))
             axis.set_minor_formatter(NullFormatter())
+
+
+def data_under_legend(fig, ax, legend):
+    """The labels of what `ax` plots that the legend's box touches, in display coordinates: a line of any style that
+    passes through the box (a connected series crossing it between its vertices as much as one with a vertex in it), a
+    scatter point, a bar and a filled band (fill_between). An empty list is a clear legend. A line or band drawn in a
+    blended transform (axhline, axvline) is a reference mark and not counted.
+
+    The 23 October 2026 check that found the supplement's profile: its legend, inside the axes upper left, was crossed
+    by the observed series' first segment and its marker, which a count of scatter points and marker-only lines
+    (make_paper_figures.points_under_legend) never sees, because the series is a connected line."""
+    from matplotlib.collections import PathCollection, PolyCollection
+    from matplotlib.path import Path as MplPath
+    from matplotlib.transforms import Bbox
+    fig.canvas.draw()
+    # only the part of the legend inside the axes can cover anything: what the axes plots outside its limits is clipped
+    # (a legend below the axes, as Figures 2, 3 and 6 have, is over nothing)
+    box = Bbox.intersection(legend.get_window_extent(fig.canvas.get_renderer()), ax.bbox)
+    if box is None:
+        return []
+    hits = []
+    for ln in ax.lines:
+        # `==` on a blended transform and transData is not reliable (an axhline's compares equal): ask both axes
+        if not all(ln.get_transform().contains_branch_seperately(ax.transData)) or not len(ln.get_xdata()):
+            continue
+        xy = np.asarray(ln.get_xydata(), float)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            disp = ax.transData.transform(xy)
+        disp = disp[np.isfinite(disp).all(axis=1)]
+        if not len(disp):
+            continue
+        inside = ((disp[:, 0] >= box.x0) & (disp[:, 0] <= box.x1) & (disp[:, 1] >= box.y0)
+                  & (disp[:, 1] <= box.y1)).any()
+        joined = ln.get_linestyle() not in ("None", "none", " ", "") and len(disp) > 1
+        if inside or (joined and MplPath(disp).intersects_bbox(box, filled=False)):
+            hits.append(ln.get_label())
+    for c in ax.collections:
+        if isinstance(c, PolyCollection):                   # fill_between: its paths are in data coordinates
+            for p in c.get_paths():
+                if len(p.vertices) > 2 and MplPath(ax.transData.transform(p.vertices), p.codes).intersects_bbox(
+                        box, filled=True):
+                    hits.append(c.get_label())
+                    break
+        elif isinstance(c, PathCollection) and len(c.get_offsets()):          # scatter
+            with np.errstate(divide="ignore", invalid="ignore"):
+                disp = ax.transData.transform(np.asarray(c.get_offsets(), float))
+            disp = disp[np.isfinite(disp).all(axis=1)]
+            if ((disp[:, 0] >= box.x0) & (disp[:, 0] <= box.x1) & (disp[:, 1] >= box.y0)
+                    & (disp[:, 1] <= box.y1)).any():
+                hits.append(c.get_label())
+    hits += [p.get_label() for p in ax.patches if box.overlaps(p.get_window_extent())]
+    return hits
 
 
 def printed_text_sizes(pdf_path, name):

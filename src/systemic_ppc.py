@@ -52,7 +52,8 @@ def implied_curve(dz, grid):
 
 def profile_figure(xbin, band, bins_obs, grid, curve):
     """The correlation-vs-size profile, with 9/8 pt text, drawn at the width paper_figure_style gives a figure saved
-    uncropped: its printed width less the print margin. Returns (fig, ax); the caller saves it inside PFS.style()."""
+    uncropped: its printed width less the print margin. Returns (fig, ax); the caller saves it inside PFS.style().
+    The legend is upper left, with the vertical axis raised until no line or band is under it (make_room_for_legend)."""
     with PFS.style():
         fig, ax = PFS.figure("systemic_correlation_profile", 3.1)
         ax.fill_between(xbin, band[0], band[1], color="#9aa5b1", alpha=0.30, lw=0,
@@ -69,11 +70,29 @@ def profile_figure(xbin, band, bins_obs, grid, curve):
         ax.set_title("Correlation-vs-size profile:\nobserved vs M1 posterior predictive")
         ax.grid(True, alpha=0.25)
         ax.axhline(0, color="0.5", lw=0.8, alpha=0.5)
-        ax.legend(frameon=False)
+        legend = ax.legend(frameon=False, loc="upper left")
         ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
         PFS.plain_log_ticks(ax)
         fig.tight_layout()
+        make_room_for_legend(fig, ax, legend)
     return fig, ax
+
+
+#: the room made above the data for the legend, in fractions of the vertical span, one step at a time, and the most steps
+LEGEND_HEADROOM_STEP, LEGEND_HEADROOM_STEPS = 0.03, 40
+
+
+def make_room_for_legend(fig, ax, legend):
+    """Raise the top of the vertical axis until nothing the axes plot is under the legend (upper left, in the axes), or
+    refuse. At the autoscaled limits the legend sat over the observed series' first point and the segment leaving it,
+    which the 23 October 2026 layout check (paper_figure_style.data_under_legend) found."""
+    for _ in range(LEGEND_HEADROOM_STEPS + 1):
+        if not PFS.data_under_legend(fig, ax, legend):
+            return
+        lo, hi = ax.get_ylim()
+        ax.set_ylim(lo, hi + LEGEND_HEADROOM_STEP * (hi - lo))
+    raise SystemExit("systemic_ppc: the profile's legend is still over the data after %d steps of headroom"
+                     % LEGEND_HEADROOM_STEPS)
 
 
 def save_profile_figure(fig, png, pdf):

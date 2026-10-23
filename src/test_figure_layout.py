@@ -114,6 +114,72 @@ def test_the_bar_check_sees_the_legend_it_replaced(coverage_inputs):
     assert not MPF.legend_clear_of_bars(fig, ax, old)
 
 
+# ------------------------------------------------------------------ the supplement's profile ------
+def _profile():
+    """The profile as its script draws it, from the recorded PPC bins and the M1 draws (as the `rendered` fixture)."""
+    with io.open(os.path.join(HERE, "results", "systemic_ppc_results.json"), encoding="utf-8") as _fh:
+        bins = json.load(_fh)["ppc"]["bins"]
+    with np.load(os.path.join(HERE, "model", "dispersion_posterior_draws_systemic.npz")) as _npz:
+        dz = {key: _npz[key] for key in _npz.files}
+    grid = np.logspace(np.log10(20), np.log10(4000), 60)
+    band = np.array([[b["band_5"] for b in bins], [b["band_95"] for b in bins]])
+    return SPPC.profile_figure([80.0, 280.0, 1100.0], band, [b["observed_mean_rho"] for b in bins], grid,
+                               SPPC.implied_curve(dz, grid))
+
+
+def test_the_profiles_legend_is_clear_of_every_line_and_the_band():
+    """23 October 2026 (the manuscript's gate CC): the legend entry 'M1 implied rho(R), equal-size pairs' was crossed by
+    the observed series' first segment and marker. No line, marker or band is under the legend now."""
+    fig, ax = _profile()
+    assert PFS.data_under_legend(fig, ax, ax.get_legend()) == []
+    assert len(ax.get_legend().get_texts()) == 3, "the band, the observed series and the implied curve"
+
+
+def test_the_check_sees_the_profiles_legend_where_it_was():
+    """The superseded drawing: the same legend over the autoscaled vertical axis is crossed by the observed series."""
+    fig, ax = _profile()
+    legend = ax.get_legend()
+    assert ax.get_ylim()[1] > 0.19, "the figure leaves room above the data (it autoscaled to 0.18)"
+    with PFS.style():
+        ax.set_ylim(-0.0285, 0.1825)               # the limits Matplotlib chose from the data before
+        hits = PFS.data_under_legend(fig, ax, legend)
+    assert "Observed mean pairwise Spearman rho" in hits, hits
+
+
+def test_the_script_makes_room_where_it_can_and_refuses_where_it_cannot(monkeypatch):
+    """Headroom clears a legend struck by a line along the top; with too few steps to clear it, the script refuses."""
+    def toy():
+        fig, ax = plt.subplots(figsize=(4, 3))
+        ax.plot([0.0, 1.0], [0.92, 0.92], label="along the top")
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        return fig, ax, ax.legend(loc="upper left")
+    fig, ax, legend = toy()
+    assert PFS.data_under_legend(fig, ax, legend) == ["along the top"]
+    SPPC.make_room_for_legend(fig, ax, legend)
+    assert PFS.data_under_legend(fig, ax, legend) == [] and ax.get_ylim()[1] > 1.0
+    monkeypatch.setattr(SPPC, "LEGEND_HEADROOM_STEPS", 2)
+    fig, ax, legend = toy()
+    with pytest.raises(SystemExit, match="still over the data"):
+        SPPC.make_room_for_legend(fig, ax, legend)
+
+
+def test_the_legend_check_counts_a_line_that_crosses_without_a_vertex_in_the_box():
+    """What the point count missed: a connected series passing through the legend between two vertices outside it."""
+    fig, ax = plt.subplots(figsize=(4, 3))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.plot([0.05, 0.95], [0.95, 0.95], "o-", label="across the top")      # vertices at the two ends, none under it
+    ax.plot([0.05, 0.95], [0.05, 0.05], "o-", label="across the bottom")
+    ax.axhline(0.9, color="0.5", label="a reference mark")                  # a blended transform: not data
+    legend = ax.legend(loc="upper center")
+    hits = PFS.data_under_legend(fig, ax, legend)
+    assert hits == ["across the top"], hits
+    assert PFS.data_under_legend(fig, ax, ax.legend(loc="center")) == []
+    band = ax.fill_between([0.0, 1.0], [0.4, 0.4], [0.6, 0.6], label="band")
+    assert band in ax.collections and PFS.data_under_legend(fig, ax, ax.legend(loc="center")) == ["band"]
+
+
 # ------------------------------------------------------------------ printed text size ------
 @pytest.fixture(scope="module")
 def rendered(tmp_path_factory):
