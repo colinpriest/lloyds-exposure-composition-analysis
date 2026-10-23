@@ -242,8 +242,10 @@ class TestTheGammaFreeFit:
     """The record check_gamma_free_fit.py writes from both committed calibrations."""
 
     def test_form_and_the_two_fits(self, g):
-        # 649 (34 RITC-regime) since the regeneration of 23 October 2026 on the primary sample; 672 (38) before it
-        assert (g["n"], g["n_ritc"]) == (649, 34) and g["fit_seed"] == 42
+        # 643 (33 RITC-regime) since the regeneration of 24 October 2026 at 38cd750 (the round-5 adjudication and review
+        # 8's decisions took six records out of the primary, one of them RITC-regime); 649 (34) from the regeneration of
+        # 23 October 2026 on the primary sample; 672 (38) before it
+        assert (g["n"], g["n_ritc"]) == (643, 33) and g["fit_seed"] == 42
         assert set(g["headline_fit"]["params"]) == set(G.PARAMS) and "gamma" not in g["headline_fit"]["params"]
         assert set(g["gamma_free_fit"]["params"]) == set(G.PARAMS) | {"gamma"}
         for fit in ("headline_fit", "gamma_free_fit"):
@@ -415,7 +417,9 @@ class TestTheGammaFreeCheckRefuses:
 class TestTheKSupport:
     def test_form_and_sampler(self, ks):
         """The regenerated record's fits carry no gamma (option B)."""
-        assert (ks["n"], ks["n_ritc"]) == (649, 34)          # 649 since the regeneration of 23 October 2026 (primary)
+        # 643 (33 RITC-regime) since the regeneration of 24 October 2026 at 38cd750 (the round-5 adjudication and review
+        # 8's decisions took six records out of the primary, one of them RITC-regime); 649 (34) before it
+        assert (ks["n"], ks["n_ritc"]) == (643, 33)
         assert (ks["draws"], ks["tune"], ks["chains"], ks["target_accept"], ks["fit_seed"]) == (1500, 1500, 4, 0.98, 42)
         assert ks["supports"] == ["logistic_0.25", "logistic_0"] == list(KS.SUPPORTS)
         for name, f in ks["fits"].items():

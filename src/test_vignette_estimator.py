@@ -383,10 +383,16 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
         after 1945/2022's figure was repaired): the test's pins were those of the earlier regeneration at a1e77c7, which
         the 2.7e-6 difference in the old quantile showed (a changed sample, not float accumulation). The headline's are
         -0.0037096425584657432 / -0.0039011408216961608 and the overlay's -0.0034554552844628006 /
-        -0.0036802460803934366."""
+        -0.0036802460803934366.
+        Re-pinned on 24 October 2026 to the record as committed at 374cc1f and kept by the recorded pass at 38cd750 (the
+        regeneration on the 643-record primary, after the round-5 adjudication and review 8's decisions took six records
+        out of the donor pool): the headline's -0.003743141109720333 / -0.0039303741763864735 and the overlay's
+        -0.0035186648500230675 / -0.0037352789377884848. The pins above were exactly the record at 2a56767 (the
+        649-record regeneration), so the 3.3e-5 gap in the old quantile is the changed sample, not float accumulation;
+        the tolerance stays 5e-12."""
         assert sign["operator"] == "size_only" and sign["overlay_sensitivity"]["operator"] == "overlay"
-        for block, old_q, new_q in ((sign, -0.0037096425584657432, -0.0039011408216961608),
-                                    (sign["overlay_sensitivity"], -0.0034554552844628006, -0.0036802460803934366)):
+        for block, old_q, new_q in ((sign, -0.003743141109720333, -0.0039303741763864735),
+                                    (sign["overlay_sensitivity"], -0.0035186648500230675, -0.0037352789377884848)):
             case = block["sign_cases"]["negative_old_quantile_actual_pool"]
             assert case["old_quantile"] < 0 and case["new_quantile"] < case["old_quantile"]
             # The positive-weight construction sums thousands of tiny contributions;

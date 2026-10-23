@@ -159,7 +159,10 @@ def test_the_partition_covers_every_primary_record_once_on_the_real_corpus():
     rows, left = D.partition(recs, register)
     keys = [CS.key_of(o) for o in recs]
     kept, out = [r["record"] for r in rows], [x["record"] for x in left]
-    assert len(rows) + len(left) == len(recs) == 649
+    # 643 primary records at the recorded pass of 38cd750 (649 before the round-5 adjudication and review 8's decisions
+    # took six records out of the primary: 4 restated-base tables, 1 unmeasurable take-on and one fifth FX record,
+    # 3000/2022, among them); the partition is exhaustive at either size
+    assert len(rows) + len(left) == len(recs) == 643
     assert sorted(kept + out) == sorted(keys) and not set(kept) & set(out)
     assert kept == [k for k in keys if k in set(kept)], "the kept records are in the primary's order"
     assert {x["reason"] for x in left} <= set(D.REASONS)
@@ -416,14 +419,17 @@ def rec():
 
 
 def test_the_record_counts_every_primary_record_and_every_reason(rec):
-    assert rec["n_primary"] == 649 == rec["n_kept"] + rec["n_left_out"] == len(rec["records"]) + len(rec["left_out"])
+    # 643 primary records = 581 kept + 62 left out at the recorded pass of 38cd750 (649 = 592 + 57 before the round-5
+    # adjudication and review 8's decisions; see test_the_partition_covers_every_primary_record_once_on_the_real_corpus)
+    assert rec["n_primary"] == 643 == rec["n_kept"] + rec["n_left_out"] == len(rec["records"]) + len(rec["left_out"])
+    assert (rec["n_kept"], rec["n_left_out"]) == (581, 62)
     assert rec["lags"] == {"primary": 2, "sensitivity": 3} and rec["operator"] == "size_only"
     assert sum(rec["left_out_by_reason"].values()) == rec["n_left_out"]
     assert set(rec["left_out_by_reason"]) == set(D.REASONS)
     for r in D.REASONS:
         assert rec["left_out_by_reason"][r] == sum(1 for x in rec["left_out"] if x["reason"] == r)
     keys = [r["record"] for r in rec["records"]] + [x["record"] for x in rec["left_out"]]
-    assert len(keys) == len(set(keys)) == 649
+    assert len(keys) == len(set(keys)) == 643
     assert set(keys) == {CS.key_of(o) for o in SS.primary()}
     assert sum(rec["grids_used"].values()) == rec["n_kept"]
     # both honest backtests are run, on the same kept records (test_cohort_depth_honest_backtest.py): nothing is left to run

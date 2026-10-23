@@ -66,23 +66,33 @@ def test_the_quoted_counts(inputs):
     # (122 + 7 = 129 -> 98 + 6 = 104: 82 net and 16 unstated at the basis step), the primary's two new steps join the
     # unusable-severity step (56 records whose figure is no mature-cohort movement, tagged NO_MATURE_COHORT_FIGURE, and
     # the 4 of the exchange-rate rule, tagged FX_UNTRANSLATED_TABLE), and its basis records fall from 7 to 6
+    # the recorded pass of 24 October 2026 at 38cd750 (the round-5 adjudication and review 8's decisions; 643 records):
+    # the basis step is unchanged (98 + 6 = 104; 82 net and 16 unstated), and the unusable-severity step gains six
+    # records in three components: the exchange-rate rule's fifth record (3000/2022; 4 -> 5), 4 restated-base tables
+    # (RESTATED_BASE_TABLE: a table whose base cells were restated, whose figure the mature-cohort rule cannot take)
+    # and 1 unmeasurable take-on (TAKEON_BASE_UNMEASURABLE: 1110/2022), so the step is 73 -> 79
     assert r["identity_basis"] == "98 + 6 = 104"
     assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (82, 16)
-    assert r["unusable_severity_components"] == {"fx_untranslated_table": 4,
+    assert r["unusable_severity_components"] == {"fx_untranslated_table": 5,
                                                  "gross_development_unavailable": 5,
                                                  "gross_triangle_does_not_reconcile": 1,
                                                  "no_mature_cohort_figure": 56,
                                                  "non_gross_or_unstated_development": 6,
-                                                 "provision_movement_not_development": 1}
-    assert r["identity_unusable_severity"] == "4 + 5 + 1 + 56 + 6 + 1 = 73"
+                                                 "provision_movement_not_development": 1,
+                                                 "restated_base_table": 4,
+                                                 "takeon_base_unmeasurable": 1}
+    assert r["identity_unusable_severity"] == "5 + 5 + 1 + 56 + 6 + 1 + 4 + 1 = 79"
     g = MC.regime_composition(rows)
     # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
     # of 38 and the corpus's 53 -> 55; the scanned filings' 60 and the basis identities above are unchanged
     # the regeneration of 23 October 2026 on the primary sample: the working sample's rows 31 + 5 + 2 of 38 -> 27 + 5 + 2
     # of 34 (the 34 RITC-regime records of the headline fit); the scanned filings' 60 and the corpus's 55 are unchanged
-    assert g["working_sample"]["composition"] == {"ritc_flagged": 27, "confirmed_transfer_not_flagged": 5,
+    # the recorded pass of 24 October 2026 at 38cd750 (643 records): the working sample's rows 27 + 5 + 2 of 34 -> 26 + 5
+    # + 2 of 33 (the 33 RITC-regime records of the headline fit; one RITC-flagged record left with the six); the
+    # scanned filings' 60 and the corpus's 55 are unchanged
+    assert g["working_sample"]["composition"] == {"ritc_flagged": 26, "confirmed_transfer_not_flagged": 5,
                                                   "takeon_only": 2}
-    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (34, 60, 55)
+    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (33, 60, 55)
 
 
 def test_a_flow_that_disagrees_is_refused(inputs):

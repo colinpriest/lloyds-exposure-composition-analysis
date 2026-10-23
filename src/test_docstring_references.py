@@ -6,7 +6,7 @@ that did not exist (review of 29 September 2026, A-3c). A reader who follows a c
 learns that the claim was never checked. So this scans the analysis sources (src/*.py other than the
 tests, and the repository's own top-level scripts) for every NAME.py they mention, in code, comments or
 docstrings, and requires each to be a file of this repository -- or one of the few named below that belong
-to another repository, with where that is. A cited "file (TestClass)" must also define that class.
+to another repository, or to this repository's results folders rather than src/, with where that is. A cited "file (TestClass)" must also define that class.
 
 Run:  python -m pytest src/test_docstring_references.py -q
 """
@@ -25,6 +25,10 @@ ELSEWHERE = {
                       "(github.com/colinpriest/lloyds-reserve-stress-testing)",
     "table_extraction.py": "the extraction repository, D:\\dev\\lloyds_reserve_stress_testing "
                            "(github.com/colinpriest/lloyds-reserve-stress-testing)",
+    # a script of THIS repository that lives in the round-5 reading folder rather than in src/ or the top level (cited
+    # by src/build_restated_base_excluded.py and src/build_fx_untranslated_excluded.py since the round-5 adjudication of
+    # 22 to 23 October 2026); test_the_in_repository_entries_exist_where_they_are_declared checks the path
+    "rebase_screen.py": "this repository, results/extraction_error_rate/mature-cohort/round5/screen/rebase_screen.py",
 }
 
 NAME = re.compile(r"(?<![\w/.\\-])(?:src/)?([A-Za-z_][A-Za-z0-9_]*\.py)\b")
@@ -71,6 +75,16 @@ def test_every_named_python_file_exists():
 def test_the_files_declared_elsewhere_are_really_not_here():
     for name in ELSEWHERE:
         assert name not in KNOWN, "%s is in this repository now: take it out of ELSEWHERE" % name
+
+
+def test_the_in_repository_entries_exist_where_they_are_declared():
+    """An ELSEWHERE entry that says 'this repository, <path>' names a file that is there, at that path."""
+    here = {n: d for n, d in ELSEWHERE.items() if d.startswith("this repository, ")}
+    assert "rebase_screen.py" in here
+    for name, d in here.items():
+        path = d[len("this repository, "):]
+        assert path.endswith("/" + name), (name, path)
+        assert os.path.isfile(os.path.join(HERE, *path.split("/"))), "%s is not at %s" % (name, path)
 
 
 def test_every_named_test_class_is_in_its_file():

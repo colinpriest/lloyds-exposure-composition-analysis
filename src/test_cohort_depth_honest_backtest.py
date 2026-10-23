@@ -323,8 +323,9 @@ def test_the_left_out_records_are_counted_by_the_primarys_size_quartile_reason_a
 
 
 # ------------------------------------------------------------------ the committed record (DEFERRED-TO-REFIT)
-def test_the_committed_record_holds_the_two_depths_on_the_same_592_records_and_the_left_out_composition():
-    """DEFERRED-TO-REFIT: written by the recorded pass."""
+def test_the_committed_record_holds_the_two_depths_on_the_same_kept_records_and_the_left_out_composition():
+    """DEFERRED-TO-REFIT: written by the recorded pass. (Named for the 592 kept records of the 649-record primary
+    until the recorded pass of 38cd750; the kept records are 581 of the 643, so the name no longer carries a count.)"""
     with io.open(os.path.join(HERE, "results", "check_cohort_depth_sensitivity_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
     h2, h3 = rec["honest_backtest_t_minus_2_on_the_kept_records"], rec["honest_backtest_t_minus_3"]
