@@ -11,6 +11,9 @@ pool. The depth sensitivity runs the same backtest on the kept records at their 
     check_operator_backtest's own functions, the quartile tables add up to the totals, and the per-target flags are
     one per target;
   * the u <= t-3 tables are set beside the primary's committed ones;
+  * a fold refit that diverges at target_accept 0.98 is refitted once at 0.995 (the full refits' rule), reported only if
+    the retry converges, and stops the run if it does not; the primary's fold path (check_operator_backtest.run_folds)
+    is unchanged;
   * the committed record (DEFERRED-TO-REFIT: written by the recorded pass).
 
 Run:  python -m pytest src/test_cohort_depth_honest_backtest.py -q
@@ -93,6 +96,199 @@ def test_the_sample_reaches_the_fold_fits(monkeypatch):
     monkeypatch.setattr(BT, "fit_training", lambda f, k=10, sample=None: (f, k, sample))
     assert BT.run_folds(1, 3, sample="S") == [(0, 3, "S"), (1, 3, "S"), (2, 3, "S")]
     assert BT.run_folds(1, 2) == [(0, 2, None), (1, 2, None)]
+
+
+# ------------------------------------------------------------------ the fold refits' convergence rule
+def _k_of(target_accept):
+    """The stand-in fit's posterior mean of k at a target_accept, so the attempt a figure comes from can be told."""
+    return 0.5 + 0.1 * target_accept
+
+
+def _stub_fold_fit(plan):
+    """A stand-in for fit_fold_at: plan[target_accept] is (divergences, max R-hat) for every fold, or a function of the
+    fold; the calls are kept. Each attempt has its own posterior means, so the attempt a record keeps can be told."""
+    calls = []
+
+    def fit(fold, k, sample, target_accept):
+        calls.append((fold, k, sample, target_accept))
+        div, rhat = plan[target_accept](fold) if callable(plan[target_accept]) else plan[target_accept]
+        means = dict(MEANS, k=_k_of(target_accept))
+        return {"fold": fold, "n_train": 10, "n_held_out": 2, "n_train_syndicates": 5, "n_held_out_syndicates": 1,
+                "params": {"k": {"mean": _k_of(target_accept)}}, "means": means,
+                "draws": {p: [m] * 3 for p, m in means.items()}, "seconds": 1.0,
+                "diagnostics": {"max_rhat": rhat, "min_ess_bulk": 1500.0, "divergences": div}}
+    return fit, calls
+
+
+def test_a_fold_that_diverges_is_refitted_once_at_the_higher_target_accept_and_the_retry_is_reported():
+    fit, calls = _stub_fold_fit({0.98: (1, 1.0016), 0.995: (0, 1.002)})
+    out = D.converging_fold_fit(4, 10, "S", fit=fit)
+    assert calls == [(4, 10, "S", 0.98), (4, 10, "S", 0.995)]
+    assert out["target_accept"] == 0.995 and out["diagnostics"] == {"max_rhat": 1.002, "min_ess_bulk": 1500.0, "divergences": 0}
+    assert out["means"]["k"] == pytest.approx(_k_of(0.995))                # the retry's figures, not the first attempt's
+    first, second = out["attempts"]
+    assert (first["target_accept"], first["converged"], first["reported"]) == (0.98, False, False)
+    assert first["diagnostics"]["divergences"] == 1 and first["diagnostics"]["max_rhat"] == 1.0016
+    assert (second["target_accept"], second["converged"], second["reported"]) == (0.995, True, True)
+    assert second["diagnostics"]["divergences"] == 0
+    # the attempt that is not reported keeps what it would have reported
+    assert first["means"]["k"] == pytest.approx(_k_of(0.98)) and first["params"] == {"k": {"mean": _k_of(0.98)}}
+    assert "means" not in second and "params" not in second
+
+
+def test_a_fold_that_converges_at_the_first_target_accept_is_not_retried():
+    fit, calls = _stub_fold_fit({0.98: (0, 1.004), 0.995: (1, 1.5)})
+    out = D.converging_fold_fit(2, 10, None, fit=fit)
+    assert [c[3] for c in calls] == [0.98]
+    assert out["target_accept"] == 0.98 and len(out["attempts"]) == 1
+    assert (out["attempts"][0]["converged"], out["attempts"][0]["reported"]) == (True, True)
+    assert out["means"]["k"] == pytest.approx(_k_of(0.98))
+
+
+def test_a_fold_whose_retry_also_diverges_stops_the_run_and_names_both_attempts():
+    fit, calls = _stub_fold_fit({0.98: (2, 1.003), 0.995: (1, 1.002)})
+    with pytest.raises(SystemExit, match=r"fold 7 has not converged.*target_accept 0\.98.*target_accept 0\.995"):
+        D.converging_fold_fit(7, 10, None, fit=fit)
+    assert [c[3] for c in calls] == [0.98, 0.995]                      # one retry, no more
+
+
+def test_a_retry_that_does_not_diverge_but_fails_on_r_hat_is_not_reported():
+    fit, calls = _stub_fold_fit({0.98: (1, 1.003), 0.995: (0, 1.02)})
+    with pytest.raises(SystemExit, match="has not converged"):
+        D.converging_fold_fit(1, 10, None, fit=fit)
+    assert [c[3] for c in calls] == [0.98, 0.995]
+
+
+def test_a_fold_that_fails_on_r_hat_with_no_divergence_is_not_retried_and_stops_the_run():
+    fit, calls = _stub_fold_fit({0.98: (0, 1.02), 0.995: (0, 1.0)})
+    with pytest.raises(SystemExit, match="has not converged"):
+        D.converging_fold_fit(3, 10, None, fit=fit)
+    assert [c[3] for c in calls] == [0.98]
+
+
+def test_only_the_fold_that_diverges_is_retried_and_the_record_keeps_every_fold_s_attempts():
+    plan = {0.98: lambda fold: (1, 1.002) if fold == 4 else (0, 1.001), 0.995: (0, 1.001)}
+    fit, calls = _stub_fold_fit(plan)
+    fits = D.run_converging_folds(1, 10, None, fit=lambda f, k, s: D.converging_fold_fit(f, k, s, fit=fit))
+    assert [f["fold"] for f in fits] == list(range(10))
+    assert sorted(c[3] for c in calls) == [0.98] * 10 + [0.995]
+    recs = _recs()
+    out = D.honest_backtest(recs, CFG, fits=fits)
+    rec = out["honest"]["fits"]
+    assert out["honest"]["folds_retried"] == [4]
+    assert [f["target_accept"] for f in rec] == [0.995 if i == 4 else 0.98 for i in range(10)]
+    assert [len(f["attempts"]) for f in rec] == [2 if i == 4 else 1 for i in range(10)]
+    assert [a["reported"] for a in rec[4]["attempts"]] == [False, True]
+    assert all(f["attempts"][-1]["reported"] and f["attempts"][-1]["converged"] for f in rec)
+    # the reported diagnostics are the last attempt's, and the operator reads the retry's means
+    assert rec[4]["diagnostics"] == rec[4]["attempts"][-1]["diagnostics"] and rec[4]["diagnostics"]["divergences"] == 0
+    assert out["sampler"]["target_accept"] == 0.98 and out["sampler"]["target_accept_retry"] == 0.995
+    th = {f["fold"]: BT.operator_params(f["means"]) for f in fits}
+    assert th[4]["k"] == pytest.approx(_k_of(0.995)) and th[3]["k"] == pytest.approx(_k_of(0.98))
+
+
+def test_a_fold_fit_that_did_not_come_through_the_rule_is_one_attempt_at_the_primarys_target_accept():
+    out = D.honest_backtest(_recs(), CFG, fits=_fits())
+    assert out["honest"]["folds_retried"] == []
+    for f in out["honest"]["fits"]:
+        assert f["target_accept"] == BT.TARGET_ACCEPT == 0.98
+        assert f["attempts"] == [{"target_accept": 0.98, "diagnostics": f["diagnostics"], "converged": True,
+                                  "reported": True}]
+
+
+def test_honest_backtest_runs_its_folds_through_the_rule_and_not_through_the_primarys_run_folds(monkeypatch):
+    seen = {}
+
+    def spy(workers, k=10, sample=None, fit=None):
+        seen["args"] = (workers, k, sample)
+        return _fits()
+
+    def refused(*a, **kw):
+        raise AssertionError("the primary's run_folds was used for the depth sensitivity's folds")
+
+    monkeypatch.setattr(D, "run_converging_folds", spy)
+    monkeypatch.setattr(BT, "run_folds", refused)
+    recs = _recs()
+    D.honest_backtest(recs, CFG, workers=5)
+    workers, k, sample = seen["args"]
+    S, R, H, yr, key = CS.arrays(recs)
+    assert (workers, k) == (5, 10) and np.array_equal(sample[0], S) and np.array_equal(sample[2], H)
+    assert list(sample[4]) == [o["syndicate"] for o in recs]
+
+
+def test_fit_fold_at_sets_the_target_accept_for_the_call_and_puts_the_primarys_back(monkeypatch):
+    during = []
+
+    def fake_fit_training(fold, k=10, sample=None):
+        during.append(BT.TARGET_ACCEPT)
+        if fold == 9:
+            raise RuntimeError("sampler failed")
+        return {"fold": fold, "k": k, "sample": sample}
+
+    monkeypatch.setattr(BT, "fit_training", fake_fit_training)
+    assert BT.TARGET_ACCEPT == D.TARGET_ACCEPT_FIRST == 0.98
+    assert D.fit_fold_at(2, 10, "S", 0.995) == {"fold": 2, "k": 10, "sample": "S"}
+    assert during == [0.995] and BT.TARGET_ACCEPT == 0.98
+    assert D.fit_fold_at(3, 10, "S", 0.98)["fold"] == 3 and during == [0.995, 0.98]
+    with pytest.raises(RuntimeError):
+        D.fit_fold_at(9, 10, "S", 0.995)
+    assert during[-1] == 0.995 and BT.TARGET_ACCEPT == 0.98                 # put back although the fit raised
+
+
+def test_the_primarys_fold_path_is_unchanged(monkeypatch):
+    """check_operator_backtest.run_folds still maps its own fit_training over (fold, k, sample) with no retry and no
+    target_accept argument; the depth sensitivity's rule is its own."""
+    import inspect
+    assert list(inspect.signature(BT.run_folds).parameters) == ["workers", "k", "sample"]
+    assert list(inspect.signature(BT.fit_training).parameters) == ["fold", "k", "sample"]
+    assert BT.TARGET_ACCEPT == 0.98 and BT.FIT_SEED == 42 and BT.DRAWS == 1500 and BT.TUNE == 1500 and BT.CHAINS == 4
+
+    def refused(*a, **kw):
+        raise AssertionError("the primary's fold path went through the depth sensitivity's rule")
+
+    monkeypatch.setattr(D, "converging_fold_fit", refused)
+    monkeypatch.setattr(D, "fit_fold_at", refused)
+    monkeypatch.setattr(D, "run_converging_folds", refused)
+    monkeypatch.setattr(BT, "fit_training", lambda f, k=10, sample=None: (f, k, sample))
+    assert BT.run_folds(1, 3, sample="S") == [(0, 3, "S"), (1, 3, "S"), (2, 3, "S")]
+    assert BT.run_folds(1, 2) == [(0, 2, None), (1, 2, None)]
+    assert BT.TARGET_ACCEPT == 0.98
+
+
+def test_run_converging_folds_runs_the_folds_in_order_on_one_worker_and_on_a_pool():
+    """pow(fold, k, sample) is a picklable stand-in for the fit: a different value for every fold."""
+    want = [pow(f, 10, 1009) for f in range(10)]
+    assert D.run_converging_folds(1, 10, 1009, fit=pow) == want
+    assert D.run_converging_folds(2, 10, 1009, fit=pow) == want
+
+
+def test_the_fold_fits_of_the_committed_record_come_through_the_rule_and_keep_their_attempts():
+    """DEFERRED-TO-REFIT: written by the recorded pass."""
+    with io.open(os.path.join(HERE, "results", "check_cohort_depth_sensitivity_results.json"), encoding="utf-8") as fh:
+        rec = json.load(fh)
+    for name in ("honest_backtest_t_minus_2_on_the_kept_records", "honest_backtest_t_minus_3"):
+        honest = rec[name]["honest"]
+        assert rec[name]["sampler"]["target_accept"] == D.TARGET_ACCEPT_FIRST
+        assert rec[name]["sampler"]["target_accept_retry"] == D.TARGET_ACCEPT_RETRY
+        assert len(honest["fits"]) == 10
+        retried = []
+        for f in honest["fits"]:
+            att = f["attempts"]
+            assert 1 <= len(att) <= 2 and [a["target_accept"] for a in att] == [D.TARGET_ACCEPT_FIRST,
+                                                                                 D.TARGET_ACCEPT_RETRY][:len(att)]
+            reported = [a for a in att if a["reported"]]
+            assert len(reported) == 1 and reported[0] is att[-1] and reported[0]["converged"] is True
+            assert f["target_accept"] == reported[0]["target_accept"] and f["diagnostics"] == reported[0]["diagnostics"]
+            assert f["diagnostics"]["divergences"] == 0 and f["diagnostics"]["max_rhat"] <= 1.01
+            if len(att) == 2:
+                retried.append(f["fold"])
+                # a retry is made only for a divergent first attempt, and keeps what that attempt would have reported
+                assert att[0]["diagnostics"]["divergences"] > 0 and att[0]["converged"] is False
+                assert att[0]["reported"] is False and set(att[0]["means"]) == set(BT.OPERATOR_PARAMS)
+                assert f["target_accept"] == D.TARGET_ACCEPT_RETRY
+            else:
+                assert f["target_accept"] == D.TARGET_ACCEPT_FIRST
+        assert honest["folds_retried"] == retried
 
 
 def test_the_folds_are_the_depth_samples_own_syndicates(monkeypatch):
@@ -370,7 +566,8 @@ def test_the_committed_record_holds_the_two_depths_on_the_same_kept_records_and_
 def test_the_docstring_states_the_left_out_composition_the_record_holds():
     """The numbers in the script's docstring are the record's (so the prose cannot drift from the table)."""
     with io.open(os.path.join(HERE, "results", "check_cohort_depth_sensitivity_results.json"), encoding="utf-8") as fh:
-        lo = json.load(fh)["left_out_by_primary_size_quartile"]
+        rec = json.load(fh)
+    lo = rec["left_out_by_primary_size_quartile"]
     doc = " ".join(D.__doc__.split())
     n = [lo["size_quartile_%d" % j]["n_left_out"] for j in (1, 2, 3, 4)]
     np_ = lo["n_primary_in_quartile"]
@@ -378,11 +575,23 @@ def test_the_docstring_states_the_left_out_composition_the_record_holds():
     assert "%d of %d in quartile 2, %d of %d in quartile 3 and %d of %d in quartile 4" % (
         n[1], np_[1], n[2], np_[2], n[3], np_[3]) in doc
     by = [lo["size_quartile_%d" % j]["by_reason"] for j in (1, 2, 3, 4)]
-    assert "43 have no figure on u <= t-3 (%d, %d, %d and %d in quartiles 1 to 4)" % tuple(
-        b["no_figure_at_t_minus_3"] for b in by) in doc
-    assert "14 have a figure no stored grid reproduces (%d, %d, %d and %d)" % tuple(
-        b["figure_not_reproduced_from_a_stored_grid"] for b in by) in doc
-    assert "Forty-eight syndicates have a record left out" in doc and len(lo["by_syndicate"]) == 48
+    no_fig = [b["no_figure_at_t_minus_3"] for b in by]
+    no_grid = [b["figure_not_reproduced_from_a_stored_grid"] for b in by]
+    assert "%d have no figure on u <= t-3 (%d, %d, %d and %d in quartiles 1 to 4)" % (sum(no_fig), *no_fig) in doc
+    assert "%d have a figure no stored grid reproduces (%d, %d, %d and %d)" % (sum(no_grid), *no_grid) in doc
+    assert "%d records left out are not a random %d" % (rec["n_left_out"], rec["n_left_out"]) in doc
+    assert ("The primary's backtest is on %d records and this one on the %d kept" % (rec["n_primary"], rec["n_kept"])) in doc
+    assert "side-by-side table on the %d is" % rec["n_kept"] in doc
+    pe, ke = lo["edges_gbp_m"], rec["honest_backtest_t_minus_3"]["size_quartiles"]["edges_gbp_m"]
+    assert "the primary's %d/%d/%d against %d/%d/%d" % tuple(int(round(e)) for e in (*pe, *ke)) in doc
+    q1 = SS.load_json(D.BACKTEST_RECORD)["per_target"]["by_size_quartile"]["honest_plug_in"]["leave_out"]["0.99"]["size_quartile_1"]
+    by1991 = dict((int(s), n) for s, n in q1["exceedances_by_syndicate"])[1991]
+    assert "syndicate 1991 carries six of the primary's eight exceedances at 99%" in doc
+    assert (by1991, q1["exceedances"]) == (6, 8)
+    n_syn = len(lo["by_syndicate"])
+    words = {40: "Forty", 50: "Fifty"}
+    ones = ["", "-one", "-two", "-three", "-four", "-five", "-six", "-seven", "-eight", "-nine"]
+    assert "%s syndicates have a record left out" % (words[n_syn // 10 * 10] + ones[n_syn % 10]) in doc
     assert "Syndicate 382 has six" in doc and lo["by_syndicate"]["382"]["n_left_out"] == 6
     assert "OUTSIDE a test of that cell by construction" in doc and "not a test of the primary's quartile 1" in doc
 

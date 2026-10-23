@@ -36,7 +36,12 @@ target_accept the reported figures come from (fit_target_accept); fit_convergenc
 that is not reported ("reported": false) also keeps what it would have reported, computed from its own draws with no
 further fit: its unrounded_summary and its vignette_centre (Vignette 1's and Vignette 2's VaR99 and VaR99.5 among
 them), so the record shows what the retry changed. The
-honest-backtest fold fits are not retried: their divergences are recorded as before. The retry is a decision of the
+honest-backtest fold fits follow the same rule (converging_fold_fit, run by this script's own run_converging_folds, so
+check_operator_backtest.py's fold path is untouched): a fold refit that diverges at 0.98 is refitted once at 0.995 with
+the same seed and every other setting unchanged, its figures are used only if that refit converges, and the run stops if
+the retry also fails (or if a fold fails on R-hat with no divergence). Each fold keeps both attempts' diagnostics
+(attempts, in honest.fits) and the target_accept its reported fit comes from (target_accept); an attempt that is not
+reported keeps the parameters it would have reported. The retry is a decision of the
 Claude analysis session; a higher target_accept changes the sampler's step size, not the model, and the posterior it
 targets is the same.
 
@@ -63,18 +68,18 @@ exceedances, the targets that exceed at both depths or at one, and every target 
 comparison that isolates the depth.
 
 The comparison with the primary's own backtest (honest_backtest_t_minus_3.against_the_primarys_backtest) is NOT
-like for like. The primary's backtest is on 649 records and this one on the 592 kept, so they differ in sample, and so in
-the quartile edges (the primary's 172/419/830 against 195/448/913): "quartile 1" is a different set of books in each. The
-57 records left out are not a random 57. By the PRIMARY's size quartile they are 36 of its 162 smallest books (22%), 5 of
-162 in quartile 2, 11 of 162 in quartile 3 and 5 of 163 in quartile 4
+like for like. The primary's backtest is on 643 records and this one on the 581 kept, so they differ in sample, and so in
+the quartile edges (the primary's 173/425/837 against 198/458/913): "quartile 1" is a different set of books in each. The
+62 records left out are not a random 62. By the PRIMARY's size quartile they are 37 of its 161 smallest books (23%), 9 of
+160 in quartile 2, 11 of 161 in quartile 3 and 5 of 161 in quartile 4
 (left_out_by_primary_size_quartile in the record). By reason: 43 have no figure on u <= t-3 (32, 2, 8 and 1 in quartiles
-1 to 4) and 14 have a figure no stored grid reproduces (4, 3, 3 and 4). A record left out for having no figure on
+1 to 4) and 19 have a figure no stored grid reproduces (5, 7, 3 and 4). A record left out for having no figure on
 u <= t-3 is a young book whose only mature cell is u = t-2; it is OUTSIDE a test of that cell by construction, so the
 u <= t-3 backtest cannot say anything about the very books whose u = t-2 cell is in question. Syndicate 1991 has two
 records left out, 1991/2015 (no figure at t-3) and 1991/2018 (no stored grid), both in the primary's quartile 1, where
-syndicate 1991 carries six of the primary's nine exceedances at 99%. Syndicate 382 has six (2015 to 2020, no stored grid). Forty-eight
+syndicate 1991 carries six of the primary's eight exceedances at 99%. Syndicate 382 has six (2015 to 2020, no stored grid). Fifty-one
 syndicates have a record left out. The t-3 backtest is therefore not a test of the primary's quartile 1 finding; the
-side-by-side table on the 592 is.
+side-by-side table on the 581 is.
 
 Writes check_cohort_depth_sensitivity_results.json.
 Usage:  python src/check_cohort_depth_sensitivity.py [workers]
@@ -84,6 +89,7 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 
@@ -111,7 +117,8 @@ SEVERITY_TOL = 1.0e-9
 #: then every block's RAG triangle and claims triangle
 GRID_FIELDS = ("_rag_triangle", "_claims_triangle")
 LEVELS = (0.99, 0.995)
-#: the full refits' target_accept: the headline's 0.98, and the one retry if that attempt diverges (same seed)
+#: the full refits' and the fold refits' target_accept: the headline's 0.98 (check_operator_backtest.TARGET_ACCEPT, which the
+#: fold refits use), and the one retry if that attempt diverges (same seed)
 TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY = 0.98, 0.995
 #: the reasons a record is left out, in the order they are decided
 REASONS = ("sign_flipped_by_the_loader", "figure_not_reproduced_from_a_stored_grid", "no_figure_at_t_minus_3",
@@ -261,14 +268,80 @@ def cheap_backtest(recs, idata, cfg, levels=LEVELS):
 DEPTH_WORDS = {"t_minus_2": "u <= t-2", "t_minus_3": "u <= t-3"}
 
 
+def fit_fold_at(fold, k, sample, target_accept):
+    """check_operator_backtest.fit_training for one fold at `target_accept`. fit_training reads the module's
+    TARGET_ACCEPT when it samples and takes no such argument (the primary's backtest, whose file this script does not
+    change, always runs it at 0.98), so the constant is set for the call and put back afterwards, in the process that
+    runs the fold (a pool worker, or the caller when workers <= 1). At 0.98 this is the primary's own call."""
+    saved = BT.TARGET_ACCEPT
+    BT.TARGET_ACCEPT = target_accept
+    try:
+        return BT.fit_training(fold, k, sample)
+    finally:
+        BT.TARGET_ACCEPT = saved
+
+
+def converging_fold_fit(fold, k=BT.K_HONEST, sample=None, fit=None):
+    """One fold's refit under the rule the full refits use (converging_fit): the fold is fitted at TARGET_ACCEPT_FIRST;
+    if that DIVERGES it is fitted once more at TARGET_ACCEPT_RETRY, with the same seed and every other setting
+    unchanged, and its figures are used only if that refit converges (no divergence, max R-hat <= 1.01:
+    refit_vignettes.converged). A fold that fails on R-hat with no divergence is not retried. If the last attempt has not
+    converged the run stops and names both attempts' diagnostics.
+
+    Returns the reported attempt's fit (check_operator_backtest.fit_training's dict) with "target_accept" (that
+    attempt's) and "attempts" (every attempt: target_accept, diagnostics, converged, reported; an attempt that
+    is not reported also keeps the "params" and "means" it would have reported, from its own draws, so the record shows
+    what the retry changed). `fit(fold, k, sample, target_accept)` stands in for fit_fold_at (a test's). A top-level
+    function with picklable arguments, so a pool of worker processes can run it."""
+    fit = fit_fold_at if fit is None else fit
+    attempts, fitted = [], []
+    for target_accept in (TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY):
+        f = fit(fold, k, sample, target_accept)
+        diag = f["diagnostics"]
+        ok = bool(RV.converged(diag))
+        attempts.append({"target_accept": target_accept, "diagnostics": diag, "converged": ok})
+        fitted.append(f)
+        if ok:
+            for i, (a, earlier) in enumerate(zip(attempts, fitted)):
+                a["reported"] = i == len(attempts) - 1
+                if not a["reported"]:
+                    a["params"], a["means"] = earlier["params"], earlier["means"]
+            return {**f, "target_accept": target_accept, "attempts": attempts}
+        if diag["divergences"] == 0:
+            break
+    raise SystemExit("fold %d has not converged (%s): no figures are written"
+                     % (fold, "; ".join("target_accept %g: %s" % (a["target_accept"], a["diagnostics"])
+                                         for a in attempts)))
+
+
+def run_converging_folds(workers, k=BT.K_HONEST, sample=None, fit=None):
+    """check_operator_backtest.run_folds with converging_fold_fit in place of fit_training: the k fold refits, in fold
+    order, on `workers` worker processes (the count does not change the numbers). `fit` stands in for
+    converging_fold_fit (a test's; it must be picklable where workers > 1)."""
+    fit = converging_fold_fit if fit is None else fit
+    if workers <= 1:
+        return [fit(f, k, sample) for f in range(k)]
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        return list(ex.map(fit, range(k), [k] * k, [sample] * k))
+
+
+def fold_attempts(f):
+    """(target_accept, attempts) of a fold fit: the reported attempt's target_accept and every attempt's diagnostics. A
+    fit that did not come through converging_fold_fit (a test's stand-in) is one attempt at the primary's target_accept."""
+    if "attempts" in f:
+        return f["target_accept"], f["attempts"]
+    return BT.TARGET_ACCEPT, [{"target_accept": BT.TARGET_ACCEPT, "diagnostics": f["diagnostics"],
+                               "converged": bool(RV.converged(f["diagnostics"])), "reported": True}]
+
+
 def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=None, depth="t_minus_3"):
     """The honest ten-fold operator backtest on `recs` (the kept records, at their severities at `depth`: the primary's
     u <= t-2 severities, or the u <= t-3 ones), as check_operator_backtest.compute runs it on the primary: the syndicates
-    dealt into k folds by fold_assignment, the adopted model refitted on each fold's training syndicates (BT.run_folds on
-    this sample), and each held-out syndicate-year scored against the VaR the headline operator reads from the training
-    pool at the fold's posterior means (honest) and over its posterior draws (honest_posterior_draws), with the
-    per-target flags and the by-size-quartile tables (BT.per_target_block). `fits` stands in for the fold fits (a
-    test's)."""
+    dealt into k folds by fold_assignment, the adopted model refitted on each fold's training syndicates (run_converging_folds
+    on this sample: a fold that diverges at 0.98 is refitted once at 0.995, as the full refits are), and each held-out
+    syndicate-year scored against the VaR the headline operator reads from the training pool at the fold's posterior means
+    (honest) and over its posterior draws (honest_posterior_draws), with the per-target flags and the by-size-quartile
+    tables (BT.per_target_block). `fits` stands in for the fold fits (a test's)."""
     if depth not in DEPTH_WORDS:
         raise SystemExit("unknown outcome depth %r (one of %s)" % (depth, sorted(DEPTH_WORDS)))
     words = DEPTH_WORDS[depth]
@@ -280,7 +353,7 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
     edges, quart = BT.size_quartiles(R)
     t_fit = time.time()
     if fits is None:
-        fits = BT.run_folds(workers, k, sample=(S, R, H, yr, syn, ritc.astype(float)))
+        fits = run_converging_folds(workers, k, sample=(S, R, H, yr, syn, ritc.astype(float)))
     fit_wall = time.time() - t_fit
     thetas = {int(f["fold"]): BT.operator_params(f["means"]) for f in fits}
     plug_in_q, draw_q = {}, {}
@@ -290,8 +363,10 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
         "neither the pool nor the fit",
         False, S, R, H, ritc, syn, yr, fold, thetas, cfg, W, capture=plug_in_q)
     honest["folds"] = k
-    honest["fits"] = [{key_: f[key_] for key_ in ("fold", "n_train", "n_held_out", "n_train_syndicates",
-                                                  "n_held_out_syndicates", "params", "diagnostics")} for f in fits]
+    honest["fits"] = [{**{key_: f[key_] for key_ in ("fold", "n_train", "n_held_out", "n_train_syndicates",
+                                                     "n_held_out_syndicates", "params", "diagnostics")},
+                       "target_accept": fold_attempts(f)[0], "attempts": fold_attempts(f)[1]} for f in fits]
+    honest["folds_retried"] = [int(f["fold"]) for f in fits if len(fold_attempts(f)[1]) > 1]
     draws = BT.posterior_draws_block(S, R, H, ritc, syn, yr, fold, fits, cfg, W, honest["pool_rules"], capture=draw_q)
     targets = dict(zip(("V1", "V2_old", "V2_new"), BT.load_targets()))
     per_target = BT.per_target_block(S, R, ritc, syn, yr, W, plug_in_q, draw_q, targets)
@@ -308,7 +383,10 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
                             "weights": "uniform Dirichlet over syndicates, a syndicate's years sharing its weight",
                             "reading": "a posterior over the exceedance rate under the bootstrap, not a test"},
         "sampler": {"draws": BT.DRAWS, "tune": BT.TUNE, "chains": BT.CHAINS, "target_accept": BT.TARGET_ACCEPT,
-                    "seed": BT.FIT_SEED},
+                    "seed": BT.FIT_SEED, "target_accept_retry": TARGET_ACCEPT_RETRY,
+                    "retry_rule": ("a fold fit that diverges at target_accept is refitted once at target_accept_retry, "
+                                   "same seed, and used only if that refit converges (no divergence, max R-hat <= "
+                                   "1.01); the run stops if it does not")},
         "honest": honest,
         "honest_posterior_draws": draws,
         "per_target": per_target,
@@ -615,6 +693,14 @@ def main(argv=None):
           % (hb["n"], len(hb["honest"]["fits"]), hb["runtime_seconds"]["workers"], hb["runtime_seconds"]["fold_fits_wall"],
              [f["diagnostics"]["divergences"] for f in hb["honest"]["fits"]],
              max(f["diagnostics"]["max_rhat"] for f in hb["honest"]["fits"])))
+    for name in ("honest_backtest_t_minus_2_on_the_kept_records", "honest_backtest_t_minus_3"):
+        for f in out[name]["honest"]["fits"]:
+            if len(f["attempts"]) > 1:
+                print("  %s fold %d retried: %s" % (name, f["fold"], "; ".join(
+                    "target_accept %g divergences %d max R-hat %.4f min bulk ESS %.0f %s" % (
+                        a["target_accept"], a["diagnostics"]["divergences"], a["diagnostics"]["max_rhat"],
+                        a["diagnostics"]["min_ess_bulk"], "(reported)" if a["reported"] else "(not reported)")
+                    for a in f["attempts"])))
     for src in ("honest_plug_in", "honest_posterior_draws"):
         for a in ("0.99", "0.995"):
             tab = hb["per_target"]["by_size_quartile"][src]["leave_out"][a]
