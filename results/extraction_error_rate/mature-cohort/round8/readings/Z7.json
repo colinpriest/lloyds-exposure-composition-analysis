@@ -1,0 +1,113 @@
+{
+ "4747_2024": {
+  "read_by": "text layer plus page images (2024 p48, 2023 p39, copied to renders/)",
+  "pages": {
+   "2024": [
+    32,
+    33,
+    35,
+    48
+   ],
+   "2023": [
+    16,
+    18,
+    28,
+    30,
+    39
+   ]
+  },
+  "item1_control": {
+   "table": "syndicate_4747_2023 p39 (printed p36), 'Estimate of cumulative gross claims incurred', GBP 000, UYs 2020-2023",
+   "latest_diagonal": "2020 3yrs later 6,866; 2021 2yrs later 19,613; 2022 1yr later 17,343; 2023 first year 7,482 = 51,304",
+   "previous_diagonal": "2020 2yrs later 7,432; 2021 1yr later 13,100; 2022 first year 2,859 = 23,391",
+   "implied_gross_incurred_2023": 27913,
+   "accounts_2023": "gross claims incurred (30,063) p28 segmental total 'Total 92,087 62,280 (30,063)'; = gross claims paid 10,259 + change in gross claims provision 19,804 (p16 income statement)",
+   "control_diff_pct": -7.2,
+   "outstanding_tie": "table 'Total gross outstanding claims (all years)' 38,860 = balance sheet/technical provisions note claims outstanding gross 38,860 (p30; 2024 report p35 shows same opening)",
+   "paid_test": "not available: the table prints cumulative paid at one date only (end 2023: 4,843+5,883+1,254+464 = 12,444). Cross-report: 12,444 less 2022 balance not printed"
+  },
+  "item2_basis_each_table": {
+   "2023_table": "p39: 'cumulative incurred claims development, including both claims notified and IBNR for each underwriting year, together with the cumulative payments to date on a gross and net of reinsurance basis at the balance sheet date'; 'translate estimated claims and claims payments at a consistent rate of exchange as determined by the balance sheet date'. UYs 2020-2023 only, no '& prior' column. Outstanding ties to the balance sheet (earned/booked claims outstanding, which excludes unexpired risk), so earned-type basis. First-year cells: UY2023 7,482 = 8.1% of 2023 GWP 92,087 (12.0% of earned 62,280); UY2022 2,859 = 6.4% of 2022 GWP 44,781.",
+   "2024_table": "p48 (printed p45): same wording, 'All numbers presented in GBP 000', UYs 2020-2024, no '& prior'. Latest diagonal less paid = reserves 2,002+6,916+18,401+39,472+8,656 = 75,447 = balance sheet gross claims outstanding 75,447 (p35). First-year cells: UY2024 9,151 = 5.6% of 2024 GWP 163,404 (7.0% of earned 129,941); UY2023 34,726 = 37.7% of 2023 GWP 92,087 (55.8% of earned 62,280), against 7,482 printed for the same cell in the 2023 report.",
+   "notes": "No note in either report on what the table includes or excludes beyond the heading text. The only restatement noted in the 2024 report (Note 4, p31) is the syndicate management fee (operating expenses, DAC, members balances); gross claims incurred 2023 is unchanged at 30,063 (p33) and claims outstanding at 1 Jan 2024 unchanged at 38,860."
+  },
+  "item4_year_t": {
+   "table": "syndicate_4747_2024 p48 gross table",
+   "latest_diagonal": "2020 4yrs later 2,215; 2021 3yrs later 11,080; 2022 2yrs later 26,218; 2023 1yr later 47,918; 2024 first year 9,151 = 96,582",
+   "previous_diagonal": "2020 3yrs later 6,863; 2021 2yrs later 19,194; 2022 1yr later 24,572; 2023 first year 34,726 = 85,355",
+   "implied_gross_incurred_2024": 11227,
+   "accounts_2024": "gross claims incurred (61,923) p32 segmental 'Total 163,404 129,941 (61,923)'; = expected cost of current year claims 62,121 less 198 change in prior year estimates (p35); gross claims paid 22,111",
+   "year_t_diff_pct": -81.9,
+   "miss_gbp000": -50696,
+   "ratio_pct_miss_to_control": 11.4,
+   "ratio_absolute_miss": 23.6,
+   "mature_cohort_check": "u<=2022: 2020 2,215-6,863 = -4,648; 2021 11,080-19,194 = -8,114; 2022 26,218-24,572 = +1,646; sum -11,116 (GBP 000)",
+   "cross_report_history": "The 2024 table's end-2023 cells are not the 2023 report's latest cells: 2020 6,863 vs 6,866; 2021 19,194 vs 19,613; 2022 24,572 vs 17,343 (+7,229); 2023 34,726 vs 7,482 (+27,244). Sum of the 2023-year-end diagonal 85,355 vs 51,304 (+34,051), while the balance sheet outstanding at end 2023 is unchanged at 38,860. Cumulative gross paid also falls: 2020 UY paid 4,843 (2023 p39) vs 213 (2024 p48), 2021 5,883 vs 4,164, so the 'paid' row is not a true cumulative payments row in the 2024 table (total 21,135 at end 2024 for UYs 2020-24 vs 12,444 at end 2023 for UYs 2020-23 = implied 8,691 paid against 22,111 gross claims paid in 2024 accounts p35). No explanation found in the 2024 report for the restated history (searched restat, p27, p31 only restate the management fee)."
+  },
+  "item3_shared_basis_gap": {
+   "answer": "no",
+   "reason": "The control (2023 table) is internally consistent with the 2023 report: both its diagonals are as printed in the 2023 report, outstanding ties (38,860), and it has no outside column. Its -2,150 (-7.2%) gap has no named basis explanation in the pages (FX: all cells at closing rate, accounts claims incurred excludes the -570 FX effect; no '& prior' column; first-year cells are small, 8% of GWP, so it is not an ultimate/underwriting-basis table). The only candidate named difference, ultimate (UPR-inclusive) against earned, is not shared: in the 2024 table the end-2023 diagonal is 34,051 above what the 2023 report printed for the same cells (UY2023 +27,244, about 51% of the 53,283 gross unearned premium at end 2023, which looks like a loss ratio on unexpired risk; UY2022 +7,229, which cannot be unexpired risk as 2022 policies have expired), while the end-2024 diagonal ties to earned outstanding (75,447) and the UY2024 first-year cell 9,151 is only 5.6% of GWP, so the two diagonals in the year t table are on different bases and the control's are not. Even if the whole +34,051 were basis, the year t miss would still be -16.6m (-27%) after adding it back (11,227+34,051 = 45,278 vs 61,923). The control's gap is -2,150 (4.0% of the 53,283 gross UPR) against year t's -50,696 (60% of the 84,275 gross UPR at end 2024).",
+   "status": "no (not the same gap; the control gap has no named basis explanation and the year t gap is mostly a restated prior diagonal)"
+  },
+  "control_diff_pct": -7.2,
+  "year_t_diff_pct": -81.9,
+  "ratio": "11.4 on percentage (23.6 on absolute GBP 000)",
+  "rule_consequence": "Control gap 7.2% is above 5% and no shared basis gap holds, so under the stated rule the 10% route is unavailable and the control does not tie on the 5% test; separate fact: year t miss is at least three times the control's. Under a 5% control threshold the control fails.",
+  "contradicts_premises": "The year t miss is not a basis gap shared with the control: the 2024 table's own end-2023 diagonal differs from the 2023 report's by +34,051 (history restated, unexplained) and its cumulative paid row falls below the 2023 report's (2020 UY 4,843 -> 213). Both reports' outstanding tie to their balance sheets (38,860; 75,447)."
+ },
+ "780_2016": {
+  "read_by": "page images (scanned, rotated 270; OCR text garbled for the table pages, so every table cell was read from the rotated-upright render in renders/s780_2016_p30_up.png and s780_2015_p28_up.png); OCR text for the accounts pages, checked against the image for 2015 p12",
+  "pages": {
+   "2016": [
+    12,
+    25,
+    28,
+    30
+   ],
+   "2015": [
+    12,
+    28
+   ]
+  },
+  "units": "2016 report USD millions (header 'All amounts are shown in USD millions'); 2015 report USD 000",
+  "item1_control": {
+   "table": "syndicate_780_2015 p28 (printed p27) 'Earned gross claims', 'Year of account', 'At the end of calendar year', $000, YOAs 2011-2015 plus '2010 & prior'",
+   "rows": "2011: 241,898 / 273,675 / 271,086 / 258,337 / 255,730; 2012: 108,080 / 143,551 / 134,331 / 124,949; 2013: 87,421 / 123,086 / 114,824; 2014: 75,551 / 130,878; 2015: 75,192; cum payments (218,915) (90,546) (68,453) (55,247) (9,406); balance to pay 36,815 34,403 46,371 75,631 65,786; 2010 & prior balance 89,477; total 348,483",
+   "latest_diagonal_end2015": "255,730+124,949+114,824+130,878+75,192 = 701,573",
+   "previous_diagonal_end2014": "258,337+134,331+123,086+75,551 = 591,305",
+   "implied_gross_incurred_2015": 110268,
+   "accounts_2015": "gross claims incurred 100,753 = gross claims paid (116,238) less change in gross provision 15,485 (2015 p12 technical account, read on image); same as note 'Current year 132,948 + Prior year (32,195)' and as the restated 2015 segment line '(100.8)' in the 2016 report p26",
+   "control_diff_pct": 9.4,
+   "outstanding_tie": "table total 348,483 = claims outstanding 348,483 (2015 p28 roll-forward; 2016 p15 comparative 348.5)",
+   "paid_test": "undeterminable: the table prints cumulative payments at end 2015 only (sum 442,567); the end-2014 cumulative payments are not on any page available (the 2014 report is a sterling report with no development table that I could find)"
+  },
+  "item2_basis_each_table": {
+   "2015_table": "'Earned gross claims' by 'Year of account', columns 'At the end of calendar year', 'One year later' ... 'Cumulative payments', 'Estimated balance to pay'. The 2010 & prior row has dashes in every development cell and only an 'Estimated balance to pay' of 89,477. Text above table (p27): 'the adverse or favourable development of claims, on a gross and net basis, determined on a year of account basis, from the amounts originally estimated at the end of the preceding year. Claims in currencies other than US dollars have been reconverted at 31 December 2015 exchange rates for all years' (OCR; the 2016 version is on p29).",
+   "2016_table": "Same layout on p30 (printed p29), headings 'Gross earned claims', 'Year of account', 'At the end of calendar year'; '2010 & prior' row all dashes, 'Estimated balance to pay' 203.2; rows 2011-2016; USD millions; wording on p29: 'determined on a year of account basis ... reconverted at 31 December 2016 exchange rates for all years'.",
+   "first_year_cells": "2016 report: 2016 29.2, 2015 21.0, 2014 29.5, 2013 37.9, 2012 44.8, 2011 134.2 (against 2016 GWP 257.8, gross premium earned 259.6). 2015 report: 75,192 / 75,551 / 87,421 / 108,080 / 241,898 for the same years: the 2016 report re-cut the history (below)."
+  },
+  "item4_year_t": {
+   "table": "syndicate_780_2016 p30 gross table, $m",
+   "rows": "2011: 134.2 / 224.3 / 232.0 / 231.7 / 234.5 / 236.9; 2012: 44.8 / 94.9 / 100.1 / 104.6 / 109.0; 2013: 37.9 / 78.1 / 83.7 / 87.1; 2014: 29.5 / 84.2 / 98.9; 2015: 21.0 / 113.2; 2016: 29.2; cum payments (208.9) (93.9) (73.4) (76.4) (92.7) (18.4); balance to pay 28.0 15.1 13.7 22.5 20.5 10.8; 2010 & prior 203.2; total 313.8",
+   "latest_diagonal_end2016": "236.9+109.0+87.1+98.9+113.2+29.2 = 674.3",
+   "previous_diagonal_end2015": "234.5+104.6+83.7+84.2+21.0 = 528.0",
+   "implied_gross_incurred_2016": 146.3,
+   "accounts_2016": "gross claims incurred 138.6: segment total '(138.6)' p25; = gross claims paid (163.9) less change in gross provision 25.3 (p12 technical account); note p27 'Current year' 154.2 (OCR 164.2; total 152.4 less (1.8) UPR gives 154.2) 'Prior year (15.6)' = 138.6",
+   "year_t_diff_pct": 5.6,
+   "ratio_year_t_miss_to_control": 0.6,
+   "outstanding_tie": "table total 313.8 = claims outstanding 313.8 (p15, p27)",
+   "paid_test_year_t": "table prints cumulative payments at end 2016 only (sum 563.7). With the 2015 report's cumulative payments as the previous date (442.6): change 121.1 against gross claims paid 163.9 (p12), diff -26.1%; the 42.8 shortfall is paid on the 2010 & prior row, outside the cells. Not a like-for-like test because the history was re-cut (2011 paid 218.9 -> 208.9, 2015 paid 9.4 -> 92.7)."
+  },
+  "history_recut_between_reports": "The 2016 table's end-2015 diagonal (528.0) is 173.6 below the 2015 report's latest diagonal (701.6), cell by cell: 2011 234.5 vs 255.7; 2012 104.6 vs 124.9; 2013 83.7 vs 114.8; 2014 84.2 vs 130.9; 2015 21.0 vs 75.2. First-year cells are 40-55% of the 2015 report's. The 2010 & prior balance to pay rises from 89.5 (end 2015, 2015 p28) to 203.2 (end 2016, 2016 p30), while total outstanding 348.5 -> 313.8 is unchanged in the balance sheets. The reports give no explanation (2016 p21 (j) restates reinsurer commission presentation only). Implied end-2015 reserve for YOAs 2011-2015 under the 2016 cells = 528.0 less 442.6 (2015 cum paid) = 85.4, so & prior at end 2015 on the 2016 basis = 348.5 - 85.4 = 263.1, against 203.2 at end 2016: & prior movement about -59.9 reserve and +42.8 paid = -17.1 incurred (derived, mixing two reports; with 9.4 FX it reconciles 146.3-17.1+9.4 = 138.6).",
+  "item3_shared_basis_gap": {
+   "answer": "undeterminable",
+   "reason": "The one named difference is the 2010 & prior row, outside the printed cells, present in both tables (2015 p28 balance 89,477; 2016 p30 balance 203.2). Both tables exceed the accounts, which is the sign a release on the & prior years would give (the cells exclude it, the accounts include it): control +9,515 (110,268 vs 100,753), year t +7.7 (146.3 vs 138.6), so an & prior release of about 9.5 and 7.7 would close both, and the notes show gross prior-year releases in both years (2015 (32.2), 2016 (15.6)). But the size cannot be checked: the end-2014 & prior balance and end-2014 cumulative payments are on no available page, so the 2015 & prior movement is unmeasurable; and the 2016 table re-cut its own history (end-2015 diagonal 173.6 below the 2015 report), so the 2016 & prior movement (derived about -17.1 incurred, 42.8 paid) is not like-for-like with anything printed. Leaning: the outside & prior column plausibly accounts for the sign of both gaps, but its size is not shown on the pages.",
+   "status": "undeterminable (leaning yes on sign, not on size)"
+  },
+  "control_diff_pct": 9.4,
+  "year_t_diff_pct": 5.6,
+  "ratio": "0.6 (year t miss is smaller than the control's, not three times larger)",
+  "rule_consequence": "Control 9.4% is above 5%; the 10% route needs a shared basis gap AND a year t miss of at least three times the control's: 5.6% is 0.6 times 9.4%, so the 10% route fails whatever the basis gap. The control does not tie, and the year t miss itself is only just above 5%.",
+  "contradicts_premises": "The year t miss is not larger than the control's: it is smaller (5.6% vs 9.4%). Cell-level, the 2016 report re-cut the 2011-2015 history by 173.6 against the 2015 report with the & prior balance moving 89.5 -> 203.2, so the two reports' tables are not on one history; no printed explanation."
+ }
+}

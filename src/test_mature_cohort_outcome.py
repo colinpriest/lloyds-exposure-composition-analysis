@@ -17,8 +17,8 @@ figures; and the sensitivity to the 672.
 PINNED COUNTS. Several tests state a count of the committed state (117 register entries and 92 figures, the 672 and its 571
 mature-enforced records, the adjudication's 82 restored figures, the primary's 643, the 52 records that leave the 672, the 56
 records without a figure). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: five corrected
-figures (rules 3 and 4; 4242/2022 after review 8), one record of rule 2, four of rule 1 and one of rule 5b (1110/2022) out of
-the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
+figures (rules 3 and 4; 4242/2022 after review 8), one record of rule 2, two of rule 1, two of rule 4b (after the round-8
+readings of 24 October 2026, which also put 780/2016 back) and one of rule 5b (1110/2022) out of the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
 to one is a change of result that the test should stop and a human should read, not a count to follow. Where a test holds
 entries to the loaded records and the purpose does not need the count, the entries are read from the register instead.
 
@@ -658,9 +658,10 @@ def test_the_sensitivity_is_the_672_construction(loaded):
 #: the records the exchange-rate rule takes out of the primary (data/fx_untranslated_excluded.json): four of the first
 #: round, and 3000/2022 of round 5 (rule 2 of the round-5 decision rules)
 FX_EXCLUDED = {"1897_2016", "2468_2016", "5151_2016", "5151_2017", "3000_2022"}
-#: the records rule 1 of the round-5 decision rules takes out of the primary (data/restated_base_excluded.json)
-#: (4242/2022 left it for rule 3 after review 8: a corrected figure, below)
-RESTATED_EXCLUDED = {"780_2016", "2689_2023", "4747_2024", "6134_2022"}
+#: the records rules 1 and 4b of the round-5 decision rules take out of the primary (data/restated_base_excluded.json)
+#: (4242/2022 left rule 1 for rule 3 after review 8: a corrected figure, below; after the round-8 readings 780/2016
+#: returned under rule 6, 4747/2024 left under rule 4b, and the rule-4b scan took 2232/2017 out)
+RESTATED_EXCLUDED = {"2689_2023", "6134_2022", "2232_2017", "4747_2024"}
 #: the record rule 5b of the round-5 decision rules takes out of the primary as an unmeasurable take-on
 #: (data/restated_base_excluded.json, bucket takeon_unmeasurable)
 UNMEASURABLE_EXCLUDED = {"1110_2022"}
@@ -675,7 +676,7 @@ COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
 
 def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restated_base_records(loaded, decisions):
     """The adjudication's 653 (571 mature-enforced under the 672 and 82 restored figures), less the five records of the
-    exchange-rate rule, the four of rule 1 and the one of rule 5b of the round-5 decision rules: 643. The adjudication's
+    exchange-rate rule, the two of rule 1, the two of rule 4b and the one of rule 5b of the round-5 decision rules: 643. The adjudication's
     figures stand,
     except the three aggregated-column records', which leave the column out, and the five the round-5 rules correct."""
     p, s = loaded["mature_cohort"], loaded["precedence_672"]

@@ -10,24 +10,32 @@ brief_r6.md). The readings are archived verbatim under round5/readings/. The dec
 of the Claude analysis session) were applied record by record; the adjudication is in round5/adjudication.md, and
 OUTCOMES below records the rule and outcome of each of the 83 records.
 
-Rules 1 to 7 were written before the adjudication. Three things were added after particular readings or a review, each
+Rules 1 to 7 were written before the adjudication. Four things were added after particular readings or a review, each
 named in rules.md: rule 5b (23 October, after the round-7 readings U1 and U2 of 1110/2022 and 1458/2024); rule 6's
 take-on clause, take_on_table_unreconciled (23 October, after the readings of 3500/2023, and applied to 3500/2022 after
-review 8); and rule 1's exact control clause (23 October, after review 8: the year t-1 control ties within 5%, or within
-10% when the same basis gap explains both years and the year t miss is at least three times the control's), re-applied to
-every record, which changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch; 4242/2022 moved from
-rule 1 to rule 3 on review 8's separate decision to set aside its merged '2016 & Prior' column, not by the clause, whose
-control ties at -1.1% under either reading). Review 8 also added the rule-6
-clause derived_correction (1274/2016, whose corrected figure is the session's derivation from cells both readers quote).
+review 8); rule 1's exact control clause (23 October, after review 8: the year t-1 control ties within 5%, or within
+10% when the same basis gap explains both years and the year t miss is at least three times the control's); and rule 4b
+(24 October, after the round-8 readings Z7 and Z8, round8/). The exact control clause decided no record: 4242/2022 moved
+from rule 1 to rule 3 on review 8's decision to set aside its merged '2016 & Prior' column (its control ties at -1.1%
+under either reading), and 780/2016 and 4747/2024, excluded under rule 1 until then, both fail the clause on the
+round-8 readings (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t miss +5.6%, 0.6 times
+it). 780/2016 returns to the primary under rule 6 (+24.9m USD as printed); 4747/2024 stays out under rule 4b, a table
+its own cells prove inconsistent (its cumulative paid falls between reports). Rule 4b was applied to the readings of
+every record of rounds 5 to 8 (round8/rule_4b_scan.json): it also takes 2232/2017 out of the primary, which rule 6
+listed until then. Review 8 also added the rule-6 clause derived_correction (1274/2016, whose corrected figure is the
+session's derivation from cells both readers quote).
 
 The register holds three buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
 its pages and quote, the facts the rule rests on and the decision:
 
-  * "excluded": rule 1. The year t table's history differs from the year t-1 report beyond the exchange rate with no
-    explanation in either filing, the table fails the year's accounts by more than 10% beyond what its basis explains
-    while the year t-1 control ties (within 5%, or within 10% when the same basis gap explains both years and the year
-    t miss is at least three times the control's), and the year t-1 printed base gives no figure that reconciles either. The loader
-    (run_analysis.py) removes the record from the primary at the unusable-severity step with the tag
+  * "excluded": rule 1 or rule 4b, each entry naming its rule. Rule 1: the year t table's history differs from the
+    year t-1 report beyond the exchange rate with no explanation in either filing, the table fails the year's accounts
+    by more than 10% beyond what its basis explains while the year t-1 control ties (within 5%, or within 10% when the
+    same basis gap explains both years and the year t miss is at least three times the control's), and the year t-1
+    printed base gives no figure that reconciles either. Rule 4b: the control does not tie, but both readings report
+    that the year t table prints, for a year u <= t-2, cumulative paid lower than the year t-1 report printed, beyond
+    the exchange rate and unexplained; the table fails the year's accounts by more than 10%; and no base reconciles. The
+    loader (run_analysis.py) removes the record from the primary at the unusable-severity step with the tag
     RESTATED_BASE_TABLE; under outcome 'precedence_672' the register is not read.
   * "history_restated": rule 6. The table ties to the year's accounts (or its basis explains the gap), but an
     underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R, or the readings
@@ -74,27 +82,45 @@ SUPPORTING = ("W1", "W2")
 #: readings did not print (1110/2022, 1458/2024); their readings carry no validity verdict and are kept with the entry
 #: as its take-on readings (rule 5b)
 AMOUNT_READERS = ("U1", "U2")
+#: the round-8 readers (round8/briefs/brief_r8.md, 24 October 2026): they read rule 1's year t-1 control again for
+#: 780/2016 and 4747/2024; their readings carry no validity verdict and are kept with the entry as its control readings
+ROUND8 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round8"
+READINGS8 = ROUND8 / "readings"
+CONTROL_READERS = ("Z7", "Z8")
+#: the record rule 6 lists since the round-8 readings (it was excluded under rule 1 until then)
+ROUND8_RULE6 = ("780_2016",)
+#: rule 4b's population scan over the readings of rounds 5 to 8: every record's answer (round8/scan_rule_4b.py)
+RULE_4B_SCAN = ROUND8 / "rule_4b_scan.json"
 #: rule 5b's threshold: the acquired share of the base, in per cent of the opening gross claims outstanding R
 TAKEON_THRESHOLD_PCT = 10.0
 VALID = ("valid", "screen_misread", "units_slip")
 INVALID = ("restated_base", "undeterminable")
 SESSION = "decision of the Claude analysis session, 23 October 2026"
+SESSION_R8 = "decision of the Claude analysis session, 24 October 2026 (after the round-8 readings)"
 
 RULE = (
     "Round 5 of the filing readings (decision rules of 23 October 2026, a decision of the Claude analysis session, "
-    "results/extraction_error_rate/mature-cohort/round5/rules.md). 'excluded' (rule 1): a record leaves the PRIMARY "
+    "results/extraction_error_rate/mature-cohort/round5/rules.md). 'excluded' (rule 1 or rule 4b; each entry names its "
+    "rule). Rule 1: a record leaves the PRIMARY "
     "sample (outcome 'mature_cohort') when its year t development table's history (an underwriting year u <= t-2, or "
     "the table as a whole) differs from the year t-1 report beyond the exchange rate with no explanation in either "
     "filing; AND the year t table fails the year's accounts (implied gross incurred, or paid where computable, off by "
     "more than 10% beyond what its basis explains) while the year t-1 control ties (within 5%; or within 10% when the "
     "same basis gap explains both years, an '& prior' column outside the cells or an ultimate basis against earned "
     "accounts, and the year t miss is at least three times the control's); AND the year t-1 report's "
-    "printed base does not give a figure that reconciles either. Rules 1 to 7 were written before the adjudication; "
-    "rule 5b, rule 6's take-on clause (take_on_table_unreconciled) and rule 1's exact control clause were added after "
-    "particular readings or review 8 (rules.md names them): the control clause was made exact on 23 October 2026 after "
-    "review 8 and re-applied to every record, changing no outcome (780/2016 and 4747/2024 meet it only through its 10% "
-    "branch); 4242/2022 moved from rule 1 to rule 3 on review 8's separate decision to set aside the merged "
-    "'2016 & Prior' column, not by the clause (its control, -1.1%, ties under either reading). "
+    "printed base does not give a figure that reconciles either. Rule 4b (a table its own cells prove inconsistent, "
+    "added 24 October 2026 after the round-8 readings): where rule 1's control does not tie, a record still leaves the "
+    "PRIMARY sample when (i) both readings report that the year t table prints, for an underwriting year u <= t-2, "
+    "cumulative paid lower than the year t-1 report printed for the same year, by more than the exchange rate explains "
+    "and with no explanation in either filing; (ii) the year t table fails the year's accounts by more than 10% (rule "
+    "1's test); and (iii) no base gives a figure that reconciles (rule 3 fails). Rules 1 to 7 were written before the "
+    "adjudication; rule 5b, rule 6's take-on clause (take_on_table_unreconciled), rule 1's exact control clause and "
+    "rule 4b were added after particular readings or review 8 (rules.md names them). The exact control clause, made "
+    "exact on 23 October 2026 after review 8 and re-applied to every record, decided no record: 4242/2022 moved from "
+    "rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column (its control, -1.1%, ties "
+    "under either reading), and 780/2016 and 4747/2024 both fail it on the round-8 readings Z7 and Z8. Rule 4b, applied "
+    "to the readings of every record of rounds 5 to 8 (round8/rule_4b_scan.json), decides two records: 4747/2024 and "
+    "2232/2017. "
     "The loader (run_analysis.py) removes an 'excluded' "
     "entry's record at the unusable-severity step with the tag RESTATED_BASE_TABLE and counts it "
     "(restated_base_excluded); under outcome 'precedence_672' the register is not read and nothing changes. "
@@ -131,6 +157,12 @@ POPULATION = {
     "tie_break": "1609/2024 and 4444/2017, whose first two readings disagreed on the facts, read by Z5 and Z6 (brief_r6.md)",
     "take_on_amount": ("1110/2022 and 1458/2024, whose take-on the round-5 readings did not give an amount for, read by U1 "
                        "and U2 (brief_r7.md); neither filing prints the transferred gross amount (rule 5b)"),
+    "control_readings": ("780/2016 and 4747/2024, the two rule-1 records whose control needed the 10% branch, read again "
+                         "for rule 1's year t-1 control by Z7 and Z8 (round8/briefs/brief_r8.md, 24 October 2026): "
+                         "both fail the clause; 780/2016 returns under rule 6 and 4747/2024 leaves under rule 4b"),
+    "rule_4b_scan": ("rule 4b applied to the readings of every record of rounds 5 to 8 (round8/rule_4b_scan.json, "
+                     "round8/scan_rule_4b.py): it decides 4747/2024 and 2232/2017; every other record's answer to its "
+                     "conditions is recorded there"),
     "not_read": ("the 2 cell-scale slips (2001/2018, 2121/2019) and the records the screen could not compare (no year "
                  "t-1 gross grid, record or common single year) or found clean"),
 }
@@ -138,30 +170,6 @@ POPULATION = {
 # ------------------------------------------------------------------------------------------------ the adjudication
 #: rule 1 (decision of the Claude analysis session, 23 October 2026): the facts each condition rests on, from both readings
 EXCLUDED = {
-    "780_2016": {
-        "history_differs_unexplained": (
-            "every early cell of the 2016 table (p30) is 8-72% below the 2015 print (p28; first-year cells 40-65% lower) "
-            "and the '2010 & prior' balance to pay rises from 89.5 to 203.2 while the 2011-2015 rows shrink; the only "
-            "wording is the reconversion of non-dollar claims at 31 December 2016 rates (p29) and a restatement of "
-            "reinsurance commissions (note 3(j)); no restatement, RITC or change of basis of the table (P6, Q5)"),
-        "year_t_fails_accounts": (
-            "the reserve identity on the table's own end-2015 diagonal implies 294.7m of 2016 gross paid against 163.9m "
-            "in the accounts (+79.8%, P6, p12); the printed reserves and payments of 2011-2014 give a 2016 movement of "
-            "-94.5m against +24.9m from the table's cells (Q5). The incurred test (+5.6%) does not discriminate: the "
-            "'2010 & prior' years carry no cells (both readings)"),
-        "control_ties": (
-            "control miss +9.5% (over the 5% bar): the 2015 table's implied incurred 110.268m against 100.7m in the 2015 "
-            "accounts (both readings). Basis reason: the '2010 & prior' years carry no cells in either table, so both "
-            "years run above the accounts by about the development a favourable '2010 & prior' would remove (Q5); the "
-            "2015 table is the base the 2015 balance sheet was struck on (outstanding 348.483 ties). Year t miss: "
-            "+79.8% (paid, the reserve identity on the table's own end-2015 diagonal, 294.7m against 163.9m, P6, p12), "
-            "8.4 times the control's. Rule 1's exact control clause (made exact on 23 October 2026 after review 8): "
-            "9.5% is within 10%, the same basis gap explains both years (its incurred miss in year t is +5.6%, the "
-            "same gap), and 79.8% is at least three times 9.5% (28.5%); met"),
-        "previous_base_reconciles": (
-            "on the 2015 print's cells the 2011-2014 movement is -94.4m against the filing's all-prior-years gross line "
-            "of -15.6m (p26) and the table's +24.9m: neither base reconciles (P6, Q5)"),
-    },
     "2689_2023": {
         "history_differs_unexplained": (
             "the 2023 table (p46) restates the 2020 and 2021 history: end-2022 cells 123,040 and 97,435 against 81,688 "
@@ -176,27 +184,6 @@ EXCLUDED = {
         "previous_base_reconciles": (
             "on the 2022 printed diagonal the mature movement is about +103.9m, above the year's total gross incurred of "
             "58.2m (V1, V2)"),
-    },
-    "4747_2024": {
-        "history_differs_unexplained": (
-            "the 2024 table (p48) raises the end-2023 cells of 2022 and 2023 to 24,572 and 34,726 against 17,343 and "
-            "7,482 printed in 2023 (p39), lowers the 2020-2021 history by about 6%, and its paid row falls (2020: "
-            "4,843 to 213); the only restatement note (p31) concerns the management fee (P2, Q3)"),
-        "year_t_fails_accounts": (
-            "implied incurred 11.2m against 61.9m (-81.9%, note 6 p35); paid 8.7m against 22.1m (-60.7%, p17) (P2, Q3)"),
-        "control_ties": (
-            "control miss -7.2% (over the 5% bar): the 2023 table's implied incurred 27.9m against 30.1m (both "
-            "readings), while its outstanding, 38,860, ties exactly to the 2023 balance sheet and the 2024 opening "
-            "(p35). Basis reason (the session's reading; neither reader names one): the table is cumulative incurred "
-            "by underwriting year on its own basis, 'not obviously earned or ultimate' (P2: the 2024 first-year cell is "
-            "9,151 against 163,404 of gross premiums written), set against the accounts' calendar-year gross incurred, "
-            "and that difference of basis is the same in 2023 and 2024. Year t miss: -81.9% (incurred, note 6 p35; "
-            "paid -60.7%, p17), 11.4 times the control's. Rule 1's exact control clause (made exact on 23 October 2026 "
-            "after review 8): 7.2% is within 10%, and 81.9% is at least three times 7.2% (21.6%); met"),
-        "previous_base_reconciles": (
-            "against the 2023 printed cells the 2024 latest diagonal gives 96,582 - 51,304 = 45.3m against 61.9m (-27%, "
-            "from the cells both readings quote) and M -4.3m (P2); the 2024 table's end-2023 diagonal less the 2023 "
-            "paid implies a 72.9m end-2023 reserve against 38.9m (P2): no figure reconciles"),
     },
     "6134_2022": {
         "history_differs_unexplained": (
@@ -213,6 +200,68 @@ EXCLUDED = {
         "previous_base_reconciles": (
             "the 2021 report's cells give no 2022 movement for the 2018 year folded into the 2020 column, whose movement "
             "is in no printed column (Q5); P4's like-for-like -15.8m is an inference, not a printed cell"),
+    },
+}
+
+#: rule 4b (decision of the Claude analysis session, 24 October 2026, after the round-8 readings): a table its own cells
+#: prove inconsistent. Where rule 1's control does not tie, the record still leaves the primary when (i) both readings
+#: report that the year t table prints, for an underwriting year u <= t-2, cumulative paid lower than the year t-1
+#: report printed for the same year, beyond the exchange rate and unexplained; (ii) the table fails the year's accounts
+#: by more than 10% (rule 1's test); (iii) no base gives a figure that reconciles (rule 3 fails). Applied to the readings
+#: of every record of rounds 5 to 8 (round8/rule_4b_scan.json); these two records meet it
+#: the conditions of rule 1 and of rule 4b, each with the value an excluded entry of that rule must show (the loader,
+#: run_analysis.RESTATED_EXCLUDED_RULES, holds the same)
+CONDITIONS_1 = (("history_differs_unexplained", True), ("year_t_fails_accounts", True), ("control_ties", True),
+                ("previous_base_reconciles", False))
+CONDITIONS_4B = (("control_ties", False), ("cumulative_paid_falls_unexplained", True), ("year_t_fails_accounts", True),
+                 ("previous_base_reconciles", False))
+EXCLUDED_4B = {
+    "2232_2017": {
+        "control_ties": (
+            "control miss +7.4% (P3: the 2016 table's own movement 99,984 against 2016 gross incurred 93,058; Q4's paid "
+            "control, +62.1%, is confounded by a retranslation): over 5%, and the year t miss, incurred -10.5%, is 1.4 "
+            "times it, not three times, with the opposite sign (the table above the accounts in 2016, below in 2017). "
+            "Rule 1's exact control clause: not met; the control does not tie"),
+        "cumulative_paid_falls_unexplained": (
+            "the 2017 table (p40) prints UY2012 cumulative gross paid 19,393 against 22,799 in the 2016 report (p40), "
+            "x0.851, and UY2013 43,200 against 47,658, x0.906 (P3: 'falling between the two reports ... with no stated "
+            "reason'; Q4 quotes the same cells in its paid derivation). Q4 measures the retranslation of the same "
+            "columns' earlier cells at x0.918-0.939, so UY2012's fall is beyond the exchange rate (UY2013's is at its "
+            "edge). Both filings state translation 'at the rates that applied at the end of each underwriting year' "
+            "(p40), which explains no move, and neither filing explains it (P3, Q4)"),
+        "year_t_fails_accounts": (
+            "implied incurred 264.9m against 296.0m in the accounts (-10.5%, P3 and Q4; p14, p40): over 10%, narrowly. "
+            "The table is on an underwriting-year (ultimate) basis against earned accounts, which would put the table "
+            "above the accounts, not below, so its basis does not explain the miss. The cross-report paid -20.1% is a "
+            "proxy (the 2017 table prints no end-2016 payments) and is set aside"),
+        "previous_base_reconciles": (
+            "the 2017 table's end-2016 cells for u <= 2015 equal the 2016 report's latest exactly (31,666; 65,024; "
+            "91,202; 118,237; P3, Q4), so the previous report's base gives the same movement (M +12.763m) and the same "
+            "-10.5% miss; Q4's constant-currency M of about +34m is an estimate, not a printed figure: no base "
+            "reconciles"),
+        "found_by": ("the rule-4b population scan of 24 October 2026 (round8/rule_4b_scan.json); rule 6 listed it "
+                     "until then (label_disagreement: P3 valid, Q4 restated_base)"),
+    },
+    "4747_2024": {
+        "control_ties": (
+            "control miss -7.2% (the 2023 table's implied incurred 27.9m against 30.1m; P2, Q3, Z7; Z8 -7.15%), over "
+            "5%, and no shared basis gap (Z7, Z8): the gap is a shortfall, which an ultimate or underwriting basis "
+            "cannot give, the table has no outside column, and FX on claims outstanding (570, 2023 p30) is about 27% "
+            "of it (Z8). Rule 1's exact control clause: not met; the control does not tie. (Until the round-8 "
+            "readings the record was excluded under rule 1, the session reading a basis gap neither reader named)"),
+        "cumulative_paid_falls_unexplained": (
+            "the 2024 table (p48) prints UY2020 cumulative paid 213 against 4,843 in the 2023 report (p39), and UY2021 "
+            "4,164 against 5,883 (P2, Q3, Z7, Z8): 'a cumulative figure cannot fall' (Z8). The 2020-2021 estimates "
+            "move by the exchange scale or less (Z8), so no exchange rate gives a fall of 96%; the only restatement "
+            "note (p31) concerns the management fee (Z8)"),
+        "year_t_fails_accounts": (
+            "implied incurred 11.2m against 61.9m (-81.9%, note 6 p35; P2, Q3, Z7, Z8); paid 8.7m against 22.1m "
+            "(-60.7%, p17; P2, Q3)"),
+        "previous_base_reconciles": (
+            "against the 2023 printed cells the 2024 latest diagonal gives 96,582 - 51,304 = 45.3m against 61.9m (-27%, "
+            "from the cells both readings quote) and M -4.3m (P2); the 2024 table's end-2023 diagonal less the 2023 "
+            "paid implies a 72.9m end-2023 reserve against 38.9m (P2): no figure reconciles"),
+        "found_by": "the round-8 readings Z7 and Z8 (round8/briefs/brief_r8.md); rule 1 excluded it until then",
     },
 }
 
@@ -241,6 +290,24 @@ HISTORY_RESTATED = {
                  "table (control +2.1%); outstanding ties. Rule 1 does not apply: incurred is within its 10%, and the "
                  "paid -15.7% (Q1) is a cross-report proxy because the 2023 table prints no end-2022 payments (P8, "
                  "Q1)"),
+    "780_2016": (["unexplained_history_move"],
+                 "the 2016 table (p30) re-cuts its history: its end-2015 diagonal is 528.0 against 701.6 in the 2015 "
+                 "report (p28), 173.6m lower cell by cell (2011 234.5 against 255.7; 2014 84.2 against 130.9; 2015 21.0 "
+                 "against 75.2), its first-year cells are 40-55% of the 2015 report's, and the '2010 & prior' balance to "
+                 "pay rises from 89.5 to 203.2 while total outstanding ties in both years (348.5; 313.8); the only "
+                 "wording is the reconversion of non-dollar claims at year-end rates (p29) and a restatement of "
+                 "reinsurance commissions (note 3(j)) (P6, Q5, Z7, Z8): far over 1% of R (348.5m). The year t table ties "
+                 "to the accounts within 10%: implied incurred 146.3m against 138.6m (+5.6%, P6, Q5, Z7, Z8). It was "
+                 "excluded under rule 1 until the round-8 readings, on P6's reserve identity (+79.8% paid), which is not "
+                 "like for like: the 2016 table re-cuts its history, so its own end-2015 diagonal is not the base the 2015 "
+                 "balance sheet was struck on (Z7, Z8). Rule 1's exact control clause: not met (Z7, Z8). The control miss "
+                 "is +9.4% (the 2015 table's 110.268m against 100.753m), over 5%, and the year t miss, +5.6%, is 0.6 "
+                 "times it (Z7; 0.8 on Z8's absolute misses), so the 10% branch fails whatever the basis (shared basis "
+                 "gap: undeterminable, Z7, Z8). Rule 4b: not met. Q5, Z7 and Z8 report UY2011's cumulative paid at "
+                 "208.9 against 218.9 in the 2015 report, but the table does not fail the accounts by more than 10% "
+                 "(condition (ii)). M as printed, +24.9m USD (2011 +2.4, 2012 +4.4, 2013 +3.4, 2014 +14.7; P6, Q5), "
+                 "stands: the record returns to the primary sample (decision of the Claude analysis session, 24 October "
+                 "2026, after the round-8 readings) and stays least certain"),
     "780_2017": (["unexplained_history_move", "label_disagreement"],
                  "the 2017 table's end-2016 estimates are 165.6m (24.6%) above the 2016 report's, mirrored by a "
                  "-170.4m fall in the '2010 & prior' balance to pay, with only the generic reconversion sentence (p30) "
@@ -318,19 +385,6 @@ HISTORY_RESTATED = {
                   "stated year-end conversion (p33), with no explanation (P8, Q7). Incurred ties (-4.4%, control "
                   "+3.1%). Rule 1 does not apply: the paid -13.1% (P8) is a cross-report proxy because the 2017 table "
                   "prints no end-2016 payments (P8; Q7: not computable)"),
-    "2232_2017": (["label_disagreement"],
-                  "the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells "
-                  "were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows "
-                  "miss (incurred -10.5%, cross-report paid -20.1%) and the control does not tie within 5% (P3 incurred "
-                  "+7.4%; Q4 paid +62.1%, confounded), so rule 1 does not apply; no exchange line is reported, so rule 2 "
-                  "cannot be tested. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The "
-                  "control miss is +7.4% (P3 incurred), within 10% with a basis that is the same in both years (an "
-                  "ultimate underwriting-year table against earned accounts, Q4), but the year t miss is not three times "
-                  "the control's (22.2%): incurred -10.5% is 1.4 times it and the cross-report paid -20.1% 2.7 times it; "
-                  "the control's sign (table above the accounts, as the basis predicts) is the opposite of the year t "
-                  "miss's (below), so the basis gap does not explain the year t miss either; Q4's paid control +62.1% is "
-                  "confounded (the 2015 report's cells are 19% lower than the 2016 report's for the same year). The "
-                  "record stays least certain. P3 valid, Q4 restated_base"),
     "2232_2019": (["unexplained_history_move"],
                   "the 2013 column (oldest) is 6.3% higher between reports with no wording, in tables translated at each "
                   "year's own end rate, so no retranslation moves history (Q6; P5): 4.5m, 1.2% of R (373.2m). The table "
@@ -469,6 +523,9 @@ TAKEON_UNMEASURABLE = {
 _STANDS = "7", "stands"
 OUTCOMES = {
     **{k: ("1", "excluded", "data/restated_base_excluded.json (excluded)") for k in EXCLUDED},
+    # rule 4b (24 October 2026, after the round-8 readings): 4747/2024 (rule 1 until then) and 2232/2017 (rule 6 until
+    # then, found by the rule-4b population scan)
+    **{k: ("4b", "excluded", "data/restated_base_excluded.json (excluded, rule 4b)") for k in EXCLUDED_4B},
     **{k: ("6", "least_certain", "data/restated_base_excluded.json (history_restated)") for k in HISTORY_RESTATED},
     "3000_2022": ("2", "excluded", "data/fx_untranslated_excluded.json (excluded)"),
     "2232_2020": ("3", "corrected", "data/mature_cohort_figures.json (previous_report_base)"),
@@ -518,6 +575,11 @@ def load_readings():
         with io.open(READINGS / ("%s.json" % rid), encoding="utf-8") as fh:
             for k, e in json.load(fh).items():
                 out.setdefault(k.split("|")[0], []).append((rid, e))
+    # round 8: Z8 keys its records by the filing's name ('syndicate_780_2016')
+    for rid in CONTROL_READERS:
+        with io.open(READINGS8 / ("%s.json" % rid), encoding="utf-8") as fh:
+            for k, e in json.load(fh).items():
+                out.setdefault(k.replace("syndicate_", "", 1), []).append((rid, e))
     return out
 
 
@@ -568,7 +630,8 @@ def reading(rid, key, e):
     """One reading as the register keeps it: the archived entry verbatim, with the reader, its source and the year t
     filing's pages (the reader's own pages kept as pages_as_read)."""
     own, other = split_pages(key, e.get("pages"))
-    out = {"reader": rid, "source": "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % rid,
+    rnd = "round8" if rid in CONTROL_READERS else "round5"
+    out = {"reader": rid, "source": "results/extraction_error_rate/mature-cohort/%s/readings/%s.json" % (rnd, rid),
            "pages": own, "pages_of_other_reports": other, "pages_as_read": e.get("pages")}
     out.update({k: v for k, v in e.items() if k not in ("key", "pages")})
     return out
@@ -612,8 +675,9 @@ def take_on_block(key, reads, bucket):
 
 
 def entry_for(key, reads, bucket):
-    main = [(rid, e) for rid, e in reads if rid not in SUPPORTING + AMOUNT_READERS]
+    main = [(rid, e) for rid, e in reads if rid not in SUPPORTING + AMOUNT_READERS + CONTROL_READERS]
     supp = [(rid, e) for rid, e in reads if rid in SUPPORTING]
+    ctl = [(rid, e) for rid, e in reads if rid in CONTROL_READERS]
     rr = [reading(rid, key, e) for rid, e in sorted(main, key=lambda p: (p[0][0] not in "PV", p[0]))]
     for r in rr:
         if not r["pages"]:
@@ -625,12 +689,23 @@ def entry_for(key, reads, bucket):
     e = {"pages": sorted({p for r in rr for p in r["pages"]}),
          "quote": " || ".join("reader %s: %s" % (r["reader"], _quote_of(r)[:600]) for r in rr),
          "verdicts": {r["reader"]: r.get("verdict") for r in rr}}
-    if bucket == "excluded":
+    if bucket == "excluded" and key in EXCLUDED_4B:
+        # rule 4b rests on the facts both readings report, not on their validity labels (2232/2017: P3 valid, Q4
+        # restated_base)
+        e["rule"] = "4b"
+        e["conditions"] = {name: {"holds": want, "facts": EXCLUDED_4B[key][name]} for name, want in CONDITIONS_4B}
+        e["found_by"] = EXCLUDED_4B[key]["found_by"]
+        e["decision"] = ("%s: rule 4b of the round-5 decision rules; rule 1's control does not tie, but both readings "
+                         "report that the year t table prints a cumulative paid figure for a year u <= t-2 lower than "
+                         "the year t-1 report printed, beyond the exchange rate and unexplained, the table fails the "
+                         "year's accounts by more than 10%%, and no base gives a figure that reconciles, so the table is "
+                         "not one consistent cumulative table, no figure from it measures the year's movement, and the "
+                         "record leaves the primary sample; the 672 sensitivity keeps it" % SESSION_R8)
+    elif bucket == "excluded":
         if any(v != "restated_base" for v in verdicts):
             raise SystemExit("%s: rule 1 needs both readings to find a restated base (%s)" % (key, verdicts))
-        e["conditions"] = {name: {"holds": want, "facts": EXCLUDED[key][name]}
-                           for name, want in (("history_differs_unexplained", True), ("year_t_fails_accounts", True),
-                                              ("control_ties", True), ("previous_base_reconciles", False))}
+        e["rule"] = "1"
+        e["conditions"] = {name: {"holds": want, "facts": EXCLUDED[key][name]} for name, want in CONDITIONS_1}
         e["decision"] = ("%s: rule 1 of the round-5 decision rules; the year t table restates its history without "
                          "explanation, fails the year's accounts while the year t-1 control ties, and the year t-1 "
                          "printed base gives no figure that reconciles, so the table cannot give the year's movement "
@@ -661,10 +736,12 @@ def entry_for(key, reads, bucket):
             rule = "rules 4 and 6"
         e["decision"] = ("%s: %s of the round-5 decision rules (%s); the record stays in the primary sample with its "
                          "figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)"
-                         % (SESSION, rule, ", ".join(clauses)))
+                         % (SESSION_R8 if key in ROUND8_RULE6 else SESSION, rule, ", ".join(clauses)))
     e["readings"] = rr
     if supp:
         e["supporting_readings"] = [reading(rid, key, x) for rid, x in supp]
+    if ctl:
+        e["control_readings"] = [reading(rid, key, x) for rid, x in sorted(ctl)]
     return e
 
 
@@ -677,8 +754,8 @@ def build():
     if set(keys) != read:
         raise SystemExit("the records decided %s are not the records read %s" % (sorted(set(keys) - read),
                                                                                 sorted(read - set(keys))))
-    if len(set(EXCLUDED) | set(HISTORY_RESTATED) | set(TAKEON_UNMEASURABLE)) != (
-            len(EXCLUDED) + len(HISTORY_RESTATED) + len(TAKEON_UNMEASURABLE)):
+    if len(set(EXCLUDED) | set(EXCLUDED_4B) | set(HISTORY_RESTATED) | set(TAKEON_UNMEASURABLE)) != (
+            len(EXCLUDED) + len(EXCLUDED_4B) + len(HISTORY_RESTATED) + len(TAKEON_UNMEASURABLE)):
         raise SystemExit("a record in two buckets")
     pop = dict(POPULATION)
     counts = {}
@@ -689,7 +766,7 @@ def build():
            "_adjudicated": {k: {"rule": OUTCOMES[k][0], "outcome": OUTCOMES[k][1], "where": OUTCOMES[k][2],
                                 "readers": [rid for rid, _ in reads[k]]} for k in keys},
            "excluded": {}, "history_restated": {}, "takeon_unmeasurable": {}}
-    for bucket, src in (("excluded", EXCLUDED), ("history_restated", HISTORY_RESTATED),
+    for bucket, src in (("excluded", {**EXCLUDED, **EXCLUDED_4B}), ("history_restated", HISTORY_RESTATED),
                         ("takeon_unmeasurable", TAKEON_UNMEASURABLE)):
         for k in sorted(src, key=order_key):
             reg[bucket][k] = entry_for(k, reads[k], bucket)

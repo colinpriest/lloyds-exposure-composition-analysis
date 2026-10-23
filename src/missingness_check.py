@@ -374,12 +374,15 @@ def classify_filings():
                         "gross claims-outstanding roll-forward prints an exchange line of 5% or more of the opening "
                         "reserves (data/fx_untranslated_excluded.json)")
         elif obs.get("data_quality_tag") == "RESTATED_BASE_TABLE":
-            # the primary outcome (rule 1 of the round-5 decision rules, 23 October 2026, run_analysis.RESTATED_BASE_TAG):
-            # the development table restates its history without explanation and fails the year's accounts
+            # the primary outcome (rules 1 and 4b of the round-5 decision rules, 23 and 24 October 2026,
+            # run_analysis.RESTATED_BASE_TAG): the development table restates its history without explanation, or its own
+            # cells prove it inconsistent, and it fails the year's accounts with no base that reconciles
             category, detail = "scientific_exclusion", "restated_base_table"
             economic, disclosure, extraction = "eligible", "development_observed", "parsed"
-            evidence = ("the development table restates its history beyond the exchange rate with no explanation and "
-                        "fails the year's accounts while the year t-1 control ties (data/restated_base_excluded.json)")
+            evidence = ("the development table restates its history beyond the exchange rate with no explanation, or "
+                        "its own cells prove it inconsistent (a cumulative paid figure falls between reports), and it "
+                        "fails the year's accounts with no base that reconciles (data/restated_base_excluded.json, "
+                        "rules 1 and 4b)")
         elif obs.get("data_quality_tag") == "TAKEON_BASE_UNMEASURABLE":
             # the primary outcome (rule 5b of the round-5 decision rules, 23 October 2026,
             # run_analysis.TAKEON_UNMEASURABLE_TAG): the year's take-on is not in R, the filing prints no transferred

@@ -226,6 +226,11 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "1% of R and stays. Rules 1 to 7 were written before the adjudication; rule 5b, rule 6's take-on clause "
          "(take_on_table_unreconciled) and rule 1's exact control clause were added after particular readings or the "
          "review (`rules.md` names them).", "",
+         "Round 8 (24 October 2026, same session): 780/2016 and 4747/2024 were read again for rule 1's year t-1 control "
+         "(readings Z7 and Z8, `../round8/briefs/brief_r8.md`), which agree on every fact: neither control ties. "
+         "780/2016 returns to the primary under rule 6 (+24.9m USD as printed); rule 4b was added to `rules.md` before "
+         "it was applied, and takes 4747/2024 and 2232/2017 out of the primary. The outcomes below are those after "
+         "round 8.", "",
          "## How the rules were read", "",
          "- Validity classes. A 'label' disagreement (rule 6) is one between the classes valid, screen_misread, units_slip "
          "and restated_base, undeterminable (the classes `compare_r5.py` uses for 'VERDICTS DIFFER'). A record whose two "
@@ -240,15 +245,17 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "- Rule 1's control (made exact on 23 October 2026, after review 8, and re-applied to every record). The year "
          "t-1 control ties within 5%; or within 10% when the same basis gap explains both years (an '& prior' column "
          "outside the cells, an ultimate basis against earned accounts) and the year t miss is at least three times the "
-         "control's. Two of the four rule-1 records need the 10% clause: 780/2016 (control +9.5% from the '2010 & prior' "
-         "years outside the cells; year t paid identity +79.8%, 8.4 times) and 4747/2024 (control -7.2%, outstanding "
-         "tying exactly; year t -81.9%, 11.4 times; neither reader names its basis gap, which the session reads as the "
-         "table's own underwriting-year basis, the place the clause leans on judgement). Under the exact clause "
-         "2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 and stay on the least-certain "
-         "list, each entry saying why. Re-applying the clause to every record changed no outcome: 780/2016 and "
-         "4747/2024 meet it only through its 10% branch, and 4242/2022's move from rule 1 to rule 3 did not come from "
-         "the clause (its control, -1.1%, ties under either reading) but from review 8's separate decision to set aside "
-         "the merged '2016 & Prior' column.",
+         "control's. The clause decided no record: 4242/2022 moved from rule 1 to rule 3 on review 8's decision to set "
+         "aside the merged '2016 & Prior' column (its control, -1.1%, ties either way), and 780/2016 and 4747/2024, "
+         "which stayed under rule 1 on the session's reading that their controls met the 10% branch, both fail it on the "
+         "round-8 readings Z7 and Z8 (4747/2024: control -7.2%, no shared basis gap; 780/2016: control +9.4%, year t "
+         "miss +5.6%, 0.6 times it). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 either, "
+         "each entry saying why.",
+         "- Rule 4b (24 October 2026, after the round-8 readings): where the control does not tie, a table whose cumulative "
+         "paid for a year u <= t-2 is lower than the year t-1 report printed, beyond the exchange rate and unexplained "
+         "(both readings), and which fails the accounts by more than 10% with no base that reconciles, leaves the "
+         "primary. Applied to the readings of every record (`../round8/rule_4b_scan.json`): it decides 4747/2024 and "
+         "2232/2017 (found by the scan; its condition (ii) is narrow, -10.5% in both readings).",
          "- Rule 1 does not reach a year t-1 column: 2015/2022's table restates only its UY2021 column (outside M) and "
          "stands.", ""]
 counts = {}
@@ -260,15 +267,15 @@ for o in ("excluded", "corrected", "corrected_least_certain", "take_on_base", "t
     ks = sorted(counts.get(o, []), key=order)
     rules = sorted({adj[k]["rule"] for k in ks})
     lines.append("| %s | %s | %d | %s |" % (o, ", ".join(rules), len(ks), ", ".join(ks)))
-lines += ["", "Primary at 35a259c: 649 records. Leaving: the four of rule 1, 3000/2022 (rule 2) and 1110/2022 (rule 5b, after "
-          "the round-7 readings): 643. Five figures corrected (318/2024, 1274/2016, 1609/2024, 2232/2020, 4242/2022). "
+lines += ["", "Primary at 35a259c: 649 records. Leaving: 2689/2023 and 6134/2022 (rule 1), 4747/2024 and 2232/2017 (rule 4b, "
+          "after the round-8 readings), 3000/2022 (rule 2) and 1110/2022 (rule 5b, after the round-7 readings): 643. Five figures corrected (318/2024, 1274/2016, 1609/2024, 2232/2020, 4242/2022). "
           "The 29 records listed under history_restated (the 25 of rule 6, 1458/2024 under rule 5b, 3500/2023 and "
           "3500/2022 under rules 5 and 6, and 1274/2016 under rules 4 and 6) stay and join the least-certain "
           "sensitivity.", ""]
 
 lines += ["## Label disagreements settled by the rules", ""]
 for k in sorted(adj, key=order):
-    vs = [(rid, e.get("verdict")) for rid, e in READS[k] if rid[0] in "PQVZ"]
+    vs = [(rid, e.get("verdict")) for rid, e in READS[k] if rid[0] in "PQVZ" and rid not in rb.CONTROL_READERS]
     cl = {("v" if v in rb.VALID else "i") for _, v in vs if v in rb.VALID + rb.INVALID}
     if len(cl) > 1 or len({v for _, v in vs}) > 1:
         lines.append("- %s: %s. %s" % (k, ", ".join("%s %s" % p for p in vs),
@@ -316,7 +323,11 @@ def section(title, keys, body):
         out.append("### %s (rule %s: %s)" % (k, adj[k]["rule"], adj[k]["outcome"]))
         out.append("")
         for rid, v in READS[k]:
-            if rid in rb.AMOUNT_READERS:
+            if rid in rb.CONTROL_READERS:
+                out.append("- %s (round 8, rule 1's control): control %s%%, year t %s%%, shared basis gap %s" % (
+                    rid, v.get("control_diff_pct"), v.get("year_t_diff_pct"),
+                    (v.get("shared_basis_gap") or (v.get("item3_shared_basis_gap") or {}).get("answer"))))
+            elif rid in rb.AMOUNT_READERS:
                 g = v["gross_transferred_in"]
                 out.append("- %s (round 7, the transferred gross amount): %s; opening R %s, closing %s" % (
                     rid, "not printed" if g.get("value_m") is None else "%s" % g["value_m"],
@@ -329,7 +340,14 @@ def section(title, keys, body):
 
 
 def excl_body(k):
-    c = REG["excluded"][k]["conditions"]
+    e = REG["excluded"][k]
+    c = e["conditions"]
+    if e["rule"] == "4b":
+        return ("Rule 4b. The control does not tie: %s. Cumulative paid falls between reports, unexplained: %s. Year t "
+                "fails the accounts: %s. No base reconciles: %s. Found by: %s. Outcome: excluded "
+                "(data/restated_base_excluded.json, tag RESTATED_BASE_TABLE)." % (
+                    c["control_ties"]["facts"], c["cumulative_paid_falls_unexplained"]["facts"],
+                    c["year_t_fails_accounts"]["facts"], c["previous_base_reconciles"]["facts"], e["found_by"]))
     return ("Rule 1. History differs, unexplained: %s. Year t fails the accounts: %s. Control ties: %s. The year t-1 "
             "base does not reconcile: %s. Outcome: excluded (data/restated_base_excluded.json, tag "
             "RESTATED_BASE_TABLE)." % (c["history_differs_unexplained"]["facts"], c["year_t_fails_accounts"]["facts"],
@@ -351,7 +369,7 @@ def hist_body(k):
 
 
 fx = FX["excluded"]["3000_2022"]
-lines += section("Rule 1: excluded", REG["excluded"], excl_body)
+lines += section("Rules 1 and 4b: excluded", REG["excluded"], excl_body)
 lines += section("Rule 2: excluded under the author's rule B", ["3000_2022"], lambda k: (
     "Both readings: the 2022 table's end-2021 incurred and cumulative paid are both lifted by the same amount in every "
     "column (2013: +20,536 on each; P2 and Q1), so the paid history is retranslated (about 8%%) and the end-2021 reserves "

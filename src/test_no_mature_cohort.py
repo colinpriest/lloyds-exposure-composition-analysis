@@ -424,10 +424,10 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
         years = ra.triangle_years(_imported(key))
         assert years and any(y <= t - ra.MATURE_LAG for y in years), key
         assert key not in blind["records"]
-        # 1967/2014 has left the regenerated sample (a basis exclusion now); 780/2016 has left the primary sample since
-        # the round-5 adjudication (RESTATED_BASE_TABLE: see the exact tags below); the others stay in every sample, the
-        # primary included: each has a mature-enforced triangle figure there
-        in_the_committed_sample = key not in ("1967_2014", "780_2016") or not (regenerated or on_the_primary)
+        # 1967/2014 has left the regenerated sample (a basis exclusion now); the others stay in every sample, the primary
+        # included: each has a mature-enforced triangle figure there (780/2016 left the primary at the round-5
+        # adjudication and returned after the round-8 readings of 24 October 2026, under rule 6)
+        in_the_committed_sample = key != "1967_2014" or not (regenerated or on_the_primary)
         assert (key in sample) == in_the_committed_sample, key
 
 
@@ -435,9 +435,9 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
 #: pyd_cohort_scope, pyd_cohort_route). Under both outcomes 1225/2017, 2012/2015 and 4141/2018 are reliable gross records
 #: with a mature-enforced triangle figure and 1967/2014 is a net-basis record; 780/2016 is the one record the outcome
 #: changes: the 672 construction reads its disclosed prior-year line (-12.64m) and keeps it as a reliable gross record;
-#: the primary reads its triangle (u <= t-2) and, since the round-5 adjudication (the recorded pass of 38cd750; it was
-#: RELIABLE with +20.18m on the 649-record primary), tags it RESTATED_BASE_TABLE: a table whose base cells the next
-#: year's report restated carries no mature-cohort figure, so the record has no severity and leaves the sample.
+#: the primary reads its triangle (u <= t-2), +24.9m USD (+20.18m GBP). The round-5 adjudication tagged it
+#: RESTATED_BASE_TABLE (the recorded pass of 38cd750); the round-8 readings (24 October 2026) found that its control does
+#: not tie, so rule 1 does not reach it, and rule 6 keeps it in the primary at that figure, on the least-certain list.
 #: A loose "or" here once let the primary pass without asserting the four were in the sample (review of 23 October 2026, m4)
 RESTATED_RECORDS = {
     "1225_2017": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
@@ -448,7 +448,7 @@ RESTATED_RECORDS = {
                   "672": ("RELIABLE", "gross", "mature-enforced", "triangle")},
     "4141_2018": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
                   "672": ("RELIABLE", "gross", "mature-enforced", "triangle")},
-    "780_2016": {"primary": ("RESTATED_BASE_TABLE", "gross", "mature-enforced", "triangle"),
+    "780_2016": {"primary": ("RELIABLE", "gross", "mature-enforced", "triangle"),
                  "672": ("RELIABLE", "gross", "disclosed-prior-year", "disclosed")},
 }
 
@@ -470,8 +470,8 @@ def test_each_restated_record_has_its_exact_tag_under_the_primary_and_the_672(lo
     assert got == RESTATED_RECORDS[key][outcome], (key, outcome)
     # membership follows the tag: only a reliable gross record carries a severity into the sample
     in_sample = r["data_quality_tag"] == "RELIABLE" and r["pyd_basis"] == "gross"
-    # outside the sample: 1967/2014 (net basis) under both outcomes, and 780/2016 under the primary (restated base table)
-    assert in_sample == (key != "1967_2014" and (key, outcome) != ("780_2016", "primary")), (key, outcome)
+    # outside the sample: 1967/2014 (net basis) under both outcomes
+    assert in_sample == (key != "1967_2014"), (key, outcome)
     if in_sample:
         assert r["s_raw_a"] is not None and r["s_raw_b"] is not None, (key, outcome)
     else:
@@ -482,10 +482,10 @@ def test_the_one_restated_record_the_outcome_changes_is_780_2016(loaded_both_way
     moved = [k for k in RESTATED_RECORDS
              if loaded_both_ways["primary"][k]["s_raw_a"] != loaded_both_ways["672"][k]["s_raw_a"]]
     assert moved == ["780_2016"]
-    # the recorded pass of 38cd750: the primary carries no figure for it (it was +20.18m before the restated-base rule),
-    # the 672 construction its disclosed prior-year line
-    assert loaded_both_ways["primary"]["780_2016"]["pyd_gbp_m"] is None
-    assert loaded_both_ways["primary"]["780_2016"]["data_quality_tag"] == "RESTATED_BASE_TABLE"
+    # since the round-8 readings the primary carries its triangle figure, +24.9m USD (GBP 20.183189), and the 672
+    # construction its disclosed prior-year line
+    assert loaded_both_ways["primary"]["780_2016"]["pyd_gbp_m"] == pytest.approx(20.183189, abs=1e-6)
+    assert loaded_both_ways["primary"]["780_2016"]["data_quality_tag"] == "RELIABLE"
     assert loaded_both_ways["672"]["780_2016"]["pyd_gbp_m"] < 0
     assert loaded_both_ways["672"]["780_2016"]["s_raw_a"] is not None
 

@@ -553,7 +553,11 @@ FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed", "table_retranslat
 #: that differs from the year t-1 report beyond the exchange rate with no explanation in either filing, whose table fails
 #: the year's accounts by more than 10% beyond what its basis explains while the year t-1 control ties within 5%, and
 #: whose year t-1 printed base gives no figure that reconciles either, leaves the primary sample: its table cannot give
-#: the year's movement. data/restated_base_excluded.json holds those records ("excluded") and the records rule 6 keeps in
+#: the year's movement. Rule 4b (24 October 2026, after the round-8 readings): where the control does not tie, a record
+#: still leaves when both readings report that the year t table prints, for a year u <= t-2, cumulative paid lower than
+#: the year t-1 report printed, beyond the exchange rate and unexplained, the table fails the year's accounts by more
+#: than 10%, and no base reconciles: the table is not one consistent cumulative table. Each "excluded" entry names its
+#: rule. data/restated_base_excluded.json holds those records ("excluded") and the records rule 6 keeps in
 #: the primary but lists for the least-certain sensitivity ("history_restated"), each on two readings of the filing
 #: (src/build_restated_base_excluded.py, from the readings archived under results/extraction_error_rate/mature-cohort/
 #: round5/). The 672 construction does not read it.
@@ -573,6 +577,23 @@ RESTATED_BUCKETS = ("excluded", "history_restated", TAKEON_UNMEASURABLE_BUCKET)
 #: the four conditions of rule 1, each with the value an excluded entry must show
 RESTATED_CONDITIONS = (("history_differs_unexplained", True), ("year_t_fails_accounts", True), ("control_ties", True),
                        ("previous_base_reconciles", False))
+#: the four conditions of rule 4b (the control does not tie; (i) a cumulative paid figure falls between reports beyond
+#: the exchange rate, unexplained; (ii) the table fails the accounts; (iii) no base reconciles)
+RESTATED_CONDITIONS_4B = (("control_ties", False), ("cumulative_paid_falls_unexplained", True),
+                          ("year_t_fails_accounts", True), ("previous_base_reconciles", False))
+#: an excluded entry's rule and the conditions it must show
+RESTATED_EXCLUDED_RULES = {"1": RESTATED_CONDITIONS, "4b": RESTATED_CONDITIONS_4B}
+#: the classification log's reason for a record an excluded entry removes, by the entry's rule
+RESTATED_LOG_REASON = {
+    "1": ("the development table restates its history beyond the exchange rate with no explanation in either filing and "
+          "fails the year's accounts while the year t-1 control ties, and the year t-1 printed base gives no figure that "
+          "reconciles either: the primary carries no severity for it (data/restated_base_excluded.json, rule 1 of the "
+          "round-5 decision rules)"),
+    "4b": ("the development table's own cells prove it inconsistent: it prints, for a year u <= t-2, cumulative paid "
+           "lower than the year t-1 report printed, beyond the exchange rate and unexplained, it fails the year's "
+           "accounts, and no base gives a figure that reconciles: the primary carries no severity for it "
+           "(data/restated_base_excluded.json, rule 4b of the round-5 decision rules)"),
+}
 #: why rule 6 lists a record: an underwriting year u <= t-2 moved beyond the exchange rate, without explanation, by more
 #: than 1% of R; or the two readings disagree on the validity label but not on the facts; or (rule 5b) the filing prints
 #: no transferred gross amount for a take-on in year t but bounds it at or below the threshold share of R
@@ -1795,7 +1816,8 @@ def _restated_reading_gaps(entry, bucket):
             gaps.append("reading %d's pages" % i)
         if r.get("verdict") not in RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS:
             gaps.append("reading %d's verdict (%s)" % (i, ", ".join(RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS)))
-    if bucket == "excluded" and any(v != "restated_base" for v in verdicts):
+    # rule 1 needs both readings to find a restated base; rule 4b rests on the facts both report, not their labels
+    if bucket == "excluded" and entry.get("rule") == "1" and any(v != "restated_base" for v in verdicts):
         gaps.append("readings that each find a restated base (verdicts %s)" % verdicts)
     if bucket == "history_restated" and "label_disagreement" in (entry.get("clauses") or []):
         if not (set(verdicts) & set(RESTATED_VALID_VERDICTS) and set(verdicts) & set(RESTATED_INVALID_VERDICTS)):
@@ -1852,8 +1874,8 @@ def _take_on_gaps(entry, bucket):
 
 def _restated_entry_gaps(entry, bucket):
     """What a data/restated_base_excluded.json entry lacks. All buckets: the decision, the pages and a quote, and the
-    readings (_restated_reading_gaps). An excluded entry: rule 1's four conditions, each with its value (the first three
-    hold, the last does not) and the facts it rests on. A history_restated entry: its clauses (RESTATED_CLAUSES) and the
+    readings (_restated_reading_gaps). An excluded entry: its rule (1 or 4b) and that rule's four conditions, each with
+    its value and the facts it rests on (RESTATED_EXCLUDED_RULES). A history_restated entry: its clauses (RESTATED_CLAUSES) and the
     facts, and for the clause take_on_base_bounded the rule-5b take-on (_take_on_gaps). A takeon_unmeasurable entry: the
     facts and the rule-5b take-on."""
     gaps = []
@@ -1862,10 +1884,13 @@ def _restated_entry_gaps(entry, bucket):
     gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
     gaps += _restated_reading_gaps(entry, bucket)
     if bucket == "excluded":
+        rule = entry.get("rule")
+        if rule not in RESTATED_EXCLUDED_RULES:
+            return gaps + ["a rule (%s)" % ", ".join(sorted(RESTATED_EXCLUDED_RULES))]
         conds = entry.get("conditions")
         if not isinstance(conds, dict):
-            return gaps + ["rule 1's conditions"]
-        for name, want in RESTATED_CONDITIONS:
+            return gaps + ["rule %s's conditions" % rule]
+        for name, want in RESTATED_EXCLUDED_RULES[rule]:
             c = conds.get(name)
             if not isinstance(c, dict) or c.get("holds") is not want or not isinstance(c.get("facts"), str) \
                     or not c["facts"].strip():
@@ -1914,8 +1939,8 @@ def _restated_buckets(path=None):
 
 
 def load_restated_base(path=None):
-    """The records data/restated_base_excluded.json removes from the primary sample (rule 1 of the round-5 decision rules,
-    decision of the Claude analysis session, 23 October 2026), as {key: entry}; every entry of every bucket ("excluded",
+    """The records data/restated_base_excluded.json removes from the primary sample (rules 1 and 4b of the round-5 decision
+    rules, decisions of the Claude analysis session, 23 and 24 October 2026), as {key: entry}; every entry of every bucket ("excluded",
     "history_restated", "takeon_unmeasurable") is validated, and a record in two buckets is refused. ``path`` defaults to
     the committed register."""
     return _restated_buckets(path)["excluded"]
@@ -2555,8 +2580,9 @@ def load_and_classify(outcome=None):
         # the author's rule B (22 October 2026): a gross reliable record whose table is not retranslated across a
         # sterling/dollar move of 5% or more, with an exchange line of 5% or more of R, leaves the primary
         counters["fx_untranslated_excluded"] = 0
-        # rule 1 of the round-5 decision rules (23 October 2026): a gross reliable record whose table restates its
-        # history without explanation and fails the year's accounts leaves the primary
+        # rules 1 and 4b of the round-5 decision rules (23 and 24 October 2026): a gross reliable record whose table
+        # restates its history without explanation, or whose own cells prove it inconsistent, and fails the year's
+        # accounts leaves the primary
         counters["restated_base_excluded"] = 0
         # rule 5b (23 October 2026): a gross reliable record whose take-on the filing does not print, and could exceed
         # 10% of R, leaves the primary
@@ -2871,7 +2897,7 @@ def load_and_classify(outcome=None):
             is_reliable = False
             pyd_pct = None
             fx_applied.add(basis_key)
-        # rule 1 of the round-5 decision rules: a reliable gross record the restated-base register excludes leaves the
+        # rules 1 and 4b of the round-5 decision rules: a reliable gross record the restated-base register excludes leaves the
         # primary at the same step; an entry that finds no such record is stale and stops the run
         restated = (basis_key in restated_register and is_reliable and not is_takeon and basis == "gross")
         if basis_key in restated_register and not restated:
@@ -2940,12 +2966,7 @@ def load_and_classify(outcome=None):
             dq_tag = RESTATED_BASE_TAG
             counters["restated_base_excluded"] += 1
             classification_log.append({"file": fname, "status": dq_tag,
-                                       "reason": "the development table restates its history beyond the exchange rate "
-                                                 "with no explanation in either filing and fails the year's accounts "
-                                                 "while the year t-1 control ties, and the year t-1 printed base gives "
-                                                 "no figure that reconciles either: the primary carries no severity for "
-                                                 "it (data/restated_base_excluded.json, rule 1 of the round-5 decision "
-                                                 "rules)"})
+                                       "reason": RESTATED_LOG_REASON[restated_register[basis_key]["rule"]]})
         elif unmeasurable:
             dq_tag = TAKEON_UNMEASURABLE_TAG
             counters["takeon_base_unmeasurable_excluded"] += 1

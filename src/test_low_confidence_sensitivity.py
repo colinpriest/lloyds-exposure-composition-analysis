@@ -41,10 +41,10 @@ def _registers3():
 #: the 29 records the round-5 decision rules list (decision of the Claude analysis session, 23 October 2026): the 25 of
 #: rule 6, 1458/2024 (rule 5b: its unprinted take-on is bounded at 8.0% of R), 3500/2023 and 3500/2022 (explained
 #: take-ons in R whose tables do not reconcile with note 7, the second added after review 8) and 1274/2016 (after review
-#: 8: its corrected figure is the session's derivation from cells both readers quote)
-RESTATED = ["382_2021", "382_2022", "382_2023", "780_2017", "1176_2019", "1274_2016", "1458_2024", "1686_2022",
-            "1729_2023", "1910_2018", "1947_2022", "1967_2017", "1967_2018", "2001_2016", "2001_2017", "2232_2017",
-            "2232_2019", "2468_2019", "2468_2020", "2488_2016", "3000_2016", "3500_2022", "3500_2023", "4020_2018",
+#: 8: its corrected figure is the session's derivation from cells both readers quote); 780/2016 joined and 2232/2017 left
+#: after the round-8 readings (24 October 2026: 780/2016 back under rule 6, 2232/2017 out under rule 4b)
+RESTATED = ["382_2021", "382_2022", "382_2023", "780_2016", "780_2017", "1176_2019", "1274_2016", "1458_2024", "1686_2022",
+            "1729_2023", "1910_2018", "1947_2022", "1967_2017", "1967_2018", "2001_2016", "2001_2017", "2232_2019", "2468_2019", "2468_2020", "2488_2016", "3000_2016", "3500_2022", "3500_2023", "4020_2018",
             "4141_2022", "4242_2017", "4444_2017", "5000_2023", "6118_2018"]
 
 

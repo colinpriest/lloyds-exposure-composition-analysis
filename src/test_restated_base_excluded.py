@@ -32,8 +32,11 @@ import build_restated_base_excluded as rb  # noqa: E402
 import run_analysis as ra  # noqa: E402
 
 #: rule 1; 4242/2022 left it for rule 3 after review 8 (the previous report's base reconciles once the merged '2016 & Prior'
-#: column is set aside)
-EXCLUDED = ["780_2016", "2689_2023", "4747_2024", "6134_2022"]
+#: column is set aside), 780/2016 for rule 6 and 4747/2024 for rule 4b after the round-8 readings
+RULE_1 = ["2689_2023", "6134_2022"]
+#: rule 4b (24 October 2026): 4747/2024, and 2232/2017, which the rule-4b population scan found
+RULE_4B = ["2232_2017", "4747_2024"]
+EXCLUDED = RULE_1 + RULE_4B
 CORRECTED = {"318_2024": "printed_table_error", "1274_2016": "printed_table_error", "1609_2024": "printed_table_error",
              "2232_2020": "previous_report_base", "4242_2022": "previous_report_base"}
 TAKEON_IN_R = ["1686_2021", "1856_2024", "1884_2021", "2488_2019", "3000_2016", "3500_2022", "3500_2023", "4000_2022",
@@ -58,6 +61,12 @@ def _archived(reader, key):
     """A record's reading as archived verbatim under round5/readings/ (not the register's copy)."""
     with io.open(os.path.join(HERE, rb.ROUND5, "readings", reader + ".json"), encoding="utf-8") as fh:
         return json.load(fh)[key]
+
+
+def _archived8(reader):
+    """A round-8 reading file as archived verbatim under round8/readings/ (Z8 keys records by the filing's name)."""
+    with io.open(os.path.join(str(rb.READINGS8), reader + ".json"), encoding="utf-8") as fh:
+        return json.load(fh)
 
 
 def _pct(value):
@@ -102,7 +111,12 @@ def test_every_record_of_the_round_has_one_rule_and_one_outcome():
                       "take_on_unmeasurable": 1}
     assert reg["_population"]["outcomes"] == dict(sorted(counts.items()))
     assert sorted(reg["excluded"], key=rb.order_key) == sorted(EXCLUDED, key=rb.order_key)
-    assert sorted(k for k, a in adj.items() if a["rule"] == "1") == sorted(reg["excluded"])
+    assert sorted(k for k, a in adj.items() if a["rule"] in ("1", "4b")) == sorted(reg["excluded"])
+    assert {k: e["rule"] for k, e in reg["excluded"].items()} == {**{k: "1" for k in RULE_1}, **{k: "4b" for k in RULE_4B}}
+    assert all(adj[k]["rule"] == e["rule"] for k, e in reg["excluded"].items())
+    # 780/2016 is back under rule 6 after the round-8 readings
+    assert adj["780_2016"] == {"rule": "6", "outcome": "least_certain", "where": adj["780_2016"]["where"],
+                               "readers": ["P6", "Q5", "Z7", "Z8"]}
     assert sorted(k for k, a in adj.items() if "6" in a["rule"]) == sorted(reg["history_restated"])
     assert sorted(k for k, a in adj.items() if a["rule"] == "5b") == sorted(reg["takeon_unmeasurable"]) == UNMEASURABLE
     assert len(reg["history_restated"]) == 29
@@ -155,7 +169,18 @@ def test_every_entry_rests_on_two_readings_with_the_year_t_filings_pages_and_the
                 assert r["verdict"] == arch["verdict"] and r["pages_as_read"] == arch["pages"], (k, r["reader"])
                 assert set(r["pages"]) <= set(rb._ints(arch["pages"] if isinstance(arch["pages"], list)
                                                        else list(arch["pages"].values()))), (k, r["reader"])
-            assert e["decision"].startswith("decision of the Claude analysis session, 23 October 2026"), k
+            day = "24" if (k in RULE_4B or k in rb.ROUND8_RULE6) else "23"
+            assert e["decision"].startswith("decision of the Claude analysis session, %s October 2026" % day), k
+            # the round-8 control readings are the archive's, verbatim
+            for r in e.get("control_readings", []):
+                with io.open(os.path.join(HERE, *r["source"].split("/")), encoding="utf-8") as fh:
+                    arch = json.load(fh)
+                arch = arch.get(k) or arch["syndicate_" + k]
+                assert r["source"].endswith("round8/readings/%s.json" % r["reader"]), (k, r["reader"])
+                assert r["control_diff_pct"] == arch["control_diff_pct"], (k, r["reader"])
+    for k in ("780_2016", "4747_2024"):
+        b = "excluded" if k in RULE_4B else "history_restated"
+        assert [r["reader"] for r in reg[b][k]["control_readings"]] == ["Z7", "Z8"], k
     assert [r["reader"] for r in reg["excluded"]["2689_2023"]["readings"]] == ["V1", "V2"]
     assert [r["reader"] for r in reg["excluded"]["2689_2023"]["supporting_readings"]] == ["W1", "W2"]
     assert [r["reader"] for r in reg["history_restated"]["4444_2017"]["readings"]] == ["P1", "Q8", "Z5", "Z6"]
@@ -203,9 +228,12 @@ def test_the_year_t_pages_are_split_from_the_readers_own_page_fields():
 
 def test_the_build_refuses_an_excluded_record_a_reading_calls_valid(monkeypatch):
     reads = rb.load_readings()
-    bad = [(rid, dict(e, verdict="valid") if rid == "Q3" else e) for rid, e in reads["4747_2024"]]
+    bad = [(rid, dict(e, verdict="valid") if rid == "Q5" else e) for rid, e in reads["6134_2022"]]
     with pytest.raises(SystemExit, match="rule 1 needs both readings"):
-        rb.entry_for("4747_2024", bad, "excluded")
+        rb.entry_for("6134_2022", bad, "excluded")
+    # rule 4b rests on the facts both readings report, not their labels: 2232/2017's P3 reads 'valid'
+    assert rb.entry_for("2232_2017", reads["2232_2017"], "excluded")["verdicts"] == {"P3": "valid",
+                                                                                    "Q4": "restated_base"}
 
 
 def test_the_build_refuses_a_label_clause_the_verdicts_do_not_show(monkeypatch):
@@ -231,11 +259,17 @@ def test_the_build_refuses_an_outcome_list_that_is_not_the_records_read(monkeypa
 
 
 @pytest.mark.parametrize("bucket,key,change", [
-    ("excluded", "4747_2024", "no-decision"), ("excluded", "4747_2024", "one-reading"),
-    ("excluded", "4747_2024", "same-reader-twice"), ("excluded", "4747_2024", "reader-says-valid"),
-    ("excluded", "4747_2024", "no-pages"), ("excluded", "4747_2024", "reading-no-pages"),
-    ("excluded", "4747_2024", "no-quote"), ("excluded", "4747_2024", "condition-flipped"),
-    ("excluded", "4747_2024", "previous-base-reconciles"), ("excluded", "4747_2024", "condition-no-facts"),
+    ("excluded", "6134_2022", "no-decision"), ("excluded", "6134_2022", "one-reading"),
+    ("excluded", "6134_2022", "same-reader-twice"), ("excluded", "6134_2022", "reader-says-valid"),
+    ("excluded", "6134_2022", "no-pages"), ("excluded", "6134_2022", "reading-no-pages"),
+    ("excluded", "6134_2022", "no-quote"), ("excluded", "6134_2022", "condition-flipped"),
+    ("excluded", "6134_2022", "previous-base-reconciles"), ("excluded", "6134_2022", "condition-no-facts"),
+    ("excluded", "6134_2022", "no-rule"), ("excluded", "6134_2022", "rule-4b-on-rule-1-conditions"),
+    ("excluded", "4747_2024", "no-rule"), ("excluded", "4747_2024", "unknown-rule"),
+    ("excluded", "4747_2024", "rule-1-on-rule-4b-conditions"), ("excluded", "4747_2024", "control-ties"),
+    ("excluded", "4747_2024", "paid-does-not-fall"), ("excluded", "2232_2017", "previous-base-reconciles"),
+    ("excluded", "2232_2017", "condition-flipped"), ("excluded", "2232_2017", "paid-fall-no-facts"),
+    ("excluded", "2232_2017", "one-reading"),
     ("history_restated", "382_2022", "no-clauses"), ("history_restated", "382_2022", "unknown-clause"),
     ("history_restated", "382_2022", "no-facts"), ("history_restated", "382_2022", "label-same-class"),
 ])
@@ -262,6 +296,18 @@ def test_the_loader_refuses_an_entry_without_its_evidence(tmp_path, bucket, key,
         e["conditions"]["previous_base_reconciles"]["holds"] = True
     elif change == "condition-no-facts":
         e["conditions"]["control_ties"]["facts"] = ""
+    elif change == "no-rule":
+        del e["rule"]
+    elif change == "unknown-rule":
+        e["rule"] = "4c"
+    elif change in ("rule-4b-on-rule-1-conditions", "rule-1-on-rule-4b-conditions"):
+        e["rule"] = "4b" if e["rule"] == "1" else "1"
+    elif change == "control-ties":
+        e["conditions"]["control_ties"]["holds"] = True
+    elif change == "paid-does-not-fall":
+        e["conditions"]["cumulative_paid_falls_unexplained"]["holds"] = False
+    elif change == "paid-fall-no-facts":
+        e["conditions"]["cumulative_paid_falls_unexplained"]["facts"] = " "
     elif change == "no-clauses":
         e["clauses"] = []
     elif change == "unknown-clause":
@@ -375,6 +421,8 @@ def test_a_record_cannot_be_both_excluded_and_listed(tmp_path):
 # --- the loader ---------------------------------------------------------------------------------------------------------
 
 def test_the_primary_removes_the_four_records_with_a_named_countable_reason(loaded):
+    """The two records of rule 1 and the two of rule 4b leave the primary with the tag RESTATED_BASE_TABLE, counted, each
+    with its own rule's reason in the ledger; 780/2016 is back at +24.9m USD as printed."""
     prim, old = loaded[ra.MATURE_COHORT_OUTCOME], loaded[ra.PRECEDENCE_672_OUTCOME]
     for key in EXCLUDED:
         r = prim["by_key"][key]
@@ -382,6 +430,8 @@ def test_the_primary_removes_the_four_records_with_a_named_countable_reason(load
         assert r["s_raw_a"] is None and r["pyd_gbp_m"] is None and r["pyd_pct"] is None, key
         entry = prim["log"]["syndicate_%s.json" % key]
         assert entry["status"] == ra.RESTATED_BASE_TAG and "data/restated_base_excluded.json" in entry["reason"]
+        rule = "4b" if key in RULE_4B else "1"
+        assert entry["reason"] == ra.RESTATED_LOG_REASON[rule] and ("rule %s of the round-5" % rule) in entry["reason"]
         assert old["by_key"][key]["data_quality_tag"] == "RELIABLE" and old["by_key"][key]["s_raw_a"] is not None
     assert prim["counters"]["restated_base_excluded"] == len(EXCLUDED) == 4
     assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.RESTATED_BASE_TAG) == 4
@@ -391,6 +441,11 @@ def test_the_primary_removes_the_four_records_with_a_named_countable_reason(load
     r = prim["by_key"]["4242_2022"]
     assert r["data_quality_tag"] == "RELIABLE" and r["pyd_basis_source"] == "mature-cohort-figure:register"
     assert "4242_2022" in _ws(prim["records"]) and r["pyd_gbp_m"] == pytest.approx(-66.254037, abs=1e-6)
+    # 780/2016 (rule 6 after the round-8 readings) is in the primary at M as printed, +24.9m USD
+    r = prim["by_key"]["780_2016"]
+    assert "780_2016" in _ws(prim["records"]) and r["data_quality_tag"] == "RELIABLE"
+    assert r["pyd_gbp_m"] == pytest.approx(ra.load_mature_cohort_figures()["780_2016"]["figure_gbp_m"], abs=1e-6)
+    assert ra.load_mature_cohort_figures()["780_2016"]["figure_m"] == 24.9
 
 
 def test_the_primary_removes_the_unmeasurable_take_on_with_its_own_countable_tag(loaded):
@@ -537,79 +592,138 @@ def _round5_text(name):
         return fh.read()
 
 
-def test_rule_1s_control_clause_is_exact_in_the_rules_the_register_and_the_adjudication():
-    """rules.md, the register's _rule text and the adjudication state the exact clause (within 5%, or within 10% when the
-    same basis gap explains both years and the year t miss is at least three times the control's), say it was made exact
-    on 23 October after review 8 and changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch;
-    4242/2022 moved to rule 3 on review 8's separate decision, not by the clause), and name what was added after the
-    rules were written. No text may say the clause changed 4242/2022's outcome (final review 2, R4 F1)."""
+def test_rule_1s_control_clause_is_exact_and_decided_no_record():
+    """rules.md, the register's _rule text, the build's docstring, the adjudication and data-provenance.md state the exact
+    clause (within 5%, or within 10% when the same basis gap explains both years and the year t miss is at least three
+    times the control's), say it decided no record (4242/2022 moved to rule 3 on review 8's decision; 780/2016 and
+    4747/2024 both fail it on the round-8 readings), and name what was added after the rules were written. No text may
+    say the clause changed or kept an outcome (final review 2, R4 F1 and F2)."""
     rules, adj = _round5_text("rules.md"), _round5_text("adjudication.md")
-    clause = "within 5%, or within 10% when the same basis gap explains"
-    flat = " ".join(rules.split())
-    for text in (flat, " ".join(adj.split())):
-        assert "Rules 1 to 7 were written before the adjudication" in text
-        assert "rule 5b" in text and "take-on clause" in text and "exact control clause" in text
-    assert "ties when it is " + clause in flat and "at least three times the control's" in flat
-    assert "made exact on 23 October 2026, after review 8, and re-applied to every record" in flat
-    assert "Re-applying the clause to every record changed no outcome." in flat
-    assert "780/2016 and 4747/2024 meet it only through its 10% branch" in flat
-    assert "4242/2022's move from rule 1 to rule 3 did not come from the clause" in flat
-    assert "Expected: 2689/2023, 4747/2024, 6134/2022, 780/2016" in flat
-    reg_rule = _register()["_rule"]
-    for needle in ("within 10% when the same basis gap explains both years", "at least three times the control's",
-                   "Rules 1 to 7 were written before the adjudication", "rule 5b, rule 6's take-on clause",
-                   "rule 1's exact control clause", "changing no outcome (780/2016 and 4747/2024 meet it only through "
-                   "its 10% branch)", "separate decision to set aside the merged '2016 & Prior' column, not by the "
-                   "clause"):
-        assert needle in reg_rule, needle
+    flat, adj_flat = " ".join(rules.split()), " ".join(adj.split())
+    reg_rule = " ".join(_register()["_rule"].split())
     doc = " ".join(rb.__doc__.split())
-    assert "changed no outcome (780/2016 and 4747/2024 meet it only through its 10% branch" in doc
-    assert "not by the clause" in doc
-    # the adjudication's rule-1 bullet says the same
-    adj_flat = " ".join(adj.split())
-    assert "changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch" in adj_flat
-    assert "did not come from the clause" in adj_flat
-    # the retracted claim (the clause moved 4242/2022) is gone from every text that stated it
-    for name, text in (("rules.md", flat), ("adjudication.md", adj_flat), ("_rule", " ".join(reg_rule.split())),
-                       ("docstring", doc)):
-        assert "no outcome but 4242" not in text, name
-    assert "Rules 1 to 7 were written before the adjudication" in doc and "rule 5b" in doc
-    assert "take_on_table_unreconciled" in doc and "rule 1's exact control clause" in doc
-    # the adjudication's third line says the same (the sentence wraps in the generator, so read it flat)
-    first = adj.splitlines()[2]
-    assert "rules 1 to 7 were written before the adjudication" in first and "exact control clause" in first
     with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as fh:
         prov = " ".join(fh.read().split())
-    assert "Rules 1 to 7 were written before the adjudication" in prov and "exact control clause" in prov
-    assert "Re-applying it changed no outcome: 780/2016 and 4747/2024 meet it only through its 10% branch" in prov
-    assert "not by the clause" in prov and "no outcome but 4242" not in prov
+    texts = {"rules.md": flat, "adjudication.md": adj_flat, "_rule": reg_rule, "docstring": doc, "provenance": prov}
+    for name, text in texts.items():
+        assert "Rules 1 to 7 were written before the adjudication" in text or "rules 1 to 7 were written before the " \
+            "adjudication" in text, name
+        assert "exact control clause" in text and "rule 4b" in text.lower(), name
+        assert "decided no record" in text, name
+        assert "4242/2022" in text and "780/2016 and 4747/2024" in text, name
+        for retracted in ("no outcome but 4242", "meet it only through its 10% branch", "changed no outcome"):
+            assert retracted not in text, (name, retracted)
+    assert "ties when it is within 5%, or within 10% when the same basis gap explains" in flat
+    assert "at least three times the control's" in flat
+    assert "Expected: 2689/2023, 6134/2022 (both tie within 5%)" in flat
+    assert "within 10% when the same basis gap explains both years" in reg_rule
+    first = adj.splitlines()[2]
+    assert "rules 1 to 7 were written before the adjudication" in first and "exact control clause" in first
 
 
-def test_the_two_rule_1_records_that_need_the_ten_percent_clause_record_the_control_miss_its_basis_and_the_ratio():
+def test_the_round_8_readings_put_both_ten_percent_records_outside_the_clause():
+    """Z7 and Z8 (round 8) agree: 4747/2024's control misses by -7.2% with no shared basis gap, and 780/2016's year t miss
+    is under its control's, so neither meets the 10% branch; the register quotes the figures from the archived readings
+    (not literals)."""
     reg = _register()
-    c780 = reg["excluded"]["780_2016"]["conditions"]["control_ties"]["facts"]
-    for needle in ("control miss +9.5%", "'2010 & prior'", "basis", "+79.8%", "8.4 times", "within 10%", "at least three times"):
-        assert needle in c780, needle
-    c4747 = reg["excluded"]["4747_2024"]["conditions"]["control_ties"]["facts"]
-    for needle in ("control miss -7.2%", "38,860", "Basis reason", "-81.9%", "11.4 times", "within 10%", "at least three times"):
-        assert needle in c4747, needle
-    # the ratios are the readings' own: the year t miss over the control's, from the archived readings' diff_pct fields
-    for key, facts, year_t, control in (
-            ("780_2016", c780, _archived("P6", "780_2016")["paid_test"]["diff_pct"],
-             _archived("P6", "780_2016")["incurred_test"]["prev_diff_pct"]),
-            ("4747_2024", c4747, _archived("P2", "4747_2024")["incurred_test"]["diff_pct"],
-             _archived("P2", "4747_2024")["incurred_test"]["control_t_minus_1"]["diff_pct"])):
-        t, c = _pct(year_t), _pct(control)
-        assert "%+.1f%%" % t in facts and "%+.1f%%" % c in facts, key
-        assert "%.1f times" % (abs(t) / abs(c)) in facts, key
-        assert 5 < abs(c) <= 10 and abs(t) >= 3 * abs(c), key
-    # the other two keep the plain 5% clause
-    for k in ("2689_2023", "6134_2022"):
-        assert "within 5%; met" in reg["excluded"][k]["conditions"]["control_ties"]["facts"], k
+    z7, z8 = (_archived8(r) for r in ("Z7", "Z8"))
+    for key in ("780_2016", "4747_2024"):
+        a, b = z7[key], z8["syndicate_" + key]
+        for z in (a, b):
+            c, t = abs(_pct(z["control_diff_pct"])), abs(_pct(z["year_t_diff_pct"]))
+            assert 5 < c <= 10, (key, c)
+            # the 10% branch needs a shared basis gap AND a year t miss three times the control's
+            shared = z.get("shared_basis_gap") or z["item3_shared_basis_gap"]["answer"]
+            assert shared != "yes" or t < 3 * c, key
+            assert shared == "no" or t < 3 * c, key
+    e4747 = reg["excluded"]["4747_2024"]
+    assert e4747["rule"] == "4b" and e4747["conditions"]["control_ties"]["holds"] is False
+    f = e4747["conditions"]["control_ties"]["facts"]
+    assert "%+.1f%%" % z7["4747_2024"]["control_diff_pct"] in f and "no shared basis gap (Z7, Z8)" in f
+    assert z7["4747_2024"]["item3_shared_basis_gap"]["answer"] == z8["syndicate_4747_2024"]["shared_basis_gap"] == "no"
+    f780 = reg["history_restated"]["780_2016"]["facts"]
+    c, t = z7["780_2016"]["control_diff_pct"], z7["780_2016"]["year_t_diff_pct"]
+    for needle in ("%+.1f%%" % c, "%+.1f%%" % t, "%.1f times" % (t / c), "Rule 1's exact control clause: not met",
+                   "+24.9m USD", "Rule 4b: not met"):
+        assert needle in f780, needle
+    assert reg["history_restated"]["780_2016"]["clauses"] == ["unexplained_history_move"]
+    assert [r["m_recomputed_m"] for r in reg["history_restated"]["780_2016"]["readings"]] == [24.9, 24.9]
+
+
+@pytest.mark.parametrize("key,cells", [
+    ("4747_2024", ("213", "4,843", "4,164", "5,883")),
+    ("2232_2017", ("19,393", "22,799", "43,200", "47,658")),
+])
+def test_a_rule_4b_record_shows_the_paid_fall_both_readings_print(key, cells):
+    """Rule 4b (i): both readings print the year t table's cumulative paid and the year t-1 report's for the same year;
+    the entry quotes the cells, and every cell it quotes is in each of the record's archived readings."""
+    e = _register()["excluded"][key]
+    f = e["conditions"]["cumulative_paid_falls_unexplained"]["facts"]
+    for cell in cells:
+        assert cell in f, (key, cell)
+    for r in e["readings"]:
+        text = json.dumps(_archived(r["reader"], key), ensure_ascii=False)
+        for cell in cells:
+            assert re.search(r"(?<![\d,])%s(?![\d,])" % re.escape(cell), text), (key, r["reader"], cell)
+    assert [c for c, want in rb.CONDITIONS_4B] == [c for c, want in ra.RESTATED_CONDITIONS_4B]
+    assert {c: v["holds"] for c, v in e["conditions"].items()} == dict(ra.RESTATED_CONDITIONS_4B)
+
+
+def test_2232_2017_meets_rule_4b_narrowly_and_the_scan_found_it():
+    """2232/2017's (ii) is narrow: -10.5% in both readings; its UY2012 paid fall (x0.851) is beyond the x0.918-0.939
+    retranslation Q4 measures on the same columns; the previous report's base gives the same cells; the scan found it."""
+    e = _register()["excluded"]["2232_2017"]
+    p3, q4 = _archived("P3", "2232_2017"), _archived("Q4", "2232_2017")
+    assert p3["incurred_test"]["diff_pct"] == q4["incurred_test"]["diff_pct"] == -10.5
+    assert "-10.5%" in e["conditions"]["year_t_fails_accounts"]["facts"] and "narrowly" in e["conditions"][
+        "year_t_fails_accounts"]["facts"]
+    assert round(19393 / 22799, 3) == 0.851 < 0.918 and "0.918-0.939" in q4["cells_check"]
+    assert "x0.851" in e["conditions"]["cumulative_paid_falls_unexplained"]["facts"]
+    assert "rule_4b_scan.json" in e["found_by"]
+    ctl = _pct(re.search(r"([+-]\d+(?:\.\d+)?)%\s*$", p3["incurred_test"]["prev_control"]).group(1))
+    f = e["conditions"]["control_ties"]["facts"]
+    assert "%+.1f%%" % ctl in f and "%.1f times it" % (abs(p3["incurred_test"]["diff_pct"]) / ctl) in f
+    with io.open(os.path.join(HERE, rb.ROUND5, "rules.md"), encoding="utf-8") as fh:
+        rules = " ".join(fh.read().split())
+    assert "4b. **A table its own cells prove inconsistent" in rules
+    assert "It decides two records" in rules and "2232/2017 (rule 6, least certain, until the scan found it)" in rules
+    assert "(ii) is narrow" in rules
+
+
+def test_the_rule_4b_scan_answers_every_record_of_the_round():
+    """round8/rule_4b_scan.json answers every one of the 83 records once: each record the scan flags is read against the
+    conditions, the rest fail (i) because no reading reports a fall; the records it decides are the register's rule-4b
+    entries, and each answer's outcome names the record's rule in the register."""
+    reg = _register()
+    adj = reg["_adjudicated"]
+    with io.open(str(rb.RULE_4B_SCAN), encoding="utf-8") as fh:
+        scan = json.load(fh)
+    sys.path.insert(0, str(rb.ROUND8))
+    try:
+        import scan_rule_4b as S
+    finally:
+        sys.path.remove(str(rb.ROUND8))
+    hits = S.scan()
+    assert set(hits) == set(adj) and len(adj) == 83
+    flagged = {k for k, h in hits.items() if h}
+    assert set(scan["read"]) >= flagged
+    assert sorted(scan["no_fall_reported"]) == sorted(set(adj) - set(scan["read"]))
+    # a record answered by hand although the scan does not flag it fails (i) in its own answer
+    for k in set(scan["read"]) - flagged:
+        assert scan["read"][k]["i"].startswith("no"), k
+    assert not set(scan["read"]) & set(scan["no_fall_reported"])
+    assert set(scan["read"]) | set(scan["no_fall_reported"]) == set(adj)
+    assert sorted(scan["decides"]) == sorted(RULE_4B) == sorted(k for k, e in reg["excluded"].items() if e["rule"] == "4b")
+    for k, ans in scan["read"].items():
+        assert ans["readings"] == adj[k]["readers"], k
+        assert ("rule %s" % adj[k]["rule"]) in ans["outcome"].split("->")[-1] or (
+            "rules %s" % adj[k]["rule"]) in ans["outcome"].split("->")[-1], k
+        assert ans["outcome"].startswith("CHANGED") == (k in ("780_2016", "2232_2017", "4747_2024")), k
+    for k in ("2232_2017", "2488_2016", "382_2021", "1967_2017", "1729_2023", "780_2016", "2468_2020"):
+        assert k in scan["read"], k
 
 
 @pytest.mark.parametrize("key,needles", [
-    ("2232_2017", ("not met", "+7.4%", "1.4 times", "2.7 times", "22.2%")),
     ("2488_2016", ("not met", "+38.3%", "over 10%", "1.6 times", "ties (-3.3%")),
     ("382_2021", ("not met", "-6.9%", "-8.7%", "1.3 times")),
     ("1967_2017", ("not met", "+4.0%", "+1.7%", "-7.6%")),
@@ -625,16 +739,16 @@ def test_the_records_rule_1_does_not_reach_under_the_exact_clause_say_why_and_st
 def test_the_ratios_the_five_entries_state_are_the_readings_own():
     """The multiples the entries quote follow from the percentages in their archived readings (the year t miss against
     the control's), read from the readings' diff_pct fields; 2232/2017's control has no diff_pct field, so it is read
-    from the end of P3's prev_control working, where the reader states it."""
+    from the end of P3's prev_control working, where the reader states it (2232/2017 is a rule-4b entry now; its control
+    facts carry the multiple)."""
     reg = _register()["history_restated"]
     p3 = _archived("P3", "2232_2017")
-    inc_t, paid_t = _pct(p3["incurred_test"]["diff_pct"]), _pct(p3["paid_test"]["diff_pct"])
+    inc_t = _pct(p3["incurred_test"]["diff_pct"])
     ctl = _pct(re.search(r"([+-]\d+(?:\.\d+)?)%\s*$", p3["incurred_test"]["prev_control"]).group(1))
-    f = reg["2232_2017"]["facts"]
-    for needle in ("%+.1f%%" % ctl, "%.1f%%" % (3 * ctl), "%.1f times it" % (abs(inc_t) / ctl),
-                   "%.1f times it" % (abs(paid_t) / ctl), "incurred %+.1f%%" % inc_t, "paid %+.1f%%" % paid_t):
+    f = _register()["excluded"]["2232_2017"]["conditions"]["control_ties"]["facts"]
+    for needle in ("%+.1f%%" % ctl, "%.1f times it" % (abs(inc_t) / ctl), "incurred %+.1f%%" % inc_t):
         assert needle in f, ("2232_2017", needle)
-    assert abs(inc_t) < 3 * ctl and abs(paid_t) < 3 * ctl
+    assert abs(inc_t) < 3 * ctl
     p6 = _archived("P6", "2488_2016")["incurred_test"]
     t, c = _pct(p6["diff_pct"]), _pct(p6["prev_diff_pct"])
     assert "%+.1f%%" % c in reg["2488_2016"]["facts"] and "%.1f times" % (t / c) in reg["2488_2016"]["facts"]

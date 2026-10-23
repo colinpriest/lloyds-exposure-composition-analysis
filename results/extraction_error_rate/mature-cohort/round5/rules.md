@@ -1,10 +1,11 @@
 # Decision rules for the round-5 readings (decision of the Claude analysis session, 23 October 2026)
 
-Rules 1 to 7 were written before the adjudication. Three rules were added or made exact after particular readings or the
-eighth review, each on 23 October 2026: rule 5b (after the round-7 readings U1 and U2 of the two take-ons whose transferred
-amount the round-5 readings did not print); rule 6's take-on clause, take_on_table_unreconciled (after the readings of
-3500/2023; applied to 3500/2022 after review 8); and rule 1's exact control clause (after review 8). Review 8 also added
-rule 6's derived-correction clause (derived_correction, 1274/2016).
+Rules 1 to 7 were written before the adjudication. Four rules were added or made exact after particular readings or the
+eighth review: rule 5b (23 October 2026, after the round-7 readings U1 and U2 of the two take-ons whose transferred
+amount the round-5 readings did not print); rule 6's take-on clause, take_on_table_unreconciled (23 October, after the
+readings of 3500/2023; applied to 3500/2022 after review 8); rule 1's exact control clause (23 October, after review 8);
+and rule 4b (24 October 2026, after the round-8 readings Z7 and Z8, `../round8/`). Review 8 also added rule 6's
+derived-correction clause (derived_correction, 1274/2016).
 
 Written before the adjudication, applied the same way to every record (82 read in round 5, plus 2689/2023 read by V1, V2
 and W1, W2). Every decision rests on facts both readings report; where the two readings give conflicting facts (not
@@ -16,18 +17,20 @@ labels), a third reading decides.
    its basis explains) while the year t-1 control ties; AND the year t-1 report's printed base does not give a figure
    that reconciles either. The year t-1 control ties when it is within 5%, or within 10% when the same basis gap explains
    both years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at
-   least three times the control's. Expected: 2689/2023, 4747/2024, 6134/2022, 780/2016. (4242/2022 was expected here
+   least three times the control's. Expected: 2689/2023, 6134/2022 (both tie within 5%). (4242/2022 was expected here
    before review 8 and is decided under rule 3: its year t-1 base reconciles once the merged '2016 & Prior' column, which
-   both readers call unreadable as a cohort, is set aside.)
+   both readers call unreadable as a cohort, is set aside. 780/2016 and 4747/2024 were expected here until the round-8
+   readings, and are decided under rules 6 and 4b.)
 
-   The control clause was made exact on 23 October 2026, after review 8, and re-applied to every record. Under it 780/2016
-   (control +9.5% from the '2010 & prior' years outside the cells, the same gap in both years; year t paid identity +80%,
-   8.4 times the control's) and 4747/2024 (control -7.2%, outstanding tying exactly; year t -81.9%, 11.4 times) are met;
-   2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 are not, and stay on the least-certain list (their entries
-   in the register say why). Re-applying the clause to every record changed no outcome. 780/2016 and 4747/2024 meet it
-   only through its 10% branch (2689/2023 and 6134/2022 tie within 5%). 4242/2022's move from rule 1 to rule 3 did not
-   come from the clause: its control (-1.1%) ties under the old and the exact clause alike, and it moved on review 8's
-   separate decision to set aside the merged '2016 & Prior' column.
+   The control clause was made exact on 23 October 2026, after review 8, and re-applied to every record. It decided no
+   record. 4242/2022 moved from rule 1 to rule 3 on review 8's decision to set aside the merged '2016 & Prior' column
+   (its control, -1.1%, ties under the old and the exact clause alike). 780/2016 and 4747/2024, which stayed under rule 1
+   on the session's reading that their controls met the 10% branch, both fail it on the round-8 readings Z7 and Z8
+   (`../round8/`, brief_r8.md), which agree on every fact: 4747/2024's control misses by -7.2% with no shared basis gap
+   (a shortfall, which an ultimate or underwriting basis cannot give); 780/2016's misses by +9.4% and its year t
+   incurred by +5.6%, 0.6 times the control's, so the 10% branch fails whatever the basis (P6's +80% paid identity is
+   not like for like: the 2016 table re-cuts its history). 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not
+   meet rule 1 either (their entries in the register say why).
 2. **Exchange rule B: leaves the primary.** The table mixes exchange bases (history not retranslated while the year end
    is) and the year's exchange effect on gross reserves is at least 5% of R (the author's rule B). Expected: 3000/2022.
 3. **Corrected to the previous report's base.** As in 1, but the year t-1 report's printed cells, used as the base,
@@ -45,6 +48,25 @@ labels), a third reading decides.
    gave them, stores the derivation apart (derived_figure_m), allows it only while both readers quote every cell used,
    gives the range other defensible factors yield (+21.8m to +25.7m), and the record joins the least-certain list (rule 6,
    clause derived_correction).
+4b. **A table its own cells prove inconsistent: leaves the primary** (added 24 October 2026, after the round-8 readings).
+   Where rule 1's control does not tie, a record still leaves the primary when (i) both readings report that the year t
+   table prints, for an underwriting year u <= t-2, cumulative paid lower than the year t-1 report printed for the same
+   year, by more than the exchange rate explains and with no explanation in either filing; and (ii) the year t table
+   fails the year's accounts by more than 10% (rule 1's test); and (iii) no base gives a figure that reconciles (rule 3
+   fails). A cumulative paid figure cannot fall, so the table is not one consistent cumulative table, and no figure from
+   it measures the year's movement. Applied to the readings of every record of rounds 5 to 8 (`../round8/
+   scan_rule_4b.py` lists every passage that reports a paid figure falling; `../round8/rule_4b_scan.json` records each
+   record's answer to (i) to (iii) with its readings). It decides two records:
+   - 4747/2024 (rule 1 until round 8): UY2020 cumulative paid 213 in the 2024 table (p48) against 4,843 in the 2023
+     report (p39), and UY2021 4,164 against 5,883 (P2, Q3, Z7, Z8); year t miss -81.9%; no base reconciles (-27% on the
+     2023 printed base).
+   - 2232/2017 (rule 6, least certain, until the scan found it): UY2012 cumulative gross paid 19,393 in the 2017 table
+     (p40) against 22,799 in the 2016 report (p40), x0.851, beyond the x0.918-0.939 retranslation Q4 measures on the same
+     columns' earlier cells (P3 names the fall; Q4 quotes the cells); (ii) is narrow: implied incurred -10.5% in both
+     readings (264.9m against 296.0m), on an ultimate basis that would put the table above the earned accounts, not
+     below; the previous report's base gives the same cells, so no base reconciles.
+   780/2016 meets (i) on Q5, Z7 and Z8 (UY2011 218.9 to 208.9) but fails (ii) (+5.6%), so it stays under rule 6. 2468/2020
+   meets (i) on both readings but its table ties (incurred -3.8%, paid -4.3%), so it stays under rule 6.
 5. **Take-on base.** An RITC, LPT or merger effective in year t whose acquired history the table shows "as if always":
    the movement is development on the combined book, so R must include the acquired gross reserves. If the analysis's
    R already includes them (check `opening_reserves_gbp_m` against the filing's opening gross reserves plus the
@@ -71,6 +93,9 @@ labels), a third reading decides.
    table that does not reconcile with the filing's own roll-forward (3500/2023, and 3500/2022 after review 8); or (added
    after review 8) the record's corrected figure is the session's derivation from cells both readers quote (1274/2016).
    These stay in the primary and join the least-certain sensitivity, derived by this rule from the register (never typed).
+   780/2016 joined after the round-8 readings (24 October 2026): its 2016 table re-cuts its history (end-2015 diagonal
+   528.0 against 701.6 in the 2015 report, unexplained, far over 1% of R) while the year t table ties to the accounts
+   (+5.6%); its figure is M as printed, +24.9m USD (both readings: +2.4, +4.4, +3.4, +14.7).
    2001/2016 was checked against the 1% of R after review 8: its UY2013 and UY2014 cells fall 24.9m and 16.7m (1.56% and
    1.04% of R, 1,601.0m) against an exchange uplift, 2.60% together, and every measure is over 1%, so it stays listed.
 7. **Stands.** Every other record: valid, screen misread, or a units slip that does not reach the analysis figure.
