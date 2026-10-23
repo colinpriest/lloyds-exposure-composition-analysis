@@ -7236,7 +7236,9 @@
    "tune": 1500,
    "chains": 4,
    "target_accept": 0.98,
-   "seed": 42
+   "seed": 42,
+   "target_accept_retry": 0.995,
+   "retry_rule": "a fold fit that diverges at target_accept is refitted once at target_accept_retry, same seed, and used only if that refit converges (no divergence, max R-hat <= 1.01); the run stops if it does not"
   },
   "honest": {
    "label": "honest: 10-fold by syndicate, adopted model refitted on each fold's training syndicates, u <= t-3 outcome",
@@ -9236,7 +9238,20 @@
       "max_rhat": 1.0012647020768624,
       "min_ess_bulk": 2273.6467997102295,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0012647020768624,
+        "min_ess_bulk": 2273.6467997102295,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 1,
@@ -9290,7 +9305,20 @@
       "max_rhat": 1.0020038161890346,
       "min_ess_bulk": 2663.684974790919,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0020038161890346,
+        "min_ess_bulk": 2663.684974790919,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 2,
@@ -9344,7 +9372,20 @@
       "max_rhat": 1.0012640991974389,
       "min_ess_bulk": 1904.3717631541185,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0012640991974389,
+        "min_ess_bulk": 1904.3717631541185,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 3,
@@ -9398,7 +9439,20 @@
       "max_rhat": 1.0019280862755733,
       "min_ess_bulk": 2149.9612383970457,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0019280862755733,
+        "min_ess_bulk": 2149.9612383970457,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 4,
@@ -9452,7 +9506,20 @@
       "max_rhat": 1.0009364118099742,
       "min_ess_bulk": 2604.7462545889925,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0009364118099742,
+        "min_ess_bulk": 2604.7462545889925,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 5,
@@ -9506,7 +9573,20 @@
       "max_rhat": 1.0014688539339505,
       "min_ess_bulk": 2028.658984768077,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0014688539339505,
+        "min_ess_bulk": 2028.658984768077,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 6,
@@ -9560,7 +9640,20 @@
       "max_rhat": 1.0024192730619048,
       "min_ess_bulk": 2064.8820649599616,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0024192730619048,
+        "min_ess_bulk": 2064.8820649599616,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 7,
@@ -9614,7 +9707,20 @@
       "max_rhat": 1.001504180230662,
       "min_ess_bulk": 1758.9733957186534,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.001504180230662,
+        "min_ess_bulk": 1758.9733957186534,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 8,
@@ -9668,7 +9774,20 @@
       "max_rhat": 1.0035149331615607,
       "min_ess_bulk": 1519.8328312617903,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0035149331615607,
+        "min_ess_bulk": 1519.8328312617903,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 9,
@@ -9722,9 +9841,23 @@
       "max_rhat": 1.0021380763251255,
       "min_ess_bulk": 2130.8411548225836,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0021380763251255,
+        "min_ess_bulk": 2130.8411548225836,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     }
-   ]
+   ],
+   "folds_retried": []
   },
   "honest_posterior_draws": {
    "operator": "size_only",
@@ -25241,7 +25374,7 @@
    }
   },
   "runtime_seconds": {
-   "fold_fits_wall": 180.24617552757263,
+   "fold_fits_wall": 164.30493569374084,
    "workers": 3
   },
   "against_the_primarys_backtest": {
@@ -25557,7 +25690,9 @@
    "tune": 1500,
    "chains": 4,
    "target_accept": 0.98,
-   "seed": 42
+   "seed": 42,
+   "target_accept_retry": 0.995,
+   "retry_rule": "a fold fit that diverges at target_accept is refitted once at target_accept_retry, same seed, and used only if that refit converges (no divergence, max R-hat <= 1.01); the run stops if it does not"
   },
   "honest": {
    "label": "honest: 10-fold by syndicate, adopted model refitted on each fold's training syndicates, u <= t-2 outcome",
@@ -26231,13 +26366,13 @@
         "size_quartile_4": 14.599999999999996
        },
        "pinball_mean": {
-        "all": 0.018956486861523247,
-        "clean": 0.01928412227434907,
-        "ritc": 0.013335491810230157,
-        "size_quartile_1": 0.03919754046642068,
-        "size_quartile_2": 0.014989282292404886,
-        "size_quartile_3": 0.01165078358922395,
-        "size_quartile_4": 0.010049766753957695
+        "all": 0.018956507507439758,
+        "clean": 0.019284141621133805,
+        "ritc": 0.0133355347443762,
+        "size_quartile_1": 0.03919763264571107,
+        "size_quartile_2": 0.014989250825705333,
+        "size_quartile_3": 0.011650797314449148,
+        "size_quartile_4": 0.0100497749854246
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -26311,13 +26446,13 @@
         "size_quartile_4": 7.300000000000006
        },
        "pinball_mean": {
-        "all": 0.012903177313091443,
-        "clean": 0.013097132966261442,
-        "ritc": 0.009575625638393665,
-        "size_quartile_1": 0.028770665283038184,
-        "size_quartile_2": 0.009964125258361697,
-        "size_quartile_3": 0.00644527364115393,
-        "size_quartile_4": 0.006476963783807034
+        "all": 0.012903182409373626,
+        "clean": 0.013097135471294867,
+        "ritc": 0.00957567519078737,
+        "size_quartile_1": 0.028770740209397076,
+        "size_quartile_2": 0.009964050743396624,
+        "size_quartile_3": 0.00644527434509807,
+        "size_quartile_4": 0.006476982956518975
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -26391,13 +26526,13 @@
         "size_quartile_4": 1.4600000000000013
        },
        "pinball_mean": {
-        "all": 0.005031896837501158,
-        "clean": 0.005157451827313084,
-        "ritc": 0.002877844043540292,
-        "size_quartile_1": 0.012632053155941911,
-        "size_quartile_2": 0.003517673215234207,
-        "size_quartile_3": 0.0022137349006225654,
-        "size_quartile_4": 0.001786508069707967
+        "all": 0.0050313577680276,
+        "clean": 0.005156924038033427,
+        "ritc": 0.002877111448240115,
+        "size_quartile_1": 0.012631676282633501,
+        "size_quartile_2": 0.0035170354576930453,
+        "size_quartile_3": 0.002213101180406342,
+        "size_quartile_4": 0.001785999929573744
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -26471,13 +26606,13 @@
         "size_quartile_4": 0.7300000000000006
        },
        "pinball_mean": {
-        "all": 0.0024367914389125194,
-        "clean": 0.0024662943408823006,
-        "ritc": 0.0019306322769934606,
-        "size_quartile_1": 0.004952900334551886,
-        "size_quartile_2": 0.002092080909168514,
-        "size_quartile_3": 0.001493320246735105,
-        "size_quartile_4": 0.0012172747252885308
+        "all": 0.0024367918327255866,
+        "clean": 0.002466294588840381,
+        "ritc": 0.0019306351731311442,
+        "size_quartile_1": 0.004952913618790745,
+        "size_quartile_2": 0.0020920783847409785,
+        "size_quartile_3": 0.0014933126931507988,
+        "size_quartile_4": 0.0012172731081821918
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -27200,13 +27335,13 @@
         "size_quartile_4": 14.599999999999996
        },
        "pinball_mean": {
-        "all": 0.019096656616767477,
-        "clean": 0.019415598282857032,
-        "ritc": 0.013624813657918552,
-        "size_quartile_1": 0.03921748860242129,
-        "size_quartile_2": 0.015273777547978625,
-        "size_quartile_3": 0.011865965971906143,
-        "size_quartile_4": 0.010091498880873467
+        "all": 0.019096534435120435,
+        "clean": 0.01941547529607916,
+        "ritc": 0.013624705289297283,
+        "size_quartile_1": 0.039217469839631564,
+        "size_quartile_2": 0.015273531965257686,
+        "size_quartile_3": 0.011865864806764796,
+        "size_quartile_4": 0.010091375672021471
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -27280,13 +27415,13 @@
         "size_quartile_4": 7.300000000000006
        },
        "pinball_mean": {
-        "all": 0.012949462395135647,
-        "clean": 0.013137562021713728,
-        "ritc": 0.009722378176655479,
-        "size_quartile_1": 0.028771966031576886,
-        "size_quartile_2": 0.010026792540992686,
-        "size_quartile_3": 0.006536117399806856,
-        "size_quartile_4": 0.006507401613556362
+        "all": 0.012949491186100847,
+        "clean": 0.013137595994086732,
+        "ritc": 0.009722318074093034,
+        "size_quartile_1": 0.028771989111775188,
+        "size_quartile_2": 0.010026856398062393,
+        "size_quartile_3": 0.006536182018507518,
+        "size_quartile_4": 0.0065073656679078985
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -27360,13 +27495,13 @@
         "size_quartile_4": 1.4600000000000013
        },
        "pinball_mean": {
-        "all": 0.005004700116053811,
-        "clean": 0.005125748872766045,
-        "ritc": 0.0029279573837095664,
-        "size_quartile_1": 0.012438241634665457,
-        "size_quartile_2": 0.003573684816405511,
-        "size_quartile_3": 0.0022243097279983923,
-        "size_quartile_4": 0.0018046337086452535
+        "all": 0.005004564511433055,
+        "clean": 0.005125622517673663,
+        "ritc": 0.002927663091867629,
+        "size_quartile_1": 0.012438146776939772,
+        "size_quartile_2": 0.003573524128322649,
+        "size_quartile_3": 0.0022241898904748715,
+        "size_quartile_4": 0.0018044668887719024
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -27440,13 +27575,13 @@
         "size_quartile_4": 0.7300000000000006
        },
        "pinball_mean": {
-        "all": 0.0029281410697288325,
-        "clean": 0.0029887520901448706,
-        "ritc": 0.0018882832507161693,
-        "size_quartile_1": 0.00710176746435476,
-        "size_quartile_2": 0.002034121126352417,
-        "size_quartile_3": 0.001426848563308879,
-        "size_quartile_4": 0.0011620073573981053
+        "all": 0.002928135246183111,
+        "clean": 0.002988746107699746,
+        "ritc": 0.001888280153288343,
+        "size_quartile_1": 0.007101779425875711,
+        "size_quartile_2": 0.0020341111863123535,
+        "size_quartile_3": 0.0014268301104886554,
+        "size_quartile_4": 0.0011620005016730337
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -27557,7 +27692,20 @@
       "max_rhat": 1.0015569260438215,
       "min_ess_bulk": 1672.2981717580574,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0015569260438215,
+        "min_ess_bulk": 1672.2981717580574,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 1,
@@ -27611,7 +27759,20 @@
       "max_rhat": 1.004560080618503,
       "min_ess_bulk": 1679.9701040980158,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.004560080618503,
+        "min_ess_bulk": 1679.9701040980158,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 2,
@@ -27665,7 +27826,20 @@
       "max_rhat": 1.0053868763576639,
       "min_ess_bulk": 1389.1426415545452,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0053868763576639,
+        "min_ess_bulk": 1389.1426415545452,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 3,
@@ -27719,7 +27893,20 @@
       "max_rhat": 1.0027181018821436,
       "min_ess_bulk": 1447.133106144357,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0027181018821436,
+        "min_ess_bulk": 1447.133106144357,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 4,
@@ -27729,51 +27916,124 @@
      "n_held_out_syndicates": 11,
      "params": {
       "k": {
-       "mean": 0.5819749762290228,
-       "hdi_2.5": 0.5038569662876263,
-       "hdi_97.5": 0.6810631593796119
+       "mean": 0.5817452650521353,
+       "hdi_2.5": 0.5039344958080552,
+       "hdi_97.5": 0.6859072729230185
       },
       "sd_undiv": {
-       "mean": 0.03200438705437091,
-       "hdi_2.5": 0.018680921707294327,
-       "hdi_97.5": 0.04452819551233798
+       "mean": 0.032080843223308286,
+       "hdi_2.5": 0.01814847841587779,
+       "hdi_97.5": 0.044217893569593505
       },
       "sd_div": {
-       "mean": 0.04296953646086691,
-       "hdi_2.5": 0.03218361339217377,
-       "hdi_97.5": 0.0557641603136691
+       "mean": 0.04304277438183065,
+       "hdi_2.5": 0.032325325513018206,
+       "hdi_97.5": 0.055498299477170165
       },
       "nu_clean": {
-       "mean": 4.224247379554184,
-       "hdi_2.5": 2.678642915042115,
-       "hdi_97.5": 5.860452181758076
+       "mean": 4.226247206157573,
+       "hdi_2.5": 2.706129259380408,
+       "hdi_97.5": 5.8830803350160155
       },
       "nu_ritc": {
-       "mean": 6.689776506617877,
-       "hdi_2.5": 1.522393352735302,
-       "hdi_97.5": 15.053198722861667
+       "mean": 6.678703192836664,
+       "hdi_2.5": 1.3452861992113732,
+       "hdi_97.5": 14.798967953320622
       },
       "lambda_ritc": {
-       "mean": -0.3133258091347139,
-       "hdi_2.5": -1.4017987619922971,
-       "hdi_97.5": 0.7362339442325215
+       "mean": -0.3132322382546334,
+       "hdi_2.5": -1.4232573871997642,
+       "hdi_97.5": 0.6892817801469558
       },
       "beta_ritc": {
-       "mean": 0.041396748069602876,
-       "hdi_2.5": -0.3049997377288308,
-       "hdi_97.5": 0.41671667591232386
+       "mean": 0.039887723584691316,
+       "hdi_2.5": -0.31953766131216077,
+       "hdi_97.5": 0.393614330818521
       },
       "tau_s": {
-       "mean": 0.1426167331383664,
-       "hdi_2.5": 2.7832258071566254e-05,
-       "hdi_97.5": 0.2823391765397626
+       "mean": 0.1417902620592255,
+       "hdi_2.5": 2.1481617036121904e-05,
+       "hdi_97.5": 0.27327486827537506
       }
      },
      "diagnostics": {
-      "max_rhat": 1.0015505246171656,
-      "min_ess_bulk": 1390.5147414978076,
-      "divergences": 1
-     }
+      "max_rhat": 1.0031593992533414,
+      "min_ess_bulk": 1667.7357026500167,
+      "divergences": 0
+     },
+     "target_accept": 0.995,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0015505246171656,
+        "min_ess_bulk": 1390.5147414978076,
+        "divergences": 1
+       },
+       "converged": false,
+       "reported": false,
+       "params": {
+        "k": {
+         "mean": 0.5819749762290228,
+         "hdi_2.5": 0.5038569662876263,
+         "hdi_97.5": 0.6810631593796119
+        },
+        "sd_undiv": {
+         "mean": 0.03200438705437091,
+         "hdi_2.5": 0.018680921707294327,
+         "hdi_97.5": 0.04452819551233798
+        },
+        "sd_div": {
+         "mean": 0.04296953646086691,
+         "hdi_2.5": 0.03218361339217377,
+         "hdi_97.5": 0.0557641603136691
+        },
+        "nu_clean": {
+         "mean": 4.224247379554184,
+         "hdi_2.5": 2.678642915042115,
+         "hdi_97.5": 5.860452181758076
+        },
+        "nu_ritc": {
+         "mean": 6.689776506617877,
+         "hdi_2.5": 1.522393352735302,
+         "hdi_97.5": 15.053198722861667
+        },
+        "lambda_ritc": {
+         "mean": -0.3133258091347139,
+         "hdi_2.5": -1.4017987619922971,
+         "hdi_97.5": 0.7362339442325215
+        },
+        "beta_ritc": {
+         "mean": 0.041396748069602876,
+         "hdi_2.5": -0.3049997377288308,
+         "hdi_97.5": 0.41671667591232386
+        },
+        "tau_s": {
+         "mean": 0.1426167331383664,
+         "hdi_2.5": 2.7832258071566254e-05,
+         "hdi_97.5": 0.2823391765397626
+        }
+       },
+       "means": {
+        "k": 0.5819749762290228,
+        "gamma": 0.0,
+        "sd_undiv": 0.03200438705437091,
+        "sd_div": 0.04296953646086691,
+        "nu_clean": 4.224247379554184,
+        "nu_ritc": 6.689776506617877
+       }
+      },
+      {
+       "target_accept": 0.995,
+       "diagnostics": {
+        "max_rhat": 1.0031593992533414,
+        "min_ess_bulk": 1667.7357026500167,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 5,
@@ -27827,7 +28087,20 @@
       "max_rhat": 1.0017570827911237,
       "min_ess_bulk": 1283.8523529815145,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0017570827911237,
+        "min_ess_bulk": 1283.8523529815145,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 6,
@@ -27881,7 +28154,20 @@
       "max_rhat": 1.0018154149174048,
       "min_ess_bulk": 1483.3968233506387,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0018154149174048,
+        "min_ess_bulk": 1483.3968233506387,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 7,
@@ -27935,7 +28221,20 @@
       "max_rhat": 1.001609448249428,
       "min_ess_bulk": 1453.1571346130172,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.001609448249428,
+        "min_ess_bulk": 1453.1571346130172,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 8,
@@ -27989,7 +28288,20 @@
       "max_rhat": 1.0018392561355298,
       "min_ess_bulk": 1561.212607246956,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0018392561355298,
+        "min_ess_bulk": 1561.212607246956,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     },
     {
      "fold": 9,
@@ -28043,8 +28355,24 @@
       "max_rhat": 1.0019376275009502,
       "min_ess_bulk": 1731.6926199277755,
       "divergences": 0
-     }
+     },
+     "target_accept": 0.98,
+     "attempts": [
+      {
+       "target_accept": 0.98,
+       "diagnostics": {
+        "max_rhat": 1.0019376275009502,
+        "min_ess_bulk": 1731.6926199277755,
+        "divergences": 0
+       },
+       "converged": true,
+       "reported": true
+      }
+     ]
     }
+   ],
+   "folds_retried": [
+    4
    ]
   },
   "honest_posterior_draws": {
@@ -28079,13 +28407,13 @@
         "size_quartile_4": 14.599999999999996
        },
        "pinball_mean": {
-        "all": 0.01898950736891261,
-        "clean": 0.01931407519284162,
-        "ritc": 0.013421140639630465,
-        "size_quartile_1": 0.03933755639625155,
-        "size_quartile_2": 0.014974905926355756,
-        "size_quartile_3": 0.011640097860781365,
-        "size_quartile_4": 0.010067003799636091
+        "all": 0.01899043569792566,
+        "clean": 0.01931496331295979,
+        "ritc": 0.013422758802496462,
+        "size_quartile_1": 0.039331674433691614,
+        "size_quartile_2": 0.014976991489406347,
+        "size_quartile_3": 0.011640077647772137,
+        "size_quartile_4": 0.010074488511771541
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28159,13 +28487,13 @@
         "size_quartile_4": 7.300000000000006
        },
        "pinball_mean": {
-        "all": 0.012933206475639135,
-        "clean": 0.013129139684222791,
-        "ritc": 0.009571727365875811,
-        "size_quartile_1": 0.028874288320254543,
-        "size_quartile_2": 0.00995335011552647,
-        "size_quartile_3": 0.0064532293246013905,
-        "size_quartile_4": 0.006496350254047194
+        "all": 0.012935526453045009,
+        "clean": 0.013131377418993905,
+        "ritc": 0.00957545831848422,
+        "size_quartile_1": 0.0288709704101903,
+        "size_quartile_2": 0.009956564319342807,
+        "size_quartile_3": 0.006455730732783225,
+        "size_quartile_4": 0.006503201213584112
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28239,13 +28567,13 @@
         "size_quartile_4": 1.4600000000000013
        },
        "pinball_mean": {
-        "all": 0.004951317019959939,
-        "clean": 0.005067253913944488,
-        "ritc": 0.00296227468253751,
-        "size_quartile_1": 0.012151303622561331,
-        "size_quartile_2": 0.0035069703475080313,
-        "size_quartile_3": 0.0023056179339799856,
-        "size_quartile_4": 0.0018626771404764997
+        "all": 0.004953752676702804,
+        "clean": 0.0050696122369941745,
+        "ritc": 0.002966037095453963,
+        "size_quartile_1": 0.012151274401452125,
+        "size_quartile_2": 0.003508588624139333,
+        "size_quartile_3": 0.002309547802784917,
+        "size_quartile_4": 0.001866888596231198
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28319,13 +28647,13 @@
         "size_quartile_4": 0.7300000000000006
        },
        "pinball_mean": {
-        "all": 0.002430750917278404,
-        "clean": 0.002461438994928679,
-        "ritc": 0.001904258585090876,
-        "size_quartile_1": 0.004993488661378988,
-        "size_quartile_2": 0.0020404506869226968,
-        "size_quartile_3": 0.001489131902791266,
-        "size_quartile_4": 0.0012083626817142115
+        "all": 0.002431750459941361,
+        "clean": 0.002462397835598936,
+        "ritc": 0.0019059564213161052,
+        "size_quartile_1": 0.004993129437223532,
+        "size_quartile_2": 0.002040974284128678,
+        "size_quartile_3": 0.0014908047688574181,
+        "size_quartile_4": 0.00121051565853106
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28404,13 +28732,13 @@
         "size_quartile_4": 14.599999999999996
        },
        "pinball_mean": {
-        "all": 0.01914123826584306,
-        "clean": 0.01945473198882587,
-        "ritc": 0.013762861580919227,
-        "size_quartile_1": 0.03933135357003171,
-        "size_quartile_2": 0.015328471918343056,
-        "size_quartile_3": 0.011857356831687486,
-        "size_quartile_4": 0.010110054767436929
+        "all": 0.01914255890884345,
+        "clean": 0.01945595998954604,
+        "ritc": 0.013765771618039551,
+        "size_quartile_1": 0.03932601817238799,
+        "size_quartile_2": 0.015330757383733708,
+        "size_quartile_3": 0.011858615458661714,
+        "size_quartile_4": 0.010117089239003072
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28466,12 +28794,12 @@
       },
       "0.95": {
        "exceedances": {
-        "all": 32,
-        "clean": 31,
+        "all": 31,
+        "clean": 30,
         "ritc": 1,
         "size_quartile_1": 12,
         "size_quartile_2": 6,
-        "size_quartile_3": 7,
+        "size_quartile_3": 6,
         "size_quartile_4": 7
        },
        "expected": {
@@ -28484,28 +28812,28 @@
         "size_quartile_4": 7.300000000000006
        },
        "pinball_mean": {
-        "all": 0.013018660605707227,
-        "clean": 0.013202948389487934,
-        "ritc": 0.009856973315219468,
-        "size_quartile_1": 0.028901728743108573,
-        "size_quartile_2": 0.010103092818034232,
-        "size_quartile_3": 0.006594923998493121,
-        "size_quartile_4": 0.006519717162799241
+        "all": 0.01302007462043996,
+        "clean": 0.013204284654812335,
+        "ritc": 0.009859721218238882,
+        "size_quartile_1": 0.02889844992492694,
+        "size_quartile_2": 0.010107890046837672,
+        "size_quartile_3": 0.006593449170196823,
+        "size_quartile_4": 0.006525300882816495
        },
        "rate_bayes_bootstrap": {
         "all": {
-         "mean": 0.055233312717142755,
-         "lo": 0.03671749563565888,
-         "hi": 0.08057097227188766,
+         "mean": 0.05348951564578984,
+         "lo": 0.03461034946391918,
+         "hi": 0.07855261471699422,
          "nominal": 0.050000000000000044,
-         "share_above_nominal": 0.65525
+         "share_above_nominal": 0.59125
         },
         "clean": {
-         "mean": 0.05666326495983563,
-         "lo": 0.0371936016817291,
-         "hi": 0.08276795973695406,
+         "mean": 0.05481437651154609,
+         "lo": 0.0352300921144125,
+         "hi": 0.08106422578809738,
          "nominal": 0.050000000000000044,
-         "share_above_nominal": 0.697
+         "share_above_nominal": 0.64075
         },
         "ritc": {
          "mean": 0.031955441006228685,
@@ -28529,11 +28857,11 @@
          "share_above_nominal": 0.2775
         },
         "size_quartile_3": {
-         "mean": 0.0482892074705528,
-         "lo": 0.02150823305946629,
-         "hi": 0.0822378120805292,
+         "mean": 0.041219683824193346,
+         "lo": 0.016996680044679337,
+         "hi": 0.07296580303588748,
          "nominal": 0.050000000000000044,
-         "share_above_nominal": 0.42125
+         "share_above_nominal": 0.25825
         },
         "size_quartile_4": {
          "mean": 0.04810661417880814,
@@ -28564,13 +28892,13 @@
         "size_quartile_4": 1.4600000000000013
        },
        "pinball_mean": {
-        "all": 0.005133557184587874,
-        "clean": 0.005255565298457883,
-        "ritc": 0.003040355481005534,
-        "size_quartile_1": 0.012790700471030975,
-        "size_quartile_2": 0.003518023757106432,
-        "size_quartile_3": 0.0023028550156434157,
-        "size_quartile_4": 0.0019446420129954475
+        "all": 0.0051351985435536445,
+        "clean": 0.00525718899778463,
+        "ritc": 0.003042299813153272,
+        "size_quartile_1": 0.012790236124287535,
+        "size_quartile_2": 0.003519137834019667,
+        "size_quartile_3": 0.002305644624178794,
+        "size_quartile_4": 0.0019477579407136813
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28644,13 +28972,13 @@
         "size_quartile_4": 0.7300000000000006
        },
        "pinball_mean": {
-        "all": 0.0027648264752854266,
-        "clean": 0.002815067262329541,
-        "ritc": 0.0019028829725598493,
-        "size_quartile_1": 0.006458016498309849,
-        "size_quartile_2": 0.001953388780298106,
-        "size_quartile_3": 0.001463363786616349,
-        "size_quartile_4": 0.0011953607375569113
+        "all": 0.0027661606174632586,
+        "clean": 0.002816327835271585,
+        "ritc": 0.0019054792869391635,
+        "size_quartile_1": 0.006458106251830497,
+        "size_quartile_2": 0.0019540329467731305,
+        "size_quartile_3": 0.0014651933375894332,
+        "size_quartile_4": 0.0011981239794394494
        },
        "rate_bayes_bootstrap": {
         "all": {
@@ -28716,8 +29044,8 @@
        "expected": 58.09999999999999
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.01898950736891261,
-       "posterior_mean_plug_in": 0.018956486861523247
+       "posterior_draws": 0.01899043569792566,
+       "posterior_mean_plug_in": 0.018956507507439758
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28741,8 +29069,8 @@
        "expected": 29.050000000000026
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.012933206475639135,
-       "posterior_mean_plug_in": 0.012903177313091443
+       "posterior_draws": 0.012935526453045009,
+       "posterior_mean_plug_in": 0.012903182409373626
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28766,8 +29094,8 @@
        "expected": 5.810000000000005
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.004951317019959939,
-       "posterior_mean_plug_in": 0.005031896837501158
+       "posterior_draws": 0.004953752676702804,
+       "posterior_mean_plug_in": 0.0050313577680276
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28791,8 +29119,8 @@
        "expected": 2.9050000000000025
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.002430750917278404,
-       "posterior_mean_plug_in": 0.0024367914389125194
+       "posterior_draws": 0.002431750459941361,
+       "posterior_mean_plug_in": 0.0024367918327255866
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28818,8 +29146,8 @@
        "expected": 58.09999999999999
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.01914123826584306,
-       "posterior_mean_plug_in": 0.019096656616767477
+       "posterior_draws": 0.01914255890884345,
+       "posterior_mean_plug_in": 0.019096534435120435
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28838,19 +29166,19 @@
      },
      "0.95": {
       "exceedances_all": {
-       "posterior_draws": 32,
+       "posterior_draws": 31,
        "posterior_mean_plug_in": 32,
        "expected": 29.050000000000026
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.013018660605707227,
-       "posterior_mean_plug_in": 0.012949462395135647
+       "posterior_draws": 0.01302007462043996,
+       "posterior_mean_plug_in": 0.012949491186100847
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
         12,
         6,
-        7,
+        6,
         7
        ],
        "posterior_mean_plug_in": [
@@ -28868,8 +29196,8 @@
        "expected": 5.810000000000005
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.005133557184587874,
-       "posterior_mean_plug_in": 0.005004700116053811
+       "posterior_draws": 0.0051351985435536445,
+       "posterior_mean_plug_in": 0.005004564511433055
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -28893,8 +29221,8 @@
        "expected": 2.9050000000000025
       },
       "pinball_mean_all": {
-       "posterior_draws": 0.0027648264752854266,
-       "posterior_mean_plug_in": 0.0029281410697288325
+       "posterior_draws": 0.0027661606174632586,
+       "posterior_mean_plug_in": 0.002928135246183111
       },
       "exceedances_by_size_quartile": {
        "posterior_draws": [
@@ -39436,7 +39764,7 @@
        0,
        0,
        0,
-       1,
+       0,
        0,
        0,
        0,
@@ -43232,16 +43560,12 @@
        "size_quartile_3": {
         "n_targets": 145,
         "n_syndicates": 41,
-        "exceedances": 7,
+        "exceedances": 6,
         "expected": 7.250000000000006,
-        "n_syndicates_with_exceedances": 7,
+        "n_syndicates_with_exceedances": 6,
         "exceedances_by_syndicate": [
          [
           218,
-          1
-         ],
-         [
-          1110,
           1
          ],
          [
@@ -43265,13 +43589,13 @@
           1
          ]
         ],
-        "rate_mean": 0.0482892074705528,
+        "rate_mean": 0.041219683824193346,
         "rate_credible_interval_95": [
-         0.02150823305946629,
-         0.0822378120805292
+         0.016996680044679337,
+         0.07296580303588748
         ],
         "nominal_rate": 0.050000000000000044,
-        "p_rate_above_nominal": 0.42125
+        "p_rate_above_nominal": 0.25825
        },
        "size_quartile_4": {
         "n_targets": 146,
@@ -43502,7 +43826,7 @@
    }
   },
   "runtime_seconds": {
-   "fold_fits_wall": 184.09224700927734,
+   "fold_fits_wall": 170.078284740448,
    "workers": 3
   }
  },
@@ -45104,5 +45428,5 @@
   }
  },
  "not_run": [],
- "runtime_seconds": 473.3288815021515
+ "runtime_seconds": 442.72572016716003
 }
