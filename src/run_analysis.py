@@ -559,14 +559,27 @@ FX_KEPT_REASONS = ("fx_line_under_5pct", "no_fx_line_printed", "table_retranslat
 #: round5/). The 672 construction does not read it.
 RESTATED_BASE_REGISTER = SCRIPT_DIR / "data" / "restated_base_excluded.json"
 RESTATED_BASE_TAG = "RESTATED_BASE_TABLE"
-#: the register's two buckets: the loader applies the first and validates both
-RESTATED_BUCKETS = ("excluded", "history_restated")
+#: Rule 5b of the round-5 decision rules (decision of the Claude analysis session, 23 October 2026), under the primary
+#: only: a take-on whose transferred gross reserves the filing does not print leaves the primary as an unmeasurable
+#: take-on (the "takeon_unmeasurable" bucket, tag TAKEON_BASE_UNMEASURABLE) when the readings show the acquired share of
+#: the base could exceed TAKEON_UNMEASURABLE_THRESHOLD_PCT of the opening gross claims outstanding R; it stays, and
+#: joins the least-certain list (history_restated, clause take_on_base_bounded), when the filing bounds it at or below
+#: that share. The 672 construction does not read it.
+TAKEON_UNMEASURABLE_BUCKET = "takeon_unmeasurable"
+TAKEON_UNMEASURABLE_TAG = "TAKEON_BASE_UNMEASURABLE"
+TAKEON_UNMEASURABLE_THRESHOLD_PCT = 10.0
+#: the register's three buckets: the loader applies the first and the third and validates all
+RESTATED_BUCKETS = ("excluded", "history_restated", TAKEON_UNMEASURABLE_BUCKET)
 #: the four conditions of rule 1, each with the value an excluded entry must show
 RESTATED_CONDITIONS = (("history_differs_unexplained", True), ("year_t_fails_accounts", True), ("control_ties", True),
                        ("previous_base_reconciles", False))
 #: why rule 6 lists a record: an underwriting year u <= t-2 moved beyond the exchange rate, without explanation, by more
-#: than 1% of R; or the two readings disagree on the validity label but not on the facts
-RESTATED_CLAUSES = ("unexplained_history_move", "label_disagreement")
+#: than 1% of R; or the two readings disagree on the validity label but not on the facts; or (rule 5b) the filing prints
+#: no transferred gross amount for a take-on in year t but bounds it at or below the threshold share of R
+#: (take_on_base_bounded); or (rule 5 with 6) an explained take-on that is in R has a table that does not reconcile with
+#: the filing's own roll-forward (take_on_table_unreconciled)
+RESTATED_CLAUSES = ("unexplained_history_move", "label_disagreement", "take_on_base_bounded",
+                    "take_on_table_unreconciled")
 #: the round-5 verdicts by validity class (a disagreement between the classes is a label disagreement)
 RESTATED_VALID_VERDICTS = ("valid", "screen_misread", "units_slip")
 RESTATED_INVALID_VERDICTS = ("restated_base", "undeterminable")
@@ -1759,11 +1772,59 @@ def _restated_reading_gaps(entry, bucket):
     return gaps
 
 
+def _take_on_gaps(entry, bucket):
+    """What the rule-5b part of an entry lacks (a takeon_unmeasurable entry, or a history_restated entry with the clause
+    take_on_base_bounded): the take-on object with the opening gross claims outstanding R, the amount (no figure the
+    filing prints: amount_printed false), its kind and share of R, the basis, and two take-on readings from distinct
+    readers with the pages read. An unmeasurable take-on's share of R exceeds the threshold (kind 'indicated'); a bounded
+    one's is at or below it (kind 'upper_bound')."""
+    t = entry.get("take_on")
+    if not isinstance(t, dict):
+        return ["the take_on object (rule 5b)"]
+    gaps = []
+    for f in ("opening_R_m", "amount_m", "pct_of_R"):
+        if not _is_number(t.get(f)) or t[f] <= 0:
+            gaps.append("take_on.%s as a positive number" % f)
+    if not isinstance(t.get("currency"), str) or not t["currency"].strip():
+        gaps.append("take_on.currency")
+    if t.get("amount_printed") is not False:
+        gaps.append("take_on.amount_printed false (rule 5b concerns an amount the filing does not print)")
+    if not isinstance(t.get("basis"), str) or not t["basis"].strip():
+        gaps.append("take_on.basis")
+    if not gaps and abs(100.0 * t["amount_m"] / t["opening_R_m"] - t["pct_of_R"]) > 0.06:
+        gaps.append("take_on.pct_of_R equal to 100 x amount_m / opening_R_m")
+    if bucket == TAKEON_UNMEASURABLE_BUCKET:
+        if t.get("amount_kind") != "indicated":
+            gaps.append("take_on.amount_kind 'indicated'")
+        if _is_number(t.get("pct_of_R")) and t["pct_of_R"] <= TAKEON_UNMEASURABLE_THRESHOLD_PCT:
+            gaps.append("a take_on.pct_of_R above %g (rule 5b)" % TAKEON_UNMEASURABLE_THRESHOLD_PCT)
+    else:
+        if t.get("amount_kind") != "upper_bound":
+            gaps.append("take_on.amount_kind 'upper_bound'")
+        if _is_number(t.get("pct_of_R")) and t["pct_of_R"] > TAKEON_UNMEASURABLE_THRESHOLD_PCT:
+            gaps.append("a take_on.pct_of_R at or below %g (rule 5b)" % TAKEON_UNMEASURABLE_THRESHOLD_PCT)
+    rs = t.get("readings")
+    if not isinstance(rs, list) or len(rs) < 2 or not all(isinstance(r, dict) for r in rs):
+        return gaps + ["two take-on readings"]
+    ids = [r.get("reader") for r in rs]
+    if any(not isinstance(i, str) or not i.strip() for i in ids) or len(set(ids)) < len(ids):
+        gaps.append("distinct take-on readers")
+    for i, r in enumerate(rs):
+        pages = r.get("pages")
+        if (not isinstance(pages, list) or not pages
+                or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
+            gaps.append("take-on reading %d's pages" % i)
+        if not isinstance(r.get("gross_transferred_in"), dict) or r["gross_transferred_in"].get("value_m") is not None:
+            gaps.append("take-on reading %d's gross_transferred_in with no printed value_m" % i)
+    return gaps
+
+
 def _restated_entry_gaps(entry, bucket):
-    """What a data/restated_base_excluded.json entry lacks. Both buckets: the decision, the pages and a quote, and the
+    """What a data/restated_base_excluded.json entry lacks. All buckets: the decision, the pages and a quote, and the
     readings (_restated_reading_gaps). An excluded entry: rule 1's four conditions, each with its value (the first three
     hold, the last does not) and the facts it rests on. A history_restated entry: its clauses (RESTATED_CLAUSES) and the
-    facts."""
+    facts, and for the clause take_on_base_bounded the rule-5b take-on (_take_on_gaps). A takeon_unmeasurable entry: the
+    facts and the rule-5b take-on."""
     gaps = []
     if not isinstance(entry.get("decision"), str) or not entry["decision"].strip():
         gaps.append("a decision")
@@ -1778,19 +1839,24 @@ def _restated_entry_gaps(entry, bucket):
             if not isinstance(c, dict) or c.get("holds") is not want or not isinstance(c.get("facts"), str) \
                     or not c["facts"].strip():
                 gaps.append("condition %s with holds %s and its facts" % (name, want))
+    elif bucket == TAKEON_UNMEASURABLE_BUCKET:
+        if not isinstance(entry.get("facts"), str) or not entry["facts"].strip():
+            gaps.append("the facts")
+        gaps += _take_on_gaps(entry, bucket)
     else:
         clauses = entry.get("clauses")
         if not isinstance(clauses, list) or not clauses or any(c not in RESTATED_CLAUSES for c in clauses):
             gaps.append("clauses (%s)" % ", ".join(RESTATED_CLAUSES))
         if not isinstance(entry.get("facts"), str) or not entry["facts"].strip():
             gaps.append("the facts")
+        if isinstance(clauses, list) and "take_on_base_bounded" in clauses:
+            gaps += _take_on_gaps(entry, bucket)
     return gaps
 
 
-def load_restated_base(path=None):
-    """The records data/restated_base_excluded.json removes from the primary sample (rule 1 of the round-5 decision rules,
-    decision of the Claude analysis session, 23 October 2026), as {key: entry}; every entry of both buckets ("excluded",
-    "history_restated") is validated, and a record in both is refused. ``path`` defaults to the committed register."""
+def _restated_buckets(path=None):
+    """{bucket: {key: entry}} of data/restated_base_excluded.json, every entry of every bucket validated; a record in
+    more than one bucket is refused. ``path`` defaults to the committed register."""
     path = Path(path or RESTATED_BASE_REGISTER)
     with open(path, "r", encoding="utf-8") as f:
         reg = json.load(f)
@@ -1804,16 +1870,36 @@ def load_restated_base(path=None):
             if gaps:
                 raise ValueError("%s: entry %s of %r lacks %s; an entry is applied only with two readings of the "
                                  "filing, the pages read and a quote" % (path.name, key, bucket, ", ".join(gaps)))
-            if bucket == "excluded":
-                out[key] = entry
-    both = set(reg["excluded"]) & set(reg["history_restated"])
+        out[bucket] = entries
+    both = set(out["excluded"]) & set(out["history_restated"])
     if both:
         raise ValueError("%s: %s are both excluded and listed" % (path.name, ", ".join(sorted(both))))
+    for other in ("excluded", "history_restated"):
+        both = set(out[other]) & set(out[TAKEON_UNMEASURABLE_BUCKET])
+        if both:
+            raise ValueError("%s: %s are in both %s and %s" % (path.name, ", ".join(sorted(both)), other,
+                                                              TAKEON_UNMEASURABLE_BUCKET))
     return out
 
 
+def load_restated_base(path=None):
+    """The records data/restated_base_excluded.json removes from the primary sample (rule 1 of the round-5 decision rules,
+    decision of the Claude analysis session, 23 October 2026), as {key: entry}; every entry of every bucket ("excluded",
+    "history_restated", "takeon_unmeasurable") is validated, and a record in two buckets is refused. ``path`` defaults to
+    the committed register."""
+    return _restated_buckets(path)["excluded"]
+
+
+def load_takeon_unmeasurable(path=None):
+    """The records data/restated_base_excluded.json removes from the primary sample as unmeasurable take-ons (rule 5b of
+    the round-5 decision rules, decision of the Claude analysis session, 23 October 2026), as {key: entry}: the filing
+    prints no transferred gross amount and the readings show the acquired share of the base could exceed
+    TAKEON_UNMEASURABLE_THRESHOLD_PCT of R. ``path`` defaults to the committed register."""
+    return _restated_buckets(path)[TAKEON_UNMEASURABLE_BUCKET]
+
+
 def restated_register_keys(path=None):
-    """The keys of both buckets of data/restated_base_excluded.json (the loader applies one and validates both)."""
+    """The keys of every bucket of data/restated_base_excluded.json (the loader applies two and validates all)."""
     return raw_register_keys(Path(path or RESTATED_BASE_REGISTER), RESTATED_BUCKETS)
 
 
@@ -2441,6 +2527,9 @@ def load_and_classify(outcome=None):
         # rule 1 of the round-5 decision rules (23 October 2026): a gross reliable record whose table restates its
         # history without explanation and fails the year's accounts leaves the primary
         counters["restated_base_excluded"] = 0
+        # rule 5b (23 October 2026): a gross reliable record whose take-on the filing does not print, and could exceed
+        # 10% of R, leaves the primary
+        counters["takeon_base_unmeasurable_excluded"] = 0
     classification_log = []
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
@@ -2449,6 +2538,8 @@ def load_and_classify(outcome=None):
     fx_applied = set()
     restated_register = load_restated_base() if mature else {}
     restated_applied = set()
+    unmeasurable_register = load_takeon_unmeasurable() if mature else {}
+    unmeasurable_applied = set()
     takeon_all = load_takeon_register()
     takeon_register = scoped_to_outcome(takeon_all, outcome)
     opening_register = load_opening_reserves_confirmed()
@@ -2760,6 +2851,17 @@ def load_and_classify(outcome=None):
             is_reliable = False
             pyd_pct = None
             restated_applied.add(basis_key)
+        # rule 5b: the same step for a take-on whose transferred gross reserves the filing does not print
+        unmeasurable = (basis_key in unmeasurable_register and is_reliable and not is_takeon and basis == "gross")
+        if basis_key in unmeasurable_register and not unmeasurable:
+            raise ValueError("data/restated_base_excluded.json: %s (takeon_unmeasurable) is no reliable gross record of "
+                             "the primary sample at the exclusion step (%s)"
+                             % (basis_key, "a take-on" if is_takeon else
+                                "basis %s, reliable %s" % (basis, is_reliable)))
+        if unmeasurable:
+            is_reliable = False
+            pyd_pct = None
+            unmeasurable_applied.add(basis_key)
         if is_reliable and is_takeon:
             is_reliable = False
             dq_tag = TAKEON_TAG
@@ -2813,6 +2915,16 @@ def load_and_classify(outcome=None):
                                                  "no figure that reconciles either: the primary carries no severity for "
                                                  "it (data/restated_base_excluded.json, rule 1 of the round-5 decision "
                                                  "rules)"})
+        elif unmeasurable:
+            dq_tag = TAKEON_UNMEASURABLE_TAG
+            counters["takeon_base_unmeasurable_excluded"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": "the year's take-on is not in the opening gross claims outstanding, the "
+                                                 "filing prints no transferred gross amount, and the readings show it "
+                                                 "could exceed %g%% of them: the movement is development on a combined "
+                                                 "book whose base cannot be measured, and the primary carries no "
+                                                 "severity for it (data/restated_base_excluded.json, rule 5b of the "
+                                                 "round-5 decision rules)" % TAKEON_UNMEASURABLE_THRESHOLD_PCT})
         elif provision_movement:
             dq_tag = PROVISION_MOVEMENT_TAG
             counters["provision_movement_unusable"] += 1
@@ -2842,7 +2954,7 @@ def load_and_classify(outcome=None):
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
         pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure or fx_untranslated
-                             or restated) else safe_float(
+                             or restated or unmeasurable) else safe_float(
             cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
@@ -3051,6 +3163,10 @@ def load_and_classify(outcome=None):
     if stale:
         raise ValueError("data/restated_base_excluded.json: %s reached no reliable gross record of the primary "
                          "sample, so the exclusion did not happen" % ", ".join(stale))
+    stale = sorted(k for k in set(unmeasurable_register) - unmeasurable_applied if "syndicate_%s.json" % k in in_corpus)
+    if stale:
+        raise ValueError("data/restated_base_excluded.json: %s (takeon_unmeasurable) reached no reliable gross record of "
+                         "the primary sample, so the exclusion did not happen" % ", ".join(stale))
     unused = sorted(set(composition_readings) - composition_readings_used)
     if unused:
         log("  %s: applies to no record whose extracted mix names no line of business now: %s"

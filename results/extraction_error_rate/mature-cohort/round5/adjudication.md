@@ -2,6 +2,8 @@
 
 Decision of the Claude analysis session, 23 October 2026, applying the decision rules of `rules.md` (written before the adjudication) record by record to the 83 records of the round: the 82 records the rebase screen (`screen/rebase_screen.py` over the primary's 649 records at 35a259c) asked to read, each read by one P-arm and one Q-arm reader (`readings/P1..P8`, `Q1..Q8`, brief `briefs/brief_r5.md`), and 2689/2023 (V1, V2; W1, W2 recomputed its figure; `briefs/brief_2689.md`). The two records whose readings disagreed on the facts (1609/2024, 4444/2017) were decided on the tie-break readings Z5 and Z6 (`briefs/brief_r6.md`). Every number below is a reader's, with the page the reader gives, or the session's arithmetic on cells the readers quote.
 
+Round 7 (23 October 2026, same session): the two take-ons whose transferred amount the round-5 readings did not print (1110/2022, 1458/2024) were read again for the amount (readings U1 and U2, `briefs/brief_r7.md`), and rule 5b was added to `rules.md` before they were applied: a take-on the filing does not print leaves the primary as an unmeasurable take-on when the readings show the acquired share of the base could exceed 10% of R, and stays on the least-certain list when the filing bounds it at or below 10%. 3500/2023, whose take-on is in R but whose table does not reconcile with note 7, joined the least-certain list under rule 6's added clause. The outcomes below are those after round 7.
+
 ## How the rules were read
 
 - Validity classes. A 'label' disagreement (rule 6) is one between the classes valid, screen_misread, units_slip and restated_base, undeterminable (the classes `compare_r5.py` uses for 'VERDICTS DIFFER'). A record whose two readings agree on the cells and the tests but not on the class is a label disagreement; one whose readings give different cells, figures or test results is a fact disagreement and went to a third reading (1609/2024, 4444/2017).
@@ -15,13 +17,14 @@ Decision of the Claude analysis session, 23 October 2026, applying the decision 
 |---|---|---|---|
 | excluded | 1, 2 | 6 | 780_2016, 2689_2023, 3000_2022, 4242_2022, 4747_2024, 6134_2022 |
 | corrected | 3, 4 | 4 | 318_2024, 1274_2016, 1609_2024, 2232_2020 |
-| take_on_base | 5 | 9 | 1686_2021, 1856_2024, 1884_2021, 2488_2019, 3500_2022, 3500_2023, 4000_2022, 4444_2018, 4444_2023 |
-| take_on_base_and_least_certain | 5 and 6 | 1 | 3000_2016 |
-| take_on_amount_not_read | 5 | 2 | 1110_2022, 1458_2024 |
+| take_on_base | 5 | 8 | 1686_2021, 1856_2024, 1884_2021, 2488_2019, 3500_2022, 4000_2022, 4444_2018, 4444_2023 |
+| take_on_base_and_least_certain | 5 and 6 | 2 | 3000_2016, 3500_2023 |
+| take_on_unmeasurable | 5b | 1 | 1110_2022 |
+| take_on_bounded_least_certain | 5b and 6 | 1 | 1458_2024 |
 | least_certain | 6 | 24 | 382_2021, 382_2022, 382_2023, 780_2017, 1176_2019, 1686_2022, 1729_2023, 1910_2018, 1947_2022, 1967_2017, 1967_2018, 2001_2016, 2001_2017, 2232_2017, 2232_2019, 2468_2019, 2468_2020, 2488_2016, 4020_2018, 4141_2022, 4242_2017, 4444_2017, 5000_2023, 6118_2018 |
 | stands | 7 | 37 | 382_2017, 382_2020, 435_2016, 510_2015, 1084_2016, 1218_2016, 1274_2022, 1274_2024, 1301_2016, 1416_2024, 1492_2019, 1856_2021, 1880_2015, 1897_2019, 1910_2016, 1945_2016, 1945_2018, 1947_2020, 1955_2023, 1967_2022, 2007_2016, 2015_2022, 2121_2018, 2357_2024, 2623_2023, 2786_2024, 2791_2022, 2988_2020, 3000_2018, 3624_2018, 4444_2022, 4472_2022, 4472_2024, 5000_2018, 5151_2020, 5678_2016, 6107_2023 |
 
-Primary at 35a259c: 649 records. Leaving: the five of rule 1 and 3000/2022 (rule 2): 643. Four figures corrected. The 25 records of rule 6 stay and join the least-certain sensitivity.
+Primary at 35a259c: 649 records. Leaving: the five of rule 1, 3000/2022 (rule 2) and 1110/2022 (rule 5b, after the round-7 readings): 642. Four figures corrected. The 27 records listed under history_restated (the 25 of rule 6, 1458/2024 under rule 5b and 3500/2023 under rules 5 and 6) stay and join the least-certain sensitivity.
 
 ## Label disagreements settled by the rules
 
@@ -124,17 +127,21 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 
 ## Rule 5: take-on bases
 
-### 1110_2022 (rule 5: take_on_amount_not_read)
+### 1110_2022 (rule 5b: take_on_unmeasurable)
 
 - P7 restated_base, M 9.082, paid None, incurred -60.1
 - Q6 restated_base, M 9.082, paid None, incurred -60.1
-- RITC of Syndicate 5678's 2018 and 2019 years of account and the Hiscox ADC in 2022 (p5, p33), the history carried as if always (2017 column x5.98, 2019 x2.09); R is the opening 221.885m alone. The accounts book the RITC and ADC through premium and claims incurred (353.8m) with no transfer line, and neither reading prints the transferred gross amount (P7's 'about 270m' is the change in the balance sheet, an inference). Rule 5 applies but cannot be applied: no entry, record unchanged, OUTSTANDING (a reading of the transferred gross amount).
+- U1 (round 7, the transferred gross amount): not printed; opening R 221.885, closing 489.603
+- U2 (round 7, the transferred gross amount): not printed; opening R 221.885, closing 489.603
+- RITC of Syndicate 5678's 2018 and 2019 years of account and the Hiscox ADC in 2022 (p5, p33), the history carried as if always (2017 column x5.98, 2019 x2.09); R is the opening 221.885m alone. The accounts book the RITC and ADC through premium and claims incurred (353.8m) with no transfer line, and neither round-5 reading prints the transferred gross amount (P7's 'about 270m' is the change in the balance sheet, an inference). Round 7 (brief_r7.md, readings U1, U2; 23 October 2026) read the filing for the amount: it is not printed (the gross roll-forward, p27, has no transfer row), the Hiscox ADC is INWARD (the Gibson Re quota share is outward and moves the reinsurers' share only), reserves rise from 221.885m to 489.603m and gross written premium from 1.366m to 333.442m; U2 derives a take-on of about 221.9m less the unknown development on the opening book, about 100% of R. Rule 5b: the acquired share could exceed 10% of R by a wide margin, so the record leaves the primary as an unmeasurable take-on (data/restated_base_excluded.json, bucket takeon_unmeasurable, tag TAKEON_BASE_UNMEASURABLE; the existing data/takeon_not_development.json does not fit: its entries describe the step of a displaced mature-cohort figure and apply under a figure_route this record's own triangle figure does not have).
 
-### 1458_2024 (rule 5: take_on_amount_not_read)
+### 1458_2024 (rule 5b and 6: take_on_bounded_least_certain)
 
 - P1 units_slip, M -33.258, paid None, incurred -5.3
 - Q8 units_slip, M -33.258, paid 20.1, incurred -5.3
-- a stated external RITC 'in the year' of the 2020 and 2021 underwriting years shown in the history (p47); note 4's roll-forward (p31) has no RITC line and neither reading gives the amount (P1: +164m of restated incurred history, not reserves). Whether R carries the acquired reserves cannot be told: no entry, record unchanged, OUTSTANDING (a reading of the amount and its effective date). The M stands at -33.258m (both readings).
+- U1 (round 7, the transferred gross amount): not printed; opening R 2050.58, closing 2149.704
+- U2 (round 7, the transferred gross amount): not printed; opening R 2050.58, closing 2149.704
+- a stated external RITC 'in the year' of the 2020 and 2021 underwriting years shown in the history (p47); note 4's roll-forward (p31) has no RITC line and neither round-5 reading gives the amount (P1: +164m of restated incurred history, not reserves). Round 7 (U1, U2; 23 October 2026): the amount is not printed; the only ADC is outward and dated 2020; R (USD 2,050.580m, GBP 1,637.71m) is the filing's opening and holds no acquired reserves. The filing bounds the take-on: the acquired cumulative incurred at the latest comparable ages is USD 164.078m (+105.138m on the 2020 column, +58.940m on the 2021 column), and the reserves taken on cannot exceed it: at most 8.0% of R. The table carries the acquired years as if always, so the movement within it (-33.258m USD = -26.56m GBP, u <= 2022, equal to the analysis figure) excludes the take-on. Rule 5b: bounded at or below 10% of R, so the record stays and joins the least-certain list (data/restated_base_excluded.json, history_restated, clause take_on_base_bounded).
 
 ### 1686_2021 (rule 5: take_on_base)
 
@@ -172,11 +179,11 @@ The readings support the correction's inputs and the diagnosis (both call the ce
 - Q7 undeterminable, M -291.756, paid None, incurred None
 - RITCs of Syndicates 1897, 2468, 1980/2014/2001 effective 1 January 2022 and LPTs in 2022 (p4; note 7 p30 'Reinsurance of new liabilities 1,728,476'), the history re-bucketed with them. R is 3,955.045m USD = 2,615.345 + 1,339.7 (the 1 January RITCs; the amount is the ninth census's decision). The mature columns move -291.8m against note 7's change in estimates incl. FX of -293.1m (0.4%, P6). P6 restated_base, Q7 undeterminable: the same validity class. Nothing changes.
 
-### 3500_2023 (rule 5: take_on_base)
+### 3500_2023 (rule 5 and 6: take_on_base_and_least_certain)
 
 - P7 restated_base, M -47.666, paid None, incurred None
 - Q8 restated_base, M -47.666, paid 759, incurred n/a: neither 136.6m nor -62.3m ties
-- RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new liabilities 3,225,818'), the history 2-3.6 times the 2022 report's. R is 5,803.136m USD = 2,962.436 + 2,840.7 (the register's amount leaves out the 201.9m LPT already in the opening and the 183.2m LPT). Nothing changes. Flag: the table's movement does not tie to note 7's change in estimates (-52.1m for u <= 2022 against -184.8m, P7; Q8: neither ties); rule 1 does not reach it (the history change is explained) and no rule covers an explained take-on table that fails the tie.
+- RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new liabilities 3,225,818'), the history 2-3.6 times the 2022 report's. R is 5,803.136m USD = 2,962.436 + 2,840.7 (the register's amount leaves out the 201.9m LPT already in the opening and the 183.2m LPT). Rule 5 changes nothing. The table's movement does not tie to note 7's change in estimates (-52.1m for u <= 2022 against -184.8m, P7; Q8: neither ties); rule 1 does not reach it (the history change is explained) and no rule covered an explained take-on table that fails the tie. Round 7 (23 October 2026): it stays in the primary and joins the least-certain list, under the rule-6 clause take_on_table_unreconciled (data/restated_base_excluded.json, history_restated).
 
 ### 4000_2022 (rule 5: take_on_base)
 

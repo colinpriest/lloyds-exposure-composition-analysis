@@ -43,9 +43,11 @@ WHY = {
     "3500_2023": "RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new "
                  "liabilities 3,225,818'), the history 2-3.6 times the 2022 report's. R is 5,803.136m USD = 2,962.436 + "
                  "2,840.7 (the register's amount leaves out the 201.9m LPT already in the opening and the 183.2m LPT). "
-                 "Nothing changes. Flag: the table's movement does not tie to note 7's change in estimates (-52.1m for "
+                 "Rule 5 changes nothing. The table's movement does not tie to note 7's change in estimates (-52.1m for "
                  "u <= 2022 against -184.8m, P7; Q8: neither ties); rule 1 does not reach it (the history change is "
-                 "explained) and no rule covers an explained take-on table that fails the tie.",
+                 "explained) and no rule covered an explained take-on table that fails the tie. Round 7 (23 October "
+                 "2026): it stays in the primary and joins the least-certain list, under the rule-6 clause "
+                 "take_on_table_unreconciled (data/restated_base_excluded.json, history_restated).",
     "4000_2022": "RITC of Syndicate 3334 effective 1 January 2022, the 2019 column as if always (p5); the table ties "
                  "(incurred +3.2%, control +1.1%). R is 555.661m = 374.414 + 181.247: already includes it.",
     "4444_2018": "RITC of Syndicate 958's 2015 year of account effective 1 January 2018, as if always; the balance to pay "
@@ -56,15 +58,27 @@ WHY = {
                  "2,681.837m = 2,367.884 + 313.953: already includes it.",
     "1110_2022": "RITC of Syndicate 5678's 2018 and 2019 years of account and the Hiscox ADC in 2022 (p5, p33), the history "
                  "carried as if always (2017 column x5.98, 2019 x2.09); R is the opening 221.885m alone. The accounts book "
-                 "the RITC and ADC through premium and claims incurred (353.8m) with no transfer line, and neither reading "
-                 "prints the transferred gross amount (P7's 'about 270m' is the change in the balance sheet, an "
-                 "inference). Rule 5 applies but cannot be applied: no entry, record unchanged, OUTSTANDING (a reading of "
-                 "the transferred gross amount).",
+                 "the RITC and ADC through premium and claims incurred (353.8m) with no transfer line, and neither "
+                 "round-5 reading prints the transferred gross amount (P7's 'about 270m' is the change in the balance "
+                 "sheet, an inference). Round 7 (brief_r7.md, readings U1, U2; 23 October 2026) read the filing for the "
+                 "amount: it is not printed (the gross roll-forward, p27, has no transfer row), the Hiscox ADC is "
+                 "INWARD (the Gibson Re quota share is outward and moves the reinsurers' share only), reserves rise from "
+                 "221.885m to 489.603m and gross written premium from 1.366m to 333.442m; U2 derives a take-on of about "
+                 "221.9m less the unknown development on the opening book, about 100% of R. Rule 5b: the acquired share "
+                 "could exceed 10% of R by a wide margin, so the record leaves the primary as an unmeasurable take-on "
+                 "(data/restated_base_excluded.json, bucket takeon_unmeasurable, tag TAKEON_BASE_UNMEASURABLE; the "
+                 "existing data/takeon_not_development.json does not fit: its entries describe the step of a displaced "
+                 "mature-cohort figure and apply under a figure_route this record's own triangle figure does not have).",
     "1458_2024": "a stated external RITC 'in the year' of the 2020 and 2021 underwriting years shown in the history (p47); "
-                 "note 4's roll-forward (p31) has no RITC line and neither reading gives the amount (P1: +164m of restated "
-                 "incurred history, not reserves). Whether R carries the acquired reserves cannot be told: no entry, "
-                 "record unchanged, OUTSTANDING (a reading of the amount and its effective date). The M stands at "
-                 "-33.258m (both readings).",
+                 "note 4's roll-forward (p31) has no RITC line and neither round-5 reading gives the amount (P1: +164m of "
+                 "restated incurred history, not reserves). Round 7 (U1, U2; 23 October 2026): the amount is not printed; "
+                 "the only ADC is outward and dated 2020; R (USD 2,050.580m, GBP 1,637.71m) is the filing's opening and "
+                 "holds no acquired reserves. The filing bounds the take-on: the acquired cumulative incurred at the "
+                 "latest comparable ages is USD 164.078m (+105.138m on the 2020 column, +58.940m on the 2021 column), and "
+                 "the reserves taken on cannot exceed it: at most 8.0% of R. The table carries the acquired years as if "
+                 "always, so the movement within it (-33.258m USD = -26.56m GBP, u <= 2022, equal to the analysis figure) "
+                 "excludes the take-on. Rule 5b: bounded at or below 10% of R, so the record stays and joins the "
+                 "least-certain list (data/restated_base_excluded.json, history_restated, clause take_on_base_bounded).",
     # rule 7: stands
     "382_2017": "screen misread: it compared balance-sheet pages and read an incremental table as levels (no identity "
                 "evidence); M from the printed increments +7.401m equals the analysis figure (P7, Q6).",
@@ -184,6 +198,13 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "recomputed its figure; `briefs/brief_2689.md`). The two records whose readings disagreed on the facts "
          "(1609/2024, 4444/2017) were decided on the tie-break readings Z5 and Z6 (`briefs/brief_r6.md`). Every number "
          "below is a reader's, with the page the reader gives, or the session's arithmetic on cells the readers quote.", "",
+         "Round 7 (23 October 2026, same session): the two take-ons whose transferred amount the round-5 readings did not "
+         "print (1110/2022, 1458/2024) were read again for the amount (readings U1 and U2, `briefs/brief_r7.md`), and "
+         "rule 5b was added to `rules.md` before they were applied: a take-on the filing does not print leaves the "
+         "primary as an unmeasurable take-on when the readings show the acquired share of the base could exceed 10% of "
+         "R, and stays on the least-certain list when the filing bounds it at or below 10%. 3500/2023, whose take-on is "
+         "in R but whose table does not reconcile with note 7, joined the least-certain list under rule 6's added "
+         "clause. The outcomes below are those after round 7.", "",
          "## How the rules were read", "",
          "- Validity classes. A 'label' disagreement (rule 6) is one between the classes valid, screen_misread, units_slip "
          "and restated_base, undeterminable (the classes `compare_r5.py` uses for 'VERDICTS DIFFER'). A record whose two "
@@ -206,13 +227,15 @@ counts = {}
 for k, a in adj.items():
     counts.setdefault(a["outcome"], []).append(k)
 lines += ["## Outcomes", "", "| outcome | rule | records | keys |", "|---|---|---|---|"]
-for o in ("excluded", "corrected", "take_on_base", "take_on_base_and_least_certain", "take_on_amount_not_read",
-          "least_certain", "stands"):
+for o in ("excluded", "corrected", "take_on_base", "take_on_base_and_least_certain", "take_on_unmeasurable",
+          "take_on_bounded_least_certain", "least_certain", "stands"):
     ks = sorted(counts.get(o, []), key=order)
     rules = sorted({adj[k]["rule"] for k in ks})
     lines.append("| %s | %s | %d | %s |" % (o, ", ".join(rules), len(ks), ", ".join(ks)))
-lines += ["", "Primary at 35a259c: 649 records. Leaving: the five of rule 1 and 3000/2022 (rule 2): 643. Four figures "
-          "corrected. The 25 records of rule 6 stay and join the least-certain sensitivity.", ""]
+lines += ["", "Primary at 35a259c: 649 records. Leaving: the five of rule 1, 3000/2022 (rule 2) and 1110/2022 (rule 5b, after "
+          "the round-7 readings): 642. Four figures corrected. The 27 records listed under history_restated (the 25 of "
+          "rule 6, 1458/2024 under rule 5b and 3500/2023 under rules 5 and 6) stay and join the least-certain "
+          "sensitivity.", ""]
 
 lines += ["## Label disagreements settled by the rules", ""]
 for k in sorted(adj, key=order):
@@ -258,7 +281,13 @@ def section(title, keys, body):
         out.append("### %s (rule %s: %s)" % (k, adj[k]["rule"], adj[k]["outcome"]))
         out.append("")
         for rid, v in READS[k]:
-            out.append("- %s" % reading_line(rid, v))
+            if rid in rb.AMOUNT_READERS:
+                g = v["gross_transferred_in"]
+                out.append("- %s (round 7, the transferred gross amount): %s; opening R %s, closing %s" % (
+                    rid, "not printed" if g.get("value_m") is None else "%s" % g["value_m"],
+                    v["opening_R"]["value_m"], v["closing"]["value_m"]))
+            else:
+                out.append("- %s" % reading_line(rid, v))
         out.append("- %s" % body(k))
         out.append("")
     return out
@@ -300,7 +329,8 @@ lines += section("Rule 5: take-on bases", [k for k in adj if adj[k]["rule"].star
 lines += section("Rule 6: least certain, stays", [k for k in adj if adj[k]["outcome"] == "least_certain"], hist_body)
 lines += section("Rule 7: stands", [k for k in adj if adj[k]["outcome"] == "stands"], lambda k: "Rule 7: " + WHY[k])
 missing = [k for k in adj if adj[k]["outcome"] in ("stands", "take_on_base", "take_on_base_and_least_certain",
-                                                   "take_on_amount_not_read") and k not in WHY]
+                                                   "take_on_unmeasurable", "take_on_bounded_least_certain")
+           and k not in WHY]
 if missing:
     raise SystemExit("no reason written for %s" % missing)
 with io.open(out_path, "w", encoding="utf-8", newline="") as fh:

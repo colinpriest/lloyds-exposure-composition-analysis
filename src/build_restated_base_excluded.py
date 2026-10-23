@@ -10,7 +10,7 @@ brief_r6.md). The readings are archived verbatim under round5/readings/. The dec
 of the Claude analysis session written before the adjudication) were applied record by record; the adjudication is in
 round5/adjudication.md, and OUTCOMES below records the rule and outcome of each of the 83 records.
 
-The register holds two buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
+The register holds three buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
 its pages and quote, the facts the rule rests on and the decision:
 
   * "excluded": rule 1. The year t table's history differs from the year t-1 report beyond the exchange rate with no
@@ -20,8 +20,18 @@ its pages and quote, the facts the rule rests on and the decision:
     RESTATED_BASE_TABLE; under outcome 'precedence_672' the register is not read.
   * "history_restated": rule 6. The table ties to the year's accounts (or its basis explains the gap), but an
     underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R, or the readings
-    disagree on the validity label but not on the facts. The record stays; the least-certain sensitivity
-    (src/check_low_confidence_sensitivity.py) reads this bucket and leaves the records out.
+    disagree on the validity label but not on the facts, or (clause take_on_base_bounded, rule 5b) the filing prints no
+    transferred gross amount for a take-on in year t but bounds it at or below 10% of R, or (clause
+    take_on_table_unreconciled) an explained take-on that is already in R has a table that does not reconcile with the
+    filing's own roll-forward. The record stays; the least-certain sensitivity (src/check_low_confidence_sensitivity.py)
+    reads this bucket and leaves the records out.
+  * "takeon_unmeasurable": rule 5b. The year's take-on (an RITC, LPT or merger effective in year t whose acquired history
+    the table shows 'as if always') is not in R, the filing prints no transferred gross amount, and the readings show the
+    acquired share of the base could exceed 10% of R: the movement is development on a combined book whose base cannot
+    be measured. The loader removes the record from the primary at the unusable-severity step with the tag
+    TAKEON_BASE_UNMEASURABLE (data/takeon_not_development.json, which describes the step of the mature-cohort figure and
+    applies to a block carrying a displaced figure, does not fit: the figure here is the extraction's own and the base,
+    not the step, is what is missing); under outcome 'precedence_672' the register is not read.
 
 The other rules are applied through the registers that already carry them: rule 2 (the author's rule B) through
 data/fx_untranslated_excluded.json (3000/2022), rules 3 and 4 through data/mature_cohort_figures.json (2232/2020,
@@ -44,9 +54,16 @@ ROUND5 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round5"
 READINGS = ROUND5 / "readings"
 #: the readers of round 5 (arms P and Q), the 2689/2023 readers (V1, V2 read the table's validity; W1, W2 recomputed its
 #: figure) and the round-6 tie-break readers
-READERS = tuple("%s%d" % (a, i) for a in "PQ" for i in range(1, 9)) + ("V1", "V2", "W1", "W2", "Z5", "Z6")
+READERS = (tuple("%s%d" % (a, i) for a in "PQ" for i in range(1, 9)) + ("V1", "V2", "W1", "W2", "Z5", "Z6")
+           + ("U1", "U2"))
 #: readers whose readings recompute a figure only (kept with the entry as supporting readings, not as its readings)
 SUPPORTING = ("W1", "W2")
+#: the round-7 readers (brief_r7.md): they read the transferred gross amount of the two take-ons whose amount the round-5
+#: readings did not print (1110/2022, 1458/2024); their readings carry no validity verdict and are kept with the entry
+#: as its take-on readings (rule 5b)
+AMOUNT_READERS = ("U1", "U2")
+#: rule 5b's threshold: the acquired share of the base, in per cent of the opening gross claims outstanding R
+TAKEON_THRESHOLD_PCT = 10.0
 VALID = ("valid", "screen_misread", "units_slip")
 INVALID = ("restated_base", "undeterminable")
 SESSION = "decision of the Claude analysis session, 23 October 2026"
@@ -64,8 +81,18 @@ RULE = (
     "'history_restated' (rule 6): the table ties to the year's accounts (or its basis explains the gap), but an "
     "underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R "
     "(unexplained_history_move), or the two readings disagree on the validity label (valid, screen_misread, units_slip "
-    "against restated_base, undeterminable) but not on the facts (label_disagreement); the record stays in the primary "
-    "and src/check_low_confidence_sensitivity.py leaves it out of its least-certain refit. Every entry rests on two "
+    "against restated_base, undeterminable) but not on the facts (label_disagreement), or (rule 5b) the filing prints no "
+    "transferred gross amount for a take-on in year t but bounds it at or below 10% of R (take_on_base_bounded), or "
+    "an explained take-on already in R has a table that does not reconcile with the filing's own roll-forward "
+    "(take_on_table_unreconciled); the record stays in the primary "
+    "and src/check_low_confidence_sensitivity.py leaves it out of its least-certain refit. 'takeon_unmeasurable' (rule 5b, "
+    "decision of the Claude analysis session, 23 October 2026): a record leaves the PRIMARY sample when an RITC, LPT or "
+    "merger effective in year t, whose acquired history the table shows as if always, is not in the opening gross claims "
+    "outstanding R, the filing does not print the transferred gross reserves, and the readings show the acquired share "
+    "of the base could exceed 10% of R (an unmeasurable take-on, as 1861/2020 and 1084/2022 are); the loader removes the "
+    "entry's record at the unusable-severity step with the tag TAKEON_BASE_UNMEASURABLE and counts it "
+    "(takeon_base_unmeasurable_excluded); under outcome 'precedence_672' nothing changes. A take-on the filing bounds "
+    "at or below 10% of R stays and is listed under history_restated. Every entry rests on two "
     "independent readings of the filing (and the tie-break readings where the first two disagreed on the facts), with "
     "the pages and quotes. Built by src/build_restated_base_excluded.py from the archived readings.")
 
@@ -81,6 +108,8 @@ POPULATION = {
              "alignment_uncertain, no_identity_evidence), each read once in arm P and once in arm Q (round5/batches/), "
              "and 2689/2023 (the reference case) read by V1 and V2 and recomputed by W1 and W2: 83 records"),
     "tie_break": "1609/2024 and 4444/2017, whose first two readings disagreed on the facts, read by Z5 and Z6 (brief_r6.md)",
+    "take_on_amount": ("1110/2022 and 1458/2024, whose take-on the round-5 readings did not give an amount for, read by U1 "
+                       "and U2 (brief_r7.md); neither filing prints the transferred gross amount (rule 5b)"),
     "not_read": ("the 2 cell-scale slips (2001/2018, 2121/2019) and the records the screen could not compare (no year "
                  "t-1 gross grid, record or common single year) or found clean"),
 }
@@ -223,6 +252,21 @@ HISTORY_RESTATED = {
                   "the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no "
                   "retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R "
                   "165.2m). The table ties (+4.0% incurred, reserves exact)"),
+    "1458_2024": (["take_on_base_bounded"],
+                  "rule 5b (U1, U2). An external RITC 'in the year' of reserves relating only to the 2020 and 2021 "
+                  "underwriting years (p47); counterparty, date and amount are not printed, and note 4's gross roll-forward "
+                  "(p31) has no transfer row (2,050,580 + 733,886 - 79,491 - 544,404 - 10,867 = 2,149,704, USD 000). The "
+                  "only ADC is outward, bought in 2020 (p49), so not a take-on. R is the opening USD 2,050.580m (p31), "
+                  "which is the analysis's opening (GBP 1,637.71m) and includes no acquired reserves. The filing bounds "
+                  "the take-on: the 2024 table's 2020 and 2021 columns exceed the 2023 filing's at every age while the "
+                  "control columns move about -1%, and the acquired cumulative incurred at the latest comparable ages is "
+                  "105.138m + 58.940m = USD 164.078m (U1, U2); the reserves taken on are that incurred less the acquired "
+                  "paid to date, so they cannot exceed it: at most 8.0% of R (U2 puts it at about 2 to 3% on a "
+                  "low-confidence indicative range). The table carries the acquired years as if always, so the movement "
+                  "within the table (-33.258m USD = -26.56m GBP, u <= 2022, equal to the analysis figure) excludes the "
+                  "take-on and only the divisor is short; the acquired years' own pre-acquisition development (-22.091m "
+                  "of it) is in the figure. Bounded at or below 10% of R: the record stays and joins the least-certain "
+                  "list"),
     "1967_2018": (["unexplained_history_move"],
                   "the 2011 column (oldest) is 26% higher between reports while the others are 3-9% lower "
                   "(retranslation), unexplained (P6, Q7): 28.9m, 11.8% of R (246.1m). Incurred ties (-4.5%, control "
@@ -262,6 +306,15 @@ HISTORY_RESTATED = {
                   "accepted 1 January 2016, 248.822m gross, p37), stated on p38 and retranslated; rule 5 applies and R "
                   "already carries the take-on (data/opening_reserves_takeon_base.json). Paid -33.4% against a -30.1% "
                   "control, the 'All prior years' column printing no paid: the basis explains it"),
+    "3500_2023": (["take_on_table_unreconciled"],
+                  "RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new "
+                  "liabilities 3,225,818'), the history carried as if always (2 to 3.6 times the 2022 report's). The "
+                  "take-on is explained and is in R (5,803.136m USD = 2,962.436 + 2,840.7, "
+                  "data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile "
+                  "with the filing's own roll-forward: its movement on the old years is -52.1m against -184.8m of change "
+                  "in estimates in note 7 (P7; Q8: neither 136.6m nor -62.3m ties). Rule 1 does not reach it (the history "
+                  "change is explained) and no rule covers an explained take-on table that fails the tie; it stays and "
+                  "joins the least-certain list"),
     "4020_2018": (["unexplained_history_move"],
                   "the history is re-spread across underwriting years without explanation (2012 -20.3m, 2013 +36.0m, "
                   "2014 -23.1m between reports, P5; Q6: re-allocations inside a near-constant total), each above 1% of R "
@@ -290,6 +343,47 @@ HISTORY_RESTATED = {
                   "rule 1's 10%. P3 valid, Q4 restated_base"),
 }
 
+#: rule 5b (decision of the Claude analysis session, 23 October 2026): the take-on, its share of R and what the readings
+#: give for it. 'indicated' (the share could exceed 10% of R: the record leaves the primary) or 'upper_bound' (the filing
+#: bounds it at or below 10% of R: the record stays and is listed). No filing prints the transferred gross amount.
+TAKEON_AMOUNT = {
+    "1110_2022": {
+        "currency": "GBP", "opening_R_m": 221.885, "amount_m": 221.879, "amount_kind": "indicated",
+        "basis": ("not printed in either reading: U2 derives the gross claims incurred in 2022 on years before the 2022 "
+                  "underwriting year, 353.805m (note 3, p27) less 131.926m (the 2022 year's end-of-year estimate, p37) = "
+                  "221.879m, which is the take-on plus calendar-year development on the opening book (the two cannot be "
+                  "separated; the take-on is about 221.9m less that development); U1 prints only proxies (gross written "
+                  "premium 333.442m, p15; gross claims incurred 353.805m, p27; closing reserves 489.603m against an "
+                  "opening of 221.885m)"),
+    },
+    "1458_2024": {
+        "currency": "USD", "opening_R_m": 2050.58, "amount_m": 164.078, "amount_kind": "upper_bound",
+        "basis": ("an upper bound, not a printed figure: the acquired cumulative incurred at the latest comparable ages, "
+                  "the 2020 column's 36-month cell (708,716 against 603,578 in the 2023 filing, +105.138m) and the 2021 "
+                  "column's 24-month cell (778,088 against 719,148, +58.940m), p47 and the 2023 filing p45 (U1, U2); the "
+                  "reserves taken on are that incurred less what the acquired books had already paid"),
+    },
+}
+
+#: rule 5b, a take-on that leaves the primary (decision of the Claude analysis session, 23 October 2026): the facts
+TAKEON_UNMEASURABLE = {
+    "1110_2022": (
+        "rule 5b (U1, U2; P7, Q6 for the table). The Syndicate 5678 RITC (all open years of account, the 2018 and 2019 "
+        "underwriting years named; agreement of 9 February 2022, p5, p33) and an INWARD adverse development cover for "
+        "certain years of Syndicates 33 and 3624 (the Hiscox ADC, p5): 1110 is the reinsurer, so both add gross reserves; "
+        "the Gibson Re 80% whole account quota share is outward and moves the reinsurers' share, not the gross reserves. "
+        "The filing prints no transferred gross amount: note 3's gross roll-forward (p27) has no transfer row (221,885 + "
+        "claims incurred 353,805 - paid 99,706 + foreign exchange 13,619 = 489,603, GBP 000), so the take-on sits inside "
+        "claims incurred, and gross written premium rose from 1.366m to 333.442m, mainly on the two deals (p6, p15). R is "
+        "the opening 221.885m alone (p27, p18): the analysis's opening equals it exactly and includes no acquired "
+        "reserves. U2 derives a take-on of about 221.9m less the unknown development on the opening book, about 100% of R "
+        "and about twice the base; closing reserves are 2.2 times the opening. The development table carries the acquired "
+        "2018 and 2019 years with their full history as if always (p37) and restates the older columns against the 2021 "
+        "filing (U2), so the movement the table gives (+9.082m) is development on a combined book of about twice R. The "
+        "acquired share of the base could exceed 10% of R by a wide margin and cannot be measured from the filing: the "
+        "record leaves the primary"),
+}
+
 #: every record of the round with its rule and outcome (the adjudication: round5/adjudication.md)
 _STANDS = "7", "stands"
 OUTCOMES = {
@@ -301,10 +395,12 @@ OUTCOMES = {
     "1274_2016": ("4", "corrected", "data/mature_cohort_figures.json (printed_table_error)"),
     "1609_2024": ("4", "corrected", "data/mature_cohort_figures.json (printed_table_error)"),
     **{k: ("5", "take_on_base", "data/opening_reserves_takeon_base.json (already in R)")
-       for k in ("1686_2021", "1856_2024", "1884_2021", "2488_2019", "3500_2022", "3500_2023", "4000_2022",
-                 "4444_2018", "4444_2023")},
-    **{k: ("5", "take_on_amount_not_read", "none: neither reading gives the transferred gross amount")
-       for k in ("1110_2022", "1458_2024")},
+       for k in ("1686_2021", "1856_2024", "1884_2021", "2488_2019", "3500_2022", "4000_2022", "4444_2018",
+                 "4444_2023")},
+    # rule 5b (after the round-7 readings U1, U2): neither filing prints the transferred gross amount
+    "1110_2022": ("5b", "take_on_unmeasurable", "data/restated_base_excluded.json (takeon_unmeasurable)"),
+    "1458_2024": ("5b and 6", "take_on_bounded_least_certain",
+                  "data/restated_base_excluded.json (history_restated, take_on_base_bounded)"),
     **{k: _STANDS + ("none",) for k in (
         "382_2017", "382_2020", "435_2016", "510_2015", "1084_2016", "1218_2016", "1274_2022", "1274_2024",
         "1301_2016", "1416_2024", "1492_2019", "1856_2021", "1880_2015", "1897_2019", "1910_2016", "1945_2016",
@@ -312,10 +408,12 @@ OUTCOMES = {
         "2623_2023", "2786_2024", "2791_2022", "2988_2020", "3000_2018", "3624_2018", "4444_2022", "4472_2022",
         "4472_2024", "5000_2018", "5151_2020", "5678_2016", "6107_2023")},
 }
-#: a record two rules decide (rule 5 applied already, and rule 6 lists it for its label disagreement)
+#: a record two rules decide (rule 5 applied already, and rule 6 lists it: 3000/2016 for its label disagreement, 3500/2023
+#: because its explained take-on's table does not reconcile with note 7)
 OUTCOMES["3000_2016"] = ("5 and 6", "take_on_base_and_least_certain",
                          "data/opening_reserves_takeon_base.json (already in R) and data/restated_base_excluded.json "
                          "(history_restated)")
+OUTCOMES["3500_2023"] = OUTCOMES["3000_2016"]
 ROUND_RECORDS = 83
 
 
@@ -395,8 +493,37 @@ def _quote_of(r):
     return ""
 
 
+def take_on_block(key, reads, bucket):
+    """The rule-5b take-on of an entry: the amount and its share of R (TAKEON_AMOUNT), and the round-7 readings of the
+    transferred gross amount (U1, U2, kept verbatim), none of which prints a figure."""
+    amount = TAKEON_AMOUNT[key]
+    us = [(rid, e) for rid, e in reads if rid in AMOUNT_READERS]
+    if sorted(rid for rid, _ in us) != sorted(AMOUNT_READERS):
+        raise SystemExit("%s: rule 5b needs the readings of both %s (%s)" % (key, "/".join(AMOUNT_READERS),
+                                                                             [rid for rid, _ in us]))
+    t = dict(amount)
+    t["pct_of_R"] = round(100.0 * amount["amount_m"] / amount["opening_R_m"], 1)
+    t["amount_printed"] = False
+    t["threshold_pct_of_R"] = TAKEON_THRESHOLD_PCT
+    t["readings"] = [reading(rid, key, x) for rid, x in sorted(us)]
+    for r in t["readings"]:
+        if not r["pages"]:
+            raise SystemExit("%s: reader %s's pages %r give no page of the year t filing" % (key, r["reader"],
+                                                                                          r["pages_as_read"]))
+        if (r.get("gross_transferred_in") or {}).get("value_m") is not None:
+            raise SystemExit("%s: reader %s prints a transferred gross amount; rule 5b concerns an unprinted one"
+                             % (key, r["reader"]))
+    if bucket == "takeon_unmeasurable" and t["pct_of_R"] <= TAKEON_THRESHOLD_PCT:
+        raise SystemExit("%s: a take-on of %.1f%% of R is not above the %g%% of rule 5b" % (key, t["pct_of_R"],
+                                                                                           TAKEON_THRESHOLD_PCT))
+    if bucket != "takeon_unmeasurable" and t["pct_of_R"] > TAKEON_THRESHOLD_PCT:
+        raise SystemExit("%s: a take-on bounded at %.1f%% of R is above the %g%% of rule 5b" % (key, t["pct_of_R"],
+                                                                                              TAKEON_THRESHOLD_PCT))
+    return t
+
+
 def entry_for(key, reads, bucket):
-    main = [(rid, e) for rid, e in reads if rid not in SUPPORTING]
+    main = [(rid, e) for rid, e in reads if rid not in SUPPORTING + AMOUNT_READERS]
     supp = [(rid, e) for rid, e in reads if rid in SUPPORTING]
     rr = [reading(rid, key, e) for rid, e in sorted(main, key=lambda p: (p[0][0] not in "PV", p[0]))]
     for r in rr:
@@ -419,6 +546,15 @@ def entry_for(key, reads, bucket):
                          "explanation, fails the year's accounts while the year t-1 control ties, and the year t-1 "
                          "printed base gives no figure that reconciles, so the table cannot give the year's movement "
                          "and the record leaves the primary sample; the 672 sensitivity keeps it" % SESSION)
+    elif bucket == "takeon_unmeasurable":
+        e["facts"] = TAKEON_UNMEASURABLE[key]
+        e["take_on"] = take_on_block(key, reads, bucket)
+        e["decision"] = ("%s: rule 5b of the round-5 decision rules; the year's take-on is not in R, the filing prints no "
+                         "transferred gross amount, and the readings show the acquired share of the base could exceed "
+                         "%g%% of R (indicated %.1f%%), so the movement is development on a combined book whose base "
+                         "cannot be measured and the record leaves the primary sample as an unmeasurable take-on; the "
+                         "672 sensitivity keeps it"
+                         % (SESSION, TAKEON_THRESHOLD_PCT, e["take_on"]["pct_of_R"]))
     else:
         clauses, facts = HISTORY_RESTATED[key]
         label = bool(set(verdicts) & set(VALID)) and bool(set(verdicts) & set(INVALID))
@@ -426,9 +562,15 @@ def entry_for(key, reads, bucket):
             raise SystemExit("%s: the clause label_disagreement (%s) against the verdicts %s" % (key, clauses, verdicts))
         e["clauses"] = list(clauses)
         e["facts"] = facts
-        e["decision"] = ("%s: rule 6 of the round-5 decision rules (%s); the record stays in the primary sample with its "
+        rule = "rule 6"
+        if "take_on_base_bounded" in clauses:
+            e["take_on"] = take_on_block(key, reads, bucket)
+            rule = "rule 5b"
+        elif "take_on_table_unreconciled" in clauses:
+            rule = "rules 5 and 6"
+        e["decision"] = ("%s: %s of the round-5 decision rules (%s); the record stays in the primary sample with its "
                          "figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)"
-                         % (SESSION, ", ".join(clauses)))
+                         % (SESSION, rule, ", ".join(clauses)))
     e["readings"] = rr
     if supp:
         e["supporting_readings"] = [reading(rid, key, x) for rid, x in supp]
@@ -444,8 +586,9 @@ def build():
     if set(keys) != read:
         raise SystemExit("the records decided %s are not the records read %s" % (sorted(set(keys) - read),
                                                                                 sorted(read - set(keys))))
-    if set(EXCLUDED) & set(HISTORY_RESTATED):
-        raise SystemExit("a record in both buckets")
+    if len(set(EXCLUDED) | set(HISTORY_RESTATED) | set(TAKEON_UNMEASURABLE)) != (
+            len(EXCLUDED) + len(HISTORY_RESTATED) + len(TAKEON_UNMEASURABLE)):
+        raise SystemExit("a record in two buckets")
     pop = dict(POPULATION)
     counts = {}
     for k in keys:
@@ -454,8 +597,9 @@ def build():
     reg = {"_rule": RULE, "_population": pop,
            "_adjudicated": {k: {"rule": OUTCOMES[k][0], "outcome": OUTCOMES[k][1], "where": OUTCOMES[k][2],
                                 "readers": [rid for rid, _ in reads[k]]} for k in keys},
-           "excluded": {}, "history_restated": {}}
-    for bucket, src in (("excluded", EXCLUDED), ("history_restated", HISTORY_RESTATED)):
+           "excluded": {}, "history_restated": {}, "takeon_unmeasurable": {}}
+    for bucket, src in (("excluded", EXCLUDED), ("history_restated", HISTORY_RESTATED),
+                        ("takeon_unmeasurable", TAKEON_UNMEASURABLE)):
         for k in sorted(src, key=order_key):
             reg[bucket][k] = entry_for(k, reads[k], bucket)
     return reg

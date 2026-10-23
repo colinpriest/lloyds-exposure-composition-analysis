@@ -1,0 +1,181 @@
+{
+ "1110_2022": {
+  "key": "1110_2022",
+  "read_by": "text layer (filing_pages.py) for notes and balance sheet; page images (render.py) for the 2022 and 2021 gross development tables",
+  "pages": [
+   5,
+   6,
+   8,
+   18,
+   27,
+   33,
+   35,
+   37,
+   "2021 filing: 28"
+  ],
+  "transactions": [
+   {
+    "type": "RITC (inward)",
+    "counterparty": "Syndicate 5678 (managed by Vibe Syndicate Management Ltd; Capita Managing Agency Ltd named in the related-party note)",
+    "effective_date": "agreement dated 9 February 2022 (the filing gives no other effective or inception date)",
+    "quotes": [
+     {
+      "page": 5,
+      "quote": "During the year the Syndicate entered into two significant contracts being the RITC of all Syndicate 5678’s open years of account and the ADC of certain years of account of Syndicates 33 and 3624 (“Hiscox ADC”), managed by Hiscox Syndicates Limited."
+     },
+     {
+      "page": 33,
+      "quote": "On 9 February 2022 Vibe Syndicate Management Limited entered into an agreement with Capita Managing Agency Limited for the RITC of Syndicate 5678’s 2018 and 2019 underwriting years of account into Syndicate 1110."
+     }
+    ]
+   },
+   {
+    "type": "ADC (adverse development cover), INWARD",
+    "counterparty": "Hiscox Syndicates Limited, covering certain years of account of Syndicates 33 and 3624 (\"Hiscox ADC\")",
+    "effective_date": "not stated in the filing (entered into during 2022)",
+    "quotes": [
+     {
+      "page": 5,
+      "quote": "The principal activity of Syndicate 1110 is the transaction of reinsurance business in the United Kingdom by way of reinsurance to close (“RITC”), loss portfolio transfer (“LPT”) or adverse development cover (“ADC”)."
+     },
+     {
+      "page": 6,
+      "quote": "The Syndicate 5678 RITC and Hiscox ADC were the main drivers behind the increase in gross written premium from £1.4m to £333.4m."
+     }
+    ]
+   },
+   {
+    "type": "Gibson Re WQS (OUTWARD, ceded)",
+    "counterparty": "Gibson Re Ltd, an unrelated entity; funds-withheld 80% whole account quota share applying to the S5678 RITC and the Hiscox ADC",
+    "effective_date": "not stated",
+    "quotes": [
+     {
+      "page": 5,
+      "quote": "Also significant to the results was a funds withheld 80% whole account quota share reinsurance agreement on certain contracts with Gibson Re Ltd (“Gibson Re WQS”), an unrelated entity. The Gibson Re WQS applies to the Syndicate 5678 RITC and Hiscox ADC."
+     }
+    ]
+   }
+  ],
+  "gross_transferred_in": {
+   "value_m": null,
+   "page": null,
+   "quote": "NOT PRINTED. The filing gives no line for the gross claims outstanding (or the premium) of the S5678 RITC or the Hiscox ADC. Note 3 (page 27) has no 'portfolio transfer' row: the rows are 'At 1 January 2022 221,885 / Claims incurred 353,805 / Claims paid during the year (99,706) / Foreign exchange 13,619 / At 31 December 2022 489,603' (gross, GBP 000), so the take-on sits inside gross claims incurred. Whole-year gross written premium (page 15 and note 2) is 333,442 (2021: 1,366), described on page 6 as driven mainly by the S5678 RITC and Hiscox ADC, but the split between the two deals and ordinary business is not given (note 2: direct insurance 85,261; reinsurance 248,181).",
+   "derived_not_printed": {
+    "what": "Gross claims incurred in 2022 on years before the 2022 year of account = take-on gross reserves PLUS calendar-year development on the opening book (the two cannot be separated from the filing)",
+    "value_m": 221.879,
+    "working": "353,805 (note 3 gross claims incurred, p27) less 131,926 (2022 column, 'Estimate of cumulative claims incurred at the end of underwriting year', gross table p37) = 221,879. Cross-check by balance: closing outstanding on 2013-2020 years 442,381 + 47,223 (2012 & prior) = 489,604 less 2022-year outstanding 102,549 = 387,055; plus paid on those years (99,706 less 29,377 paid on 2022 year = 70,329); less FX 13,619 less opening 221,885 = 221,880.",
+    "caveat": "Assumes the table's 2022 end-of-year estimate (translated at year-end rate) equals the 2022-year share of note 3 claims incurred; this is an inference, not a printed figure. If development on the opening 221.9m book is D (sign unknown), take-on gross is about 221.9 - D."
+   }
+  },
+  "opening_R": {
+   "value_m": 221.885,
+   "page": 27,
+   "quote": "At 1 January 2022 | 221,885 | (52,444) | 169,441 (Gross / Reinsurer's Share / Net, £000); also page 18 statement of financial position, Technical provisions, Claims outstanding 2021 column: 221,885"
+  },
+  "closing": {
+   "value_m": 489.603,
+   "page": 27,
+   "quote": "At 31 December 2022 | 489,603 | (274,249) | 215,354 (Gross / Reinsurer's Share / Net, £000); page 18: Claims outstanding 2022 column 489,603; page 37 gross table total 489,603 (2013-2022 columns 442,381 plus '2012 & Prior' 47,223)"
+  },
+  "as_if_always": {
+   "answer": "yes, by the cells; the filing does not say so in words",
+   "quote": "Page 37 heading: 'Gross insurance contract outstanding claims provision as at 31 December 2022'. Page 36 text: 'The following tables show the estimates of cumulative incurred claims, including both claims notified and IBNR for each successive underwriting year at each reporting date, together with cumulative payments to date.' And at foot of the table: '2021 Year of account has not been presented above as the Syndicate did not participate on this year of account.'",
+   "cells": "The 2022 gross table (p37, printed 35) carries full early-development history for 2013-2020: e.g. 2018 column 44,984 / 100,979 / 105,633 / 113,604 / 115,426 (end of year, +12, +24, +36, +48 months) and 2019 column 104,174 / 184,687 / 225,235 / 199,843, years the syndicate did not write itself (S5678's 2018 and 2019 years come in by the RITC). The 2021 filing's gross table (2021 filing p28, printed 28) has no 2018 column at all, and shows 2017 as 16,398 / 20,940 / 25,189 / 22,634 / 25,052 (paid 16,230, outstanding 8,822) against 91,445 / 135,308 / 150,628 / 145,199 / 149,880 / 149,860 in the 2022 table (paid 124,175, outstanding 25,685); 2019 shows 58,790 / 67,383 / 107,888 (outstanding 75,954) in the 2021 table against 104,174 / 184,687 / 225,235 / 199,843 (outstanding 99,161) in 2022; 2013-2016 columns are also restated upward (e.g. 2016 end-of-year 53,309 in 2021 vs 77,395 in 2022). So the acquired books' history is carried back to the underwriting-year start, and the older columns are on a restated basis, not the previous report's figures. 'Paid to date' on the 2020 column is only 4,650 against a current estimate of 123,833, so paid history is not carried back for all acquired years."
+  },
+  "adc_direction": "INWARD for the Hiscox ADC: 1110 is the provider (it 'entered into ... the ADC of certain years of account of Syndicates 33 and 3624', 'transaction of reinsurance business ... by way of ... ADC', 'Reinsurance accepted' creditors 4,248 + 29,294, p32). It therefore ADDS gross claims outstanding. The OUTWARD (ceded) cover is the Gibson Re WQS (80% funds-withheld whole account quota share): it moves the reinsurers' share (274,249 at year end vs 52,444), not the gross reserves.",
+  "takeon_base_m": {
+   "opening_R_plus_transferred_in": null,
+   "status": "not computable from the printed filing because the gross transferred in is not printed",
+   "derived_indicative_m": "about 221.885 + (221.879 - D) = about 443.8 - D, where D is gross development in 2022 on the opening book (not printed; sign unknown); this is a derivation, not a printed figure",
+   "vs_analysis_opening_reserves_gbp_m": "analysis opening 221.885 equals the printed opening R exactly and contains no take-on. On the derived indicative figure the take-on base is roughly double the analysis opening (about 2.0x if D = 0). Closing 489.603 is 2.21x the opening."
+  },
+  "note": "The take-on is large relative to the opening book (closing gross reserves 2.2x the opening) and the RITC history is restated into the development table. Gross claims movement in the filing is confounded with the take-on: note 3 has no transfer row. A defensible take-on figure needs a source outside this filing (the S5678 RITC statement, the Hiscox ADC premium or the opening position of the acquired years), or an explicit choice to exclude the record. The gross development table's 2022 values are on a restated basis (differences in 2013-2016 columns against the 2021 filing exceed 7 percent at end of underwriting year), so a latest-less-previous mature-cohort figure cannot be built from the 2021 and 2022 filings' tables like for like; the 2022 table's own latest diagonal reconciles to the gross claims outstanding of 489,603."
+ },
+ "1458_2024": {
+  "key": "1458_2024",
+  "read_by": "text layer (filing_pages.py, and the source HTML text) for notes; page images (render.py) for the 2024 and 2023 gross development tables",
+  "pages": [
+   4,
+   5,
+   15,
+   18,
+   19,
+   28,
+   31,
+   32,
+   47,
+   48,
+   "2023 filing: 45"
+  ],
+  "transactions": [
+   {
+    "type": "external RITC (inward), counterparty not named",
+    "counterparty": "not stated anywhere in the filing (text layer and source HTML both searched for RITC, reinsurance to close, acquired, portfolio, transfer)",
+    "effective_date": "not stated; the only wording is 'in the year' (2024)",
+    "quotes": [
+     {
+      "page": 47,
+      "quote": "The tables include historic claims information on reserves acquired through an external RITC transaction in the year, which relate only to the 2020 and 2021 underwriting years."
+     }
+    ]
+   },
+   {
+    "type": "ADC (adverse development cover), OUTWARD, bought 2020: not a 2024 take-on",
+    "counterparty": "not named",
+    "effective_date": "1 January 2020",
+    "quotes": [
+     {
+      "page": 28,
+      "quote": "This policy has been applied in respect of the Adverse Development Cover protecting the Casualty classes on the Syndicate for the 2017 and prior underwriting years which came into effect on 1 January 2020."
+     },
+     {
+      "page": 48,
+      "quote": "During 2020, an Adverse Development Cover was purchased protecting the Casualty classes on the Syndicate for the 2017 and prior underwriting years."
+     },
+     {
+      "page": 28,
+      "quote": "premiums ceded and claims reimbursed are presented on a gross basis"
+     }
+    ]
+   }
+  ],
+  "gross_transferred_in": {
+   "value_m": null,
+   "page": null,
+   "quote": "NOT PRINTED. No line in the filing gives the gross claims outstanding (or premium) of the external RITC. Note 4 (page 31, gross / reinsurers' share / net, $000) has no transfer row: 'At 1 January 2024 2,050,580 | Expected cost of current year claims 733,886 | Change in estimates of prior year provisions (79,491) | Claims paid during the year (544,404) | Foreign exchange (10,867) | At 31 December 2024 2,149,704' (gross column; 2,050,580 + 733,886 - 79,491 - 544,404 - 10,867 = 2,149,704), so any take-on sits inside the two incurred rows. The Managing agent's report (pages 4 and 5) does not mention the RITC; its explanation of gross premium growth is the property, casualty and specialty books.",
+   "derived_not_printed": {
+    "what": "Upper bound on the gross reserves taken on, from the acquired cumulative incurred carried in the 2020 and 2021 columns of the 2024 gross table",
+    "upper_bound_usd_m": 164.1,
+    "upper_bound_gbp_m": 131.0,
+    "working": "Same-age cells, 2024 table (p47) less 2023 table (2023 filing p45, printed 42; whole dollars). 2020 column: end of year 471,190 vs 382,042,610 (+89,147); 12m 716,849 vs 601,103,087 (+115,746); 24m 737,863 vs 628,390,771 (+109,472); 36m 708,716 vs 603,578,497 (+105,138). 2021 column: end of year 388,671 vs 364,341,013 (+24,330); 12m 757,962 vs 689,123,940 (+68,838); 24m 778,088 vs 719,148,378 (+58,940). Control, columns with no acquired history: 2022 end of year 665,124 vs 665,824,036 (-700); 2022 12m 755,296 vs 757,228,795 (-1,933); 2019 end of year 214,918 vs 216,457,773 (-1,540); 2019 12m 519,104 vs 523,499,120 (-4,395), so the restatement noise is about -1% or less and the 2020 and 2021 jumps are the acquired history. Acquired cumulative incurred at the latest comparable ages = 105,138 (2020, age 36m) + 58,940 (2021, age 24m) = 164,078 ($000), about +-10m for year-end-rate noise.",
+    "why_upper_bound": "The reserves taken on are that acquired incurred less what the acquired books had already paid, so they cannot exceed it (the table carries paid history for the acquired years too).",
+    "indicative_low_confidence_usd_m": "about 40 to 55",
+    "indicative_working": "Sum of the 2024 'Cumulative payments to date' row (p47: 387,589 + 237,387 + 338,778 + 531,038 + 419,584 + 406,012 + 513,135 + 514,243 + 346,743 + 59,496 + 20,244 = 3,774,249) less the 2023 row (2023 filing p45: 3,119,490) less 2024 claims paid (544,404, note 4) = 110,355 of acquired paid history, with the restatement of the old columns to the 2024 year-end rate (about -0.5%) in it; 164 less roughly 110 to 126 = about 40 to 55. This leans on the assumption that every other cell moved only by the rate restatement, so it is a pointer, not a figure."
+   }
+  },
+  "opening_R": {
+   "value_m": 2050.58,
+   "page": 31,
+   "quote": "At 1 January 2024 | 2,050,580 | (1,248,499) | 802,081 (Gross / Reinsurers' share / Net, $000); page 19 statement of financial position, Technical provisions, Claims outstanding, 2023 column 2,050,580. In GBP: 2,050.580 / 1.2521 = 1,637.71 = the analysis opening_reserves_gbp_m 1637.712642760163 exactly."
+  },
+  "closing": {
+   "value_m": 2149.704,
+   "page": 31,
+   "quote": "At 31 December 2024 | 2,149,704 | (1,326,579) | 823,125 (Gross / Reinsurers' share / Net, $000); page 19: Claims outstanding 2024 column 2,149,704; page 47 gross table 'Total gross outstanding claims provision per the statement of financial position' total 2,149,704."
+  },
+  "as_if_always": {
+   "answer": "yes, stated in words for the table and visible in the cells for the 2020 and 2021 columns",
+   "quote": "Page 47: 'The tables include historic claims information on reserves acquired through an external RITC transaction in the year, which relate only to the 2020 and 2021 underwriting years.' The 2023 filing's table (p45) carries no such sentence.",
+   "cells": "2024 gross table (p47) 2020 column 471,190 / 716,849 / 737,863 / 708,716 / 694,462 (end of year, +12, +24, +36, +48 months); 2021 column 388,671 / 757,962 / 778,088 / 770,251 (end of year, +12, +24, +36). In the 2023 filing the same columns read 2020: 382,042,610 / 601,103,087 / 628,390,771 / 603,578,497 and 2021: 364,341,013 / 689,123,940 / 719,148,378. So the early-age cells of 2020 and 2021 were raised for the acquired books, at every age, not only on the latest diagonal. Consequence: the latest-less-previous differences inside the 2024 table do not contain the take-on. Cross-check from the 2024 table alone: 2015 +828 (275,024-274,196); 2016 -5 (403,820-403,825); 2017 +13,620 (626,439-612,819); 2018 +3,322 (542,990-539,668); 2019 -5,678 (564,996-570,674); 2020 -14,254 (694,462-708,716); 2021 -7,837 (770,251-778,088); 2022 -23,254 (732,042-755,296); sum for u <= 2022 = -33,258 ($000) = -26.56 GBP m at 1.2521, equal to the analysis pyd_gbp_m -26.5618 (triangle route). The 'Earlier' column has no development rows."
+  },
+  "adc_direction": "OUTWARD (ceded), and dated 1 January 2020. It is the Adverse Development Cover 'purchased' for the 2017 and prior casualty years, so it is not a take-on of gross reserves and not a 2024 event. No inward ADC or loss portfolio contract is mentioned in the filing.",
+  "takeon_base_m": {
+   "opening_R_plus_transferred_in": null,
+   "status": "not computable from the printed filing because the gross transferred in is not printed",
+   "derived_upper_bound_usd_m": "2,050.580 + at most 164.1 = at most about 2,214.7",
+   "derived_upper_bound_gbp_m": "1,637.71 + at most 131.0 = at most about 1,768.7",
+   "vs_analysis_opening_reserves_gbp_m": "analysis opening 1,637.71 equals the printed opening R, with no take-on. The take-on lifts the base by at most 8.0 percent on the upper bound (164.1 / 2,050.6), and by about 2 to 3 percent on the low-confidence indicative range (40 to 55 / 2,050.6). Closing 2,149.704 is 1.05x the opening."
+  },
+  "note": "The take-on is small against the opening book. Because the development table carries the acquired history as if always, the mature-cohort movement from the table (-33.258m USD, -26.56m GBP) already excludes the take-on, and only the denominator R is short by the acquired reserves. The size cannot be read off the filing: it needs the RITC statement or the RITC premium from outside the filing. The RITC counterparty and date are not given in the filing. The report's gross written premium, claims note and managing agent's report do not isolate the RITC."
+ }
+}

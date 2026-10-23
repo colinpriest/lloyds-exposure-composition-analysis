@@ -380,6 +380,15 @@ def classify_filings():
             economic, disclosure, extraction = "eligible", "development_observed", "parsed"
             evidence = ("the development table restates its history beyond the exchange rate with no explanation and "
                         "fails the year's accounts while the year t-1 control ties (data/restated_base_excluded.json)")
+        elif obs.get("data_quality_tag") == "TAKEON_BASE_UNMEASURABLE":
+            # the primary outcome (rule 5b of the round-5 decision rules, 23 October 2026,
+            # run_analysis.TAKEON_UNMEASURABLE_TAG): the year's take-on is not in R, the filing prints no transferred
+            # gross amount, and the readings show it could exceed 10% of R
+            category, detail = "scientific_exclusion", "takeon_base_unmeasurable"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("the year's take-on is not in the opening gross claims outstanding and the filing prints no "
+                        "transferred gross amount, which the readings show could exceed 10% of them "
+                        "(data/restated_base_excluded.json)")
         elif obs.get("pyd_pct") is None:
             category, detail = "eligible_outcome_unavailable", "gross_development_unavailable"
             economic, disclosure, extraction = (
@@ -508,7 +517,7 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
                                        "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
                                        "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE",
-                                       "CORPUS:RESTATED_BASE_TABLE")]
+                                       "CORPUS:RESTATED_BASE_TABLE", "CORPUS:TAKEON_BASE_UNMEASURABLE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

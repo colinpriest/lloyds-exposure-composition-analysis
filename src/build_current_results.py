@@ -718,6 +718,9 @@ SCIENTIFIC_DETAIL_WORDS = {
                               "(the primary outcome, the author's rule B, 22 October 2026)"),
     "restated_base_table": ("the development table restates its history without explanation and fails the year's "
                             "accounts (the primary outcome, rule 1 of the round-5 decision rules, 23 October 2026)"),
+    "takeon_base_unmeasurable": ("the year's take-on is not in the opening reserves, the filing prints no transferred "
+                                 "gross amount and it could exceed 10% of them (the primary outcome, rule 5b of the "
+                                 "round-5 decision rules, 23 October 2026)"),
     "mix_names_no_line_of_business": "the filing prints no premium amount for any non-life line of business (a "
                                      "contract form or distribution channels only; scope)",
     "life_book": "life business (scope)",

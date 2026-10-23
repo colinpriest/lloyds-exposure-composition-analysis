@@ -16,7 +16,9 @@ Round 5 of the filing readings (decision rules of 23 October 2026, a decision of
 records whose development table restated its history and that stay in the primary under rule 6: the table ties to the
 year's accounts, but an underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of
 R, or the two readings disagree on the validity label but not on the facts. data/restated_base_excluded.json lists them
-under "history_restated" (25 records when the register was built). The least-certain set is the ten and these.
+under "history_restated" (27 records: the 25 of rule 6, 1458/2024, whose unprinted take-on the filing bounds at 8.0% of
+R (rule 5b), and 3500/2023, an explained take-on whose table does not reconcile with note 7). The least-certain set is
+the ten and these.
 
 The list is read from the three registers, never typed here: a record whose confidence, reason or bucket changes there
 changes the sensitivity. Every record must be in the primary working sample (sample_scope.refit_without refuses a key

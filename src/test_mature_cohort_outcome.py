@@ -15,9 +15,9 @@ its rebuild and to the readings; the loader's guard to every block; the primary 
 figures; and the sensitivity to the 672.
 
 PINNED COUNTS. Several tests state a count of the committed state (116 register entries and 91 figures, the 672 and its 571
-mature-enforced records, the adjudication's 82 restored figures, the primary's 643, the 52 records that leave the 672, the 56
+mature-enforced records, the adjudication's 82 restored figures, the primary's 642, the 53 records that leave the 672, the 56
 records without a figure). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: four corrected
-figures (rules 3 and 4), one record of rule 2 and five of rule 1 out of the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
+figures (rules 3 and 4), one record of rule 2, five of rule 1 and one of rule 5b (1110/2022) out of the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
 to one is a change of result that the test should stop and a human should read, not a count to follow. Where a test holds
 entries to the loaded records and the purpose does not need the count, the entries are read from the register instead.
 
@@ -655,6 +655,9 @@ def test_the_sensitivity_is_the_672_construction(loaded):
 FX_EXCLUDED = {"1897_2016", "2468_2016", "5151_2016", "5151_2017", "3000_2022"}
 #: the records rule 1 of the round-5 decision rules takes out of the primary (data/restated_base_excluded.json)
 RESTATED_EXCLUDED = {"780_2016", "2689_2023", "4242_2022", "4747_2024", "6134_2022"}
+#: the record rule 5b of the round-5 decision rules takes out of the primary as an unmeasurable take-on
+#: (data/restated_base_excluded.json, bucket takeon_unmeasurable)
+UNMEASURABLE_EXCLUDED = {"1110_2022"}
 #: the figures rules 3 and 4 of the round-5 decision rules correct (data/mature_cohort_figures.json, a correction
 #: object), in GBP m: the printed table's own figure and the corrected one
 CORRECTED_GBP = {"318_2024": (-67.098, -27.99), "1274_2016": (46.610197, 19.083651), "1609_2024": (-0.147752, 11.129303),
@@ -666,14 +669,15 @@ COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
 
 def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restated_base_records(loaded, decisions):
     """The adjudication's 653 (571 mature-enforced under the 672 and 82 restored figures), less the five records of the
-    exchange-rate rule and the five of rule 1 of the round-5 decision rules: 643. The adjudication's figures stand,
+    exchange-rate rule, the five of rule 1 and the one of rule 5b of the round-5 decision rules: 642. The adjudication's
+    figures stand,
     except the three aggregated-column records', which leave the column out, and the four the round-5 rules correct."""
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     enforced_672 = {k for k, r in s["ws"].items() if r["pyd_cohort_scope"] == ra.COHORT_ENFORCED}
     primary_decided = {k for k, r in decisions.items() if r["final_status"].startswith("primary")}
-    out = FX_EXCLUDED | RESTATED_EXCLUDED
+    out = FX_EXCLUDED | RESTATED_EXCLUDED | UNMEASURABLE_EXCLUDED
     assert len(enforced_672) == 571 and len(primary_decided) == 82
-    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 643
+    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 642
     assert out <= enforced_672 | primary_decided
     assert all(r["pyd_cohort_scope"] == ra.COHORT_ENFORCED for r in p["ws"].values())
     for k in enforced_672 - out - set(COLUMN_FIGURES) - set(CORRECTED_GBP):
@@ -699,11 +703,13 @@ def test_the_non_triangle_records_and_the_transactions_leave_the_primary(loaded)
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     left = set(s["ws"]) - set(p["ws"])
     tags = {k: p["status"][k]["status"] for k in left}
-    assert len(left) == 52
+    assert len(left) == 53
     # the exchange-rate rule's records that the 672 construction holds (5151/2016 is not in it)
     assert sorted(k for k, t in tags.items() if t == ra.FX_UNTRANSLATED_TAG) == sorted(FX_EXCLUDED - {"5151_2016"})
     # rule 1 of the round-5 decision rules: all five are in the 672
     assert sorted(k for k, t in tags.items() if t == ra.RESTATED_BASE_TAG) == sorted(RESTATED_EXCLUDED)
+    # rule 5b: the one unmeasurable take-on is in the 672 as well
+    assert sorted(k for k, t in tags.items() if t == ra.TAKEON_UNMEASURABLE_TAG) == sorted(UNMEASURABLE_EXCLUDED)
     assert sorted(k for k, t in tags.items() if t == ra.TAKEON_TAG) == ["1084_2022", "2001_2022"]
     nomature = sorted(k for k, t in tags.items() if t == ra.NO_MATURE_COHORT_FIGURE_TAG)
     assert len(nomature) == 41 and "6134_2023" in nomature
@@ -755,7 +761,7 @@ def test_the_new_tag_reaches_the_ledgers_unusable_severity_step(loaded, tmp_path
     _meta, subsets = ra.build_subsets(p["records"])
     ra.compute_eligibility(p["records"], subsets)
     flow = ra.build_disposition_ledger(p["log"], p["records"], str(tmp_path / "ledger.csv"))
-    assert flow["working_sample"] == 643 and flow["working_sample_equals_eligible_for_capital"] is True
+    assert flow["working_sample"] == 642 and flow["working_sample_equals_eligible_for_capital"] is True
     n = sum(1 for r in p["records"] if r["data_quality_tag"] == ra.NO_MATURE_COHORT_FIGURE_TAG)
     assert n == p["counters"]["no_mature_cohort_figure_unusable"] == 56
     assert all(r["eligible_for_capital"] is False for r in p["records"]

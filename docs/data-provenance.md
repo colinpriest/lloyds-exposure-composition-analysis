@@ -171,10 +171,27 @@ before the adjudication) were applied record by record (`round5/adjudication.md`
   their labels) and 1274/2016 at +23.544m USD (a misprinted 2012 cell replaced by the 2015 report's at the year's exchange
   factor), each with a `correction` object.
 - Rule 5 (take-on bases): every candidate whose transferred gross amount the readings print was already in
-  `data/opening_reserves_takeon_base.json`; for 1110/2022 and 1458/2024 neither reading gives the amount, and nothing is
-  added.
-- Rule 6 (least certain): 25 records stay in the primary and are listed under `history_restated` in
-  `data/restated_base_excluded.json`; `src/check_low_confidence_sensitivity.py` reads them from there.
+  `data/opening_reserves_takeon_base.json`; for 1110/2022 and 1458/2024 the round-5 readings did not give the amount, and
+  nothing is added to that register.
+- Rule 5b (a take-on whose transferred gross reserves the filing does not print; added the same day, after the round-7
+  readings U1 and U2 of 1110/2022 and 1458/2024, `round5/briefs/brief_r7.md`): neither filing prints the amount. If the
+  readings show the acquired share of the base could exceed 10% of the opening gross claims outstanding R, the record
+  leaves the primary as an unmeasurable take-on; if the filing bounds it at or below 10% of R, it stays and joins the
+  least-certain list. 1110/2022 (the Syndicate 5678 RITC and an inward Hiscox ADC; reserves GBP 221.885m to 489.603m,
+  a take-on of about GBP 221.9m less the unknown development on the opening book, about 100% of R) leaves, in the bucket
+  `takeon_unmeasurable` of `data/restated_base_excluded.json`, with its own tag `TAKEON_BASE_UNMEASURABLE` and counter
+  `takeon_base_unmeasurable_excluded`. That register, and not `data/takeon_not_development.json`, carries it: the take-on
+  register's entries describe the step of a displaced mature-cohort figure (`figure_route`) and apply only to a block
+  that carries one, and 1110/2022's figure is the extraction's own; its denominator, not its step, is what is missing.
+  The 672 construction keeps the record. 1458/2024 (an external RITC restating the 2020 and 2021 years; at most USD
+  164.1m of cumulative incurred, 8.0% of R, and the movement within the table, -33.258m USD, already excludes the
+  take-on) stays and is listed under `history_restated` with the clause `take_on_base_bounded`.
+- Rule 6 (least certain): 27 records stay in the primary and are listed under `history_restated` in
+  `data/restated_base_excluded.json`: the 25 of rule 6, 1458/2024 (rule 5b) and 3500/2023 (its take-on is explained and
+  in R, but its table does not reconcile with note 7, -52.1m against -184.8m on the old years; clause
+  `take_on_table_unreconciled`); `src/check_low_confidence_sensitivity.py` reads them from there.
+- Primary at 35a259c: 649 records; 642 after the round-5 decisions and rule 5b (the five of rule 1, 3000/2022 and
+  1110/2022 leave).
 
 <!-- coverage:start -->
 Coverage is **68 % of active syndicate-years overall** (649 of 953; it was ~47 % on the

@@ -5,7 +5,11 @@ analysis session).
   * data/restated_base_excluded.json equals its rebuild from the archived readings (src/build_restated_base_excluded.py);
   * every one of the round's 83 records has one rule and one outcome, and each outcome is in the register that carries
     it: rule 1 here ('excluded'), rule 2 in data/fx_untranslated_excluded.json, rules 3 and 4 in
-    data/mature_cohort_figures.json, rule 5 in data/opening_reserves_takeon_base.json, rule 6 here ('history_restated');
+    data/mature_cohort_figures.json, rule 5 in data/opening_reserves_takeon_base.json, rule 5b here ('takeon_unmeasurable',
+    or 'history_restated' for a take-on bounded at or below 10% of R), rule 6 here ('history_restated');
+  * rule 5b (the round-7 readings U1, U2): 1110/2022, whose unprinted take-on could exceed 10% of R, leaves the primary
+    under the bucket 'takeon_unmeasurable' with a tag of its own; 1458/2024, bounded at 8.0%, and 3500/2023 stay and are
+    listed;
   * the loader removes the five records of rule 1 from the primary with a named, countable tag, and the 672 construction
     does not read the register;
   * the loader refuses an entry without its evidence (mutation-checked), a record in both buckets, a stale entry and a
@@ -31,6 +35,15 @@ CORRECTED = {"318_2024": "printed_table_error", "1274_2016": "printed_table_erro
              "2232_2020": "previous_report_base"}
 TAKEON_IN_R = ["1686_2021", "1856_2024", "1884_2021", "2488_2019", "3000_2016", "3500_2022", "3500_2023", "4000_2022",
                "4444_2018", "4444_2023"]
+#: rule 5b (after the round-7 readings U1, U2): the take-on leaves the primary (1110/2022), or the filing bounds it at or
+#: below 10% of R and the record is listed (1458/2024)
+UNMEASURABLE = ["1110_2022"]
+BOUNDED = ["1458_2024"]
+
+
+def adj_keys_of_rule_6_alone(adj):
+    """The records whose only rule is rule 6, or rules 5 and 6 for a take-on already in the register (3000/2016)."""
+    return [k for k, a in adj.items() if a["rule"] == "6" or k == "3000_2016"]
 
 
 def _register():
@@ -68,13 +81,16 @@ def test_every_record_of_the_round_has_one_rule_and_one_outcome():
     counts = {}
     for k, a in adj.items():
         counts[a["outcome"]] = counts.get(a["outcome"], 0) + 1
-    assert counts == {"corrected": 4, "excluded": 6, "least_certain": 24, "stands": 37, "take_on_amount_not_read": 2,
-                      "take_on_base": 9, "take_on_base_and_least_certain": 1}
+    assert counts == {"corrected": 4, "excluded": 6, "least_certain": 24, "stands": 37, "take_on_base": 8,
+                      "take_on_base_and_least_certain": 2, "take_on_bounded_least_certain": 1,
+                      "take_on_unmeasurable": 1}
     assert reg["_population"]["outcomes"] == dict(sorted(counts.items()))
     assert sorted(reg["excluded"], key=rb.order_key) == sorted(EXCLUDED, key=rb.order_key)
     assert sorted(k for k, a in adj.items() if a["rule"] == "1") == sorted(reg["excluded"])
     assert sorted(k for k, a in adj.items() if "6" in a["rule"]) == sorted(reg["history_restated"])
-    assert len(reg["history_restated"]) == 25
+    assert sorted(k for k, a in adj.items() if a["rule"] == "5b") == sorted(reg["takeon_unmeasurable"]) == UNMEASURABLE
+    assert len(reg["history_restated"]) == 27
+    assert sorted(set(reg["history_restated"]) - set(adj_keys_of_rule_6_alone(adj))) == ["1458_2024", "3500_2023"]
 
 
 def test_each_outcome_is_in_the_register_that_carries_it():
@@ -90,9 +106,14 @@ def test_each_outcome_is_in_the_register_that_carries_it():
     assert sorted(k for k, a in adj.items() if a["outcome"].startswith("take_on_base")) == sorted(TAKEON_IN_R)
     for k in TAKEON_IN_R:
         assert k in takeon, k
-    # rule 5 with no printed amount in either reading: no take-on base, recorded as outstanding
-    for k in ("1110_2022", "1458_2024"):
-        assert adj[k]["outcome"] == "take_on_amount_not_read" and k not in takeon, k
+    # rule 5b: no printed amount in either reading (U1, U2), so no take-on base; the filing's share of R decides
+    for k in UNMEASURABLE + BOUNDED:
+        assert k not in takeon and k not in ra.load_takeon_register(), k
+    assert adj["1110_2022"]["outcome"] == "take_on_unmeasurable" and "1110_2022" in reg["takeon_unmeasurable"]
+    assert adj["1458_2024"]["outcome"] == "take_on_bounded_least_certain"
+    assert reg["history_restated"]["1458_2024"]["clauses"] == ["take_on_base_bounded"]
+    assert reg["history_restated"]["3500_2023"]["clauses"] == ["take_on_table_unreconciled"]
+    assert adj["3500_2023"]["outcome"] == "take_on_base_and_least_certain" and "3500_2023" in takeon
     # the records that stand are in no bucket of this register and in no correction
     for k, a in adj.items():
         if a["outcome"] == "stands":
@@ -115,6 +136,33 @@ def test_every_entry_rests_on_two_readings_with_the_year_t_filings_pages_and_the
     assert [r["reader"] for r in reg["excluded"]["2689_2023"]["readings"]] == ["V1", "V2"]
     assert [r["reader"] for r in reg["excluded"]["2689_2023"]["supporting_readings"]] == ["W1", "W2"]
     assert [r["reader"] for r in reg["history_restated"]["4444_2017"]["readings"]] == ["P1", "Q8", "Z5", "Z6"]
+
+
+def test_the_take_on_readings_are_the_archived_round_7_readings_and_none_prints_an_amount():
+    reg = _register()
+    for bucket, key in (("takeon_unmeasurable", "1110_2022"), ("history_restated", "1458_2024")):
+        t = reg[bucket][key]["take_on"]
+        assert [r["reader"] for r in t["readings"]] == ["U1", "U2"], key
+        assert t["amount_printed"] is False and t["threshold_pct_of_R"] == 10.0
+        for r in t["readings"]:
+            with io.open(os.path.join(HERE, *r["source"].split("/")), encoding="utf-8") as fh:
+                arch = json.load(fh)[key]
+            assert r["source"].endswith("round5/readings/%s.json" % r["reader"])
+            assert r["gross_transferred_in"] == arch["gross_transferred_in"], (key, r["reader"])
+            assert r["gross_transferred_in"]["value_m"] is None and r["pages"], (key, r["reader"])
+            assert r["opening_R"]["value_m"] == t["opening_R_m"], (key, r["reader"])
+        assert key in reg["_adjudicated"] and {"U1", "U2"} <= set(reg["_adjudicated"][key]["readers"]), key
+    # the share of R that decides the rule: above 10% for the take-on that leaves, at or below for the one that stays
+    assert reg["takeon_unmeasurable"]["1110_2022"]["take_on"]["pct_of_R"] > 10.0
+    assert reg["takeon_unmeasurable"]["1110_2022"]["take_on"]["amount_kind"] == "indicated"
+    assert reg["history_restated"]["1458_2024"]["take_on"]["pct_of_R"] == 8.0
+    assert reg["history_restated"]["1458_2024"]["take_on"]["amount_kind"] == "upper_bound"
+    assert rb.TAKEON_THRESHOLD_PCT == ra.TAKEON_UNMEASURABLE_THRESHOLD_PCT == 10.0
+    # the archive holds the amended rules with rule 5b and the round-7 brief
+    with io.open(os.path.join(HERE, rb.ROUND5, "rules.md"), encoding="utf-8") as fh:
+        rules = fh.read()
+    assert "5b." in rules and "10% of the opening gross claims outstanding R" in rules
+    assert os.path.exists(os.path.join(HERE, rb.ROUND5, "briefs", "brief_r7.md"))
 
 
 def test_the_year_t_pages_are_split_from_the_readers_own_page_fields():
@@ -207,6 +255,91 @@ def test_the_loader_refuses_an_entry_without_its_evidence(tmp_path, bucket, key,
     assert sorted(ra.load_restated_base()) == sorted(EXCLUDED)
 
 
+@pytest.mark.parametrize("bucket,key,change", [
+    ("takeon_unmeasurable", "1110_2022", "no-take-on"), ("takeon_unmeasurable", "1110_2022", "share-below-threshold"),
+    ("takeon_unmeasurable", "1110_2022", "share-at-threshold"), ("takeon_unmeasurable", "1110_2022", "amount-printed"),
+    ("takeon_unmeasurable", "1110_2022", "kind-upper-bound"), ("takeon_unmeasurable", "1110_2022", "one-take-on-reading"),
+    ("takeon_unmeasurable", "1110_2022", "same-reader-twice"), ("takeon_unmeasurable", "1110_2022", "reading-prints-value"),
+    ("takeon_unmeasurable", "1110_2022", "reading-no-pages"), ("takeon_unmeasurable", "1110_2022", "share-not-the-amount"),
+    ("takeon_unmeasurable", "1110_2022", "no-facts"), ("takeon_unmeasurable", "1110_2022", "no-decision"),
+    ("takeon_unmeasurable", "1110_2022", "no-pages"),
+    ("history_restated", "1458_2024", "no-take-on"), ("history_restated", "1458_2024", "share-above-threshold"),
+    ("history_restated", "1458_2024", "kind-indicated"), ("history_restated", "1458_2024", "amount-printed"),
+    ("history_restated", "1458_2024", "one-take-on-reading"),
+])
+def test_the_loader_refuses_a_rule_5b_entry_that_does_not_show_its_share_of_r(tmp_path, bucket, key, change):
+    """Mutation checks of rule 5b: an unmeasurable take-on must show a share of R above 10% and a bounded one at or below
+    it, the amount unprinted, and two readings of the amount from distinct readers."""
+    reg = _register()
+    e = reg[bucket][key]
+    t = e["take_on"]
+    if change == "no-take-on":
+        del e["take_on"]
+    elif change == "share-below-threshold":
+        t["amount_m"], t["pct_of_R"] = 20.0, round(100 * 20.0 / t["opening_R_m"], 1)
+    elif change == "share-at-threshold":
+        t["amount_m"], t["pct_of_R"] = 0.1 * t["opening_R_m"], 10.0
+    elif change == "share-above-threshold":
+        t["amount_m"], t["pct_of_R"] = 0.12 * t["opening_R_m"], 12.0
+    elif change == "amount-printed":
+        t["amount_printed"] = True
+    elif change in ("kind-upper-bound", "kind-indicated"):
+        t["amount_kind"] = "upper_bound" if change == "kind-upper-bound" else "indicated"
+    elif change == "one-take-on-reading":
+        t["readings"] = t["readings"][:1]
+    elif change == "same-reader-twice":
+        t["readings"][1]["reader"] = t["readings"][0]["reader"]
+    elif change == "reading-prints-value":
+        t["readings"][0]["gross_transferred_in"]["value_m"] = 50.0
+    elif change == "reading-no-pages":
+        t["readings"][0]["pages"] = []
+    elif change == "share-not-the-amount":
+        t["pct_of_R"] = 50.0
+    elif change == "no-facts":
+        e["facts"] = ""
+    elif change == "no-decision":
+        e["decision"] = ""
+    elif change == "no-pages":
+        e["pages"] = []
+    p = tmp_path / "reg.json"
+    p.write_text(json.dumps(reg), encoding="utf-8")
+    with pytest.raises(ValueError, match="lacks"):
+        ra.load_restated_base(p)
+    with pytest.raises(ValueError, match="lacks"):
+        ra.load_takeon_unmeasurable(p)
+    # the unmutated register loads, and the loader returns the right bucket
+    assert sorted(ra.load_takeon_unmeasurable()) == UNMEASURABLE
+
+
+def test_a_listed_take_on_without_the_bounded_clause_needs_no_take_on_object(tmp_path):
+    """3500/2023's clause is take_on_table_unreconciled: it carries no amount, because R already holds its take-on."""
+    reg = _register()
+    assert "take_on" not in reg["history_restated"]["3500_2023"]
+    p = tmp_path / "reg.json"
+    p.write_text(json.dumps(reg), encoding="utf-8")
+    assert sorted(ra.load_takeon_unmeasurable(p)) == UNMEASURABLE
+
+
+def test_the_build_refuses_a_take_on_on_the_wrong_side_of_the_threshold(monkeypatch):
+    """Mutation checks of the builder: the same take-on in the other bucket is refused, and so is a missing round-7 reader."""
+    reads = rb.load_readings()
+    with pytest.raises(SystemExit, match="not above the 10%"):
+        rb.take_on_block("1458_2024", reads["1458_2024"], "takeon_unmeasurable")
+    amounts = dict(rb.TAKEON_AMOUNT)
+    amounts["1458_2024"] = dict(amounts["1458_2024"], amount_m=250.0)
+    monkeypatch.setattr(rb, "TAKEON_AMOUNT", amounts)
+    with pytest.raises(SystemExit, match="above the 10%"):
+        rb.entry_for("1458_2024", reads["1458_2024"], "history_restated")
+    one = [(rid, e) for rid, e in reads["1458_2024"] if rid != "U2"]
+    with pytest.raises(SystemExit, match="needs the readings of both"):
+        rb.take_on_block("1458_2024", one, "history_restated")
+    printed = [(rid, dict(e, gross_transferred_in=dict(e["gross_transferred_in"], value_m=9.0)) if rid == "U1" else e)
+               for rid, e in reads["1458_2024"]]
+    monkeypatch.setattr(rb, "TAKEON_AMOUNT", {"1458_2024": rb.TAKEON_AMOUNT["1458_2024"]})
+    with pytest.raises(SystemExit, match="prints a transferred gross amount"):
+        rb.take_on_block("1458_2024", printed, "history_restated")
+
+
 def test_a_record_cannot_be_both_excluded_and_listed(tmp_path):
     reg = _register()
     reg["history_restated"]["4747_2024"] = copy.deepcopy(reg["history_restated"]["382_2022"])
@@ -230,7 +363,56 @@ def test_the_primary_removes_the_five_records_with_a_named_countable_reason(load
     assert prim["counters"]["restated_base_excluded"] == 5
     assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.RESTATED_BASE_TAG) == 5
     assert set(EXCLUDED) <= _ws(old["records"]) and not set(EXCLUDED) & _ws(prim["records"])
-    assert len(_ws(prim["records"])) == 643
+    assert len(_ws(prim["records"])) == 642
+
+
+def test_the_primary_removes_the_unmeasurable_take_on_with_its_own_countable_tag(loaded):
+    """Rule 5b: 1110/2022 leaves the primary with the tag TAKEON_BASE_UNMEASURABLE, a counter and a ledger reason of
+    its own; the 672 keeps the record, with the figure and the tag it always had; the take-on is in no take-on register."""
+    prim, old = loaded[ra.MATURE_COHORT_OUTCOME], loaded[ra.PRECEDENCE_672_OUTCOME]
+    assert ra.TAKEON_UNMEASURABLE_TAG == "TAKEON_BASE_UNMEASURABLE" != ra.RESTATED_BASE_TAG != ra.TAKEON_TAG
+    for key in UNMEASURABLE:
+        r = prim["by_key"][key]
+        assert r["data_quality_tag"] == ra.TAKEON_UNMEASURABLE_TAG, key
+        assert r["s_raw_a"] is None and r["pyd_gbp_m"] is None and r["pyd_pct"] is None, key
+        entry = prim["log"]["syndicate_%s.json" % key]
+        assert entry["status"] == ra.TAKEON_UNMEASURABLE_TAG and "rule 5b" in entry["reason"]
+        assert "data/restated_base_excluded.json" in entry["reason"]
+        o = old["by_key"][key]
+        assert o["data_quality_tag"] == "RELIABLE" and o["s_raw_a"] is not None and o["pyd_gbp_m"] == 9.082
+        # the opening reserves are the filing's own (no acquired reserves added): the take-on is not measured
+        assert r["opening_reserves_gbp_m"] == o["opening_reserves_gbp_m"] == 221.885
+    assert prim["counters"]["takeon_base_unmeasurable_excluded"] == len(UNMEASURABLE)
+    assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.TAKEON_UNMEASURABLE_TAG) == len(UNMEASURABLE)
+    assert set(UNMEASURABLE) <= _ws(old["records"]) and not set(UNMEASURABLE) & _ws(prim["records"])
+    # the bounded take-on stays, with its figure, and the divisor is the filing's opening reserves
+    r = prim["by_key"]["1458_2024"]
+    assert r["data_quality_tag"] == "RELIABLE" and r["pyd_gbp_m"] == pytest.approx(-26.5618, abs=1e-4)
+    assert prim["counters"]["restated_base_excluded"] == 5
+
+
+def test_the_new_tag_reaches_the_ledgers_unusable_severity_step_and_the_missingness_exclusions():
+    """Rule 5b's tag is a step of the disposition ledger and the missingness partition like the other primary tags: the
+    reconciliation counts it at the unusable-severity step, the classifier gives it a scientific-exclusion detail, both
+    generated documents describe it, and the missingness sensitivity leaves the record out."""
+    import build_current_results as bcr
+    import generate_data_audit as gda
+    import missingness_check as MC
+    rows = [{"file": "a", "detail": "takeon_base_unmeasurable"}, {"file": "b", "detail": "restated_base_table"}]
+    ledger = [{"file": "a", "disposition": "CORPUS:" + ra.TAKEON_UNMEASURABLE_TAG},
+              {"file": "b", "disposition": "CORPUS:" + ra.RESTATED_BASE_TAG}]
+    out = MC.basis_exclusions_reconciliation(rows, ledger, {"to_working_sample": {"net_or_unstated_basis": 0,
+                                                                                  "unusable_severity": 2}})
+    assert out["unusable_severity_components"] == {"restated_base_table": 1, "takeon_base_unmeasurable": 1}
+    for fname, needles in (("missingness_check.py", ['obs.get("data_quality_tag") == "%s"' % ra.TAKEON_UNMEASURABLE_TAG,
+                                                      '"scientific_exclusion", "takeon_base_unmeasurable"']),
+                           ("check_missingness_sensitivity.py", ['"%s"' % ra.TAKEON_UNMEASURABLE_TAG])):
+        with io.open(os.path.join(HERE, "src", fname), encoding="utf-8") as fh:
+            src = fh.read()
+        for needle in needles:
+            assert needle in src, (fname, needle)
+    for words in (bcr.SCIENTIFIC_DETAIL_WORDS, gda.SCIENTIFIC_DETAIL_WORDS):
+        assert "rule 5b" in words["takeon_base_unmeasurable"]
 
 
 def test_the_listed_records_stay_in_the_primary_with_their_figure(loaded):
@@ -243,10 +425,12 @@ def test_the_listed_records_stay_in_the_primary_with_their_figure(loaded):
 def test_the_672_construction_does_not_read_the_register(loaded, monkeypatch, tmp_path):
     old = loaded[ra.PRECEDENCE_672_OUTCOME]
     assert "restated_base_excluded" not in old["counters"]
-    assert not any(e["status"] == ra.RESTATED_BASE_TAG for e in old["log"].values())
+    assert "takeon_base_unmeasurable_excluded" not in old["counters"]
+    assert not any(e["status"] in (ra.RESTATED_BASE_TAG, ra.TAKEON_UNMEASURABLE_TAG) for e in old["log"].values())
     monkeypatch.setattr(ra, "RESTATED_BASE_REGISTER", tmp_path / "missing.json")
     records, counters, log, files = ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
     assert len(records) == len(old["records"]) and "restated_base_excluded" not in counters
+    assert "takeon_base_unmeasurable_excluded" not in counters
     with pytest.raises(FileNotFoundError):
         ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
 
@@ -271,9 +455,34 @@ def test_a_non_gross_record_the_register_names_stops_the_run(monkeypatch):
         ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
 
 
+def test_an_unmeasurable_entry_that_reaches_no_reliable_gross_record_stops_the_run(monkeypatch):
+    """The stale-entry guard of rule 5b: a record outside the sample (1206/2019 in run-off) or not gross (1218/2015)
+    cannot be named in the takeon_unmeasurable bucket."""
+    real = ra.load_takeon_unmeasurable()
+    for bogus in ("1206_2019", "1218_2015"):
+        extra = dict(real)
+        extra[bogus] = real["1110_2022"]
+        monkeypatch.setattr(ra, "load_takeon_unmeasurable", lambda path=None, e=extra: e)
+        with pytest.raises(ValueError, match=bogus):
+            ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+
+
+def test_a_record_cannot_be_both_unmeasurable_and_excluded_or_listed(tmp_path):
+    for other in ("excluded", "history_restated"):
+        reg = _register()
+        if other == "excluded":
+            reg[other]["1110_2022"] = copy.deepcopy(reg["excluded"]["4747_2024"])
+        else:
+            reg[other]["1110_2022"] = copy.deepcopy(reg["history_restated"]["382_2022"])
+        p = tmp_path / ("reg_%s.json" % other)
+        p.write_text(json.dumps(reg), encoding="utf-8")
+        with pytest.raises(ValueError, match="1110_2022.*both"):
+            ra.load_takeon_unmeasurable(p)
+
+
 def test_a_mistyped_key_in_either_bucket_stops_the_primary_load(monkeypatch):
     real = ra.restated_register_keys()
-    assert len(real) == 30
+    assert len(real) == 33 and "1110_2022" in real
     for bogus in ("9999_2032", "4747_2042"):
         monkeypatch.setattr(ra, "restated_register_keys", lambda path=None, b=bogus: real + [b])
         with pytest.raises(ValueError, match=r"data/restated_base_excluded.json: 1 key\(s\).*%s" % bogus):
