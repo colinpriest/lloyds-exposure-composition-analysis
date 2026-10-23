@@ -145,6 +145,130 @@ def test_the_syndicate_control_refuses_an_impossible_match():
                                    tol=0.0001, max_tries=50)
 
 
+def _toy_syndicates(n=16):
+    """n syndicates of one record each, total R 1..n: with 4 strata the syndicates of R 1-4, 5-8, 9-12 and 13-16."""
+    syn = np.arange(1, n + 1)
+    return np.arange(1.0, n + 1), syn
+
+
+def _old_masks(R, syn, left_syndicates, n_draws, rng, n=4, tol=1.0):
+    """The whole-syndicate control as it was before strata were merged (4 strata, an error where one is short),
+    to show that the merging path leaves the unmerged case unchanged."""
+    synds = np.array(sorted(set(syn.tolist())))
+    total = np.array([R[syn == s].sum() for s in synds])
+    edges = np.percentile(total, np.linspace(0, 100, n + 1))
+    edges[-1] += 1e-9
+    stratum = np.clip(np.digitize(total, edges) - 1, 0, n - 1)
+    flagged = np.isin(synds, list(left_syndicates))
+    need = [int((flagged & (stratum == d)).sum()) for d in range(n)]
+    pool = [np.where(~flagged & (stratum == d))[0] for d in range(n)]
+    assert all(k <= len(p) for k, p in zip(need, pool))
+    left = np.isin(syn, list(left_syndicates))
+    target_n, target_r = int(left.sum()), float(R[left].sum())
+    masks, seen, tries = [], set(), 0
+    while len(masks) < n_draws:
+        tries += 1
+        pick = np.concatenate([rng.choice(p, k, replace=False) for p, k in zip(pool, need) if k])
+        key = tuple(sorted(pick.tolist()))
+        if key in seen:
+            continue
+        out = np.isin(syn, synds[pick])
+        if abs(out.sum() - target_n) <= tol * target_n and abs(R[out].sum() - target_r) <= tol * target_r:
+            seen.add(key)
+            masks.append(~out)
+    return masks, tries
+
+
+
+def test_merge_strata_keeps_strata_that_suffice_and_merges_toward_the_middle():
+    """No merge when every stratum suffices; a short stratum joins the adjacent one nearer the middle of the size
+    range (stratum 0 can only join 1, stratum 3 only 2, 1 joins 2 and 2 joins 1); the merge repeats until every group
+    suffices; and a variant that needs more than all the strata hold raises."""
+    assert CM.merge_strata([1, 6, 12, 11], [29, 23, 17, 19]) == [[0], [1], [2], [3]]
+    assert CM.merge_strata([2, 8, 15, 11], [28, 21, 14, 19]) == [[0], [1, 2], [3]]
+    assert CM.merge_strata([3, 1, 1, 1], [2, 5, 5, 5]) == [[0, 1], [2], [3]]
+    assert CM.merge_strata([1, 3, 1, 1], [5, 2, 5, 5]) == [[0], [1, 2], [3]]
+    assert CM.merge_strata([1, 1, 1, 3], [5, 5, 5, 2]) == [[0], [1], [2, 3]]
+    # the merged group [1, 2] (need 6, holds 5) is still short: it joins a neighbour, the tie of 0 and 3 going to 0
+    assert CM.merge_strata([1, 3, 3, 1], [5, 1, 4, 5]) == [[0, 1, 2], [3]]
+    with pytest.raises(ValueError, match="fewer unflagged syndicates"):
+        CM.merge_strata([4, 4, 4, 4], [3, 3, 3, 3])
+    # every group's unflagged syndicates cover its draws, and the groups partition the strata in order
+    need, avail = [2, 8, 15, 11], [28, 21, 14, 19]
+    groups = CM.merge_strata(need, avail)
+    assert [d for g in groups for d in g] == [0, 1, 2, 3]
+    assert all(sum(need[d] for d in g) <= sum(avail[d] for d in g) for g in groups)
+
+
+def test_the_syndicate_control_merges_a_short_stratum_and_draws_within_the_merged_group():
+    R, syn = _toy_syndicates()
+    # the flagged are R 9, 10, 11 of the third quartile (9-12), which holds one unflagged syndicate (12)
+    flagged = [9, 10, 11]
+    rec = CM.strata_record(R, syn, flagged)
+    assert rec["flagged_per_stratum"] == [0, 0, 3, 0] and rec["unflagged_per_stratum"] == [4, 4, 1, 4]
+    assert rec["groups"] == [[0], [1, 2], [3]] and rec["strata_merged"] == [[1, 2]]
+    assert rec["flagged_per_group"] == [0, 3, 0] and rec["unflagged_per_group"] == [4, 5, 4]
+    masks, tries = CM.syndicate_control_masks(R, syn, flagged, 5, np.random.default_rng(3), tol=1.0)
+    assert len(masks) == 5
+    keys = set()
+    for keep in masks:
+        gone = sorted(syn[~keep].tolist())
+        # three whole syndicates, drawn from the merged group's unflagged syndicates (R 5-8 and 12), none flagged
+        assert len(gone) == 3 and set(gone) <= {5, 6, 7, 8, 12}
+        keys.add(tuple(gone))
+    assert len(keys) == 5, "the draws are distinct"
+    # a stratum drawn from the group is not forced to be the short one: 5-8 appear
+    assert any(set(k) & {5, 6, 7, 8} for k in keys)
+
+
+def test_the_syndicate_control_without_a_short_stratum_equals_the_unmerged_masks():
+    """When every stratum suffices the merging path draws exactly what the four-stratum control drew."""
+    R, syn = _toy_syndicates()
+    flagged = [2, 6, 10, 14, 15]
+    assert CM.strata_record(R, syn, flagged)["strata_merged"] == []
+    new, new_tries = CM.syndicate_control_masks(R, syn, flagged, 6, np.random.default_rng(11), tol=1.0)
+    old, old_tries = _old_masks(R, syn, flagged, 6, np.random.default_rng(11))
+    assert new_tries == old_tries and len(new) == len(old) == 6
+    assert all(np.array_equal(a, b) for a, b in zip(new, old))
+    # and on the current primary's two variants that need no merge
+    S, Rs, H, yr, sy, ritc = am.load_sample()
+    for name in ("held_margin", "held_or_conditional"):
+        synds = CM.margin_variants()[name]
+        assert CM.strata_record(Rs, sy, synds)["strata_merged"] == [], name
+        a, ta = CM.syndicate_control_masks(Rs, sy, synds, 3, np.random.default_rng(5))
+        b, tb = _old_masks(Rs, sy, synds, 3, np.random.default_rng(5), tol=CM.MATCH_TOLERANCE)
+        assert ta == tb and all(np.array_equal(x, y) for x, y in zip(a, b)), name
+
+
+def test_the_syndicate_control_raises_when_even_the_merged_strata_cannot_supply_the_draws():
+    R, syn = _toy_syndicates()
+    # 13 of the 16 syndicates flagged: the three left cannot supply them in any grouping
+    with pytest.raises(ValueError, match="fewer unflagged syndicates"):
+        CM.syndicate_control_masks(R, syn, list(range(1, 14)), 1, np.random.default_rng(1), tol=1.0)
+    with pytest.raises(ValueError):
+        CM.strata_record(R, syn, list(range(1, 14)))
+    # a variant that merges step by step and still cannot be met: 12 flagged (R 5-16), only R 1-4 remain
+    with pytest.raises(ValueError):
+        CM.syndicate_control_masks(R, syn, [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], 1, np.random.default_rng(1),
+                                   tol=1.0)
+
+
+def test_the_current_primary_merges_the_third_quartile_for_the_37_syndicate_variant_only():
+    """The 643-record primary: the 37-syndicate variant leaves out 15 syndicates of the third quartile, which holds
+    14 unflagged; the other two variants need no merge."""
+    S, R, H, yr, syn, ritc = am.load_sample()
+    got = {name: CM.strata_record(R, syn, synds) for name, synds in CM.margin_variants().items()}
+    assert got["any_scan_hit"]["flagged_per_stratum"] == [2, 8, 15, 11]
+    assert got["any_scan_hit"]["unflagged_per_stratum"] == [28, 21, 14, 19]
+    assert got["any_scan_hit"]["groups"] == [[0], [1, 2], [3]]
+    assert got["held_margin"]["strata_merged"] == got["held_or_conditional"]["strata_merged"] == []
+    out = CM.run(n_control=2, fit_fn=_fake_fit)
+    per = out["controls_design"]["syndicate"]["per_variant"]
+    assert per["any_scan_hit"]["strata"] == got["any_scan_hit"]
+    assert per["held_margin"]["strata"]["groups"] == [[0], [1], [2], [3]]
+    json.dumps(out)
+
+
 def _fake_fit(mask, label):
     import zlib
     rng = np.random.default_rng(zlib.crc32(label.encode()))

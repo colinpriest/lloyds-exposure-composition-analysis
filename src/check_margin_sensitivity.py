@@ -17,7 +17,9 @@ and 39% to 41% of the size proxy, can be told from a margin effect:
     (200 draws, measured), where the variant keeps 81 to 87, and 14 to 32 of the 38 RITC records (mean 22 to 24),
     where the variant keeps 26 to 31;
   * a whole-syndicate control: random whole syndicates left out, drawn from the syndicates the variant keeps, matched
-    on the syndicates' size (their total R, in quartiles) and, by rejection, on the records left out and their share
+    on the syndicates' size (their total R, in quartiles; a quartile whose unflagged syndicates cannot supply the
+    variant's draws is merged with the adjacent quartile nearer the middle, and the results record which) and, by
+    rejection, on the records left out and their share
     of the size proxy (each within MATCH_TOLERANCE of the variant's). This is the like-for-like comparator: it removes
     syndicates, not scattered records, so the year effects and the RITC regime are confounded as the variant's are
     (the stage-3 review, finding 3). It keeps the variant's number of syndicates exactly, and, by rejection, the
@@ -25,8 +27,8 @@ and 39% to 41% of the size proxy, can be told from a margin effect:
     regenerated working sample: a tolerance of 1 accepts a draw at 254, 365 and 29 tries for the 31-, 35- and
     37-syndicate variants on one seed of 100 draws, and at 239 to 290, 345 to 390 and 27 to 30 over the verifier's five
     seeds of 200 draws, so the rejection costs seconds, and the controls keep 30 to 32 RITC records
-    against the variant's 31, and 25 to 27 against 26). The variants leave out 241, 255 and 268 of the 672 records on
-    the regenerated sample (the committed sample before the regeneration gives 242, 256 and 269): read the counts
+    against the variant's 31, and 25 to 27 against 26). The variants leave out 235, 248 and 258 of the 643 records of
+    the primary sample (236, 249 and 259 of the 649 before the round-5 adjudication): read the counts
     from the regenerated results, not from this text. Each fit records n_ritc_kept.
 
 How to read it. The comparison gives an indication of whether stated margins move k, the floor or the tail
@@ -65,7 +67,9 @@ N_CONTROL = 8
 N_DECILES = 10
 #: the whole-syndicate control matches on quartiles of the syndicates' total R (the flagged syndicates are mostly
 #: large: with quintiles the 34-syndicate variant needs 13 syndicates from a stratum holding 10 unflagged ones), and
-#: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's
+#: by rejection on the records left out and their share of R, each within MATCH_TOLERANCE of the variant's. A quartile
+#: that cannot supply its draws is merged with its neighbour (merge_strata): on the 643-record primary the third
+#: quartile holds 14 unflagged syndicates against the 37-syndicate variant's 15
 N_SYNDICATE_STRATA = 4
 MATCH_TOLERANCE = 0.10
 #: and on the RITC records left out, within this many of the variant's. Measured over 100 draws (tries per accepted
@@ -117,15 +121,32 @@ def control_masks(R, left_out, n_draws, rng, n=N_DECILES):
     return out
 
 
-def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE_STRATA, tol=MATCH_TOLERANCE,
-                            max_tries=MAX_TRIES, ritc=None, ritc_tol=None):
-    """(masks of the records KEPT, tries): `n_draws` distinct sets of whole syndicates left out, each drawn from the
-    syndicates the variant keeps, in the same number per stratum of total R as `left_syndicates`, and accepted only
-    if the records left out and their share of R are within `tol` of the variant's. The draws are cheap (no fit), so
-    the rejection costs nothing; it is needed because the flagged syndicates hold more records than syndicates of
-    their size do (a stratified draw alone leaves out about 17% fewer records). With `ritc` (the RITC flags) and
-    `ritc_tol`, a draw must also leave out within `ritc_tol` RITC records of the variant's, so that the controls keep
-    about the variant's RITC count (nu_RITC is fitted on those records)."""
+def merge_strata(need, available):
+    """Contiguous groups of size strata (lists of stratum indices, lowest first) such that each group's unflagged
+    syndicates (`available`, per stratum) cover the syndicates the variant leaves out of it (`need`). Strata stay apart
+    wherever they suffice. A stratum (or merged group) that falls short is merged with its adjacent group that is
+    nearer the middle of the size range (the middle is the mean stratum index; a tie goes to the smaller-R neighbour),
+    and this repeats until every group suffices. If even one group of all the strata falls short, the variant leaves out
+    more syndicates than the sample has left to draw from, and it raises ValueError."""
+    n = len(need)
+    groups = [[d] for d in range(n)]
+    mid = (n - 1) / 2.0
+    while True:
+        short = [i for i, g in enumerate(groups) if sum(need[d] for d in g) > sum(available[d] for d in g)]
+        if not short:
+            return groups
+        if len(groups) == 1:
+            raise ValueError("a size stratum holds fewer unflagged syndicates (%s) than the variant leaves out (%s)"
+                             % (list(available), list(need)))
+        i = short[0]
+        j = min((j for j in (i - 1, i + 1) if 0 <= j < len(groups)),
+                key=lambda j: (abs(float(np.mean(groups[j])) - mid), j))
+        lo, hi = min(i, j), max(i, j)
+        groups[lo:hi + 1] = [groups[lo] + groups[hi]]
+
+
+def _syndicate_strata(R, syn, left_syndicates, n):
+    """(syndicates, their stratum of total R, flagged mask, flagged per stratum, unflagged per stratum)."""
     synds = np.array(sorted(set(syn.tolist())))
     total = np.array([R[syn == s].sum() for s in synds])
     edges = np.percentile(total, np.linspace(0, 100, n + 1))
@@ -133,10 +154,40 @@ def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE
     stratum = np.clip(np.digitize(total, edges) - 1, 0, n - 1)
     flagged = np.isin(synds, list(left_syndicates))
     need = [int((flagged & (stratum == d)).sum()) for d in range(n)]
-    pool = [np.where(~flagged & (stratum == d))[0] for d in range(n)]
-    if any(k > len(p) for k, p in zip(need, pool)):
-        raise ValueError("a size stratum holds fewer unflagged syndicates (%s) than the variant leaves out (%s)"
-                         % ([len(p) for p in pool], need))
+    available = [int((~flagged & (stratum == d)).sum()) for d in range(n)]
+    return synds, stratum, flagged, need, available
+
+
+def strata_record(R, syn, left_syndicates, n=N_SYNDICATE_STRATA):
+    """The strata the whole-syndicate control draws within, for the results: the flagged and unflagged syndicates in
+    each of the n strata of total R, the groups of strata merge_strata makes of them, and the counts per group
+    (`strata_merged` lists the groups of more than one stratum; it is empty when the n strata all suffice)."""
+    _synds, _stratum, _flagged, need, available = _syndicate_strata(R, syn, left_syndicates, n)
+    groups = merge_strata(need, available)
+    return {"flagged_per_stratum": need, "unflagged_per_stratum": available, "groups": groups,
+            "flagged_per_group": [sum(need[d] for d in g) for g in groups],
+            "unflagged_per_group": [sum(available[d] for d in g) for g in groups],
+            "strata_merged": [g for g in groups if len(g) > 1]}
+
+
+def syndicate_control_masks(R, syn, left_syndicates, n_draws, rng, n=N_SYNDICATE_STRATA, tol=MATCH_TOLERANCE,
+                            max_tries=MAX_TRIES, ritc=None, ritc_tol=None):
+    """(masks of the records KEPT, tries): `n_draws` distinct sets of whole syndicates left out, each drawn from the
+    syndicates the variant keeps, in the same number per stratum of total R as `left_syndicates`, and accepted only
+    if the records left out and their share of R are within `tol` of the variant's. The n strata stand where each
+    holds at least as many unflagged syndicates as the variant leaves out of it. Where one does not (the 643-record
+    primary's 37-syndicate variant leaves out 15 syndicates of the third quartile, which holds 14 unflagged), merge_strata
+    merges it with the adjacent stratum nearer the middle of the size range, repeating until every group suffices, and
+    the draws are matched on the merged groups; if even all the strata together cannot supply the draws it raises
+    ValueError. strata_record gives the groups and the counts for the results. The draws are cheap (no fit), so
+    the rejection costs nothing; it is needed because the flagged syndicates hold more records than syndicates of
+    their size do (a stratified draw alone leaves out about 17% fewer records). With `ritc` (the RITC flags) and
+    `ritc_tol`, a draw must also leave out within `ritc_tol` RITC records of the variant's, so that the controls keep
+    about the variant's RITC count (nu_RITC is fitted on those records)."""
+    synds, stratum, flagged, need_s, avail_s = _syndicate_strata(R, syn, left_syndicates, n)
+    groups = merge_strata(need_s, avail_s)
+    need = [sum(need_s[d] for d in g) for g in groups]
+    pool = [np.where(~flagged & np.isin(stratum, g))[0] for g in groups]
     left = np.isin(syn, list(left_syndicates))
     target_n, target_r = int(left.sum()), float(R[left].sum())
     target_ritc = None if ritc is None else int(np.sum(ritc[left]))
@@ -256,10 +307,12 @@ def assemble(variants, controls, headline, syndicates, n_control, n_sample, matc
                                   "106 to 117 of the 118 syndicates, the variant 81 to 87, and on average 22 to 24 "
                                   "RITC records to the variant's 27 to 32 (measured over 200 draws), so it "
                                   "understates the spread a syndicate-level exclusion of the same size would show")},
-            "syndicate": {"matched_on": ("quartiles of the syndicates' total R, then by rejection on the records left "
-                                         "out and their share of R, each within %.0f%% of the variant's, and on the "
-                                         "RITC records left out, within %d of the variant's"
-                                         % (100 * MATCH_TOLERANCE, RITC_TOLERANCE)),
+            "syndicate": {"matched_on": ("quartiles of the syndicates' total R (adjacent quartiles merged where one "
+                                         "cannot supply the unflagged syndicates the variant's draws need: "
+                                         "per_variant[...]['strata'] records the groups and the counts), then by "
+                                         "rejection on the records left out and their share of R, each within %.0f%% "
+                                         "of the variant's, and on the RITC records left out, within %d of the "
+                                         "variant's" % (100 * MATCH_TOLERANCE, RITC_TOLERANCE)),
                           "drawn_from": "the syndicates the variant keeps",
                           "n_strata": N_SYNDICATE_STRATA, "tolerance": MATCH_TOLERANCE,
                           "per_variant": matching or {},
@@ -315,6 +368,7 @@ def run(n_control=N_CONTROL, fit_fn=fit):
         masks["syndicate"], tries = syndicate_control_masks(R, syn, synds, n_control, rng, ritc=ritc,
                                                             ritc_tol=RITC_TOLERANCE)
         matching[name] = {"tries": int(tries), "accepted": int(n_control),
+                          "strata": strata_record(R, syn, synds),
                           "variant_records_left_out": int(out.sum()),
                           "variant_share_of_R_left_out": float(R[out].sum() / R.sum()),
                           "variant_ritc_left_out": int(ritc[out].sum()), "ritc_tolerance": RITC_TOLERANCE,
