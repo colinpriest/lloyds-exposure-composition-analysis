@@ -503,13 +503,14 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
 
 
 def _papers_unresolved_subject_gate():
-    """The manuscript's gate H (paper/audit_numbers.required_context), loaded from the paper repository, or None."""
+    """The manuscript's gate H (paper/audit_numbers.required_context), loaded from the paper repository: (module, path),
+    or the repository's path (a string) where there is no manuscript there."""
     import importlib.util
     root = os.environ.get("LLOYDS_PAPER_REPO") or os.path.join("D:" + os.sep, "Latex projects",
                                                                 "BAJ - Lloyds reserves rescaling")
     path = os.path.join(root, "paper", "audit_numbers.py")
-    if not os.path.exists(path):
-        return None
+    if not os.path.exists(os.path.join(root, "paper", "main.tex")) or not os.path.exists(path):
+        return root
     sys.path.insert(0, os.path.dirname(path))
     try:
         spec = importlib.util.spec_from_file_location("audit_numbers_for_gate_h", path)
@@ -527,8 +528,9 @@ def test_the_open_questions_are_clear_of_the_manuscripts_unresolved_subject_gate
     subject. The generated text names the slope in words. This runs the paper's own gate on the generated document, and on
     a copy with the notation put back, which it must flag."""
     loaded = _papers_unresolved_subject_gate()
-    if loaded is None:
-        pytest.skip("no manuscript at LLOYDS_PAPER_REPO (or the default path): the paper's gate H is not available")
+    if isinstance(loaded, str):
+        pytest.skip("no manuscript at %s: set LLOYDS_PAPER_REPO to the paper repository, or this "
+                    "cross-repository check does not run" % loaded)
     gate, path = loaded
     doc = _read("docs", "current-results.md")
     (tmp_path / "docs").mkdir()

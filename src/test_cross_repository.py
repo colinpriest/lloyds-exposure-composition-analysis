@@ -42,7 +42,8 @@ def test_the_readme_lists_every_test_that_reads_the_manuscript():
     listed = re.findall(r"^- `([^`]+)`$", LIST.search(readme).group(1), re.M)
     assert listed == reading_tests()
     assert len(listed) >= 2
-    words = {1: "One test file crosses", 2: "Two test files cross", 3: "Three test files cross"}
+    words = {1: "One test file crosses", 2: "Two test files cross", 3: "Three test files cross",
+             4: "Four test files cross"}
     assert words[len(listed)] in readme
 
 

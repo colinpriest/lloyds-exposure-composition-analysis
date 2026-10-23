@@ -269,13 +269,17 @@ and maximum R-hat 1.000. The full-manifest record described above was made on
 21 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
-Three test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
+Four test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
 test files that read `LLOYDS_PAPER_REPO`):
 <!-- cross-repository-tests:start -->
 - `src/test_figure_layout.py`
 - `src/test_operator_binding.py`
+- `src/test_public_documents.py`
 - `src/test_vignette_estimator.py`
 <!-- cross-repository-tests:end -->
+
+`test_public_documents.py` runs the manuscript's gate H (`paper/audit_numbers.py`, `required_context`) on the
+generated `docs/current-results.md`, so that an open question the document states is hedged as the paper hedges it.
 
 `test_vignette_estimator.py` reads Section 5.2's scale-ratio range out of `paper/main.tex` and checks
 it against `check_vignette2_sign_results.json`, so that the range is the record's rather than a
