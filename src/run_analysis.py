@@ -577,9 +577,10 @@ RESTATED_CONDITIONS = (("history_differs_unexplained", True), ("year_t_fails_acc
 #: than 1% of R; or the two readings disagree on the validity label but not on the facts; or (rule 5b) the filing prints
 #: no transferred gross amount for a take-on in year t but bounds it at or below the threshold share of R
 #: (take_on_base_bounded); or (rule 5 with 6) an explained take-on that is in R has a table that does not reconcile with
-#: the filing's own roll-forward (take_on_table_unreconciled)
+#: the filing's own roll-forward (take_on_table_unreconciled); or (rule 4 with 6, after review 8) the corrected figure is
+#: derived by the session from cells both readers quote, a figure neither reader gives (derived_correction)
 RESTATED_CLAUSES = ("unexplained_history_move", "label_disagreement", "take_on_base_bounded",
-                    "take_on_table_unreconciled")
+                    "take_on_table_unreconciled", "derived_correction")
 #: the round-5 verdicts by validity class (a disagreement between the classes is a label disagreement)
 RESTATED_VALID_VERDICTS = ("valid", "screen_misread", "units_slip")
 RESTATED_INVALID_VERDICTS = ("restated_base", "undeterminable")
@@ -1573,6 +1574,33 @@ def _correction_gaps(entry):
     if not _is_number(printed) or not _is_number((entry.get("displaced") or {}).get("figure_m")) \
             or abs(printed - entry["displaced"]["figure_m"]) > 0.0015:
         gaps.append("the correction's figure_as_printed_m equal to the displaced figure")
+    gaps += _derived_correction_gaps(entry)
+    return gaps
+
+
+def _derived_correction_gaps(entry):
+    """What a DERIVED correction (a correction object with derived_figure_m: a figure no reader gives, 1274/2016 after
+    review 8) lacks: its derived figure equal to the entry's, the cells the derivation uses, and, in every reading, the
+    reader's own figure kept apart from the derived figure and every cell of the derivation among the cells the reader
+    quotes. A correction without derived_figure_m has none of these requirements."""
+    corr = entry.get("correction")
+    if not isinstance(corr, dict) or "derived_figure_m" not in corr:
+        return []
+    gaps = []
+    if not _is_number(corr["derived_figure_m"]) or not _is_number(entry.get("figure_m")) \
+            or abs(corr["derived_figure_m"] - entry["figure_m"]) > 0.0015:
+        gaps.append("a derived_figure_m equal to the entry's figure")
+    if not isinstance(corr.get("cells_used"), list) or not corr["cells_used"]:
+        gaps.append("the cells the derived figure uses (correction.cells_used)")
+    for i, r in enumerate(entry.get("readings") or []):
+        if not isinstance(r, dict):
+            continue
+        if not _is_number(r.get("derived_figure_m")) or not _is_number(entry.get("figure_m")) \
+                or abs(r["derived_figure_m"] - entry["figure_m"]) > 0.0015:
+            gaps.append("reading %d's derived_figure_m equal to the entry's figure" % i)
+        missing = sorted(set(corr.get("cells_used") or []) - set(r.get("cells_quoted") or []))
+        if missing:
+            gaps.append("reading %d quoting every cell the derivation uses (missing %s)" % (i, missing))
     return gaps
 
 
@@ -1617,7 +1645,10 @@ def _mature_cohort_gaps(entry):
     gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
     reading_gaps = _mature_reading_gaps(entry.get("readings"))
     gaps += reading_gaps
-    if not reading_gaps:
+    derived = isinstance(entry.get("correction"), dict) and "derived_figure_m" in entry["correction"]
+    if not reading_gaps and not derived:
+        # a derived correction's readings give their own figure_m (the printed table's); _derived_correction_gaps holds
+        # them to the derived figure and the cells they quote instead
         off = [i for i, r in enumerate(entry["readings"])
                if not _is_number(r.get("figure_m")) or abs(r["figure_m"] - entry["figure_m"]) > 0.0015]
         if off:

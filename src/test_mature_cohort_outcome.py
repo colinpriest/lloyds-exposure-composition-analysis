@@ -14,10 +14,11 @@ These tests hold the register to the corpus (every displaced gross triangle is i
 its rebuild and to the readings; the loader's guard to every block; the primary to the adjudication's 653 records and
 figures; and the sensitivity to the 672.
 
-PINNED COUNTS. Several tests state a count of the committed state (116 register entries and 91 figures, the 672 and its 571
-mature-enforced records, the adjudication's 82 restored figures, the primary's 642, the 53 records that leave the 672, the 56
-records without a figure). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: four corrected
-figures (rules 3 and 4), one record of rule 2, five of rule 1 and one of rule 5b (1110/2022) out of the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
+PINNED COUNTS. Several tests state a count of the committed state (117 register entries and 92 figures, the 672 and its 571
+mature-enforced records, the adjudication's 82 restored figures, the primary's 643, the 52 records that leave the 672, the 56
+records without a figure). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: five corrected
+figures (rules 3 and 4; 4242/2022 after review 8), one record of rule 2, four of rule 1 and one of rule 5b (1110/2022) out of
+the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
 to one is a change of result that the test should stop and a human should read, not a count to follow. Where a test holds
 entries to the loaded records and the purpose does not need the count, the entries are read from the register instead.
 
@@ -89,10 +90,11 @@ def test_every_displaced_gross_triangle_of_the_corpus_is_in_the_register_with_a_
     # the two records in the register no precedence rule displaced: 1945/2023 and 1945/2022, whose triangles' own
     # figures carry an aggregated column (the author's decision of 22 October 2026; the decision of the Claude analysis
     # session of 23 October 2026 for 1945/2022)
-    # and the four the round-5 decision rules correct (rules 3 and 4, 23 October 2026), whose printed figure stood
+    # and the five the round-5 decision rules correct (rules 3 and 4, 23 October 2026; 4242/2022 after review 8), whose
+    # printed figure stood
     assert bm.COLUMN_ONLY == ("1945_2022", "1945_2023")
     assert sorted(set(register) - set(pop)) == sorted(bm.COLUMN_ONLY + tuple(bm.CORRECTIONS))
-    assert sorted(bm.CORRECTIONS) == ["1274_2016", "1609_2024", "2232_2020", "318_2024"]
+    assert sorted(bm.CORRECTIONS) == ["1274_2016", "1609_2024", "2232_2020", "318_2024", "4242_2022"]
     for key, entry in register.items():
         assert (entry["figure_m"] is not None) != (entry.get("reason") is not None), key
         if entry["figure_m"] is None:
@@ -129,11 +131,11 @@ def test_the_register_loads_with_its_evidence_and_counts(register):
     loaded = ra.load_mature_cohort_figures()
     assert loaded == register
     figures = [k for k, e in register.items() if e["figure_m"] is not None]
-    assert len(register) == 116 and len(figures) == 91
+    assert len(register) == 117 and len(figures) == 92
     by_status = {}
     for e in register.values():
         by_status[e["status"]] = by_status.get(e["status"], 0) + 1
-    assert by_status == {"primary": 88, "excluded_takeon_not_development": 3, "no_figure": 25}
+    assert by_status == {"primary": 89, "excluded_takeon_not_development": 3, "no_figure": 25}
 
 
 def test_the_register_equals_its_rebuild_from_the_pinned_extraction():
@@ -218,9 +220,12 @@ def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
         readers = {r["reader"] for r in e["readings"]}
         assert len(readers) >= 2 and len(readers) == len(e["readings"]), key
         assert "reading" in kinds, key
+        derived = "derived_figure_m" in (e.get("correction") or {})
         for r in e["readings"]:
             assert r["pages"] and r["cells"].strip(), (key, r["reader"])
-            assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
+            # a derived correction (1274/2016): the reader's own figure_m is kept as given, and the figure the entry
+            # carries is the one derived from the cells the reader quotes
+            assert abs(r["derived_figure_m" if derived else "figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
         tr = e["table_read"]
         assert tr["kind"] == "extraction_table_read" and "stored grid" in tr["reader"], key
         # a correction's table read is the printed table's own figure, the one the correction replaces
@@ -232,7 +237,7 @@ def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
             mine = [r for r in e["readings"] if r["reader"] in second]
             assert len(first) == 1 and [r["reader"] for r in mine] == c, key
             assert mine[0]["round"] == bm.SECOND_ROUND and mine[0]["cells"] == second[c[0]][key]["cells"], key
-    assert n == 91
+    assert n == 92
 
 
 @pytest.mark.parametrize("change", ["table-read-as-reading", "same-reader-twice", "one-reading", "no-own-reading",
@@ -485,7 +490,7 @@ def test_every_entry_with_a_figure_rests_on_two_agent_readings_by_the_loaders_ow
         n += 1
         agents = [r for r in e["readings"] if r["kind"] in ra.MATURE_COHORT_READING_KINDS]
         assert len(agents) == len(e["readings"]) >= 2 and len({r["reader"] for r in agents}) == len(agents), key
-    assert n == 91
+    assert n == 92
 
 
 # --- an aggregated development-age column left out of the figure (Appendix 2.1; the author's decision of 22 October 2026)
@@ -654,14 +659,15 @@ def test_the_sensitivity_is_the_672_construction(loaded):
 #: round, and 3000/2022 of round 5 (rule 2 of the round-5 decision rules)
 FX_EXCLUDED = {"1897_2016", "2468_2016", "5151_2016", "5151_2017", "3000_2022"}
 #: the records rule 1 of the round-5 decision rules takes out of the primary (data/restated_base_excluded.json)
-RESTATED_EXCLUDED = {"780_2016", "2689_2023", "4242_2022", "4747_2024", "6134_2022"}
+#: (4242/2022 left it for rule 3 after review 8: a corrected figure, below)
+RESTATED_EXCLUDED = {"780_2016", "2689_2023", "4747_2024", "6134_2022"}
 #: the record rule 5b of the round-5 decision rules takes out of the primary as an unmeasurable take-on
 #: (data/restated_base_excluded.json, bucket takeon_unmeasurable)
 UNMEASURABLE_EXCLUDED = {"1110_2022"}
 #: the figures rules 3 and 4 of the round-5 decision rules correct (data/mature_cohort_figures.json, a correction
 #: object), in GBP m: the printed table's own figure and the corrected one
-CORRECTED_GBP = {"318_2024": (-67.098, -27.99), "1274_2016": (46.610197, 19.083651), "1609_2024": (-0.147752, 11.129303),
-                 "2232_2020": (55.227, 19.331)}
+CORRECTED_GBP = {"318_2024": (-67.098, -27.99), "1274_2016": (46.610197, 18.395315), "1609_2024": (-0.147752, 11.129303),
+                 "2232_2020": (55.227, 19.331), "4242_2022": (-36.740084, -66.254037)}
 #: the three records whose figure leaves an aggregated development-age column out (the author's decision of 22 October
 #: 2026 for 1945/2023 and 1945/2024; the Claude analysis session's of 23 October 2026 for 1945/2022)
 COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
@@ -669,15 +675,15 @@ COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
 
 def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restated_base_records(loaded, decisions):
     """The adjudication's 653 (571 mature-enforced under the 672 and 82 restored figures), less the five records of the
-    exchange-rate rule, the five of rule 1 and the one of rule 5b of the round-5 decision rules: 642. The adjudication's
+    exchange-rate rule, the four of rule 1 and the one of rule 5b of the round-5 decision rules: 643. The adjudication's
     figures stand,
-    except the three aggregated-column records', which leave the column out, and the four the round-5 rules correct."""
+    except the three aggregated-column records', which leave the column out, and the five the round-5 rules correct."""
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     enforced_672 = {k for k, r in s["ws"].items() if r["pyd_cohort_scope"] == ra.COHORT_ENFORCED}
     primary_decided = {k for k, r in decisions.items() if r["final_status"].startswith("primary")}
     out = FX_EXCLUDED | RESTATED_EXCLUDED | UNMEASURABLE_EXCLUDED
     assert len(enforced_672) == 571 and len(primary_decided) == 82
-    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 642
+    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 643
     assert out <= enforced_672 | primary_decided
     assert all(r["pyd_cohort_scope"] == ra.COHORT_ENFORCED for r in p["ws"].values())
     for k in enforced_672 - out - set(COLUMN_FIGURES) - set(CORRECTED_GBP):
@@ -696,17 +702,17 @@ def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restate
     # 1945/2022's '2012&Prior' column leaves the figure too (the 23 October 2026 readings): -13.840 to -13.831
     assert s["ws"]["1945_2022"]["pyd_gbp_m"] == -13.84 and p["ws"]["1945_2022"]["pyd_gbp_m"] == -13.831
     assert p["ws"]["1945_2022"]["pyd_basis_source"] == "mature-cohort-figure:register"
-    assert p["counters"]["mature_cohort_figures_applied"] == 91
+    assert p["counters"]["mature_cohort_figures_applied"] == 92
 
 
 def test_the_non_triangle_records_and_the_transactions_leave_the_primary(loaded):
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     left = set(s["ws"]) - set(p["ws"])
     tags = {k: p["status"][k]["status"] for k in left}
-    assert len(left) == 53
+    assert len(left) == 52
     # the exchange-rate rule's records that the 672 construction holds (5151/2016 is not in it)
     assert sorted(k for k, t in tags.items() if t == ra.FX_UNTRANSLATED_TAG) == sorted(FX_EXCLUDED - {"5151_2016"})
-    # rule 1 of the round-5 decision rules: all five are in the 672
+    # rule 1 of the round-5 decision rules: all four are in the 672
     assert sorted(k for k, t in tags.items() if t == ra.RESTATED_BASE_TAG) == sorted(RESTATED_EXCLUDED)
     # rule 5b: the one unmeasurable take-on is in the 672 as well
     assert sorted(k for k, t in tags.items() if t == ra.TAKEON_UNMEASURABLE_TAG) == sorted(UNMEASURABLE_EXCLUDED)
@@ -761,7 +767,7 @@ def test_the_new_tag_reaches_the_ledgers_unusable_severity_step(loaded, tmp_path
     _meta, subsets = ra.build_subsets(p["records"])
     ra.compute_eligibility(p["records"], subsets)
     flow = ra.build_disposition_ledger(p["log"], p["records"], str(tmp_path / "ledger.csv"))
-    assert flow["working_sample"] == 642 and flow["working_sample_equals_eligible_for_capital"] is True
+    assert flow["working_sample"] == 643 and flow["working_sample_equals_eligible_for_capital"] is True
     n = sum(1 for r in p["records"] if r["data_quality_tag"] == ra.NO_MATURE_COHORT_FIGURE_TAG)
     assert n == p["counters"]["no_mature_cohort_figure_unusable"] == 56
     assert all(r["eligible_for_capital"] is False for r in p["records"]
@@ -1014,24 +1020,97 @@ def test_the_corrections_rest_on_the_round_5_readings(register):
         assert ra._correction_gaps(e) == [] and ra._mature_cohort_gaps(e) == [], key
         for r in e["readings"]:
             assert r["source"] == "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % r["reader"]
-            assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015 and r["pages"], (key, r["reader"])
-    want = {"318_2024": -27.99, "1609_2024": 13.935, "2232_2020": 19.331, "1274_2016": 23.5435}
+            # 1274/2016's figure is derived (no reader gives it): each reading keeps its own figure_m and carries the
+            # derived one apart; every other correction's readings give the entry's figure
+            if c.get("derived"):
+                assert abs(r["derived_figure_m"] - e["figure_m"]) <= 0.0015 and r["figure_m"] == 57.503, (key, r["reader"])
+            else:
+                assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
+            assert r["pages"], (key, r["reader"])
+    want = {"318_2024": -27.99, "1609_2024": 13.935, "2232_2020": 19.331, "1274_2016": 22.6943, "4242_2022": -80.015}
     assert {k: register[k]["figure_m"] for k in want} == want
     # 1609/2024: the tie-break readers and Q2 give the figure; P3's literal reading is kept as superseded
     assert [r["reader"] for r in register["1609_2024"]["superseded_readings"]] == ["P3"]
     assert register["1609_2024"]["superseded_readings"][0]["figure_m"] == -0.185
 
 
-def test_1274_2016_is_recomputed_from_both_readers_cells_at_the_years_exchange_factor():
-    """The misprinted 2012 cell (141,355) is replaced by the 2015 report's 178,987 at the 2008 column's ratio 209,137 /
-    213,518; the other six years give +13,440 (thousands)."""
-    f = 13440 + 185418 - 178987 * 209137 / 213518
-    assert abs(f / 1000.0 - 23.5435) < 0.00006
+def test_1274_2016_is_derived_from_both_readers_cells_at_the_2012_columns_own_factor(register):
+    """The misprinted 2012 cell (141,355) is replaced by the 2015 report's 178,987 at the 2012 column's own paid factor,
+    129,350 / 131,423 = 0.98423 (review 8); the other six years give +13,440 (thousands). The figure is the session's
+    derivation, +22.6943m USD: neither reader gives it, and each reading keeps its own figure (+57.503m as printed)."""
+    f = 13440 + 185418 - 178987 * 129350 / 131423
+    assert abs(f / 1000.0 - 22.6943) < 0.00006 and round(f / 1000.0, 3) == 22.694
     for rid in ("P3", "Q4"):
         spec = bm.CORRECTIONS["1274_2016"]["readers"][rid]["misprint"]
         e = _json("results", "extraction_error_rate", "mature-cohort", "round5", "readings", "%s.json" % rid)["1274_2016"]
         fig, parts = bm.misprint_figure(spec, json.dumps(e, ensure_ascii=False), "1274_2016", rid)
-        assert fig == 23.5435 and parts["other_years_k"] == 13440 and parts["previous_report_cell_k"] == 178987, rid
+        assert fig == 22.6943 and parts["other_years_k"] == 13440 and parts["previous_report_cell_k"] == 178987, rid
+        assert parts["factor"] == 0.984227 and parts["paid_t_cell_k"] == 129350 and parts["paid_previous_cell_k"] == 131423
+        assert parts["range_other_factors_m"] == [21.806, 25.659], rid
+        # neither reader's own figure is the derived one
+        assert e["m_recomputed_m"] == 57.503
+    e = register["1274_2016"]
+    c = e["correction"]
+    assert e["figure_m"] == c["derived_figure_m"] == 22.6943 and c["figure_as_printed_m"] == 57.503
+    assert c["figure_before_review_8_m"] == 23.5435 and c["range_other_factors_m"] == [21.806, 25.659]
+    assert c["cells_used"] == bm.derived_cells("1274_2016") and "129,350" in c["cells_used"] and "131,423" in c["cells_used"]
+    assert c["derivation"].startswith("DERIVED") and "not a figure either reader gives" in c["derivation"]
+    assert [r["figure_m"] for r in e["readings"]] == [57.503, 57.503]
+    assert [r["derived_figure_m"] for r in e["readings"]] == [22.6943, 22.6943]
+    assert set(c["cells_used"]) <= set(e["readings"][0]["cells_quoted"]) & set(e["readings"][1]["cells_quoted"])
+    assert e["readings"][1]["reader_sensitivity_m"] == 19.871 and "reader_sensitivity_m" not in e["readings"][0]
+    assert e["figure_gbp_m"] == pytest.approx(22.6943 / 1.2337, abs=1e-5)
+
+
+def test_4242_2022_is_corrected_to_the_2021_reports_printed_base_by_rule_3(register):
+    """Review 8: both readers give -80.015m USD on the 2021 report's printed cells (P4 states it, Q3 sums its terms), the
+    printed table's own figure is -44.371m, and the correction names rule 3 and the previous report's base."""
+    e = register["4242_2022"]
+    assert e["figure_m"] == -80.015 and e["displaced"]["by"] == "previous_report_base" == bm.CORRECTIONS["4242_2022"]["by"]
+    assert e["correction"]["figure_as_printed_m"] == -44.371 == e["displaced"]["figure_m"]
+    assert e["correction"]["rule"].startswith("rule 3 ") and "derived_figure_m" not in e["correction"]
+    assert [(r["reader"], r["figure_m"]) for r in e["readings"]] == [("P4", -80.015), ("Q3", -80.015)]
+    assert e["status"] == "primary" and "merged '2016 & Prior' column" in e["correction"]["cause"]
+    assert "-18,289 -15,813 -20,241 -25,672 = -80,015" in e["readings"][1]["figure_from"]
+    assert bm.independent_reading_gaps(e) == [] and ra._mature_cohort_gaps(e) == []
+
+
+@pytest.mark.parametrize("change", ["reading-misses-a-cell", "no-cells-used", "no-derivation", "derived-off-the-entry",
+                                    "reading-derived-off", "derived-flag-removed"])
+def test_a_derived_correction_is_allowed_only_with_both_readers_quoting_every_cell_and_a_derivation(register, change):
+    """Mutation checks of the builder's and the loader's gates on 1274/2016: the derived figure needs its derivation, the
+    cells it uses, and every one of them in each reading's cells_quoted, with each reading's derived figure the entry's;
+    without the derived figure the readings must give the entry's own figure, which these do not."""
+    e = copy.deepcopy(register["1274_2016"])
+    assert bm.independent_reading_gaps(e) == [] and ra._mature_cohort_gaps(e) == []
+    c = e["correction"]
+    if change == "reading-misses-a-cell":
+        e["readings"][1]["cells_quoted"].remove("129,350")
+    elif change == "no-cells-used":
+        c["cells_used"] = []
+    elif change == "no-derivation":
+        c["derivation"] = " "
+    elif change == "derived-off-the-entry":
+        c["derived_figure_m"] = 23.5435
+    elif change == "reading-derived-off":
+        e["readings"][0]["derived_figure_m"] = 23.5435
+    else:
+        del c["derived_figure_m"]
+    assert bm.independent_reading_gaps(e) != [], change
+    assert ra._mature_cohort_gaps(e) != [], change
+
+
+def test_the_build_refuses_a_reader_who_does_not_quote_a_cell_the_derivation_uses():
+    """Mutation check: a cell the derivation uses that the reader's archived reading does not hold stops the build."""
+    spec = bm.CORRECTIONS["1274_2016"]["readers"]["Q4"]["misprint"]
+    e = _json("results", "extraction_error_rate", "mature-cohort", "round5", "readings", "Q4.json")["1274_2016"]
+    text = json.dumps(e, ensure_ascii=False)
+    assert "165,410" in text
+    with pytest.raises(SystemExit, match="does not quote"):
+        bm.misprint_figure(spec, text.replace("165,410", "165,401"), "1274_2016", "Q4")
+    bad = dict(spec, paid_t=("(141,355-129,350 paid)", "129,305"))
+    with pytest.raises(SystemExit, match="does not show the cell"):
+        bm.misprint_figure(bad, text, "1274_2016", "Q4")
 
 
 @pytest.mark.parametrize("what,old,new", [("terms", "+44,063", "+44,036"), ("prev_cells", "178,987", "178,978")])

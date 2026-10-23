@@ -39,7 +39,17 @@ WHY = {
                  "'Reinsurance of new liabilities 1,728,476'), the history re-bucketed with them. R is 3,955.045m USD = "
                  "2,615.345 + 1,339.7 (the 1 January RITCs; the amount is the ninth census's decision). The mature "
                  "columns move -291.8m against note 7's change in estimates incl. FX of -293.1m (0.4%, P6). P6 "
-                 "restated_base, Q7 undeterminable: the same validity class. Nothing changes.",
+                 "restated_base, Q7 undeterminable: the same validity class. Rule 5 changes nothing. After review 8 "
+                 "(decision of the Claude analysis session, 23 October 2026) it joins 3500/2023 on the least-certain "
+                 "list under the rule-6 clause take_on_table_unreconciled, on the same all-prior-years scope: the "
+                 "table's movement on every column that existed at end-2021 (2013-2019 and 2021) is -291.756m - "
+                 "98.057m = -389.8m against note 7's -293.1m, and the whole table is -26.4m, a gap of 266.7m (P6, "
+                 "Q7); only the 2013-2019 columns alone tie (0.4%). The readings conflict on the loss portfolio "
+                 "transfers: P6 reads the mid-2022 LPTs of Syndicates 1200 and 1686 (293.8m and 67.1m) as entering "
+                 "the history as if always, the ninth census (data/opening_reserves_takeon_base.json) places all four "
+                 "LPTs (388.7m) in the 2022 column, outside M and R. Either way the acquired share outside R is at most "
+                 "9.1% of R (360.9m of 3,955.0m; 9.8% with all four), so rule 5b would list it too "
+                 "(data/restated_base_excluded.json, history_restated).",
     "3500_2023": "RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new "
                  "liabilities 3,225,818'), the history 2-3.6 times the 2022 report's. R is 5,803.136m USD = 2,962.436 + "
                  "2,840.7 (the register's amount leaves out the 201.9m LPT already in the opening and the 183.2m LPT). "
@@ -191,8 +201,10 @@ def reading_line(rid, v):
 adj = REG["_adjudicated"]
 order = rb.order_key
 lines = ["# Round-5 adjudication: tables whose history moved between reports", "",
-         "Decision of the Claude analysis session, 23 October 2026, applying the decision rules of `rules.md` (written "
-         "before the adjudication) record by record to the 83 records of the round: the 82 records the rebase screen "
+         "Decision of the Claude analysis session, 23 October 2026, applying the decision rules of `rules.md` record by "
+         "record (rules 1 to 7 were written before the adjudication; rule 5b, rule 6's take-on clause and rule 1's exact "
+         "control clause were added after particular readings or review 8, and `rules.md` names them) to the 83 records "
+         "of the round: the 82 records the rebase screen "
          "(`screen/rebase_screen.py` over the primary's 649 records at 35a259c) asked to read, each read by one P-arm and "
          "one Q-arm reader (`readings/P1..P8`, `Q1..Q8`, brief `briefs/brief_r5.md`), and 2689/2023 (V1, V2; W1, W2 "
          "recomputed its figure; `briefs/brief_2689.md`). The two records whose readings disagreed on the facts "
@@ -204,7 +216,16 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "primary as an unmeasurable take-on when the readings show the acquired share of the base could exceed 10% of "
          "R, and stays on the least-certain list when the filing bounds it at or below 10%. 3500/2023, whose take-on is "
          "in R but whose table does not reconcile with note 7, joined the least-certain list under rule 6's added "
-         "clause. The outcomes below are those after round 7.", "",
+         "clause. The outcomes below are those after round 7 and review 8.", "",
+         "Review 8 (23 October 2026, same session; the decisions below are those of the Claude analysis session after "
+         "the review's findings): 4242/2022 moves from rule 1 to rule 3 (the 2021 report's printed base reconciles with "
+         "the accounts once the merged '2016 & Prior' column is set aside; both readers give -80.015m USD); rule 1's "
+         "control clause is made exact and re-applied to every record; 3500/2022 joins the least-certain list; "
+         "1274/2016's corrected figure becomes a derived one (+22.694m USD, the 2012 column's own exchange factor), "
+         "kept apart from the readers' figures, and the record joins the list; 2001/2016 was checked against rule 6's "
+         "1% of R and stays. Rules 1 to 7 were written before the adjudication; rule 5b, rule 6's take-on clause "
+         "(take_on_table_unreconciled) and rule 1's exact control clause were added after particular readings or the "
+         "review (`rules.md` names them).", "",
          "## How the rules were read", "",
          "- Validity classes. A 'label' disagreement (rule 6) is one between the classes valid, screen_misread, units_slip "
          "and restated_base, undeterminable (the classes `compare_r5.py` uses for 'VERDICTS DIFFER'). A record whose two "
@@ -216,25 +237,31 @@ lines = ["# Round-5 adjudication: tables whose history moved between reports", "
          "neither reading finds a cause in either filing (a stated retranslation explains a uniform move, not a "
          "year-specific one; a misprint in the year t-1 report, a basis change the filing states, an RITC, or a screen "
          "misread explains it).",
-         "- Rule 1's control. Two of the five rule-1 records do not tie within 5% on the raw incurred control: 4747/2024 "
-         "(-7.2%, while its outstanding ties exactly and the year t miss is -81.9%) and 780/2016 (+9.5%, the same gap the "
-         "'2010 & prior' years outside the cells make in year t). The session read the control as tying once its basis "
-         "is allowed for, as the rule allows the year t test. This is the session's reading of the rule, flagged for "
-         "the author: read strictly, both would fall outside rule 1 and no other rule, and would stand.",
+         "- Rule 1's control (made exact on 23 October 2026, after review 8, and re-applied to every record). The year "
+         "t-1 control ties within 5%; or within 10% when the same basis gap explains both years (an '& prior' column "
+         "outside the cells, an ultimate basis against earned accounts) and the year t miss is at least three times the "
+         "control's. Two of the four rule-1 records need the 10% clause: 780/2016 (control +9.5% from the '2010 & prior' "
+         "years outside the cells; year t paid identity +79.8%, 8.4 times) and 4747/2024 (control -7.2%, outstanding "
+         "tying exactly; year t -81.9%, 11.4 times; neither reader names its basis gap, which the session reads as the "
+         "table's own underwriting-year basis, the place the clause leans on judgement). Under the exact clause "
+         "2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 and stay on the least-certain "
+         "list, each entry saying why. Re-applying the clause to every record changed no outcome but 4242/2022's, which "
+         "moved from rule 1 to rule 3 on the review's decision.",
          "- Rule 1 does not reach a year t-1 column: 2015/2022's table restates only its UY2021 column (outside M) and "
          "stands.", ""]
 counts = {}
 for k, a in adj.items():
     counts.setdefault(a["outcome"], []).append(k)
 lines += ["## Outcomes", "", "| outcome | rule | records | keys |", "|---|---|---|---|"]
-for o in ("excluded", "corrected", "take_on_base", "take_on_base_and_least_certain", "take_on_unmeasurable",
-          "take_on_bounded_least_certain", "least_certain", "stands"):
+for o in ("excluded", "corrected", "corrected_least_certain", "take_on_base", "take_on_base_and_least_certain",
+          "take_on_unmeasurable", "take_on_bounded_least_certain", "least_certain", "stands"):
     ks = sorted(counts.get(o, []), key=order)
     rules = sorted({adj[k]["rule"] for k in ks})
     lines.append("| %s | %s | %d | %s |" % (o, ", ".join(rules), len(ks), ", ".join(ks)))
-lines += ["", "Primary at 35a259c: 649 records. Leaving: the five of rule 1, 3000/2022 (rule 2) and 1110/2022 (rule 5b, after "
-          "the round-7 readings): 642. Four figures corrected. The 27 records listed under history_restated (the 25 of "
-          "rule 6, 1458/2024 under rule 5b and 3500/2023 under rules 5 and 6) stay and join the least-certain "
+lines += ["", "Primary at 35a259c: 649 records. Leaving: the four of rule 1, 3000/2022 (rule 2) and 1110/2022 (rule 5b, after "
+          "the round-7 readings): 643. Five figures corrected (318/2024, 1274/2016, 1609/2024, 2232/2020, 4242/2022). "
+          "The 29 records listed under history_restated (the 25 of rule 6, 1458/2024 under rule 5b, 3500/2023 and "
+          "3500/2022 under rules 5 and 6, and 1274/2016 under rules 4 and 6) stay and join the least-certain "
           "sensitivity.", ""]
 
 lines += ["## Label disagreements settled by the rules", ""]
@@ -259,20 +286,26 @@ lines += ["## 1274/2016: the corrected figure (rule 4)", "",
           "174,440 / 141,355 / 185,418, so its end-2015 cell (141,355) sits between 174,440 and 185,418 and implies a "
           "reserve of 12,005 against 47,564 in the 2015 report, whose own 2012 cell is 178,987 (p41). P3 reads it as a "
           "misprint 'not correctable from the filing'; Q4 reads it as a misprint and gives the replacement without the "
-          "exchange factor (+19.871m). The year's exchange factor is the 2008 column's end-2015 cell over the 2015 "
-          "report's, 209,137 / 213,518 = 0.979482 (both readers quote both cells; the screen's common factor; the other "
-          "years run 0.968-0.989).", "",
-          "- corrected 2012 end-2015 cell: 178,987 x 0.979482 = 175,314.5",
-          "- 2012 term: 185,418 - 175,314.5 = +10,103.5",
+          "exchange factor (+19.871m). Before review 8 the exchange factor was the 2008 column's end-2015 cell over the "
+          "2015 report's, 209,137 / 213,518 = 0.979482 (the screen's common factor; the other years run 0.968-0.989). "
+          "Review 8 changed it: the replaced cell belongs to the 2012 column, so the column's own factor is used, from "
+          "its paid cells at end-2015, which both readers quote and which the misprint does not touch: 129,350 (2016 "
+          "table) against 131,423 (2015 report), f = 0.98423.", "",
+          "- corrected 2012 end-2015 cell: 178,987 x 0.98423 = 176,163.7",
+          "- 2012 term: 185,418 - 176,163.7 = +9,254.3",
           "- other six years (2008 -681, 2009 +564, 2010 +2,491, 2011 +3,607, 2013 -3,166, 2014 +10,625): +13,440",
-          "- M = 13,440 + 10,103.5 = +23,543.5, i.e. +23.5435m USD (GBP 19.084m at the loader's rate), against +57.503m "
-          "as printed",
-          "- check: the table's implied incurred with the corrected cell is 260,042 - 44,063 + 10,103.5 = 226,082.5 "
-          "against 230,541 in the accounts (-1.9%; the paid test ties at -1.9% either way)", "",
+          "- M = 13,440 + 9,254.3 = +22,694.3, i.e. +22.6943m USD (GBP 18.395m at the loader's rate), against +57.503m "
+          "as printed and +23.5435m before review 8 (the 2008 column's factor)",
+          "- check: the table's implied incurred with the corrected cell is 260,042 - 44,063 + 9,254.3 = 225,233.3 "
+          "against 230,541 in the accounts (-2.3%; the paid test ties at -1.9% either way)",
+          "- range: the other columns' end-2015 ratios (0.96766 to 0.98919) as the factor give +21.806m to +25.659m "
+          "(review 8: +21.8m to +25.6m); no factor (the 2015 cell as printed) gives Q4's +19.871m", "",
           "The readings support the correction's inputs and the diagnosis (both call the cell a misprint and quote every "
-          "cell used; Q4 makes the same replacement); neither gives the exchange-adjusted figure, which is the session's "
-          "arithmetic on their cells, as rules.md instructs. The build recomputes it from each reader's own quoted cells "
-          "(`build_mature_cohort_figures.misprint_figure`).", ""]
+          "cell used); neither gives the figure. It is the session's derivation from cells both readers quote, stored "
+          "apart from the readers' own figures (derived_figure_m; each reading keeps its figure_m, +57.503m as printed), "
+          "allowed only while both readers quote every cell used and the derivation is recorded. The build recomputes it "
+          "from each reader's own quoted cells (`build_mature_cohort_figures.misprint_figure`). Because it rests on a "
+          "choice of factor, 1274/2016 also joins the least-certain list (rule 6, clause derived_correction).", ""]
 
 
 def section(title, keys, body):
@@ -324,7 +357,7 @@ lines += section("Rule 2: excluded under the author's rule B", ["3000_2022"], la
     "exchange 91,879' on an opening 1,146,474 (note 17, p42; balance sheet p25): %.2f%% of R. Neither filing explains the "
     "history. Rule 2 decides before rule 1. Outcome: excluded (data/fx_untranslated_excluded.json)." % fx[
         "fx_line_pct_of_opening"]))
-lines += section("Rules 3 and 4: corrected", [k for k in adj if adj[k]["outcome"] == "corrected"], corr_body)
+lines += section("Rules 3 and 4: corrected", [k for k in adj if adj[k]["outcome"].startswith("corrected")], corr_body)
 lines += section("Rule 5: take-on bases", [k for k in adj if adj[k]["rule"].startswith("5")], lambda k: WHY[k])
 lines += section("Rule 6: least certain, stays", [k for k in adj if adj[k]["outcome"] == "least_certain"], hist_body)
 lines += section("Rule 7: stands", [k for k in adj if adj[k]["outcome"] == "stands"], lambda k: "Rule 7: " + WHY[k])

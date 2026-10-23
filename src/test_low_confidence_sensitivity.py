@@ -38,22 +38,23 @@ def _registers3():
     return _registers() + (SS.load_json(LC.RESTATED_REGISTER),)
 
 
-#: the 27 records the round-5 decision rules list (decision of the Claude analysis session, 23 October 2026): the 25 of
-#: rule 6, and 1458/2024 (rule 5b: its unprinted take-on is bounded at 8.0% of R) and 3500/2023 (an explained take-on in
-#: R whose table does not reconcile with note 7)
-RESTATED = ["382_2021", "382_2022", "382_2023", "780_2017", "1176_2019", "1458_2024", "1686_2022", "1729_2023",
-            "1910_2018", "1947_2022", "1967_2017", "1967_2018", "2001_2016", "2001_2017", "2232_2017", "2232_2019",
-            "2468_2019", "2468_2020", "2488_2016", "3000_2016", "3500_2023", "4020_2018", "4141_2022", "4242_2017",
-            "4444_2017", "5000_2023", "6118_2018"]
+#: the 29 records the round-5 decision rules list (decision of the Claude analysis session, 23 October 2026): the 25 of
+#: rule 6, 1458/2024 (rule 5b: its unprinted take-on is bounded at 8.0% of R), 3500/2023 and 3500/2022 (explained
+#: take-ons in R whose tables do not reconcile with note 7, the second added after review 8) and 1274/2016 (after review
+#: 8: its corrected figure is the session's derivation from cells both readers quote)
+RESTATED = ["382_2021", "382_2022", "382_2023", "780_2017", "1176_2019", "1274_2016", "1458_2024", "1686_2022",
+            "1729_2023", "1910_2018", "1947_2022", "1967_2017", "1967_2018", "2001_2016", "2001_2017", "2232_2017",
+            "2232_2019", "2468_2019", "2468_2020", "2488_2016", "3000_2016", "3500_2022", "3500_2023", "4020_2018",
+            "4141_2022", "4242_2017", "4444_2017", "5000_2023", "6118_2018"]
 
 
 def test_the_least_certain_set_adds_the_restated_histories_from_their_register():
     cols, fx, rs = _registers3()
     named, c, e, r = LC.least_certain_records(cols, fx, rs)
-    assert r == sorted(RESTATED, key=SS.order_key) and len(r) == 27
+    assert r == sorted(RESTATED, key=SS.order_key) and len(r) == 29
     assert sorted(c, key=SS.order_key) == sorted(COLUMNS, key=SS.order_key)
     assert sorted(e, key=SS.order_key) == sorted(EXCHANGE, key=SS.order_key)
-    assert sorted(named) == sorted(COLUMNS + EXCHANGE + RESTATED) and len(named) == 37
+    assert sorted(named) == sorted(COLUMNS + EXCHANGE + RESTATED) and len(named) == 39
     for k in RESTATED:
         assert named[k].startswith("development table's history restated, kept under rule 6"), k
     # none of them is excluded by the register's other bucket
@@ -248,8 +249,8 @@ def test_the_low_confidence_record():
     """DEFERRED-TO-REFIT: written by the recorded pass."""
     with io.open(os.path.join(HERE, "results", "check_low_confidence_sensitivity_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
-    assert rec["n_left_out"] == rec["named_records"] == len(rec["left_out"]) == 37
-    assert rec["n_fit"] == rec["n_primary"] - 37
+    assert rec["n_left_out"] == rec["named_records"] == len(rec["left_out"]) == 39
+    assert rec["n_fit"] == rec["n_primary"] - 39
     assert sorted(r["record"] for r in rec["left_out"]) == sorted(COLUMNS + EXCHANGE + RESTATED)
     assert rec["history_restated"] == sorted(RESTATED, key=SS.order_key)
     assert rec["older_years_columns_low_confidence"] == sorted(COLUMNS, key=SS.order_key)

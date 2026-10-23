@@ -1,5 +1,5 @@
 {
- "_rule": "Round 5 of the filing readings (decision rules of 23 October 2026, a decision of the Claude analysis session, results/extraction_error_rate/mature-cohort/round5/rules.md). 'excluded' (rule 1): a record leaves the PRIMARY sample (outcome 'mature_cohort') when its year t development table's history (an underwriting year u <= t-2, or the table as a whole) differs from the year t-1 report beyond the exchange rate with no explanation in either filing; AND the year t table fails the year's accounts (implied gross incurred, or paid where computable, off by more than 10% beyond what its basis explains) while the year t-1 control ties within 5%; AND the year t-1 report's printed base does not give a figure that reconciles either. The loader (run_analysis.py) removes an 'excluded' entry's record at the unusable-severity step with the tag RESTATED_BASE_TABLE and counts it (restated_base_excluded); under outcome 'precedence_672' the register is not read and nothing changes. 'history_restated' (rule 6): the table ties to the year's accounts (or its basis explains the gap), but an underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R (unexplained_history_move), or the two readings disagree on the validity label (valid, screen_misread, units_slip against restated_base, undeterminable) but not on the facts (label_disagreement), or (rule 5b) the filing prints no transferred gross amount for a take-on in year t but bounds it at or below 10% of R (take_on_base_bounded), or an explained take-on already in R has a table that does not reconcile with the filing's own roll-forward (take_on_table_unreconciled); the record stays in the primary and src/check_low_confidence_sensitivity.py leaves it out of its least-certain refit. 'takeon_unmeasurable' (rule 5b, decision of the Claude analysis session, 23 October 2026): a record leaves the PRIMARY sample when an RITC, LPT or merger effective in year t, whose acquired history the table shows as if always, is not in the opening gross claims outstanding R, the filing does not print the transferred gross reserves, and the readings show the acquired share of the base could exceed 10% of R (an unmeasurable take-on, as 1861/2020 and 1084/2022 are); the loader removes the entry's record at the unusable-severity step with the tag TAKEON_BASE_UNMEASURABLE and counts it (takeon_base_unmeasurable_excluded); under outcome 'precedence_672' nothing changes. A take-on the filing bounds at or below 10% of R stays and is listed under history_restated. Every entry rests on two independent readings of the filing (and the tie-break readings where the first two disagreed on the facts), with the pages and quotes. Built by src/build_restated_base_excluded.py from the archived readings.",
+ "_rule": "Round 5 of the filing readings (decision rules of 23 October 2026, a decision of the Claude analysis session, results/extraction_error_rate/mature-cohort/round5/rules.md). 'excluded' (rule 1): a record leaves the PRIMARY sample (outcome 'mature_cohort') when its year t development table's history (an underwriting year u <= t-2, or the table as a whole) differs from the year t-1 report beyond the exchange rate with no explanation in either filing; AND the year t table fails the year's accounts (implied gross incurred, or paid where computable, off by more than 10% beyond what its basis explains) while the year t-1 control ties (within 5%; or within 10% when the same basis gap explains both years, an '& prior' column outside the cells or an ultimate basis against earned accounts, and the year t miss is at least three times the control's); AND the year t-1 report's printed base does not give a figure that reconciles either. Rules 1 to 7 were written before the adjudication; rule 5b, rule 6's take-on clause (take_on_table_unreconciled) and rule 1's exact control clause were added after particular readings or review 8 (rules.md names them): the control clause was made exact on 23 October 2026 after review 8 and re-applied to every record, changing no outcome but 4242/2022's, which moved from rule 1 to rule 3. The loader (run_analysis.py) removes an 'excluded' entry's record at the unusable-severity step with the tag RESTATED_BASE_TABLE and counts it (restated_base_excluded); under outcome 'precedence_672' the register is not read and nothing changes. 'history_restated' (rule 6): the table ties to the year's accounts (or its basis explains the gap), but an underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R (unexplained_history_move), or the two readings disagree on the validity label (valid, screen_misread, units_slip against restated_base, undeterminable) but not on the facts (label_disagreement), or (rule 5b) the filing prints no transferred gross amount for a take-on in year t but bounds it at or below 10% of R (take_on_base_bounded), or an explained take-on already in R has a table that does not reconcile with the filing's own roll-forward (take_on_table_unreconciled), or the record's corrected figure is the session's derivation from cells both readers quote, a figure neither reader gives (derived_correction); the record stays in the primary and src/check_low_confidence_sensitivity.py leaves it out of its least-certain refit. 'takeon_unmeasurable' (rule 5b, decision of the Claude analysis session, 23 October 2026): a record leaves the PRIMARY sample when an RITC, LPT or merger effective in year t, whose acquired history the table shows as if always, is not in the opening gross claims outstanding R, the filing does not print the transferred gross reserves, and the readings show the acquired share of the base could exceed 10% of R (an unmeasurable take-on, as 1861/2020 and 1084/2022 are); the loader removes the entry's record at the unusable-severity step with the tag TAKEON_BASE_UNMEASURABLE and counts it (takeon_base_unmeasurable_excluded); under outcome 'precedence_672' nothing changes. A take-on the filing bounds at or below 10% of R stays and is listed under history_restated. Every entry rests on two independent readings of the filing (and the tie-break readings where the first two disagreed on the facts), with the pages and quotes. Built by src/build_restated_base_excluded.py from the archived readings.",
  "_population": {
   "screen": "results/extraction_error_rate/mature-cohort/round5/screen/rebase_screen.json (rebase_screen.py, report rebase_report.md), over the primary sample's 649 records at 35a259c",
   "records": 649,
@@ -23,11 +23,12 @@
   "not_read": "the 2 cell-scale slips (2001/2018, 2121/2019) and the records the screen could not compare (no year t-1 gross grid, record or common single year) or found clean",
   "outcomes": {
    "corrected": 4,
-   "excluded": 6,
+   "corrected_least_certain": 1,
+   "excluded": 5,
    "least_certain": 24,
    "stands": 37,
-   "take_on_base": 8,
-   "take_on_base_and_least_certain": 2,
+   "take_on_base": 7,
+   "take_on_base_and_least_certain": 3,
    "take_on_bounded_least_certain": 1,
    "take_on_unmeasurable": 1
   }
@@ -162,9 +163,9 @@
    ]
   },
   "1274_2016": {
-   "rule": "4",
-   "outcome": "corrected",
-   "where": "data/mature_cohort_figures.json (printed_table_error)",
+   "rule": "4 and 6",
+   "outcome": "corrected_least_certain",
+   "where": "data/mature_cohort_figures.json (printed_table_error, derived) and data/restated_base_excluded.json (history_restated, derived_correction)",
    "readers": [
     "P3",
     "Q4"
@@ -591,9 +592,9 @@
    ]
   },
   "3500_2022": {
-   "rule": "5",
-   "outcome": "take_on_base",
-   "where": "data/opening_reserves_takeon_base.json (already in R)",
+   "rule": "5 and 6",
+   "outcome": "take_on_base_and_least_certain",
+   "where": "data/opening_reserves_takeon_base.json (already in R) and data/restated_base_excluded.json (history_restated)",
    "readers": [
     "P6",
     "Q7"
@@ -654,9 +655,9 @@
    ]
   },
   "4242_2022": {
-   "rule": "1",
-   "outcome": "excluded",
-   "where": "data/restated_base_excluded.json (excluded)",
+   "rule": "3",
+   "outcome": "corrected",
+   "where": "data/mature_cohort_figures.json (previous_report_base)",
    "readers": [
     "P4",
     "Q3"
@@ -818,7 +819,7 @@
     },
     "control_ties": {
      "holds": true,
-     "facts": "the 2015 table's implied incurred is +9.5% against the 2015 accounts (both readings), the same gap the '2010 & prior' years outside the cells explain in both years (Q5); the 2015 table is the base the 2015 balance sheet was struck on (outstanding 348.483 ties). Read by the session as tying once its basis is allowed for, as the rule allows the year t test; the raw gap exceeds 5%"
+     "facts": "control miss +9.5% (over the 5% bar): the 2015 table's implied incurred 110.268m against 100.7m in the 2015 accounts (both readings). Basis reason: the '2010 & prior' years carry no cells in either table, so both years run above the accounts by about the development a favourable '2010 & prior' would remove (Q5); the 2015 table is the base the 2015 balance sheet was struck on (outstanding 348.483 ties). Year t miss: +79.8% (paid, the reserve identity on the table's own end-2015 diagonal, 294.7m against 163.9m, P6, p12), 8.4 times the control's. Rule 1's exact control clause (made exact on 23 October 2026 after review 8): 9.5% is within 10%, the same basis gap explains both years (its incurred miss in year t is +5.6%, the same gap), and 79.8% is at least three times 9.5% (28.5%); met"
     },
     "previous_base_reconciles": {
      "holds": false,
@@ -997,7 +998,7 @@
     },
     "control_ties": {
      "holds": true,
-     "facts": "the 2022 table's own movement, +55.9m, against 2022 gross incurred of 56.3m (0.7%, V1); outstanding ties in both years (108,937; 131,452)"
+     "facts": "the 2022 table's own movement, +55.9m, against 2022 gross incurred of 56.3m (0.7%, V1); outstanding ties in both years (108,937; 131,452). Rule 1's exact control clause (23 October 2026): within 5%; met"
     },
     "previous_base_reconciles": {
      "holds": false,
@@ -1330,188 +1331,6 @@
     }
    ]
   },
-  "4242_2022": {
-   "pages": [
-    18,
-    32,
-    38,
-    44
-   ],
-   "quote": "reader P4: No statement of a restatement of the claims history in either filing (searched restat / re-present / reclassif / reinsurance to close / as if / commut / portfolio transfer / transfer). Nearest wording, p38 note 11 (debtors): 'It is noted the loss funds have been reclassified from claims paid to a debtor balance in the calendar year to reflect amount held by a direct intermediary.' The debtor note shows Loss Funds 3,034 (2021: 2,219), far smaller than the 35.9m of history change (32,689 + 2,955 + 213), and no amount of the reclassification is given, so it cannot be tied to the table. p32 has an || reader Q3: {\"searched\": \"restat, re-present, reclassif, as if, RITC, reinsurance to close, merger, portfolio transfer, correction, change of basis, '& prior' in both filings.\", \"found_1\": \"p32 note 4 'Technical provisions' 2022: 'RITC accepted from SPA 6123  -  5,909  5,909' (gross nil, reinsurance asset 5,909); the 2022 managing agent's report p8: 'The following amounts are shown net of SPA 6123 and SPA 1416.' Neither says the claims development table's history was restated or how.\", \"found_2\": \"p38 note 11: 'It is noted the loss funds have been reclassified from claims paid to a debtor balance in the c",
-   "verdicts": {
-    "P4": "restated_base",
-    "Q3": "restated_base"
-   },
-   "conditions": {
-    "history_differs_unexplained": {
-     "holds": true,
-     "facts": "the 2022 table (p44) lowers the end-2021 cells of 2019 and 2020 (204,999 and 277,405 against 207,954 and 310,094 printed in 2021, p46), -35.9m on the 2017-2021 diagonal of a dollar table that is not retranslated, and merges the older columns into '2016 & Prior', whose cumulative paid falls 17.7m; the loss-funds reclassification (p38) gives no amount and neither filing explains the change (P4, Q3)"
-    },
-    "year_t_fails_accounts": {
-     "holds": true,
-     "facts": "implied incurred 115.1m against 78.3m (+47%, p18, p32); cross-table paid -19.6% (P4, Q3)"
-    },
-    "control_ties": {
-     "holds": true,
-     "facts": "the 2021 table: 227.1m against 229.5m (-1.1%, P4, Q3)"
-    },
-    "previous_base_reconciles": {
-     "holds": false,
-     "facts": "the readings do not agree that it does: on the 2021 printed cells, excluding the merged column, 79.3m (+1.2%, Q3); with the merged column as printed, 54.3m (-30.6%, P4). The merged column's 2022 movement cannot be measured (its paid falls), so the 2021 base reconciles only if the older years did not move, which neither filing shows; rule 3 needs both readings to give the reconciling figure"
-    }
-   },
-   "decision": "decision of the Claude analysis session, 23 October 2026: rule 1 of the round-5 decision rules; the year t table restates its history without explanation, fails the year's accounts while the year t-1 control ties, and the year t-1 printed base gives no figure that reconciles, so the table cannot give the year's movement and the record leaves the primary sample; the 672 sensitivity keeps it",
-   "readings": [
-    {
-     "reader": "P4",
-     "source": "results/extraction_error_rate/mature-cohort/round5/readings/P4.json",
-     "pages": [
-      18,
-      32,
-      38,
-      44
-     ],
-     "pages_of_other_reports": {
-      "prev_table": [
-       46
-      ]
-     },
-     "pages_as_read": {
-      "t_table": 44,
-      "prev_table": 46,
-      "t_accounts": [
-       18,
-       32
-      ],
-      "t_other": 38
-     },
-     "read_by": "text layer (PyMuPDF), rows read by column and checked against the printed 'Gross outstanding claims' row (est less paid) for each column",
-     "cells_check": "Screen cells confirmed; the aggregated '2016 & Prior' column is not read by the screen and cannot be read as a cohort. 2022 report p44, gross table (USD '000, 'cumulative incurred claims development, including both claims notified and IBNR'), columns 2016&Prior | 2017 | 2018 | 2019 | 2020 | 2021 | 2022. First year 44,583 | 125,844 | 196,190 | 52,361 | 205,324 | 112,628 | 87,710; one year later 107,872 | 316,595 | 247,927 | 213,779 | 277,405 | 184,401; two 138,636 | 327,506 | 246,029 | 204,999 | 284,422; three 137,525 | 337,564 | 249,006 | 187,713; four 146,075 | 349,613 | 233,193; five 146,824 | 331,324; six 143,438; seven 41,642; eight 10,229; nine 10,229. Less cumulative gross paid (152,111) | (313,608) | (220,195) | (140,023) | (202,477) | (60,329) | (6,599); gross outstanding 3,463 | 17,716 | 12,998 | 47,690 | 81,945 | 124,072 | 81,111; total 368,995. 2021 report p46 (columns 2015&Prior | 2016 | 2017 | 2018 | 2019 | 2020 | 2021): first year 39,624 | 25,710 | 125,844 | 196,190 | 52,382 | 205,369 | 112,841; one year 74,300 | 70,487 | 316,595 | 247,927 | 214,030 | 310,094; two 76,248 | 98,862 | 327,506 | 246,029 | 207,954; three 72,239 | 98,901 | 337,564 | 249,006; four 75,938 | 103,652 | 349,613; five 76,295 | 104,195; paid (75,211) | (94,580) | (304,229) | (212,845) | (117,430) | (160,519) | (29,805); gross outstanding 1,081 | 9,615 | 45,384 | 36,161 | 90,525 | 149,575 | 83,037; total 415,378. End-2021 cells in the 2022 table v the 2021 report: 2017 349,613 v 349,613; 2018 249,006 v 249,006; 2019 204,999 v 207,954 (-2,955); 2020 277,405 v 310,094 (-32,689; ratio 0.895); 2021 112,628 v 112,841 (-213). The report is in USD, so no exchange explanation exists. Net table moves by the same amounts (2020 net one year later 142,765 v 175,454 = -32,689; 2019 net two years 99,898 v 102,853 = -2,955), so the restated amounts are wholly retained, not reinsured. The 2020 column's early cells are unchanged (205,324 v 205,369); only the end-2021 cell moved. The '2016 & Prior' column: cumulative gross paid 152,111 is below the 2021 report's 2015&Prior + 2016 paid (75,211 + 94,580 = 169,791) and its development rows run 143,438 -> 41,642 -> 10,229, so it is not a single readable cohort.",
-     "explanation": "No statement of a restatement of the claims history in either filing (searched restat / re-present / reclassif / reinsurance to close / as if / commut / portfolio transfer / transfer). Nearest wording, p38 note 11 (debtors): 'It is noted the loss funds have been reclassified from claims paid to a debtor balance in the calendar year to reflect amount held by a direct intermediary.' The debtor note shows Loss Funds 3,034 (2021: 2,219), far smaller than the 35.9m of history change (32,689 + 2,955 + 213), and no amount of the reclassification is given, so it cannot be tied to the table. p32 has an RITC accepted from SPA 6123, reinsurance asset only (5,909; gross nil). The 2021 report has no such wording.",
-     "paid_test": {
-      "table_implied": 100.723,
-      "table_implied_calc": "cross-table, the 2022 table prints no end-2021 paid: sum of cumulative gross paid at end-2022 (152,111 + 313,608 + 220,195 + 140,023 + 202,477 + 60,329 + 6,599 = 1,095,342) less the 2021 report's at end-2021 (75,211 + 94,580 + 304,229 + 212,845 + 117,430 + 160,519 + 29,805 = 994,619)",
-      "accounts": 125.289,
-      "page": 18,
-      "quote": "Claims Paid | Gross amount | (125,289) | (245,518)",
-      "diff_pct": -19.6,
-      "note": "excluding the irregular aggregated column the 2017-2022 columns give 118.403 (-5.5%); with the aggregated column the paid total falls by 17.7m, which no payment can do"
-     },
-     "paid_test_prev": {
-      "table_implied": "2021 table: cumulative paid at end-2021 994,619; opening cumulative not printed in the same table; not computable",
-      "accounts": 245.518,
-      "page": 18,
-      "quote": "Gross amount (125,289) (245,518)",
-      "diff_pct": null
-     },
-     "incurred_test": {
-      "year_t": {
-       "implied_gross_incurred_m_cols_2017_2022": 115.112,
-       "calc": "latest 331,324 + 233,193 + 187,713 + 284,422 + 184,401 + 87,710 = 1,308,763 less end-2021 diagonal 349,613 + 249,006 + 204,999 + 277,405 + 112,628 = 1,193,651",
-       "accounts_m": 78.306,
-       "accounts_calc": "gross claims paid 125,289 less release of gross provision 46,983 (p18; p32 'Claims incurred during the year (46,983)')",
-       "diff_pct": 47.0,
-       "alt_including_aggregated_column_from_2021_report": {
-        "implied_m": 90.199,
-        "calc": "adds 2016&Prior latest estimate 155,574 (outstanding 3,463 + paid 152,111) less 180,487 (2021 report 2015&Prior 76,292 + 2016 104,195)",
-        "diff_pct": 15.2
-       },
-       "alt_on_the_2021_reports_own_history": {
-        "implied_m": 54.342,
-        "diff_pct": -30.6,
-        "calc": "2022 latest less the 2021 report's latest per column, all columns incl. the aggregated one"
-       }
-      },
-      "year_t_minus_1_control": {
-       "implied_gross_incurred_m_cols_2016_2021": 227.059,
-       "calc": "2021 report latest 104,195 + 349,613 + 249,006 + 207,954 + 310,094 + 112,841 = 1,333,703 less end-2020 diagonal 103,652 + 337,564 + 246,029 + 214,030 + 205,369 = 1,106,644",
-       "accounts_m": 229.536,
-       "accounts_calc": "245,518 paid less 15,982 release (2022 report p18 comparatives)",
-       "diff_pct": -1.1,
-       "note": "the 2021 table ties; the aggregated 2015&Prior column excluded"
-      },
-      "balance_sheet_tie": "table total gross outstanding 368,995 equals p32 'Balance at 31 December | 368,995' (0%); 2021: 415,378 equals 415,378"
-     },
-     "basis": "gross of reinsurance (separate net table); underwriting year; cumulative incurred (earned-type: 2022 first-year cell 87,710 against gross written premium 359,524); the outstanding row ties to the balance sheet but the estimate and paid rows move together by reclassification",
-     "m_recomputed_m": -44.371,
-     "m_recomputed_note": "USD m, u <= 2020 (columns 2017-2020; the aggregated '2016 & Prior' column cannot be read as a diagonal and is excluded), latest less end-2021 from the 2022 table: 2017 -18.289 (331,324-349,613), 2018 -15.813 (233,193-249,006), 2019 -17.286 (187,713-204,999), 2020 +7.017 (284,422-277,405) = -44.371m. On the 2021 report's end-2021 cells the same four columns give -80.015m (the 2019 and 2020 cells differ by 35.6m). Analysis figure not supplied in the batch.",
-     "verdict": "restated_base",
-     "note": "The history of two mature columns was lowered between the reports with no stated cause (2020: -32.7m, 2019: -3.0m at end-2021, identical in gross and net), and the 2022 table does not tie to the 2022 accounts in any of the three ways it can be read (incurred +47% on the columns 2017-2022, +15% with the aggregated column, -31% against the 2021 report's own history; cross-table paid -20%); the 2021 control ties (-1.1%). The loss-funds reclassification on p38 may be the cause (it would lower paid and estimate together and leave the outstanding row unchanged, which is what the table shows), but the filing gives no amount and the loss-funds debtor is only 3.0m, so this is a possibility, not a reading. M is not measurable with confidence from this table: it is -44.4m on the table's own end-2021 cells and -80.0m on the 2021 report's. The filing prints only a net all-years prior-year figure (p44: 'Total net prior year release/(strengthening) 30,642'), not a gross mature-cohort one. Confidence in the verdict is medium; an alternative reading is `undeterminable`."
-    },
-    {
-     "reader": "Q3",
-     "source": "results/extraction_error_rate/mature-cohort/round5/readings/Q3.json",
-     "pages": [
-      18,
-      32,
-      38,
-      44
-     ],
-     "pages_of_other_reports": {
-      "prev": [
-       46
-      ]
-     },
-     "pages_as_read": {
-      "t": [
-       44,
-       18,
-       32,
-       38
-      ],
-      "prev": [
-       46
-      ]
-     },
-     "read_by": "text layer for the numbers, page images for the column mapping (Q3/renders/syndicate_4242_2022_p44_clip.png, syndicate_4242_2021_p46_clip.png and the *_gross_hi.png crops)",
-     "cells_check": {
-      "t_table": "4242_2022 p44 (printed 41), 'Claims development table', first table (gross; $'000, so USD), 'Underwriting Year 2016 & Prior | 2017 | 2018 | 2019 | 2020 | 2021 | 2022'. At end of first underwriting year 44,583 | 125,844 | 196,190 | 52,361 | 205,324 | 112,628 | 87,710; One Year Later 107,872 | 316,595 | 247,927 | 213,779 | 277,405 | 184,401; Two Years Later 138,636 | 327,506 | 246,029 | 204,999 | 284,422; Three 137,525 | 337,564 | 249,006 | 187,713; Four 146,075 | 349,613 | 233,193; Five 146,824 | 331,324; Six 143,438; Seven 41,642; Eight 10,229; Nine 10,229. Less cumulative gross paid (152,111) (313,608) (220,195) (140,023) (202,477) (60,329) (6,599); Gross outstanding claims 3,463 17,716 12,998 47,690 81,945 124,072 81,111; 'Total gross outstandings claims (all years)' 368,995 (= p32 closing 'Balance at 31 December 368,995'). End-2021 cells (screen's cell_t): 2017 349,613; 2018 249,006; 2019 204,999; 2020 277,405; 2021 112,628: confirmed. Latest (end 2022): 10,229 | 331,324 | 233,193 | 187,713 | 284,422 | 184,401 | 87,710.",
-      "prev_table": "4242_2021 p46 (printed 43), 'Estimate of cumulative gross claims incurred', 'Underwriting Year 2015 & Prior | 2016 | 2017 | 2018 | 2019 | 2020 | 2021' ($'000). At end of first UY 39,624 | 25,710 | 125,844 | 196,190 | 52,382 | 205,369 | 112,841; One Year Later 74,300 | 70,487 | 316,595 | 247,927 | 214,030 | 310,094; Two Years Later 76,248 | 98,862 | 327,506 | 246,029 | 207,954; Three 72,239 | 98,901 | 337,564 | 249,006; Four 75,938 | 103,652 | 349,613; Five 76,295 | 104,195; Six 76,189; Seven 44,028; Eight 31,218; Nine 20,989; Ten 0. Less cumulative gross paid (75,211) (94,580) (304,229) (212,845) (117,430) (160,519) (29,805); Gross outstanding claims 1,081 9,615 45,384 36,161 90,525 149,575 83,037; total 415,378 (= the 2022 opening gross provision 415,378, p32). Latest cells (screen's cell_p): 2017 349,613; 2018 249,006; 2019 207,954; 2020 310,094; 2021 112,841: confirmed (the screen's 2017-2018 are identical to the 2022 table; flagged 2019 and 2020 are the differing ones).",
-      "history_change": "The 2022 table reproduces the 2021 table cell for cell for 2017 and 2018, and for 2019 and 2020 every cell except the end-2021 diagonal (2019: 52,382/52,361 and 214,030/213,779 are close, but Two Years Later 207,954 became 204,999, -2,955; 2020: 205,369/205,324 and then One Year Later 310,094 became 277,405, -32,689; 2021: 112,841 became 112,628, -213). Total of the end-2021 diagonal for 2017-2021: 1,193,651 in the 2022 table against 1,229,508 in the 2021 table (-35,857), in a table where nothing is retranslated (both in $). The 2021 diagonal as printed in 2021 ties to the balance sheet (reserves 415,378); the 2022 table's end-2021 cells would give for UY 2020 an end-2021 reserve of 277,405 - 160,519 = 116,886 against the printed 149,575. The 'X & Prior' column is not like for like: the 2021 table had '2015 & Prior' and '2016' separately (first-year 39,624 and 25,710) and the 2022 table prints one '2016 & Prior' column (first-year 44,583) whose later cells fall from 143,438 to 41,642 to 10,229."
-     },
-     "explanation": {
-      "searched": "restat, re-present, reclassif, as if, RITC, reinsurance to close, merger, portfolio transfer, correction, change of basis, '& prior' in both filings.",
-      "found_1": "p32 note 4 'Technical provisions' 2022: 'RITC accepted from SPA 6123  -  5,909  5,909' (gross nil, reinsurance asset 5,909); the 2022 managing agent's report p8: 'The following amounts are shown net of SPA 6123 and SPA 1416.' Neither says the claims development table's history was restated or how.",
-      "found_2": "p38 note 11: 'It is noted the loss funds have been reclassified from claims paid to a debtor balance in the calendar year to reflect amount held by a direct intermediary.' (a classification of claims paid, with no statement about the table's estimates.)",
-      "verdict_on_explanations": "None explains the -35.9m change to the end-2021 diagonal or the merged '2016 & Prior' column."
-     },
-     "paid_test": {
-      "table_implied": 100.723,
-      "accounts": 125.289,
-      "page": 18,
-      "quote": "technical account p18: 'Claims Paid  Gross amount (125,289) (245,518)' ($'000)",
-      "diff_pct": -19.6,
-      "note": "Cross-table (the 2022 table prints no end-2021 paid): 2022 cumulative paid 1,095,342 (152,111+313,608+220,195+140,023+202,477+60,329+6,599) less the 2021 table's 994,619 (75,211+94,580+304,229+212,845+117,430+160,519+29,805) = 100,723 ($000). The merged column distorts it (cumulative paid for '2015 & Prior'+'2016' 169,791 against '2016 & Prior' 152,111); on UYs 2017-2022 only: 943,231 less 824,828 = 118,403, against the accounts' total 125,289 (-5.5%, the difference being 2022 payments on 2016 and prior)."
-     },
-     "paid_test_prev": {
-      "table_implied": null,
-      "accounts": 245.518,
-      "page": 18,
-      "quote": "p18 comparative: 'Claims Paid Gross amount (125,289) (245,518)'",
-      "diff_pct": null,
-      "note": "The 2021 table prints no end-2020 paid; control done on incurred."
-     },
-     "incurred_test": {
-      "t_table_implied_m": 115.112,
-      "t_working": "2022 table against its own end-2021 cells: 2017 331,324-349,613=-18,289; 2018 233,193-249,006=-15,813; 2019 187,713-204,999=-17,286; 2020 284,422-277,405=+7,017; 2021 184,401-112,628=+71,773; 2022 +87,710; total 115,112 (excluding the merged '2016 & Prior' column, whose last two diagonals 10,229 and 10,229 add 0)",
-      "t_accounts_m": 78.306,
-      "t_accounts_quote": "p18 and p32: gross claims paid (125,289) with 'Changes in the provision for claims outstanding  Gross amount 46,983' (a release; provision 415,378 to 368,995, FX +600), so gross incurred 125,289 - 46,983 = 78,306 ($000)",
-      "t_diff_pct": 47.0,
-      "alt_base_check": "Against the 2021 table's printed end-2021 cells instead: 2017 -18,289; 2018 -15,813; 2019 187,713-207,954=-20,241; 2020 284,422-310,094=-25,672; 2021 184,401-112,841=+71,560; 2022 +87,710; total 79,255, which is within +1.2% of 78,306. So the accounts agree with the 2021 printed base and not with the 2022 table's end-2021 cells.",
-      "prev_table_implied_m": 227.059,
-      "prev_working": "2021 table: 2016 104,195-103,652=+543; 2017 349,613-337,564=+12,049; 2018 249,006-246,029=+2,977; 2019 207,954-214,030=-6,076; 2020 310,094-205,369=+104,725; 2021 +112,841; total 227,059 (excluding the aggregated '2015 & Prior' column)",
-      "prev_accounts_m": 229.536,
-      "prev_accounts_quote": "p18 comparative: 'Claims Paid Gross amount (245,518)' less 'Changes in the provision for claims outstanding Gross amount 15,982' = 229,536",
-      "prev_diff_pct": -1.1
-     },
-     "basis": "Gross, cumulative incurred by underwriting year, USD ($'000), not retranslated (reporting currency USD); the latest diagonal ties to the balance sheet (368,995) in both years.",
-     "m_recomputed_m": -44.371,
-     "m_working": "u<=2020 in the 2022 table's own cells: 2017 -18,289; 2018 -15,813; 2019 -17,286; 2020 +7,017 (USD 000), plus the '2016 & Prior' column 10,229-10,229 = 0 (not like for like, so not measurable). Against the 2021 table's printed end-2021 cells the same terms are -18,289 -15,813 -20,241 -25,672 = -80,015 (USD 000).",
-     "verdict": "restated_base",
-     "note": "The 2022 table's end-2021 diagonal for UYs 2019-2021 (mostly UY 2020) is 35.9m below the 2021 report and the 2021 balance sheet, with no stated reason, and no retranslation is involved (USD report). Taken from the 2022 table the year's gross incurred is 115.1m against 78.3m in the accounts (+47%, not an ultimate/earned difference of that size), and cross-table paid is -19.6% (-5.5% excluding the merged prior column); against the 2021 printed diagonal the table gives 79.3m (+1.2%). The 2021 control ties (-1.1%). So M from the 2022 table (-44.4m) is not measurable from the table; the movement against the 2021-printed base would be -80.0m for u<=2020, but the 2022 filing does not print that, and the merged '2016 & Prior' column cannot be compared. The analysis figure was not supplied."
-    }
-   ]
-  },
   "4747_2024": {
    "pages": [
     17,
@@ -1536,7 +1355,7 @@
     },
     "control_ties": {
      "holds": true,
-     "facts": "the 2023 table's implied incurred is 27.9m against 30.1m (-7.2%, both readings) and its outstanding, 38,860, ties exactly to the 2023 balance sheet and the 2024 opening (p35). Read by the session as tying: the 5% bar is missed by 2.2 points on incurred while outstanding ties, against a year t miss of 82%; the raw incurred gap exceeds 5%"
+     "facts": "control miss -7.2% (over the 5% bar): the 2023 table's implied incurred 27.9m against 30.1m (both readings), while its outstanding, 38,860, ties exactly to the 2023 balance sheet and the 2024 opening (p35). Basis reason (the session's reading; neither reader names one): the table is cumulative incurred by underwriting year on its own basis, 'not obviously earned or ultimate' (P2: the 2024 first-year cell is 9,151 against 163,404 of gross premiums written), set against the accounts' calendar-year gross incurred, and that difference of basis is the same in 2023 and 2024. Year t miss: -81.9% (incurred, note 6 p35; paid -60.7%, p17), 11.4 times the control's. Rule 1's exact control clause (made exact on 23 October 2026 after review 8): 7.2% is within 10%, and 81.9% is at least three times 7.2% (21.6%); met"
     },
     "previous_base_reconciles": {
      "holds": false,
@@ -1708,7 +1527,7 @@
     },
     "control_ties": {
      "holds": true,
-     "facts": "the 2021 table: 82.7m against 82.0m (+0.9%, P4, Q5)"
+     "facts": "the 2021 table: 82.7m against 82.0m (+0.9%, P4, Q5). Rule 1's exact control clause (23 October 2026): within 5%; met"
     },
     "previous_base_reconciles": {
      "holds": false,
@@ -1861,7 +1680,7 @@
    "clauses": [
     "unexplained_history_move"
    ],
-   "facts": "UY2014's end-2020 cell in the 2021 table (187,147) is 10.3m above the 2020 report's printed estimate and out of line with its own column (169,537 -> 187,147 -> 170,900), unexplained in the filing (P1, Q8): 2.1% of R (498.1m). The rest moves by the stated retranslation; the table ties to the balance sheet and its incurred gap (-8.7%) is the 2020 control's (-6.9%), the pre-2011 years outside the table. M as printed (+20.409m) stands",
+   "facts": "UY2014's end-2020 cell in the 2021 table (187,147) is 10.3m above the 2020 report's printed estimate and out of line with its own column (169,537 -> 187,147 -> 170,900), unexplained in the filing (P1, Q8): 2.1% of R (498.1m). The rest moves by the stated retranslation; the table ties to the balance sheet and its incurred gap (-8.7%) is the 2020 control's (-6.9%), the pre-2011 years outside the table. M as printed (+20.409m) stands. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is -6.9% (over 5%, within 10%, the same pre-2011 years outside the table in both years), but the year t miss, -8.7%, is 1.3 times the control's, not three times, and is itself under 10%. The record stays least certain",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (unexplained_history_move); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -2567,6 +2386,150 @@
     }
    ]
   },
+  "1274_2016": {
+   "pages": [
+    20,
+    34,
+    40,
+    41
+   ],
+   "quote": "reader P3: Both filings state the translation basis: 2016 p40: 'Claims development tables are shown on an underwriting year basis; ... These claims are shown on an earned basis for each successive development year. Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases.' (2015 report: '... at 31 December 2015 in all cases.') and 2016 p44: 'The Syndicate underwrites a significant proportion of business in currencies other than US Dollars'. The ~2% downward move of every cell (e.g. 2008 end-of-UY 145,525 in 2015 vs 142,613 in 2016, x0.980; paid 2008 seven years later 18 || reader Q4: Yes, for the 2-3% change: p40 'Claims development tables are shown on an underwriting year basis ... These claims are shown on an earned basis for each successive development year. Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases.' Note 15(a) 'Impact of Foreign Exchange (14,555)' on 477,796 opening claims. So the history is re-translated at end-2016 rates every year (a stated policy). Nothing explains 141,355; no restatement/RITC/transfer wording found (grep: 'restated' appears only at p46 for a 2015 comparative adoption of a revised standard; 'reclas",
+   "verdicts": {
+    "P3": "valid",
+    "Q4": "valid"
+   },
+   "clauses": [
+    "derived_correction"
+   ],
+   "facts": "added after review 8 (decision of the Claude analysis session, 23 October 2026). Rule 4 corrects the misprinted 2012 cell (141,355 for 178,987 in the 2015 report), but the corrected figure, +22.6943m USD, is the session's derivation from cells both readers quote, not a figure either gives (P3: not correctable from the filing, +57.503m as printed; Q4: +19.871m with the 2015 report's cell unretranslated): the 2015 cell at the 2012 column's own paid factor, 129,350 / 131,423 = 0.98423 (data/mature_cohort_figures.json, correction.derived_figure_m). The factor is a choice: the other columns' end-2015 ratios (0.96766 to 0.98919) give +21.806m to +25.659m (review 8: +21.8m to +25.6m), and the 2008 column's factor 0.97948 gives +23.5435m, the figure carried before review 8. Both readers call the table otherwise valid (paid -1.9%, the stated retranslation); the record stays at the derived figure and joins the least-certain list",
+   "decision": "decision of the Claude analysis session, 23 October 2026: rules 4 and 6 of the round-5 decision rules (derived_correction); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
+   "readings": [
+    {
+     "reader": "P3",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/P3.json",
+     "pages": [
+      20,
+      40,
+      41
+     ],
+     "pages_of_other_reports": {
+      "prev": [
+       41
+      ],
+      "accounts_prev": [
+       41
+      ]
+     },
+     "pages_as_read": {
+      "t": 41,
+      "prev": 41,
+      "accounts_t": [
+       20,
+       40
+      ],
+      "accounts_prev": [
+       41
+      ]
+     },
+     "read_by": "text layer and page image (p41 of 2016 filing rendered; renders in the shared eye folder, image checked)",
+     "cells_check": {
+      "t_table": "2016 report p41 (printed 'Page 39 of 47'), note 21 Risk Management, 'Whole Account Underwriting Year ... $000 ... Gross Claims, Estimate of incurred gross claims', UY 2008..2016, development by 'years later'. End-2015 cells (screen cells_t) confirmed: 2008 'Seven years later' 209,137; 2009 'Six years later' 165,410; 2010 'Five years later' 206,415; 2011 'Four years later' 174,535; 2012 'Three years later' 141,355; 2013 'Two years later' 183,933; 2014 'One year later' 192,589; 2015 end of UY 101,954. Latest (t) cells: 208,456; 165,974; 208,906; 178,142; 185,418; 180,767; 203,214; 191,184; 113,309.",
+      "prev_table": "2015 report p41, 'Estimate of incurred gross claims': latest cells 213,518 (2008, seven years later); 167,218; 212,521; 180,368; 178,987; 188,149; 196,949; 103,804 (2015). Screen's cells_prev confirmed.",
+      "oddity_2016_table": "2012 column of the 2016 table reads 102,670 / 158,484 / 174,440 / 141,355 / 185,418 (end of UY, 1, 2, 3, 4 years later); the 141,355 at 'Three years later' sits between 174,440 and 185,418 and against 178,987 in the 2015 report. Image confirms it is printed so. The table's own reserve row ties to the latest cell (2012 reserve 46,174 = 185,418 - 139,244 paid), so 185,418 is right and 141,355 looks like a misprint in the end-2015 cell; not correctable from the filing.",
+      "oddity_2015_table": "2015 table 2010 column 'Three years later' 168,472 (incurred) and 122,265 (paid) repeat the 2009 column's 'Four years later' values, again a printed slip; not in M's cells for 2016 (2015 table's own end-(t-1) cell only)."
+     },
+     "explanation": "Both filings state the translation basis: 2016 p40: 'Claims development tables are shown on an underwriting year basis; ... These claims are shown on an earned basis for each successive development year. Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases.' (2015 report: '... at 31 December 2015 in all cases.') and 2016 p44: 'The Syndicate underwrites a significant proportion of business in currencies other than US Dollars'. The ~2% downward move of every cell (e.g. 2008 end-of-UY 145,525 in 2015 vs 142,613 in 2016, x0.980; paid 2008 seven years later 188,195 vs 185,468, x0.986) is therefore year-end retranslation of non-USD business, applied to the whole table. No restatement, correction or change of basis found.",
+     "paid_test": {
+      "table_implied": 163.032,
+      "accounts": 166.205,
+      "page": 20,
+      "quote": "Claims Paid, Gross Amount (166,205)",
+      "diff_pct": -1.9,
+      "computation": "paid latest less end-(t-1), same 2016 table ($000): 2008 192,931-185,468=7,463; 2009 143,138-142,400=738; 2010 190,668-180,504=10,164; 2011 150,511-134,394=16,117; 2012 139,244-129,350=9,894; 2013 124,660-104,883=19,777; 2014 100,929-61,034=39,895; 2015 56,138-6,728=49,410; plus 2016 end of UY 9,574 = 163,032"
+     },
+     "paid_test_prev": {
+      "table_implied": 174.017,
+      "accounts": 175.835,
+      "page": "2016 report p20 comparative column (2015); 2015 table p41",
+      "quote": "Claims Paid, Gross Amount (175,835) [2015 comparative]",
+      "diff_pct": -1.0,
+      "computation": "2015 table: 2008 188,195-185,170=3,025; 2009 144,285-134,042=10,243; 2010 185,159-165,539=19,620; 2011 139,060-123,386=15,674; 2012 131,423-105,931=25,492; 2013 106,410-63,749=42,661; 2014 62,365-11,885=50,480; 2015 6,822 = 174,017"
+     },
+     "incurred_test": {
+      "t_table_implied_m": 260.042,
+      "accounts_gross_incurred_m": 230.541,
+      "accounts_quote": "Gross claims paid (166,205) + change in provision gross (64,336) = 230,541",
+      "diff_pct": 12.8,
+      "note": "Not used as the test (underwriting-year table; 2012 misprint contributes +44.063m to the implied total; without the 2012 term implied is 215.979m, -6.3% vs 230.541). Paid test governs."
+     },
+     "basis": "USD, gross, underwriting year of account, stated 'earned basis' development, translated at 31 Dec 2016 rates; paid ties within 5%.",
+     "m_recomputed_m": 57.503,
+     "m_recomputed_cells": "u<=2014, year t table ($000, latest less end-2015): 2008 208,456-209,137=-681; 2009 165,974-165,410=+564; 2010 208,906-206,415=+2,491; 2011 178,142-174,535=+3,607; 2012 185,418-141,355=+44,063; 2013 180,767-183,933=-3,166; 2014 203,214-192,589=+10,625; sum +57,503 ($57.503m). Without the 2012 term +13.440m.",
+     "verdict": "valid",
+     "note": "The year t table ties to the year's gross paid (-1.9%) and the history change is the stated 31 Dec 2016 retranslation, so this is not a 2689-type restated base. Caveat for the analysis: M from the printed table includes +44.1m from the 2012 column, which rests on a single end-2015 cell (141,355) that is out of line with its neighbours and with the 2015 report (178,987) and looks like a misprint; with that cell M = +57.5m, without the 2012 term +13.4m. Whether to treat the cell as an extraction-level repair is for the analysis; the filing does not print a corrected value."
+    },
+    {
+     "reader": "Q4",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/Q4.json",
+     "pages": [
+      20,
+      34,
+      40,
+      41
+     ],
+     "pages_of_other_reports": {
+      "prev": [
+       41
+      ]
+     },
+     "pages_as_read": {
+      "t": 41,
+      "t_printed": "39 of 47",
+      "prev": 41,
+      "accounts": [
+       20,
+       34
+      ],
+      "basis_note": 40
+     },
+     "read_by": "text layer (rows are joined in order; checked against reserve and paid totals)",
+     "cells_check": "Screen cells CONFIRMED as printed, USD 000. 2016 p41 'Gross Claims / Estimate of incurred gross claims', columns 2008..2016, rows 'At the end of underwriting year' ... 'Eight years later': 2008 142,613 ... 209,137 (7y), 208,456 (8y); 2009 ... 165,410 (6y), 165,974 (7y); 2010 ... 206,415 (5y), 208,906 (6y); 2011 ... 174,535 (4y), 178,142 (5y); 2012 ... 174,440 (2y), 141,355 (3y), 185,418 (4y); 2013 ... 183,933 (2y), 180,767 (3y); 2014 192,589 (1y), 203,214 (2y); 2015 101,954 (end UY), 191,184 (1y); 2016 113,309. End-2015 cells = cell_t in the screen. 2015 report p41 latest cells (2008..2015): 213,518; 167,218; 212,521; 180,368; 178,987; 188,149; 196,949; 103,804. Ratios t/prev: 0.9795, 0.9892, 0.9713, 0.9677, 0.7898, 0.9776, 0.9779, 0.9822. A uniform 2-3% fall on every year except 2012. The 2012 cell 141,355 is out of line: it sits between 174,440 (2y) and 185,418 (4y) in the same column, and implies a reserve of 12,005 (141,355-129,350 paid) against 47,564 printed in the 2015 report (178,987-131,423); I read it as a misprint in the filing (not a screen error). The latest 2012 cell 185,418 is right: 185,418-139,244 paid = 46,174 = printed 2012 reserve.",
+     "explanation": "Yes, for the 2-3% change: p40 'Claims development tables are shown on an underwriting year basis ... These claims are shown on an earned basis for each successive development year. Balances have been translated at exchange rates prevailing at 31 December 2016 in all cases.' Note 15(a) 'Impact of Foreign Exchange (14,555)' on 477,796 opening claims. So the history is re-translated at end-2016 rates every year (a stated policy). Nothing explains 141,355; no restatement/RITC/transfer wording found (grep: 'restated' appears only at p46 for a 2015 comparative adoption of a revised standard; 'reclassified' p10 concerns classes of business).",
+     "paid_test": {
+      "table_implied": 163032,
+      "derivation": "2016 table 'Gross paid claims position', latest less previous diagonal, columns 2008..2016: 192,931-185,468=7,463; 143,138-142,400=738; 190,668-180,504=10,164; 150,511-134,394=16,117; 139,244-129,350=9,894; 124,660-104,883=19,777; 100,929-61,034=39,895; 56,138-6,728=49,410; plus 2016 end-of-UY 9,574 = 163,032",
+      "accounts": 166205,
+      "page": 20,
+      "quote": "Claims Paid Gross Amount (166,205) (175,835)",
+      "diff_pct": -1.9
+     },
+     "paid_test_prev": {
+      "table_implied": 174017,
+      "derivation": "2015 report p41 paid position, latest less previous diagonal (2008..2015): 3,025; 10,243; 19,620; 15,674; 25,492; 42,661; 50,480; plus 6,822 = 174,017 (the printed 3y cell for 2010, 122,265, equals the 4y cell of 2009 and is below the 2y cell, an apparent misprint; the 4y-5y step for 2010 is used)",
+      "accounts": 175835,
+      "page": 20,
+      "quote": "Claims Paid Gross Amount (166,205) (175,835) [2015 column]",
+      "diff_pct": -1.0
+     },
+     "incurred_test": {
+      "basis": "table states it is on an EARNED basis; underwriting-year columns",
+      "table_implied_incurred_k": 260042,
+      "derivation": "latest less end-2015 cell, 2008..2015: -681; +564; +2,491; +3,607; +44,063 (2012, uses the 141,355 cell); -3,166; +10,625; +89,230; plus 2016 113,309 = 260,042. With 178,987 (2015 report's printed 2012 cell, unretranslated) in place of 141,355 the 2012 step is +6,431 and the total 222,410",
+      "accounts_gross_incurred_k": 230541,
+      "accounts_page": "20 and 34",
+      "accounts_quote": "Gross claims paid (166,205) + Change in the Provision for Claims Gross Amount (64,336) = 230,541; note 15(a) 'Movements During the Year 64,336 ... Impact of Foreign Exchange (14,555)'",
+      "diff_pct": 12.8,
+      "diff_pct_corrected": -3.5
+     },
+     "basis": "gross, earned basis, USD, all cells translated at end-2016 rates",
+     "m_recomputed_m": 57.503,
+     "m_detail": "u<=2014 as printed: 2008 -681; 2009 +564; 2010 +2,491; 2011 +3,607; 2012 +44,063; 2013 -3,166; 2014 +10,625 = +57,503 (USD k). 44,063 of it is the 2012 step, which uses the suspect 141,355 cell. Sensitivity: with the 2015 report's printed 2012 cell 178,987 the 2012 step is +6,431 and M = +19,871 (USD k). The analysis figure was not in the batch.",
+     "verdict": "valid",
+     "m_affected": "yes, by one misprinted cell (2012, three years later) in the t table",
+     "note": "Valid as a table: the paid roll ties to the accounts (-1.9%; control year -1.0%) and the 2-3% change of history is the stated end-of-year re-translation of every cell. But the table carries one evident misprint (2012 at three years: 141,355) that makes M about 38m too high; the other seven years give M = +13.4m. So the printed-cell M (+57.5m, USD) should not be used as it stands; the likely true M is about +20m (sensitivity above, not printed in the t table). Check the 2012 cell on the page image if the figure is to be corrected."
+    }
+   ]
+  },
   "1458_2024": {
    "pages": [
     15,
@@ -3098,7 +3061,7 @@
    "clauses": [
     "unexplained_history_move"
    ],
-   "facts": "UY2021's end-2022 estimate is 58.3m USD above the 2022 report's at the common presentation factor (17.1% of R), unexplained in the filing (P7, Q6; Q6 judges the 2022 print faulty, which the filing does not say). The 2023 table ties (incurred -0.4%)",
+   "facts": "UY2021's end-2022 estimate is 58.3m USD above the 2022 report's at the common presentation factor (17.1% of R), unexplained in the filing (P7, Q6; Q6 judges the 2022 print faulty, which the filing does not say). The 2023 table ties (incurred -0.4%). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t incurred ties (-0.4%); the cross-table paid (+35%, P7; +34.1%, Q6) comes, P7 shows, entirely from the restated UY2021 column, and the control does not tie under either bound (-27.3%, Q6; about -29%, P7). The record stays least certain",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (unexplained_history_move); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -3542,7 +3505,7 @@
    "clauses": [
     "unexplained_history_move"
    ],
-   "facts": "the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R 165.2m). The table ties (+4.0% incurred, reserves exact)",
+   "facts": "the whole 2011-2016 history, estimates and payments alike, is 6-16% above the 2016 report with no retranslation or restatement statement (P5, Q6); 2015 moves 5.7m beyond the common factor (3.5% of R 165.2m). The table ties (+4.0% incurred, reserves exact). Rule 1 under the exact control clause (23 October 2026, review 8): not met. The year t table does not fail the accounts: incurred +4.0% and P5's reserve-identity paid test +1.7% (the like-for-like test used for 780/2016); Q6's cross-report paid +55.2% is the proxy that the restated history itself distorts. The control miss is -7.6% (Q6), over 5% and within 10%. The record stays least certain",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (unexplained_history_move); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -3815,7 +3778,7 @@
    "clauses": [
     "unexplained_history_move"
    ],
-   "facts": "UY2013 and UY2014 fall at end-2015 against an exchange uplift (P6: unexplained, about 2% of the year's gross incurred; Q7: the 2013-2015 columns look mis-allocated, the 2017 report re-allocates them); the stated basis is year-end conversion (p35). Incurred ties (+3.1%, control +4.8%)",
+   "facts": "UY2013 and UY2014 fall at end-2015 against an exchange uplift (P6: unexplained; Q7: the 2013-2015 columns look mis-allocated, the 2017 report re-allocates them); the stated basis is year-end conversion (p35). Incurred ties (+3.1%, control +4.8%). Share of R, checked after review 8 against rule 6's 1% of R (opening gross claims outstanding 1,601.0m, note 9(a), so 16.01m): the 2016 table's end-2015 cells are 761.5 (UY2013) and 804.7 (UY2014) against 786.4 and 821.4 in the 2015 report, falls of 24.9m (1.56% of R) and 16.7m (1.04% of R), 41.6m together (2.60%), both cells that the exchange uplift (ratios 1.016, 1.074, 0.968, 0.980 for UY2011-UY2014, no common factor) should have raised, so the move beyond the exchange rate is at least the fall; P6's own measure, about 2% of the year's gross incurred (1,089.5m), is 21.8m or 1.4% of R. Every measure is over 1% of R: rule 6 is met and the record stays on the list (decision of the Claude analysis session, 23 October 2026)",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (unexplained_history_move); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -4097,7 +4060,7 @@
    "clauses": [
     "label_disagreement"
    ],
-   "facts": "the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows miss (incurred -10.5%, cross-report paid -20.1%) and the control does not tie within 5% (P3 incurred +7.4%; Q4 paid +62.1%, confounded), so rule 1 does not apply; no exchange line is reported, so rule 2 cannot be tested. P3 valid, Q4 restated_base",
+   "facts": "the mature years' end-2016 cells equal the 2016 report's latest exactly while their earlier cells were retranslated about -7% (P3, Q4); Q4 reads a mixed currency base, P3 a valid table. The flows miss (incurred -10.5%, cross-report paid -20.1%) and the control does not tie within 5% (P3 incurred +7.4%; Q4 paid +62.1%, confounded), so rule 1 does not apply; no exchange line is reported, so rule 2 cannot be tested. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +7.4% (P3 incurred), within 10% with a basis that is the same in both years (an ultimate underwriting-year table against earned accounts, Q4), but the year t miss is not three times the control's (22.2%): incurred -10.5% is 1.4 times it and the cross-report paid -20.1% 2.7 times it; the control's sign (table above the accounts, as the basis predicts) is the opposite of the year t miss's (below), so the basis gap does not explain the year t miss either; Q4's paid control +62.1% is confounded (the 2015 report's cells are 19% lower than the 2016 report's for the same year). The record stays least certain. P3 valid, Q4 restated_base",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (label_disagreement); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -4656,7 +4619,7 @@
     "unexplained_history_move",
     "label_disagreement"
    ],
-   "facts": "the 2011 column's end-2015 estimate is 28.9-29.3m above the 2015 report at the stated 1.165 retranslation, unexplained (P6, Q5): 3.2% of R (916.3m). The paid bridge ties (-3.3%, -2.9%); incurred +59.5% against a +38.3% control, the 2010-and-prior years outside the table. P6 valid, Q5 restated_base",
+   "facts": "the 2011 column's end-2015 estimate is 28.9-29.3m above the 2015 report at the stated 1.165 retranslation, unexplained (P6, Q5): 3.2% of R (916.3m). The paid bridge ties (-3.3%, -2.9%); incurred +59.5% against a +38.3% control, the 2010-and-prior years outside the table. Rule 1 under the exact control clause (23 October 2026, review 8): not met. The control miss is +38.3%, over 10%, so the control ties under neither bound (the same 2010-and-prior gap makes the year t incurred test uninformative, P6, Q5); the year t incurred miss, +59.5%, is 1.6 times the control's, not three times; and the year t paid test ties (-3.3% with the factor, P6; -2.9%, Q5). The record stays least certain. P6 valid, Q5 restated_base",
    "decision": "decision of the Claude analysis session, 23 October 2026: rule 6 of the round-5 decision rules (unexplained_history_move, label_disagreement); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
    "readings": [
     {
@@ -4937,6 +4900,153 @@
      "m_working": "u<=2014, 2016 table only (end-2016 less end-2015 cell): 2011 587,479-584,362=+3,117; 2012 443,952-445,510=-1,558; 2013 315,360-343,050=-27,690; 2014 284,441-230,985=+53,456; sum +27,325 (GBP '000) = GBP 27.3m. Excludes the 'All prior years' column (no triangle cells). Analysis figure not supplied in the batch (source mature-cohort-figure:register).",
      "verdict": "restated_base",
      "note": "The restatement is stated and legitimate in kind, but it is a take-on: the 2016 table folds Syndicate 1400's history (RITC of 248.8m gross) into the 2011-2014 columns and retranslates it, so the 2016 table's end-2015 cells (e.g. 2011: 584,362 against 226,131 printed in 2015) are not the 2015 report's estimates. M from the 2016 table alone is internally consistent (both diagonals are from one table) but is not the movement of Syndicate 3000's own prior-year estimates; the 2015 report's cells cannot serve as the opening base either. The paid test does not discriminate: both years fall about 30% short of the accounts because the 'All prior years' column carries no paid cells (control 2015 table 143.0m vs 204.5m, -30.1%; 2016 table 176.0m vs 264.3m, -33.4%). Outstanding ties to the balance sheet in both years (1,103,264 and 737,922). Explained by RITC wording, so not an unexplained restatement; M should be treated as contaminated by the 1400 take-on."
+    }
+   ]
+  },
+  "3500_2022": {
+   "pages": [
+    4,
+    13,
+    24,
+    29,
+    30
+   ],
+   "quote": "reader P6: Yes. Syndicate 3500 is a RiverStone run-off consolidator. p4: 'Effective 1st January 2022, Syndicate 3500 entered into the following transactions: the reinsurance to close of the 2019 underwriting year of account liabilities of Syndicate 1897 ... the reinsurance to close of the 2019 and prior underwriting years of account liabilities of Syndicate 2468 ... the reinsurance to close, or split reinsurance to close of the 2019 and prior ... Syndicate 1980, Syndicate 2014 and Syndicate 2001'; 'During 2022 ... loss portfolio transfer reinsurance of the 2018 and 2019 underwriting year of account liabi || reader Q7: No sentence says the development table was restated or re-presented (searched restat, re-present, correction, change of basis, reclassif, as if; the only 'Restated' in the 2022 report is the 2021 comparative at p25 (Insurance Risk Concentrations table, \"2021 (Restated)\", \"Restated, see note 3(f)\"), not the triangle). BUT the filing discloses large reinsurance-to-close and loss portfolio transfers: p4 'Effective 1st January 2022, Syndicate 3500 entered into the following transactions: the reinsurance to close of the 2019 underwriting year of account liabilities of Syndicate 1897 ... $13.4 milli",
+   "verdicts": {
+    "P6": "restated_base",
+    "Q7": "undeterminable"
+   },
+   "clauses": [
+    "take_on_table_unreconciled"
+   ],
+   "facts": "added after review 8 (decision of the Claude analysis session, 23 October 2026), on the same all-prior-years scope as 3500/2023. RITCs of Syndicates 1897, 2468 and 1980/2014/2001 effective 1 January 2022 and loss portfolio transfers (p4; note 7 p30 'Reinsurance of new liabilities 1,728,476'), the history carried as if always (the 2018 column about double the 2021 report's, Q7). The RITCs are in R (3,955.045m USD = 2,615.345 + 1,339.7, data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile with note 7's change in estimates including foreign exchange of -293.1m (-293,072, p30) on that scope: the movement on every column that existed at end-2021 (2013-2019 and 2021) is -291.756m - 98.057m = -389.8m (review 8; P6's workings), and the whole table (those columns plus the new 2022 column, +363.424m) is -26.4m, a gap of 266.7m (P6; Q7 -26.389m); only the 2013-2019 columns alone (-291.8m, the adopted figure) are within 0.4% of it. LPT placement conflict: P6 reads the mid-2022 loss portfolio transfers of Syndicates 1200 (293.8m) and 1686 (67.1m) as entering the history as if always, while the ninth census (data/opening_reserves_takeon_base.json) places all four LPTs (also 2468's 22.6m and 2001's 5.2m: 388.7m) in the 2022 column, outside M and outside R. Either way the acquired share outside R is at most 9.1% of R for the two mid-2022 LPTs (360.9m of 3,955.045m) and 9.8% with all four (388.7m), at or below rule 5b's 10%, so rule 5b would list the record too. Rule 1 does not reach it (the history change is explained). It stays and joins the least-certain list",
+   "decision": "decision of the Claude analysis session, 23 October 2026: rules 5 and 6 of the round-5 decision rules (take_on_table_unreconciled); the record stays in the primary sample with its figure and joins the least-certain sensitivity (src/check_low_confidence_sensitivity.py)",
+   "readings": [
+    {
+     "reader": "P6",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/P6.json",
+     "pages": [
+      4,
+      13,
+      24,
+      29,
+      30
+     ],
+     "pages_of_other_reports": {
+      "prev": [
+       25
+      ],
+      "accounts_prev": [
+       25
+      ]
+     },
+     "pages_as_read": {
+      "t": 24,
+      "prev": 25,
+      "accounts_t": [
+       13,
+       29,
+       30,
+       4
+      ],
+      "accounts_prev": [
+       25
+      ]
+     },
+     "read_by": "text layer (both filings); table columns are run together in the text layer, UY assignment checked by counting values per row against the header",
+     "cells_check": "Screen cells confirmed. 2022 filing p24 'Claims Outstanding (Gross) ... Estimate of cumulative gross claims', $'000, columns 2013 2014 2015 2016 2017 2018 2019 2021 2022. End-2021 cells: 2013 1,169,214 (Eight years later), 2014 1,490,652 (Seven), 2015 1,629,830 (Six), 2016 2,329,978 (Five), 2017 2,224,525 (Four), 2018 1,761,919 (Three), 2019 442,634 (Two; no counterpart in the 2021 table), 2021 1,020,668 (At the end of the first year). 2021 filing p25 latest cells: 1,094,861; 1,366,683; 1,448,892; 2,048,622; 1,759,449; 833,123; 1,078,053 (columns 2012..2018, 2021). Ratios 1.068, 1.091, 1.125, 1.137, 1.264, 2.115 rising toward recent years: this is added business, not FX (USD report). Column set also changed: 2012 dropped, 2019 added.",
+     "explanation": "Yes. Syndicate 3500 is a RiverStone run-off consolidator. p4: 'Effective 1st January 2022, Syndicate 3500 entered into the following transactions: the reinsurance to close of the 2019 underwriting year of account liabilities of Syndicate 1897 ... the reinsurance to close of the 2019 and prior underwriting years of account liabilities of Syndicate 2468 ... the reinsurance to close, or split reinsurance to close of the 2019 and prior ... Syndicate 1980, Syndicate 2014 and Syndicate 2001'; 'During 2022 ... loss portfolio transfer reinsurance of the 2018 and 2019 underwriting year of account liabilities of Syndicate 1200 ... of certain discontinued lines of Syndicate 1686'. p5: 'Net earned premiums and net incurred claims include the reinsurance to close and loss portfolio transfer reinsurance transactions'. Note 7 p30: 'Reinsurance of new liabilities 1,728,476' (gross, 2022). The filing does not say the tables were restated as if the acquired portfolios were always held, but the table's history clearly contains them.",
+     "paid_test": {
+      "table_implied": "Same-table not computable (only end-2022 cumulative payments printed, total 9,241,331). Cross-table 9,241,331 - 8,109,331 = 1,132,000, confounded: the 2021 table's UY2012 paid (878,691) has dropped out of the 2022 table, and acquired portfolios' paid history is in the 2022 table. Under the note-7 identity (opening 2,615,345 + new liabilities 1,728,476 = as-if opening reserves 4,343,821) the implied end-2021 paid in the 2022 table would be 7,864,613 and in-year paid 1,376,718",
+      "accounts": 1088313,
+      "page": 13,
+      "quote": "Gross claims paid 7 (1,088,313) (523,168)",
+      "diff_pct": "n/a (same-table not printed); cross-table +4.0 but not like-for-like; identity-based +26.5"
+     },
+     "paid_test_prev": {
+      "table_implied": "not computed",
+      "accounts": 523168,
+      "page": 13,
+      "quote": "(1,088,313) (523,168)",
+      "diff_pct": "n/a"
+     },
+     "incurred_test": {
+      "basis": "underwriting-year table, total liabilities 2,801,700 + prior-years reserve 160,736 = 2,962,436 = balance sheet gross claims outstanding (p30)",
+      "t_table_implied_incurred_k": -26389,
+      "t_workings": "end-2022 minus end-2021 (own table): 2013 -36,910; 2014 -19,891; 2015 -71,413; 2016 -91,742; 2017 -43,268; 2018 -33,377; 2019 +4,845; 2021 -98,057; 2022 +363,424 (new column); total 12,043,031 - 12,069,420",
+      "accounts_gross_incurred_k": "P&L gross claims incurred 1,602,344 (p29 segmental), of which take-ons 1,728,476; note 7 'Change in estimates of technical provision, including foreign exchange (293,072)' is the like-for-like figure",
+      "accounts_quote": "p30 note 7: 'Claims outstanding at 1st January 2,615,345 ... Reinsurance of new liabilities 1,728,476 ... Change in estimates of technical provision, including foreign exchange (293,072) ... Paid claims (1,088,313) ... at 31st December 2,962,436'",
+      "diff_pct": "table -26.4m vs -293.1m: does not tie (gap 266.7m); mature columns only (2013-2019) -291.8m vs -293.1m: 0.4% apart",
+      "prev_table_implied_incurred_k": "not computed; 2021 also contains 2,425,117 of new liabilities (RITC take-ons) so it has the same structure"
+     },
+     "basis": "gross, underwriting-year columns that are acquired portfolios aggregated by year of account, USD thousands",
+     "m_recomputed_m": -291.8,
+     "m_workings": "u<=2020 from the 2022 table, own end-2021 cells (2013-2019): -36,910 -19,891 -71,413 -91,742 -43,268 -33,377 +4,845 = -291,756 ($'000). Not comparable with the latest-vs-2021-print differences (which would show about +0.9bn of added history). Filing's all-years printed movement: -293,072 (note 7, p30). Analysis figure not supplied.",
+     "verdict": "restated_base",
+     "note": "Explained, not mysterious: the 2022 table's history changes because of 2022 RITC and LPT acquisitions (1,728,476 gross), re-bucketed by underwriting year (2012 dropped, 2019 added). The table therefore is not a like-for-like development of the same book across the two years, and its whole-table implied incurred (-26.4m) does not tie to the accounts (the 363m UY2022 column and the -98m UY2021 column are acquisition artefacts). The mature columns (2013-2019) do move by -291.8m, within 0.4% of the filing's printed all-years change in estimates (-293.1m incl. FX), so M is about -292m if the author accepts a consolidator's acquired-portfolio development as the syndicate's prior-year movement; if the paper wants own-book development only, M is not measurable from this table (acquired history for the two mid-2022 LPTs, 293.8m and 67.1m, enters 'as if'). Recommend flag, not simple exclusion; author decision."
+    },
+    {
+     "reader": "Q7",
+     "source": "results/extraction_error_rate/mature-cohort/round5/readings/Q7.json",
+     "pages": [
+      4,
+      24
+     ],
+     "pages_of_other_reports": {
+      "prev_filing_syndicate_3500_2021": [
+       4,
+       25
+      ]
+     },
+     "pages_as_read": {
+      "t_filing_syndicate_3500_2022": [
+       4,
+       24
+      ],
+      "prev_filing_syndicate_3500_2021": [
+       25,
+       4
+      ]
+     },
+     "read_by": "text layer and page image of both table pages",
+     "cells_check": "Screen cells CONFIRMED. 2022 report p24 (PDF p24; printed 'Page 24 of 39'), heading 'Claims Outstanding (Gross)' '$'000', columns 2013 2014 2015 2016 2017 2018 2019 2021 2022 (no 2020 column). End-2021 cells (one step before 'Current estimate'): 2013 '- Eight years later' 1,169,214; 2014 '- Seven years later' 1,490,652; 2015 '- Six years later' 1,629,830; 2016 '- Five years later' 2,329,978; 2017 '- Four years later' 2,224,525; 2018 '- Three years later' 1,761,919; 2019 '- Two years later' 442,634; 2021 'At the end of the first year' 1,020,668. Current estimates: 1,132,304 / 1,470,761 / 1,558,417 / 2,238,236 / 2,181,257 / 1,728,542 / 447,479 / 922,611 / 363,424. 2021 report PDF p25 (printed 'Page 24 of 41'), same heading, columns 2012..2018 and 2021 (no 2019, 2020 columns): latest 2013 1,094,861 (Eight years later), 2014 1,366,683, 2015 1,448,892, 2016 2,048,622, 2017 1,759,449, 2018 833,123, 2021 1,078,053. All screen cell_t and cell_p match. Note the 2018 column: the 2022 table history is 1,020,105 / 1,554,736 / 1,630,103 / 1,761,919 / 1,728,542 against 529,996 / 762,365 / 833,123 in the 2021 table (about double); the 2021 column first-year figure also differs (1,020,668 against 1,078,053). A 2019 column (192,868 / 409,330 / 442,634 / 447,479) appears for the first time.",
+     "explanation": "No sentence says the development table was restated or re-presented (searched restat, re-present, correction, change of basis, reclassif, as if; the only 'Restated' in the 2022 report is the 2021 comparative at p25 (Insurance Risk Concentrations table, \"2021 (Restated)\", \"Restated, see note 3(f)\"), not the triangle). BUT the filing discloses large reinsurance-to-close and loss portfolio transfers: p4 'Effective 1st January 2022, Syndicate 3500 entered into the following transactions: the reinsurance to close of the 2019 underwriting year of account liabilities of Syndicate 1897 ... $13.4 million'; 'the reinsurance to close of the 2019 and prior underwriting years of account liabilities of Syndicate 2468 ... $399.2 million'; 'the reinsurance to close, or split reinsurance to close of the 2019 and prior underwriting years of account liabilities of Syndicate 1980, Syndicate 2014 and Syndicate 2001 ... $927.1 million'; plus LPTs of 22.6m and 5.2m; and 'During 2022 ... loss portfolio transfer reinsurance of the 2018 and 2019 underwriting year of account liabilities of Syndicate 1200 ... $293.8 million' and Syndicate 1686 '$67.1 million' (total about 1,728m gross). p5: 'Net earned premiums and net incurred claims include the reinsurance to close and loss portfolio transfer reinsurance transactions set out above.' The 2022 column's first-year 363,424 is close to the two 2022 LPTs (293.8+67.1=360.9m). The filing does not say that the 2013-2019 history cells now include the acquired portfolios, so that reading is an inference from timing and size (2013 end-2021 cell 1,169,214 vs 1,094,861 earlier; the 2013-2018 end-2021 cells total 10,606,118 vs 8,551,630 in the 2021 table, +2.05bn).",
+     "paid_test": {
+      "table_implied": null,
+      "accounts": 1088313,
+      "page": 13,
+      "quote": "Gross claims paid 7 (1,088,313) (523,168)  [Technical Account, 2022 / 2021, $'000]",
+      "diff_pct": null,
+      "note": "NOT COMPUTABLE: the table prints only 'Cumulative payments to date' (one figure per column, 9,241,331 total), no cumulative paid at end t-1, so the brief's paid test cannot be run on the year t table. Cross-report change in the paid-to-date total is 9,241,331 less 8,109,331 = 1,132,000 (2021 report p25), but that mixes two tables whose bases differ (2019 column new, acquired portfolios) and is not the paid test."
+     },
+     "paid_test_prev": {
+      "table_implied": null,
+      "accounts": 523168,
+      "page": "2021 report PDF p14",
+      "quote": "Gross claims paid 7 (523,168) (220,552)",
+      "diff_pct": null,
+      "note": "also not computable, same reason"
+     },
+     "incurred_test": {
+      "basis": "underwriting-year (ultimate) basis: every column is 'Estimate of cumulative gross claims', so unearned business is included; not comparable to earned incurred",
+      "table_implied_2022_m": -26.389,
+      "calc": "sum over columns of (current less end-2021 cell): 2013 -36,910; 2014 -19,891; 2015 -71,413; 2016 -91,742; 2017 -43,268; 2018 -33,377; 2019 +4,845; 2021 -98,057; plus 2022 first-year 363,424 = -26,389 ($'000)",
+      "accounts_gross_incurred_m": 1602.344,
+      "accounts_calc": "gross claims paid 1,088,313 + change in the gross provision for claims 514,031 (p13 technical account)",
+      "accounts_ex_takeon_m": -126.056,
+      "accounts_ex_takeon_calc": "1,602,344 less transferred gross provisions 13.4+399.2+22.6+927.1+5.2+293.8+67.1 = 1,728.4m (p4, rounded to 0.1m)",
+      "diff": "Table -26.4m against accounts -126.1m after removing take-ons (100m apart, about 3% of the 2.96bn gross provision); against raw accounts 1,602m they do not compare because the accounts include the take-on claims. Prev (2021) table implied: 2012 -3,720, 2013 -15,066, 2014 -37,133, 2015 -44,156, 2016 +37,045, 2017 +106,438, 2018 +65,678, plus 2021 first-year 1,078,053 = 1,187,139 against accounts gross incurred 2,399,739 (523,168 + 1,876,571): the 2021 table also does not reproduce the year's incurred because acquired portfolios were not added to its history."
+     },
+     "balance_sheet_tie": "Table liability 2,801,700 + 'Reserve in respect of prior years' 160,736 = 2,962,436 and the report says 'Total outstanding claims, gross of reinsurance, were $3.0 billion as at 31st December 2022 (2021: $2.6 billion)' (p5); 2021 table total reserve 2,615,345. Outstanding ties in both reports.",
+     "basis": "Gross (heading 'Claims Outstanding (Gross)'), UY ultimate-claims basis, $'000 in both reports. Net table printed below it.",
+     "m_recomputed_m": {
+      "from_t_table_u_le_2020": -291.756,
+      "calc": "2013 -36,910; 2014 -19,891; 2015 -71,413; 2016 -91,742; 2017 -43,268; 2018 -33,377; 2019 +4,845 ($'000); no 2020 column",
+      "from_prev_table_latest_cells_for_comparison": 1757.9,
+      "equals_analysis_figure": "analysis figure not in batch"
+     },
+     "verdict": "undeterminable",
+     "note": "The restatement of the 2013-2019 history between the two reports is real and large (2018 column about double), and its timing and size fit the 1 Jan 2022 reinsurance-to-close/LPT take-ons ($1.37bn at 1 Jan plus 0.36bn during 2022), which the filing discloses; the filing never states that the development table was re-presented to include them. The table prints no per-year cumulative paid, so the paid test cannot be run; the incurred test is on an ultimate basis and is within about 100m (3% of reserves) of the accounts once take-on provisions are stripped out, but that match is by my own reading of aggregates. Outstanding ties to the balance sheet. Lean: a pro-forma/take-on-restated base, so the table's own movement (-291.8m on u<=2020) is a movement on the enlarged book and would be a transaction case, not a clean 2689/2023 type; cannot be settled from the pages."
     }
    ]
   },

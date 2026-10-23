@@ -343,34 +343,79 @@ CORRECTIONS = {
     },
     "1274_2016": {
         "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+        "derived": True,
         "cause": ("a misprinted cell: the 2016 table's 2012 column prints 141,355 at three years later between 174,440 "
                   "and 185,418 (p41), a reserve of 12,005 against 47,564 in the 2015 report, whose own cell is 178,987; "
                   "both readers read it as a misprint, which the filing does not correct"),
-        "derivation": ("the 2015 report's 2012 cell (178,987) at the year's exchange factor (the 2008 column's "
-                       "end-2015 cell over the 2015 report's: 209,137 / 213,518 = 0.97948, the record's common factor) "
-                       "replaces the misprinted 141,355: the 2012 term is 185,418 - 175,314.5 = +10,103.5 and M "
-                       "= +13,440 (the other six years) + 10,103.5 = +23.5435m USD. Derived by the build from the cells "
-                       "both readings quote; P3 calls the cell not correctable from the filing and Q4 gives the same "
-                       "replacement without the exchange factor (+19.871m); both give +57.503m as printed"),
+        "derivation": ("DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8); not a "
+                       "figure either reader gives. The 2015 report's 2012 cell (178,987) replaces the misprinted 141,355 "
+                       "at the 2012 column's own exchange factor: its paid cells at end-2015, 129,350 in the 2016 table "
+                       "against 131,423 in the 2015 report (the 2012 column's paid history is a retranslation of cells "
+                       "the misprint does not touch), f = 129,350 / 131,423 = 0.98423. Corrected cell 178,987 x f = "
+                       "176,163.7; the 2012 term is 185,418 - 176,163.7 = +9,254.3; M = +13,440 (the other six years) + "
+                       "9,254.3 = +22,694.3, i.e. +22.6943m USD. Every cell used is quoted by both readers (P3, Q4) and "
+                       "the build recomputes the figure from each reader's own quoted cells. Each reader's own figure is "
+                       "kept as given: +57.503m as printed (both), P3 calling the cell not correctable from the filing, "
+                       "Q4 giving +19.871m with the 2015 report's cell unretranslated. Other defensible factors (the "
+                       "ratio of any other column's end-2015 cell to the 2015 report's, 0.96766 to 0.98919) give "
+                       "+21.806m to +25.659m (review 8: +21.8m to +25.6m); the 2008 column's factor 0.97948 gives "
+                       "+23.5435m, the figure this register carried before review 8"),
+        "cells_used": {
+            "other_years_latest_and_end_2015": {
+                2008: ("208,456", "209,137"), 2009: ("165,974", "165,410"), 2010: ("208,906", "206,415"),
+                2011: ("178,142", "174,535"), 2013: ("180,767", "183,933"), 2014: ("203,214", "192,589")},
+            "misprinted_year_latest": "185,418", "previous_report_cell": "178,987",
+            "paid_end_2015_2016_table": "129,350", "paid_end_2015_2015_report": "131,423"},
+        "other_factor_cells": {2008: ("209,137", "213,518"), 2009: ("165,410", "167,218"), 2010: ("206,415", "212,521"),
+                               2011: ("174,535", "180,368"), 2013: ("183,933", "188,149"), 2014: ("192,589", "196,949"),
+                               2015: ("101,954", "103,804")},
         "readers": {
             "P3": {"misprint": {
                 "terms": ("2008 208,456-209,137=-681; 2009 165,974-165,410=+564; 2010 208,906-206,415=+2,491; 2011 "
                           "178,142-174,535=+3,607; 2012 185,418-141,355=+44,063; 2013 180,767-183,933=-3,166; 2014 "
                           "203,214-192,589=+10,625"),
-                "latest": "185,418 is right", "t_2008": "2008 'Seven years later' 209,137",
+                "latest": "185,418 is right",
+                "paid_t": ("2012 139,244-129,350=9,894", "129,350"),
+                "paid_prev": ("2012 131,423-105,931=25,492", "131,423"),
                 "prev_cells": "latest cells 213,518 (2008, seven years later); 167,218; 212,521; 180,368; 178,987"},
                 "cells": "m_recomputed_cells"},
             "Q4": {"misprint": {
                 "terms": "2008 -681; 2009 +564; 2010 +2,491; 2011 +3,607; 2012 +44,063; 2013 -3,166; 2014 +10,625",
-                "latest": "141,355 (3y), 185,418 (4y)", "t_2008": "209,137 (7y)",
-                "prev_cells": "latest cells (2008..2015): 213,518; 167,218; 212,521; 180,368; 178,987"},
+                "latest": "141,355 (3y), 185,418 (4y)",
+                "paid_t": ("(141,355-129,350 paid)", "129,350"),
+                "paid_prev": ("(178,987-131,423)", "131,423"),
+                "prev_cells": "latest cells (2008..2015): 213,518; 167,218; 212,521; 180,368; 178,987",
+                "sensitivity": "M = +19,871 (USD k)"},
                 "cells": "m_detail"},
         },
     },
+    "4242_2022": {
+        "by": "previous_report_base", "rule": "rule 3 of the round-5 decision rules (corrected to the previous report's base)",
+        "cause": ("the 2022 table (p44) lowers the end-2021 cells of 2019 and 2020 (204,999 and 277,405 against 207,954 "
+                  "and 310,094 printed in 2021, p46), -35.9m on the 2017-2021 diagonal of a dollar table that is not "
+                  "retranslated, with no explanation in either filing (the loss-funds reclassification, p38, gives no "
+                  "amount); the table taken on its own implies gross incurred 115.1m against 78.3m in the accounts "
+                  "(+47%), the 2021 control tying (-1.1%). The 2021 report's printed cells as the base reproduce the "
+                  "year's accounts once the merged '2016 & Prior' column, which both readers call unreadable as a cohort "
+                  "(P4: its cumulative paid falls 17.7m, 'no payment can do'; Q3: not like for like, not measurable), is "
+                  "set aside: 79.255m on the 2017-2022 columns against 78.306m (+1.2%, Q3), and 78.9m against 78.3m "
+                  "(+0.8%, review 8). M (u <= 2020) does not use the merged column on either base. Decision of the "
+                  "Claude analysis session, 23 October 2026, after review 8: rule 3, not rule 1 (the year t-1 base "
+                  "reconciles)"),
+        "derivation": ("u <= 2020, the 2022 table's latest cells less the 2021 report's printed latest cells: 2017 "
+                       "331,324-349,613 = -18,289; 2018 233,193-249,006 = -15,813; 2019 187,713-207,954 = -20,241; "
+                       "2020 284,422-310,094 = -25,672; -80,015 (USD 000), i.e. -80.015m USD (both readers); the 2022 "
+                       "table's own end-2021 cells give -44.371m"),
+        "readers": {"P4": {"stated": "On the 2021 report's end-2021 cells the same four columns give -80.015m",
+                           "cells": "m_recomputed_note"},
+                    "Q3": {"terms": "-18,289 -15,813 -20,241 -25,672 = -80,015", "cells": "m_working"}},
+    },
 }
-#: the misprinted underwriting year of 1274/2016 and the year whose cells give the exchange factor
-MISPRINT_YEAR, FACTOR_YEAR = 2012, 2008
+#: the misprinted underwriting year of 1274/2016 and the first underwriting year of its table (the previous report's
+#: cells are listed from it)
+MISPRINT_YEAR, FIRST_YEAR = 2012, 2008
 
+SESSION_23_OCT = "decision of the Claude analysis session, 23 October 2026 (after review 8)"
 OWNER = ("owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of "
          "Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement "
          "has the other sign")
@@ -773,19 +818,70 @@ def _terms(snippet):
     return [_n(v) for v in re.findall(r"([+-]?%s)" % _NUM, snippet.split("=")[0])]
 
 
+def _quoted(text, cell, key, rid, what):
+    if cell not in text:
+        raise SystemExit("%s: reader %s does not quote the %s cell %s" % (key, rid, what, cell))
+    return cell
+
+
+def _paid_cell(pair, text, key, rid, what):
+    """A paid cell of the 2012 column: the reader's snippet that holds it, and the cell, which the snippet must show."""
+    snippet, cell = pair
+    if cell not in _snip(text, snippet, key, rid, what):
+        raise SystemExit("%s: reader %s's %s snippet does not show the cell %s" % (key, rid, what, cell))
+    return _n(cell)
+
+
+def derived_cells(key=None):
+    """The cell strings the derived figure of 1274/2016 uses (CORRECTIONS[...]['cells_used']), flattened and sorted."""
+    c = (CORRECTIONS[key or "1274_2016"])["cells_used"]
+    out = set()
+    for pair in c["other_years_latest_and_end_2015"].values():
+        out.update(pair)
+    out.update(v for k, v in c.items() if isinstance(v, str))
+    return sorted(out)
+
+
 def misprint_figure(spec, text, key, rid):
-    """1274/2016: the figure with the misprinted MISPRINT_YEAR cell replaced by the previous report's cell at the year's
-    exchange factor (FACTOR_YEAR's end-(t-1) cell over the previous report's), from the reader's own quoted cells."""
+    """1274/2016: the figure with the misprinted MISPRINT_YEAR cell replaced by the previous report's cell at the MISPRINT
+    YEAR COLUMN'S OWN exchange factor (its paid cell at end-(t-1) in the year t table over the same cell in the previous
+    report), from cells the reader quotes. The other years' terms are the sums of the reader's own cells (the table's
+    latest cell less its end-(t-1) cell), checked against the reader's terms snippet. DERIVED, not a figure the reader
+    gives: the reader's own figure is kept apart by correction_reading."""
+    c = CORRECTIONS[key]
     terms = _terms(_snip(text, spec["terms"], key, rid, "terms"))
     latest = _n(re.findall(_CELL, _snip(text, spec["latest"], key, rid, "latest cell"))[-1])
-    t_factor = _n(re.findall(_CELL, _snip(text, spec["t_2008"], key, rid, "factor year's cell"))[-1])
     prev = [_n(x) for x in re.findall(_CELL, _snip(text, spec["prev_cells"], key, rid, "previous report's cells"))]
-    prev_factor, prev_misprint = prev[0], prev[MISPRINT_YEAR - FACTOR_YEAR]
-    other = sum(v for y, v in terms.items() if y != MISPRINT_YEAR)
-    corrected = prev_misprint * t_factor / prev_factor
-    return round((other + latest - corrected) / 1000.0, 4), {
-        "other_years_k": other, "latest_cell_k": latest, "factor": round(t_factor / prev_factor, 6),
-        "previous_report_cell_k": prev_misprint, "corrected_cell_k": round(corrected, 1)}
+    prev_misprint = prev[MISPRINT_YEAR - FIRST_YEAR]
+    paid_t = _paid_cell(spec["paid_t"], text, key, rid, "paid cell of the year t table")
+    paid_prev = _paid_cell(spec["paid_prev"], text, key, rid, "paid cell of the previous report")
+    quoted = [_quoted(text, cell, key, rid, "derivation") for cell in derived_cells(key)]
+    other = sum(_n(a) - _n(b) for a, b in c["cells_used"]["other_years_latest_and_end_2015"].values())
+    if other != sum(v for y, v in terms.items() if y != MISPRINT_YEAR):
+        raise SystemExit("%s: reader %s's terms %s are not the cells' differences %s" % (key, rid, terms, other))
+    if latest != _n(c["cells_used"]["misprinted_year_latest"]) or prev_misprint != _n(c["cells_used"]["previous_report_cell"]):
+        raise SystemExit("%s: reader %s's latest or previous-report cell is not the one the derivation uses" % (key, rid))
+    factor = paid_t / paid_prev
+    corrected = prev_misprint * factor
+    lo, hi = other_factor_range(c, text, key, rid)
+    figure = round((other + latest - corrected) / 1000.0, 4)
+    return figure, {
+        "other_years_k": other, "latest_cell_k": latest, "factor": round(factor, 6), "paid_t_cell_k": paid_t,
+        "paid_previous_cell_k": paid_prev, "previous_report_cell_k": prev_misprint, "corrected_cell_k": round(corrected, 1),
+        "range_other_factors_m": [lo, hi], "cells_quoted": quoted}
+
+
+def other_factor_range(c, text, key, rid):
+    """The figures the other columns' end-(t-1) cell ratios (the year t table's over the previous report's) give as the
+    misprinted column's factor: (lowest, highest), each cell quoted by the reader."""
+    other = sum(_n(a) - _n(b) for a, b in c["cells_used"]["other_years_latest_and_end_2015"].values())
+    latest, prev = _n(c["cells_used"]["misprinted_year_latest"]), _n(c["cells_used"]["previous_report_cell"])
+    figs = []
+    for a, b in c["other_factor_cells"].values():
+        _quoted(text, a, key, rid, "other column's end-(t-1)")
+        _quoted(text, b, key, rid, "other column's previous-report")
+        figs.append(round((other + latest - prev * _n(a) / _n(b)) / 1000.0, 3))
+    return min(figs), max(figs)
 
 
 def correction_reading(key, rid, spec, round_name):
@@ -803,14 +899,33 @@ def correction_reading(key, rid, spec, round_name):
     if "field" in spec:
         out["figure_m"] = _num(e[spec["field"]])
         out["figure_from"] = "the reader's own figure (%s)" % spec["field"]
+    elif "stated" in spec:
+        m = re.findall(r"([+-]\d+(?:\.\d+)?)m", _snip(text, spec["stated"], key, rid, "stated figure"))
+        if len(m) != 1:
+            raise SystemExit("%s: reader %s's stated snippet holds %d signed figures, not one" % (key, rid, len(m)))
+        out["figure_m"] = float(m[0])
+        out["figure_from"] = "the figure the reader states: %s" % spec["stated"]
     elif "terms" in spec:
         t = _terms(_snip(text, spec["terms"], key, rid, "terms"))
         out["figure_m"] = round(sum(t.values() if isinstance(t, dict) else t) / 1000.0, 4)
         out["figure_from"] = "the sum of the reader's own terms: %s" % spec["terms"]
     else:
-        out["figure_m"], parts = misprint_figure(spec["misprint"], text, key, rid)
-        out["figure_from"] = ("derived by the build from the reader's quoted cells (%s): %s"
-                              % ("; ".join(spec["misprint"].values()), json.dumps(parts)))
+        # a DERIVED correction (1274/2016): figure_m stays the reader's own figure as given (the printed table's, which the
+        # reader flags as carrying a misprint); the derived figure is kept apart under derived_figure_m, with the cells
+        # the reader quotes
+        ms = spec["misprint"]
+        out["figure_m"] = out["reader_figure_m"]
+        out["derived_figure_m"], parts = misprint_figure(ms, text, key, rid)
+        out["cells_quoted"] = parts.pop("cells_quoted")
+        out["derived_parts"] = parts
+        out["figure_from"] = ("the reader's own figure (m_recomputed_m), as printed with the misprinted cell; the "
+                              "corrected figure is DERIVED by the build from the reader's quoted cells, not given by the "
+                              "reader (derived_figure_m): %s" % json.dumps(parts))
+        if "sensitivity" in ms:
+            s = re.findall(r"([+-]\d[\d,]*) \(USD k\)", _snip(text, ms["sensitivity"], key, rid, "sensitivity"))
+            out["reader_sensitivity_m"] = _n(s[0]) / 1000.0
+            out["reader_sensitivity_note"] = ("the reader's own sensitivity with the previous report's 2012 cell "
+                                              "unretranslated: %s" % ms["sensitivity"])
     cells = e.get(spec["cells"]) or e.get("cells_check")
     out["cells"] = cells if isinstance(cells, str) else json.dumps(cells, ensure_ascii=False)
     out["table"] = {"page": (out["pages"] or [None])[0], "basis": e.get("basis") or "gross"}
@@ -827,15 +942,35 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
         raise SystemExit("%s: the stored grid's figure %s is not the adopted figure %s the correction replaces"
                          % (key, figure_printed, entry["displaced"]["figure_m"]))
     reads = [correction_reading(key, rid, spec, spec.get("round", ROUND5_ROUND)) for rid, spec in c["readers"].items()]
-    figure = round(reads[0]["figure_m"], 4)
+    derived = bool(c.get("derived"))
+    # a derived correction's figure is the build's own derivation from the cells each reader quotes (derived_figure_m);
+    # any other correction's figure is the one every reader gives (figure_m)
+    which = "derived_figure_m" if derived else "figure_m"
+    figure = round(reads[0][which], 4)
     for r in reads:
-        if r["figure_m"] is None or abs(r["figure_m"] - figure) > FIGURE_TOL:
+        if r.get(which) is None or abs(r[which] - figure) > FIGURE_TOL:
             raise SystemExit("%s: reader %s's corrected figure %s is not reader %s's %s" % (
-                key, r["reader"], r["figure_m"], reads[0]["reader"], figure))
+                key, r["reader"], r.get(which), reads[0]["reader"], figure))
     currency, gbp = fx_gbp(key, figure)
     entry.update({"figure_m": figure, "figure_gbp_m": gbp, "figure_kind": "triangle"})
     entry["correction"] = {"rule": c["rule"], "cause": c["cause"], "derivation": c["derivation"],
                            "figure_as_printed_m": figure_printed}
+    if derived:
+        lows = [r["derived_parts"]["range_other_factors_m"] for r in reads]
+        if any(x != lows[0] for x in lows):
+            raise SystemExit("%s: the readers' ranges of other factors differ: %s" % (key, lows))
+        entry["correction"].update({
+            "derived_figure_m": figure, "derived_by": SESSION_23_OCT,
+            "factor": reads[0]["derived_parts"]["factor"],
+            "factor_basis": ("the 2012 column's own paid cells at end-2015: 129,350 (2016 table) over 131,423 (2015 "
+                             "report)"),
+            "cells_used": derived_cells(key),
+            "range_other_factors_m": lows[0],
+            "range_other_factors_basis": ("the ratio of each other column's end-2015 cell in the 2016 table to the 2015 "
+                                          "report's latest cell (2008-2011, 2013-2015: 0.96766 to 0.98919) as the "
+                                          "misprinted column's factor; review 8 quotes +21.8m to +25.6m"),
+            "figure_before_review_8_m": 23.5435,
+            "figure_before_review_8_basis": "the 2008 column's factor 209,137 / 213,518 = 0.97948"})
     entry["readings"] = reads
     if c.get("superseded"):
         entry["superseded_readings"] = [correction_reading(key, rid, spec, ROUND5_ROUND)
@@ -849,6 +984,15 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
     entry["pages"] = sorted({p for r in reads for p in r["pages"]})
     entry["quote"] = " | ".join("reader %s, p%s: %s" % (r["reader"], r["table"]["page"], r["cells"]) for r in reads)
     entry["status"] = "primary"
+    if derived:
+        entry["decision"] = ("decision of the Claude analysis session, 23 October 2026 (after review 8), applying %s: "
+                             "%s; the register carries the corrected figure DERIVED from the cells both readers (%s) "
+                             "quote, at the misprinted column's own exchange factor (a figure neither reader gives), in "
+                             "place of the printed table's own (%s); primary, and listed with the least-certain records "
+                             "(data/restated_base_excluded.json, history_restated, clause derived_correction); under "
+                             "the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads), figure_printed,
+                                         OWNER))
+        return entry
     entry["decision"] = ("decision of the Claude analysis session, 23 October 2026, applying %s: %s; the register carries "
                          "the corrected figure the readings give (%s) in place of the printed table's own (%s); "
                          "primary; under the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads),
@@ -860,8 +1004,13 @@ def independent_reading_gaps(entry):
     """Why a figure entry does not rest on two independent agent readings of the filing, or []: every reading is an
     agent's (AGENT_READING_KINDS; the extraction's table read is not a reading), at least two distinct readers, at
     least one of them a reader's own reading of 22 October 2026, and each with its pages and cells, giving the
-    entry's figure."""
+    entry's figure. A DERIVED correction (correction.derived_figure_m: 1274/2016, whose figure no reader gives) is allowed
+    only when it records its derivation, its figure is the one each reader's quoted cells give (the reading's
+    derived_figure_m, kept apart from the reader's own figure_m), and both readers quote every cell the derivation uses
+    (correction.cells_used, each in the reading's cells_quoted)."""
     reads = entry.get("readings") or []
+    corr = entry.get("correction") if isinstance(entry.get("correction"), dict) else {}
+    derived = corr.get("derived_figure_m") is not None
     gaps = ["reading %d is not an agent's reading (kind %r)" % (i, r.get("kind"))
             for i, r in enumerate(reads) if r.get("kind") not in AGENT_READING_KINDS]
     agents = [r for r in reads if r.get("kind") in AGENT_READING_KINDS]
@@ -869,10 +1018,24 @@ def independent_reading_gaps(entry):
         gaps.append("two distinct readers (%s)" % sorted({str(r.get("reader")) for r in agents}))
     if not any(r.get("kind") == "reading" for r in agents):
         gaps.append("a reader's own reading (kind 'reading')")
+    if derived:
+        if abs(corr["derived_figure_m"] - entry["figure_m"]) > FIGURE_TOL:
+            gaps.append("a derived figure %s equal to the entry's %s" % (corr["derived_figure_m"], entry["figure_m"]))
+        if not str(corr.get("derivation") or "").strip():
+            gaps.append("a recorded derivation")
+        if not corr.get("cells_used"):
+            gaps.append("the cells the derivation uses (correction.cells_used)")
     for i, r in enumerate(agents):
         if not r.get("pages") or not str(r.get("cells") or "").strip():
             gaps.append("reading %s's pages and cells" % r.get("reader"))
-        if r.get("figure_m") is None or abs(r["figure_m"] - entry["figure_m"]) > FIGURE_TOL:
+        if derived:
+            if r.get("derived_figure_m") is None or abs(r["derived_figure_m"] - entry["figure_m"]) > FIGURE_TOL:
+                gaps.append("reading %s's derived figure %s against the entry's %s" % (
+                    r.get("reader"), r.get("derived_figure_m"), entry["figure_m"]))
+            missing = sorted(set(corr.get("cells_used") or []) - set(r.get("cells_quoted") or []))
+            if missing:
+                gaps.append("reading %s quotes every cell the derivation uses (missing %s)" % (r.get("reader"), missing))
+        elif r.get("figure_m") is None or abs(r["figure_m"] - entry["figure_m"]) > FIGURE_TOL:
             gaps.append("reading %s's figure %s against the entry's %s" % (r.get("reader"), r.get("figure_m"),
                                                                            entry["figure_m"]))
     return gaps
@@ -1073,10 +1236,14 @@ PURPOSE = (
     "own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a "
     "precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure "
     "is the triangle's own with the column in it (1945/2022 and 1945/2023). An entry with a correction object (rules 3 "
-    "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 1609/2024 and 2232/2020) replaces the "
-    "printed table's own figure, the adopted one, with the corrected figure its readings give (archived in "
-    "round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a misprinted "
-    "cell) or 'previous_report_base' (the year t-1 report's printed cells as the base).")
+    "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 1609/2024, 2232/2020 and 4242/2022) "
+    "replaces the printed table's own figure, the adopted one, with the corrected figure its readings give (archived "
+    "in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a "
+    "misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and "
+    "4242/2022). 1274/2016's corrected figure is DERIVED (correction.derived_figure_m, decision of the Claude analysis "
+    "session of 23 October 2026 after review 8), not given by either reader: each reading keeps its own figure_m and "
+    "carries derived_figure_m and the cells it quotes (cells_quoted), and the entry is allowed only while both readers "
+    "quote every cell in correction.cells_used and the derivation is recorded (independent_reading_gaps).")
 
 
 def dumps(reg):

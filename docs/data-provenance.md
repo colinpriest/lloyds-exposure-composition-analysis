@@ -156,20 +156,34 @@ Round 5 (23 October 2026) read the tables whose history moved between reports. A
 35a259c (`results/extraction_error_rate/mature-cohort/round5/screen/`) set each year t table's end-(t-1) cells against the
 year t-1 report's latest cells; the 82 records it asked to read were read twice, independently (arms P1 to P8 and Q1 to
 Q8), 2689/2023 by V1 and V2, and the two records whose readings disagreed on the facts (1609/2024, 4444/2017) by the
-tie-break readers Z5 and Z6. The decision rules (`round5/rules.md`, a decision of the Claude analysis session written
-before the adjudication) were applied record by record (`round5/adjudication.md`). Where each result lives:
+tie-break readers Z5 and Z6. The decision rules (`round5/rules.md`, a decision of the Claude analysis session) were
+applied record by record (`round5/adjudication.md`). Rules 1 to 7 were written before the adjudication. Three rules were
+added or made exact afterwards, after particular readings or the eighth review (23 October 2026): rule 5b (after the
+round-7 readings U1 and U2), rule 6's take-on clause `take_on_table_unreconciled` (after the readings of 3500/2023;
+applied to 3500/2022 after review 8) and rule 1's exact control clause (after review 8); review 8 also added rule 6's
+`derived_correction` clause (1274/2016). Where each result lives:
 
 - Rule 1 (the table restates its history without explanation, fails the year's accounts while the year t-1 control ties,
   and the year t-1 printed base gives no figure that reconciles): `data/restated_base_excluded.json`
-  (`src/build_restated_base_excluded.py`), bucket `excluded`: 780/2016, 2689/2023, 4242/2022, 4747/2024 and 6134/2022
-  leave the primary at the unusable-severity step tagged `RESTATED_BASE_TABLE`. The register is a hashed input of the run
-  identifier; the 672 construction does not read it.
+  (`src/build_restated_base_excluded.py`), bucket `excluded`: 780/2016, 2689/2023, 4747/2024 and 6134/2022 leave the
+  primary at the unusable-severity step tagged `RESTATED_BASE_TABLE`. The register is a hashed input of the run
+  identifier; the 672 construction does not read it. The control clause was made exact on 23 October 2026, after review 8,
+  and re-applied to every record: the year t-1 control ties within 5%, or within 10% when the same basis gap explains both
+  years (an '& prior' column outside the cells, an ultimate basis against earned accounts) and the year t miss is at least
+  three times the control's. 780/2016 (control +9.5%, year t paid identity +79.8%) and 4747/2024 (control -7.2%, year t
+  -81.9%) need the 10% clause; 2232/2017, 2488/2016, 382/2021, 1967/2017 and 1729/2023 do not meet rule 1 under it and stay
+  listed. Re-applying it changed no outcome but 4242/2022's, which moved to rule 3 on the review's decision.
 - Rule 2 (the author's rule B): 3000/2022 joins `data/fx_untranslated_excluded.json` ("excluded"; its history is
   retranslated while its end-2021 reserves are not, and the exchange line is 8.0% of R).
 - Rules 3 and 4 (corrections): `data/mature_cohort_figures.json` carries 2232/2020 at +19.331m (the 2019 report's printed
-  base, `previous_report_base`), 318/2024 at -27.990m and 1609/2024 at +13.935m USD (tables printed transposed against
-  their labels) and 1274/2016 at +23.544m USD (a misprinted 2012 cell replaced by the 2015 report's at the year's exchange
-  factor), each with a `correction` object.
+  base, `previous_report_base`), 4242/2022 at -80.015m USD (the 2021 report's printed base, which reconciles with the 2022
+  accounts once the merged '2016 & Prior' column both readers call unreadable is set aside; it was excluded under rule 1
+  before review 8 and is in the primary again, 643 records), 318/2024 at -27.990m and 1609/2024 at +13.935m USD (tables
+  printed transposed against their labels) and 1274/2016 at +22.694m USD, each with a `correction` object. 1274/2016's
+  figure is DERIVED (a misprinted 2012 cell replaced by the 2015 report's at the 2012 column's own paid factor, 129,350 /
+  131,423 = 0.98423; the other columns' factors give +21.8m to +25.7m): neither reader gives it, so it is stored as
+  `correction.derived_figure_m` apart from each reader's own `figure_m` (+57.503m as printed), allowed only while both
+  readers quote every cell used, and the record joins the least-certain list (clause `derived_correction`).
 - Rule 5 (take-on bases): every candidate whose transferred gross amount the readings print was already in
   `data/opening_reserves_takeon_base.json`; for 1110/2022 and 1458/2024 the round-5 readings did not give the amount, and
   nothing is added to that register.
@@ -186,11 +200,15 @@ before the adjudication) were applied record by record (`round5/adjudication.md`
   The 672 construction keeps the record. 1458/2024 (an external RITC restating the 2020 and 2021 years; at most USD
   164.1m of cumulative incurred, 8.0% of R, and the movement within the table, -33.258m USD, already excludes the
   take-on) stays and is listed under `history_restated` with the clause `take_on_base_bounded`.
-- Rule 6 (least certain): 27 records stay in the primary and are listed under `history_restated` in
-  `data/restated_base_excluded.json`: the 25 of rule 6, 1458/2024 (rule 5b) and 3500/2023 (its take-on is explained and
+- Rule 6 (least certain): 29 records stay in the primary and are listed under `history_restated` in
+  `data/restated_base_excluded.json`: the 25 of rule 6, 1458/2024 (rule 5b), 3500/2023 (its take-on is explained and
   in R, but its table does not reconcile with note 7, -52.1m against -184.8m on the old years; clause
-  `take_on_table_unreconciled`); `src/check_low_confidence_sensitivity.py` reads them from there.
-- Primary at 35a259c: 649 records; 642 after the round-5 decisions and rule 5b (the five of rule 1, 3000/2022 and
+  `take_on_table_unreconciled`), 3500/2022 (the same clause, after review 8: -389.8m against note 7's -293.1m on the
+  all-prior-years scope, the readings conflicting on where the loss portfolio transfers sit, and the acquired share
+  outside R at most 9.1% of R either way) and 1274/2016 (clause `derived_correction`);
+  `src/check_low_confidence_sensitivity.py` reads them from there. 2001/2016 was checked against the 1% of R after review 8
+  (its UY2013 and UY2014 cells fall 24.9m and 16.7m, 2.60% of R together) and stays.
+- Primary at 35a259c: 649 records; 643 after the round-5 decisions, rule 5b and review 8 (the four of rule 1, 3000/2022 and
   1110/2022 leave).
 
 <!-- coverage:start -->
