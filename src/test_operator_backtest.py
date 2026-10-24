@@ -567,7 +567,9 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     Re-pinned on 24 October 2026 to the recorded 0.33403593971572976, 0.3340 to four places, at the recorded pass of
     38cd750 on the 643-record primary (the round-5 adjudication and review 8's decisions took six records out of the
     donor pool); the rest of the test, which ties the record to check_gamma0_vignette_results.json and to the pool, is
-    unchanged."""
+    unchanged.
+    Re-pinned on 24 October 2026 to the recorded 0.33432015847442714, 0.3343 to four places, at the recorded pass of
+    c733f9f (152468b): the round-8 readings swapped 780/2016 into the donor pool and 2232/2017 out of it."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -578,7 +580,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3340
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3343
 
 
 def test_the_draw_based_block_is_beside_the_plug_in_and_reads_the_same_targets(rec):
