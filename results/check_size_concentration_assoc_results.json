@@ -3,43 +3,43 @@
   "unit": "syndicate-year",
   "a_association_raw": {
     "logR_vs_HHI": {
-      "pearson": -0.31135598658938535,
-      "pearson_p": 6.394170320859651e-16,
-      "spearman": -0.2984763229803145,
-      "spearman_p": 1.0689468027602121e-14
+      "pearson": -0.31087859129163725,
+      "pearson_p": 7.115553689745819e-16,
+      "spearman": -0.29627553579354693,
+      "spearman_p": 1.7058106030196884e-14
     },
     "logR_vs_log_inv_line": {
-      "pearson": 0.3227054496361237,
-      "pearson_p": 4.753999071018244e-17,
-      "spearman": 0.2984763229803145,
-      "spearman_p": 1.0689468027602121e-14
+      "pearson": 0.3220255069855343,
+      "pearson_p": 5.572428750842622e-17,
+      "spearman": 0.29627553579354693,
+      "spearman_p": 1.7058106030196884e-14
     },
     "logR_vs_diversification": {
-      "pearson": 0.3113559865893854,
-      "pearson_p": 6.394170320859651e-16,
-      "spearman": 0.2984763229803145,
-      "spearman_p": 1.0689468027602121e-14
+      "pearson": 0.3108785912916373,
+      "pearson_p": 7.115553689745819e-16,
+      "spearman": 0.29627553579354693,
+      "spearman_p": 1.7058106030196884e-14
     }
   },
   "a_association_within_year": {
     "logR_vs_HHI_within_year": {
-      "pearson": -0.33781632648547033,
-      "pearson_p": 1.2538391694701034e-18,
-      "spearman": -0.34722723920458065,
-      "spearman_p": 1.174778379236488e-19
+      "pearson": -0.33771101104867307,
+      "pearson_p": 1.2869199178930585e-18,
+      "spearman": -0.3468360217851274,
+      "spearman_p": 1.2983835077366136e-19
     },
     "logR_vs_log_inv_line_within_year": {
-      "pearson": 0.35259605783373416,
-      "pearson_p": 2.934324629391445e-20,
-      "spearman": 0.3442149959771232,
-      "spearman_p": 2.528766213408313e-19
+      "pearson": 0.35243856391685746,
+      "pearson_p": 3.0573586946253965e-20,
+      "spearman": 0.34337397105970613,
+      "spearman_p": 3.127699475453339e-19
     }
   },
   "b_redundancy": {
-    "vif_logR_given_line_and_year": 1.184284686562213,
-    "vif_log_inv_line_given_size_and_year": 1.1623954432940053,
-    "condition_number_logR_logH": 1.397470924577194,
-    "r2_HHI_on_logR": 0.09694255038504973,
+    "vif_logR_given_line_and_year": 1.184049463153944,
+    "vif_log_inv_line_given_size_and_year": 1.1630497259296466,
+    "condition_number_logR_logH": 1.396410930823275,
+    "r2_HHI_on_logR": 0.0966454985234727,
     "note": "VIF<2.5 and condition number<~10 => size and concentration are not collinear as covariates. This is a design diagnostic: it does not by itself identify k and gamma in the nonlinear scale model, nor show that the floor is invariant to refitting without gamma."
   },
   "c_within_size_variation": {
@@ -89,11 +89,11 @@
       {
         "size_decile": 4,
         "n": 64,
-        "median_logR": 5.573397969374705,
-        "HHI_median": 0.309745718624727,
+        "median_logR": 5.576512925118089,
+        "HHI_median": 0.3063738413401592,
         "HHI_iqr": [
-          0.27156817272968875,
-          0.44681970123694587
+          0.26899612554303354,
+          0.44249980476338796
         ],
         "HHI_range": [
           0.2078248350450539,
@@ -186,20 +186,20 @@
       }
     ],
     "chi2_size_x_conc_tercile": {
-      "chi2": 60.617340173585205,
-      "p": 2.1516738796513098e-12,
+      "chi2": 58.036887122948094,
+      "p": 7.496149828995907e-12,
       "dof": 4,
-      "cramers_v": 0.2171090633566235,
+      "cramers_v": 0.21243769029375859,
       "grid": [
         [
-          34,
+          35,
           76,
-          104
+          103
         ],
         [
-          91,
+          90,
           57,
-          67
+          68
         ],
         [
           89,
@@ -208,6 +208,6 @@
         ]
       ]
     },
-    "median_HHI_iqr_width_within_decile": 0.17166835270075576
+    "median_HHI_iqr_width_within_decile": 0.1707944280573044
   }
 }

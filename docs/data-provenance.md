@@ -234,7 +234,7 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
 
 <!-- coverage:start -->
 Coverage is **67 % of active syndicate-years overall** (643 of 953; it was ~47 % on the
-old dataset), and it is **uneven, not flat**: the annual rate runs from **61 % in 2016 (60 of
+old dataset), and it is **uneven, not flat**: the annual rate runs from **62 % in 2016 (61 of
 99)** to **79 % in 2024**, with every other year between 62 % and 79 %. The 2020–2024 retrieval
 gap in the old dataset is closed (90–95 PDFs retrieved per year in 2020–2024 vs 92–98 active syndicates),
 <!-- coverage:end -->
@@ -293,7 +293,7 @@ implementation and sampling configuration (4 chains x 1500 post-warmup draws), s
 baseline reproduces the published calibration --- on nominal (as-reported) sizes reconstructed
 at the same year-end rates; results are reported in
 `fx_sensitivity_results.json` (the pooling exponent moves by 0.001 and the clean tail by 0.02;
-the Vignette-1 VaR$_{99.5}$ moves 0.2% -- 0.334 converted against 0.335 nominal, both committed
+the Vignette-1 VaR$_{99.5}$ moves 0.0% -- 0.334 converted against 0.334 nominal, both committed
 in that file with each fit's own 95% HDIs and sampling diagnostics. These are point
 sensitivities of two separately fitted posteriors: no posterior interval for the
 between-treatment difference is estimated; the tail-regime point ordering recurs under
@@ -333,22 +333,22 @@ separate broader-potential-target stress that assumes all 20 unresolved cases el
   $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
   gradient (coefficient on $\log R$ $+0.92$). Refitting with each observation weighted
   by $[1/\max(\hat p,0.15)]/\operatorname{mean}[1/\max(\hat p,0.15)]$ — moves the pooling exponent to
-  $k=0.628$ $[0.532,0.721]$ against $0.601$ $[0.508,0.701]$. 1 of 643 model
-  records lie below the 0.15 floor; $\hat p_{\min}=0.1237$, the mean-one weights span
-  0.95--6.31 and have descriptive Kish ESS 600. Uncapped diagnostics span 0.95--7.64
+  $k=0.628$ $[0.531,0.724]$ against $0.602$ $[0.509,0.699]$. 1 of 643 model
+  records lie below the 0.15 floor; $\hat p_{\min}=0.1240$, the mean-one weights span
+  0.95--6.31 and have descriptive Kish ESS 600. Uncapped diagnostics span 0.95--7.62
   with ESS 586; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
   The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
   are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.028
-  against 0.031; $\nu_{\text{clean}}=3.80$ against 4.04.
+  against 0.031; $\nu_{\text{clean}}=3.80$ against 4.07.
 - **High-volatility eligible-outcome stress.** Appending only the 9 records whose outcome is
   eligible but unavailable moves the conditional bracketed estimate from $k=0.597$
-  at $c=1$ to $0.564$ at $c=5$, between $0.564$ and $0.597$ across the grid. Because the
+  at $c=1$ to $0.565$ at $c=5$, between $0.565$ and $0.597$ across the grid. Because the
   construction makes those unavailable outcomes more volatile, it cannot test the
   adverse-to-sub-linearity direction.
-  $\nu_{\text{clean}}$ moves 4.09 to 3.46 at $c=5$; this is not a bound.
+  $\nu_{\text{clean}}$ moves 4.10 to 3.47 at $c=5$; this is not a bound.
 - **Eligibility-unresolved stress.** Assuming all 20 filings with no deterministic reading were economically
   eligible expands the potential target from 676 to 696 and appends them with the 9 known
-  unavailable outcomes. This 29-record stress moves $k=0.572$ at $c=1$ to $0.541$ at $c=5$.
+  unavailable outcomes. This 29-record stress moves $k=0.571$ at $c=1$ to $0.542$ at $c=5$.
   It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.
 <!-- missingness:end -->
 
