@@ -13,7 +13,9 @@ analysis session).
   * the loader removes the four records of rule 1 from the primary with a named, countable tag, and the 672 construction
     does not read the register;
   * the loader refuses an entry without its evidence (mutation-checked), a record in both buckets, a stale entry and a
-    mistyped key; the register is a hashed raw-byte input of the run identifier.
+    mistyped key; the register is a hashed raw-byte input of the run identifier;
+  * rule 4b's outcomes follow mechanically from the round-8 scan's answers and the readings' own incurred misses
+    (round8/rule_4b_scan.json; mutation-checked by flipping hand answers).
 
 Run:  python -m pytest src/test_restated_base_excluded.py -q
 """
@@ -793,6 +795,73 @@ def test_condition_ii_is_read_on_incurred_wherever_a_reading_gives_it():
             assert not (a["outcome"] == "excluded" and a["rule"] in ("1", "4b")), (k, incs)
     incs = [_incurred_t(r) for _rid, r in reads["1274_2022"]]
     assert incs == [0.25, 0.25] and reg["_adjudicated"]["1274_2022"]["outcome"] == "stands"
+
+
+def _scan_answer(text):
+    """A rule-4b scan answer read as it begins: 'yes...' (or, for (i), 'on three of the four readings...') holds,
+    'no...' or 'not both...' fails, an absent answer is None; any other form is 'unread', which the test refuses where
+    the answer decides."""
+    if text is None:
+        return None
+    t = text.strip()
+    if t.startswith("yes") or re.match(r"on (two|three|four) of the (three|four) readings", t):
+        return True
+    if t.startswith("no"):
+        return False
+    return "unread"
+
+
+def test_rule_4b_outcomes_follow_from_the_readings_incurred_misses():
+    """Rule 4b's outcome, derived mechanically (the review of final review 2's fixes, R4 6). For every record the scan
+    reads: rule 4b reaches it only where rule 1's control does not tie ('yes...') and (i) holds. For each such record
+    (780/2016, 2232/2017, 4747/2024), the (ii) answer states the incurred miss (the first signed percentage after the
+    word 'incurred'), at least two readings give an implied incurred miss and each is the stated one to the places it is
+    stated to (Z8's -81.87 is -81.9), (ii) is answered 'yes' exactly when |miss| > 10%, (iii) is
+    answered wherever (ii) holds, and the record leaves the primary under rule 4b exactly when (ii) and (iii) both hold,
+    in the scan's outcome, its 'decides' list and the register. So a hand answer flipped from 'no' to 'yes' (or a stated
+    miss the readings do not give) fails here."""
+    with io.open(str(rb.RULE_4B_SCAN), encoding="utf-8") as fh:
+        scan = json.load(fh)
+    adj = _register()["_adjudicated"]
+    reads = rb.load_readings()
+    reached, decided = [], []
+    for k, a in scan["read"].items():
+        is_4b = adj[k]["rule"] == "4b"
+        assert ("rule 4b" in a["outcome"].split("->")[-1]) == is_4b, (k, a["outcome"])
+        assert is_4b == (adj[k]["rule"] == "4b" and adj[k]["outcome"] == "excluded"), k
+        ctl = _scan_answer(a["control_does_not_tie"])
+        assert ctl in (None, True, False), (k, a["control_does_not_tie"])
+        if ctl is not True:
+            assert not is_4b, "%s: rule 4b reaches only a record whose control does not tie" % k
+            continue
+        i = _scan_answer(a["i"])
+        assert i in (True, False), (k, a["i"])
+        if not i:
+            assert not is_4b, "%s: rule 4b needs (i)" % k
+            continue
+        reached.append(k)
+        m = re.search(r"incurred[^%]*?([+-]\d+(?:\.\d+)?)%", a["ii"] or "")
+        assert m, "%s: (ii) does not state the incurred miss first: %r" % (k, a["ii"])
+        stated = float(m.group(1))
+        places = len(m.group(1).split(".")[1]) if "." in m.group(1) else 0
+        incs = [(rid, _incurred_t(r)) for rid, r in reads[k] if rid in a["readings"]]
+        given = [(rid, x) for rid, x in incs if x is not None]
+        assert len(given) >= 2, "%s: incurred first needs the readings' incurred miss: %r" % (k, incs)
+        for rid, x in given:
+            assert abs(x - stated) <= 0.5 * 10.0 ** -places + 1e-9, (
+                "%s: (ii) states %+.*f%% but %s's implied incurred miss is %+g%%" % (k, places, stated, rid, x))
+        fails = abs(stated) > 10.0
+        assert _scan_answer(a["ii"]) is fails, (
+            "%s: (ii) is answered %r with an incurred miss of %+g%%" % (k, a["ii"].split(":")[0], stated))
+        iii = _scan_answer(a["iii"])
+        if fails:
+            assert iii in (True, False), "%s: (ii) holds, so (iii) must be answered: %r" % (k, a["iii"])
+        out = fails and iii is True
+        assert is_4b == out, "%s: (ii) %s, (iii) %r, but the outcome is %r" % (k, fails, a["iii"], a["outcome"])
+        if out:
+            decided.append(k)
+    assert sorted(reached) == ["2232_2017", "4747_2024", "780_2016"], reached
+    assert sorted(decided) == sorted(scan["decides"]) == sorted(RULE_4B)
 
 
 
