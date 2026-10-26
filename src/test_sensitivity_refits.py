@@ -353,7 +353,7 @@ def test_the_record_control_caveat_reads_its_direction_from_the_fits(ctl_ritc, w
 def test_the_committed_margin_record_states_the_record_controls_own_counts():
     """The committed record's caveat and reading are the ones its own fits give (final review 2, S18: the record said
     the record control keeps more RITC records, 22 to 24 against 27 to 32, when its fits keep 13 to 25 against 25 to
-    26). Pending until the regeneration pass rewrites the record with the fixed writer."""
+    26)."""
     with io.open(os.path.join(HERE, "results", "check_margin_sensitivity_results.json"), encoding="utf-8") as fh:
         rec = json.load(fh)
     S, R, H, yr, syn, ritc = am.load_sample()

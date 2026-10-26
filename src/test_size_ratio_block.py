@@ -63,7 +63,7 @@ def test_the_counterfactual_is_the_adopted_k_and_says_it_is_not_a_fit(full):
 
 
 def test_the_recorded_block_is_the_fitted_comparator():
-    """DEFERRED-TO-REFIT: results/check_pooling_cv_extended_results.json carries size_ratio_100_2000."""
+    """results/check_pooling_cv_extended_results.json carries size_ratio_100_2000."""
     with io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"),
                             encoding="utf-8") as _fh:
         rec = json.load(_fh)
@@ -84,7 +84,7 @@ def test_the_band_count_includes_both_ends_and_only_the_band():
 
 
 def test_the_recorded_band_count_is_the_working_samples():
-    """DEFERRED-TO-REFIT: results/check_pooling_cv_extended_results.json carries the band count, and it is the count on
+    """results/check_pooling_cv_extended_results.json carries the band count, and it is the count on
     the sample the fits read (oos_validation.load): 455 of 643 on the primary at faf8b41b."""
     from oos_validation import load
     with io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"), encoding="utf-8") as _fh:

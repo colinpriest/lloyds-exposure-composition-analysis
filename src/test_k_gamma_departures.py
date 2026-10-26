@@ -284,8 +284,7 @@ class TestTheGammaFreeFit:
         assert g["gamma_free_fit"]["prior_prob"]["gamma_gt_0.05"] == gf["prior_prob"]["gamma_gt_0.05"]
 
     def test_the_record_carries_the_unrounded_gap_column(self, g):
-        """App 3's table of the two fits reads its gap column from this block (final review 2, R2 9). Pending until the
-        regeneration pass rewrites the record with the fixed writer."""
+        """App 3's table of the two fits reads its gap column from this block (final review 2, R2 9)."""
         _gap_block_is_the_draws(g["gap_in_sd_unrounded"])
 
     def test_the_sampler_is_the_headline_calibrations(self):
