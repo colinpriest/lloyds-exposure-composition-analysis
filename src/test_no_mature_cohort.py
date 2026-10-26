@@ -397,8 +397,10 @@ def test_the_records_the_rule_cannot_see_are_the_samples_records_without_triangl
                       and not any(k in sample for k in blind["records"] if k not in primary["records"]))
     if on_the_primary:
         # 643 at the recorded pass of 38cd750 (649 on the regeneration of 23 October 2026: the round-5 adjudication and
-        # review 8's decisions took six records out of the primary, none of them one with no triangle year)
-        assert primary["count"] == len(primary["records"]) == len(unseen) and len(sample) == 643
+        # review 8's decisions took six records out of the primary, none of them one with no triangle year).
+        # 632 on the regeneration at f15a357f (26 October 2026): rule 8 set the census's 11 records aside, none of them
+        # one with no triangle year (3334/2018 is still the only one)
+        assert primary["count"] == len(primary["records"]) == len(unseen) and len(sample) == 632
         assert sorted(unseen) == sorted(primary["records"]) and set(primary["records"]) <= set(blind["records"])
         for key in primary["records"]:
             assert not ra.triangle_years(_imported(key)), key

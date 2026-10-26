@@ -71,6 +71,9 @@ def test_the_quoted_counts(inputs):
     # records in three components: the exchange-rate rule's fifth record (3000/2022; 4 -> 5), 4 restated-base tables
     # (RESTATED_BASE_TABLE: a table whose base cells were restated, whose figure the mature-cohort rule cannot take)
     # and 1 unmeasurable take-on (TAKEON_BASE_UNMEASURABLE: 1110/2022), so the step is 73 -> 79
+    # the regeneration at f15a357f (26 October 2026; 632 records): rule 8, the source-history rule, sets the census's
+    # 11 records aside at the same step (SOURCE_HISTORY_SET_ASIDE, data/restated_base_excluded.json), so the step is
+    # 79 -> 90; the basis step is unchanged
     assert r["identity_basis"] == "98 + 6 = 104"
     assert (r["flow_basis_step_net"], r["flow_basis_step_unstated"]) == (82, 16)
     assert r["unusable_severity_components"] == {"fx_untranslated_table": 5,
@@ -80,8 +83,9 @@ def test_the_quoted_counts(inputs):
                                                  "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1,
                                                  "restated_base_table": 4,
+                                                 "source_history_set_aside": 11,
                                                  "takeon_base_unmeasurable": 1}
-    assert r["identity_unusable_severity"] == "5 + 5 + 1 + 56 + 6 + 1 + 4 + 1 = 79"
+    assert r["identity_unusable_severity"] == "5 + 5 + 1 + 56 + 6 + 1 + 4 + 11 + 1 = 90"
     g = MC.regime_composition(rows)
     # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
     # of 38 and the corpus's 53 -> 55; the scanned filings' 60 and the basis identities above are unchanged
@@ -90,9 +94,12 @@ def test_the_quoted_counts(inputs):
     # the recorded pass of 24 October 2026 at 38cd750 (643 records): the working sample's rows 27 + 5 + 2 of 34 -> 26 + 5
     # + 2 of 33 (the 33 RITC-regime records of the headline fit; one RITC-flagged record left with the six); the
     # scanned filings' 60 and the corpus's 55 are unchanged
-    assert g["working_sample"]["composition"] == {"ritc_flagged": 26, "confirmed_transfer_not_flagged": 5,
+    # the regeneration at f15a357f (26 October 2026; 632 records): the working sample's rows 26 + 5 + 2 of 33 -> 20 + 5
+    # + 2 of 27 (the 27 RITC-regime records of the headline fit; six RITC-flagged records are among the 11 set aside by
+    # rule 8); the scanned filings' 60 and the corpus's 55 are unchanged
+    assert g["working_sample"]["composition"] == {"ritc_flagged": 20, "confirmed_transfer_not_flagged": 5,
                                                   "takeon_only": 2}
-    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (33, 60, 55)
+    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (27, 60, 55)
 
 
 def test_a_flow_that_disagrees_is_refused(inputs):

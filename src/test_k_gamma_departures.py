@@ -271,8 +271,12 @@ class TestTheGammaFreeFit:
     def test_form_and_the_two_fits(self, g):
         # 643 (33 RITC-regime) since the regeneration of 24 October 2026 at 38cd750 (the round-5 adjudication and review
         # 8's decisions took six records out of the primary, one of them RITC-regime); 649 (34) from the regeneration of
-        # 23 October 2026 on the primary sample; 672 (38) before it
-        assert (g["n"], g["n_ritc"]) == (643, 33) and g["fit_seed"] == 42
+        # 23 October 2026 on the primary sample; 672 (38) before it.
+        # Re-pinned on 26 October 2026 to the record regenerated at f15a357f: 632 (27 RITC-regime). Rule 8 (the source-history
+        # rule) set the census's 11 records aside, six of them RITC-regime (1884/2021, 2008/2023, 3000/2016 and
+        # 3500/2021, 3500/2022, 3500/2023, which carry ritc_strong in the 643-record loader output): 33 -> 27, and
+        # syndicate 2008, whose only record was 2008/2023, left the sample (118 -> 117 syndicates).
+        assert (g["n"], g["n_ritc"]) == (632, 27) and g["fit_seed"] == 42
         assert set(g["headline_fit"]["params"]) == set(G.PARAMS) and "gamma" not in g["headline_fit"]["params"]
         assert set(g["gamma_free_fit"]["params"]) == set(G.PARAMS) | {"gamma"}
         for fit in ("headline_fit", "gamma_free_fit"):
@@ -451,8 +455,10 @@ class TestTheKSupport:
     def test_form_and_sampler(self, ks):
         """The regenerated record's fits carry no gamma (option B)."""
         # 643 (33 RITC-regime) since the regeneration of 24 October 2026 at 38cd750 (the round-5 adjudication and review
-        # 8's decisions took six records out of the primary, one of them RITC-regime); 649 (34) before it
-        assert (ks["n"], ks["n_ritc"]) == (643, 33)
+        # 8's decisions took six records out of the primary, one of them RITC-regime); 649 (34) before it.
+        # Re-pinned on 26 October 2026 to the record regenerated at f15a357f: 632 (27 RITC-regime), because rule 8 set the
+        # census's 11 records aside, six of them RITC-regime (see TestTheGammaFreeFit.test_form_and_the_two_fits).
+        assert (ks["n"], ks["n_ritc"]) == (632, 27)
         assert (ks["draws"], ks["tune"], ks["chains"], ks["target_accept"], ks["fit_seed"]) == (1500, 1500, 4, 0.98, 42)
         assert ks["supports"] == ["logistic_0.25", "logistic_0"] == list(KS.SUPPORTS)
         for name, f in ks["fits"].items():

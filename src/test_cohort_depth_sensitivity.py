@@ -161,8 +161,10 @@ def test_the_partition_covers_every_primary_record_once_on_the_real_corpus():
     kept, out = [r["record"] for r in rows], [x["record"] for x in left]
     # 643 primary records at the recorded pass of 38cd750 (649 before the round-5 adjudication and review 8's decisions
     # took six records out of the primary: 4 restated-base tables, 1 unmeasurable take-on and one fifth FX record,
-    # 3000/2022, among them); the partition is exhaustive at either size
-    assert len(rows) + len(left) == len(recs) == 643
+    # 3000/2022, among them); the partition is exhaustive at either size.
+    # Re-pinned on 26 October 2026 to 632 on the regeneration at f15a357f: rule 8 (the source-history rule) set the
+    # census's 11 records aside (cccdbe06), so the primary is 632 records.
+    assert len(rows) + len(left) == len(recs) == 632
     assert sorted(kept + out) == sorted(keys) and not set(kept) & set(out)
     assert kept == [k for k in keys if k in set(kept)], "the kept records are in the primary's order"
     assert {x["reason"] for x in left} <= set(D.REASONS)
@@ -586,15 +588,20 @@ def rec():
 def test_the_record_counts_every_primary_record_and_every_reason(rec):
     # 643 primary records = 581 kept + 62 left out at the recorded pass of 38cd750 (649 = 592 + 57 before the round-5
     # adjudication and review 8's decisions; see test_the_partition_covers_every_primary_record_once_on_the_real_corpus)
-    assert rec["n_primary"] == 643 == rec["n_kept"] + rec["n_left_out"] == len(rec["records"]) + len(rec["left_out"])
-    assert (rec["n_kept"], rec["n_left_out"]) == (581, 62)
+    # Re-pinned on 26 October 2026 to the record regenerated at f15a357f (rule 8 took the census's 11 records out of the
+    # primary: 632): 588 kept + 44 left out. The record's own partition_before_repair (the script without the cohort-depth
+    # repair of b04812d3) is 570 kept + 62 left out; the repair keeps 19 of the 20 records whose stored grid does not
+    # reproduce their figure (from their register cells), sends 1609/2023 (no cohort at t-3) to "no figure at t-3", and
+    # sends 5678/2016 there too (its older-cohort sum is empty; it was kept on a zero): 570 + 19 - 1 = 588.
+    assert rec["n_primary"] == 632 == rec["n_kept"] + rec["n_left_out"] == len(rec["records"]) + len(rec["left_out"])
+    assert (rec["n_kept"], rec["n_left_out"]) == (588, 44)
     assert rec["lags"] == {"primary": 2, "sensitivity": 3} and rec["operator"] == "size_only"
     assert sum(rec["left_out_by_reason"].values()) == rec["n_left_out"]
     assert set(rec["left_out_by_reason"]) == set(D.REASONS)
     for r in D.REASONS:
         assert rec["left_out_by_reason"][r] == sum(1 for x in rec["left_out"] if x["reason"] == r)
     keys = [r["record"] for r in rec["records"]] + [x["record"] for x in rec["left_out"]]
-    assert len(keys) == len(set(keys)) == 643
+    assert len(keys) == len(set(keys)) == 632
     assert set(keys) == {CS.key_of(o) for o in SS.primary()}
     assert sum(rec["grids_used"].values()) == rec["n_kept"]
     # both honest backtests are run, on the same kept records (test_cohort_depth_honest_backtest.py): nothing is left to run

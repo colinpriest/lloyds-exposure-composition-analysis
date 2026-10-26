@@ -253,15 +253,24 @@ def test_the_syndicate_control_raises_when_even_the_merged_strata_cannot_supply_
                                    tol=1.0)
 
 
-def test_the_current_primary_merges_the_third_quartile_for_the_37_syndicate_variant_only():
-    """The 643-record primary: the any_scan_hit variant (37 syndicates flagged, 36 in the sample) leaves out 15
-    syndicates of the third quartile, which holds 14 unflagged; the other two variants need no merge."""
+def test_the_current_primary_needs_no_merge_for_any_variant():
+    """The 632-record primary (renamed on 26 October 2026 from test_the_current_primary_merges_the_third_quartile_for_
+    the_37_syndicate_variant_only): the any_scan_hit variant (37 syndicates flagged, 35 in the sample) leaves out 13
+    syndicates of the third quartile, which holds 16 unflagged, so no stratum falls short and no variant merges.
+
+    On the 643-record primary the same variant (36 of the 37 in the sample) left out 15 syndicates of the third quartile,
+    which held 14 unflagged (flagged [2, 8, 15, 11], unflagged [28, 21, 14, 19], groups [[0], [1, 2], [3]]). Rule 8 (the
+    source-history rule) set 11 records aside and syndicate 2008, a flagged one, left the sample; the quartiles of the
+    syndicates' total R moved with it. The merge itself is exercised on the toy syndicates above, where it is forced."""
     S, R, H, yr, syn, ritc = am.load_sample()
     got = {name: CM.strata_record(R, syn, synds) for name, synds in CM.margin_variants().items()}
-    assert got["any_scan_hit"]["flagged_per_stratum"] == [2, 8, 15, 11]
-    assert got["any_scan_hit"]["unflagged_per_stratum"] == [28, 21, 14, 19]
-    assert got["any_scan_hit"]["groups"] == [[0], [1, 2], [3]]
-    assert got["held_margin"]["strata_merged"] == got["held_or_conditional"]["strata_merged"] == []
+    assert got["any_scan_hit"]["flagged_per_stratum"] == [2, 8, 13, 12]
+    assert got["any_scan_hit"]["unflagged_per_stratum"] == [27, 21, 16, 18]
+    assert got["any_scan_hit"]["groups"] == [[0], [1], [2], [3]]
+    assert all(g["strata_merged"] == [] for g in got.values())
+    # no stratum is short: every variant leaves out no more than the stratum holds unflagged
+    for g in got.values():
+        assert all(f <= u for f, u in zip(g["flagged_per_stratum"], g["unflagged_per_stratum"]))
     out = CM.run(n_control=2, fit_fn=_fake_fit)
     per = out["controls_design"]["syndicate"]["per_variant"]
     assert per["any_scan_hit"]["strata"] == got["any_scan_hit"]
@@ -329,7 +338,8 @@ def test_the_margin_record_has_its_variants_two_matched_controls_each_and_readin
         assert out["variants"][name]["spec"] == ("the adopted model without the %d syndicates of %s in the sample "
                                                  "(%d flagged)" % (len(set(synds) & set(syn.tolist())), name,
                                                                    len(synds)))
-    assert "the 36 syndicates of any_scan_hit in the sample (37 flagged)" in out["variants"]["any_scan_hit"]["spec"]
+    # 35 of the 37 on the 632-record primary (26 October 2026: syndicate 2008 left with rule 8); it was 36 of the 37
+    assert "the 35 syndicates of any_scan_hit in the sample (37 flagged)" in out["variants"]["any_scan_hit"]["spec"]
     assert "2/(n+1)" in out["controls_design"]["min_max_flag_caveat"]
     assert "indication" in out["reading"] and "not proof" in out["reading"]
     assert "lower bound" not in out["reading"] or "HTML" in out["flag_is_a_lower_bound"]

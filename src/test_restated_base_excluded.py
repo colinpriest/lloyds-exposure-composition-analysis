@@ -102,6 +102,18 @@ def _ws(records):
             and r["pyd_basis"] == "gross"}
 
 
+#: the working sample of the 643-record primary as the loader wrote it into model/exposure_results.json at 9c227e7a, before
+#: rule 8 (key -> opening reserves and figure). model/exposure_results.json itself is regenerated at every pass (at
+#: f15a357f it became the 632-record primary), so the census tests compare the loader with this fixed baseline (built
+#: from 'git show 9c227e7a:model/exposure_results.json' with _ws() above)
+BEFORE_RULE_8 = os.path.join(HERE, "tests_data", "exposure_results_working_sample_before_rule_8.json")
+
+
+def _before_rule_8():
+    with io.open(BEFORE_RULE_8, encoding="utf-8") as fh:
+        return {"%s_%s" % (o["syndicate"], o["year"]): o for o in json.load(fh)["observations"]}
+
+
 # --- the register and the adjudication --------------------------------------------------------------------------------
 
 def test_the_register_equals_its_rebuild_from_the_archived_readings():
@@ -1117,10 +1129,9 @@ def test_the_primary_sets_the_11_records_aside_with_one_tag_one_counter_and_no_f
     records stay."""
     prim, old = loaded[ra.MATURE_COHORT_OUTCOME], loaded[ra.PRECEDENCE_672_OUTCOME]
     assert ra.SOURCE_HISTORY_TAG == "SOURCE_HISTORY_SET_ASIDE"
-    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
-        # the committed loader output at 9c227e7a: the 643-record primary before rule 8
-        committed = json.load(fh)["observations"]
-    committed_by_key = {"%s_%s" % (o["syndicate"], o["year"]): o for o in committed}
+    # the loader output at 9c227e7a: the 643-record primary before rule 8 (the committed model/exposure_results.json was
+    # regenerated on the 632-record primary at f15a357f, so the baseline is the fixture in tests_data/)
+    committed_by_key = _before_rule_8()
     assert len({ra.SOURCE_HISTORY_TAG, ra.RESTATED_BASE_TAG, ra.TAKEON_UNMEASURABLE_TAG, ra.TAKEON_TAG}) == 4
     for k in SET_ASIDE:
         r = prim["by_key"][k]
@@ -1139,7 +1150,7 @@ def test_the_primary_sets_the_11_records_aside_with_one_tag_one_counter_and_no_f
     assert "source_history_set_aside" not in old["counters"]
     assert not any(e["status"] == ra.SOURCE_HISTORY_TAG for e in old["log"].values())
     ws_new = _ws(prim["records"])
-    ws_old = _ws(committed)
+    ws_old = set(committed_by_key)
     assert set(SET_ASIDE) <= ws_old and not set(SET_ASIDE) & ws_new
     assert len(ws_new) == 632 and len(ws_old) == 643 and ws_old - ws_new == set(SET_ASIDE)
     # 6131/2020 is read under the same protocol and stays; every 1991 record stays
@@ -1150,7 +1161,7 @@ def test_the_primary_sets_the_11_records_aside_with_one_tag_one_counter_and_no_f
     import assumed_business
     occ = assumed_business.keys()
     assert len({prim["by_key"][k]["syndicate"] for k in ws_new}) == 117
-    assert len({o["syndicate"] for o in committed if "%s_%s" % (o["syndicate"], o["year"]) in ws_old}) == 118
+    assert len({o["syndicate"] for o in committed_by_key.values()}) == 118
     assert sum(1 for k in ws_new if k in occ) == 27 and sum(1 for k in ws_old if k in occ) == 33
 
 
@@ -1371,11 +1382,10 @@ def test_1609_2024_is_back_at_the_printed_figure_with_the_reversal_and_the_earli
 
 
 def test_the_census_figure_changes_move_only_three_records_and_no_r_in_the_working_sample(loaded):
-    """On fixed inputs (the loader against the committed model/exposure_results.json, the loader's output at 9c227e7a):
+    """On fixed inputs (the loader against the working sample of the loader's output at 9c227e7a, kept in tests_data/):
     of the 632 records that remain in the working sample, exactly 1609/2024, 3330/2017 and 3330/2018 change their figure, and
     no record's R changes."""
-    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
-        old = {"%s_%s" % (o["syndicate"], o["year"]): o for o in json.load(fh)["observations"]}
+    old = _before_rule_8()
     prim = loaded[ra.MATURE_COHORT_OUTCOME]["by_key"]
     moved, r_moved = [], []
     for k in sorted(_ws(loaded[ra.MATURE_COHORT_OUTCOME]["records"])):
@@ -1385,6 +1395,30 @@ def test_the_census_figure_changes_move_only_three_records_and_no_r_in_the_worki
         if abs(n["opening_reserves_gbp_m"] - o["opening_reserves_gbp_m"]) > 1e-9:
             r_moved.append(k)
     assert moved == ["1609_2024", "3330_2017", "3330_2018"] and r_moved == []
+    # the three figures are the register's, and the baseline still holds the figures they replaced (a baseline that had
+    # lost them would also report no move); 1609/2024 returns to its as-labelled -0.185m USD
+    assert (old["1609_2024"]["pyd_gbp_m"], old["3330_2017"]["pyd_gbp_m"], old["3330_2018"]["pyd_gbp_m"]) != (
+        prim["1609_2024"]["pyd_gbp_m"], prim["3330_2017"]["pyd_gbp_m"], prim["3330_2018"]["pyd_gbp_m"])
+    assert prim["3330_2018"]["pyd_gbp_m"] == pytest.approx(1.094) and prim["3330_2017"]["pyd_gbp_m"] == pytest.approx(0.559)
+
+
+def test_the_committed_loader_output_is_the_regenerated_primary(loaded):
+    """The committed model/exposure_results.json (regenerated at f15a357f) is the loader's output on the 632-record primary:
+    the 11 set-aside records carry the one tag and no figure, the working sample is the loader's 632 records, and on each of
+    them the figure and R are the loader's. A regeneration that did not take the rule, or a loader changed since, shows here."""
+    prim = loaded[ra.MATURE_COHORT_OUTCOME]["by_key"]
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
+        committed = json.load(fh)["observations"]
+    by_key = {"%s_%s" % (o["syndicate"], o["year"]): o for o in committed}
+    for k in SET_ASIDE:
+        assert by_key[k]["data_quality_tag"] == ra.SOURCE_HISTORY_TAG and by_key[k]["s_raw_a"] is None, k
+        assert by_key[k]["pyd_gbp_m"] is None, k
+    ws = _ws(committed)
+    assert len(ws) == 632 and not ws & set(SET_ASIDE) and ws == _ws(loaded[ra.MATURE_COHORT_OUTCOME]["records"])
+    assert ws == set(_before_rule_8()) - set(SET_ASIDE)
+    for k in sorted(ws):
+        assert abs(by_key[k]["pyd_gbp_m"] - prim[k]["pyd_gbp_m"]) <= 1e-9, k
+        assert abs(by_key[k]["opening_reserves_gbp_m"] - prim[k]["opening_reserves_gbp_m"]) <= 1e-9, k
 
 
 # --- the rule-4b scan, the take-on bases, the outbound register and the least-certain list (census follow-ups) ----------------

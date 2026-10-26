@@ -82,7 +82,12 @@ def test_the_reported_pool_gives_a_negative_concentration_contribution(pool):
     manuscript prints."""
     te, se, ce, v = _contribution(pool)
     assert ce < 0
-    assert v[0] == pytest.approx(0.711, abs=0.001)   # raw pool
+    # Raw pool 0.711 (0.7110) on the 643-record primary. Re-pinned on 26 October 2026 to 0.672 (0.67243372, the record's
+    # raw_pool v995 in check_operator_backtest_results.json) on the regeneration at f15a357f: rule 8 set 11 records aside
+    # (632 donors), among them 6131/2021, whose severity (0.839) was the second largest in the pool. Without it the
+    # 99.5% point moves from the 4th-largest severity (1991/2020, 0.7113) to the 4th-largest of the rest (5820/2016,
+    # 0.6724), read from the 643-record loader output at f6e787b9.
+    assert v[0] == pytest.approx(0.672, abs=0.001)   # raw pool
     # fully transferred: 0.282 on the regenerated run of 6 October 2026 (0.284 on the 1 October outputs, 0.280 before
     # round 62's records). The refit moved gamma from 0.425 to 0.356 and 88 records' composition changed, so the
     # overlay's VaR the manuscript prints (0.284 at gamma 0.425) is stale until stage 4
@@ -90,7 +95,9 @@ def test_the_reported_pool_gives_a_negative_concentration_contribution(pool):
     # and 0.321 (0.32094) on the regeneration of 24 October 2026 at 38cd750 on the 643-record primary (643 donors:
     # the round-5 adjudication and review 8's decisions took six records out). The tolerance is unchanged; the
     # manuscript prints 0.321 as the concentration overlay's Vignette 1 VaR(99.5).
-    assert v[7] == pytest.approx(0.321, abs=0.001)
+    # and 0.329 (0.32868656, the overlay's V1_v995 in check_gamma0_vignette_results.json) on the regeneration at f15a357f
+    # (632 donors: rule 8 set 11 records aside); the tolerance is unchanged.
+    assert v[7] == pytest.approx(0.329, abs=0.001)
     assert te + se + ce == pytest.approx(v[7] - v[0])
 
 

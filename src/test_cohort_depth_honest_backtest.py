@@ -572,7 +572,10 @@ def test_the_committed_record_holds_the_two_depths_on_the_same_kept_records_and_
     for r in D.REASONS:
         assert sum(lo["size_quartile_%d" % j]["by_reason"][r] for j in (1, 2, 3, 4)) == rec["left_out_by_reason"][r]
     assert sum(v["n_left_out"] for v in lo["by_syndicate"].values()) == rec["n_left_out"]
-    assert [r["record"] for r in lo["syndicate_1991"]["records"]] == ["1991_2015", "1991_2018"]
+    # Re-pinned on 26 October 2026 to the record regenerated at f15a357f (632 records): the cohort-depth repair (b04812d3)
+    # read 1991/2018 from its register cells (data/pyd_confirmed_figures.json: 42.675m at t-2, 4.085m at t-3), so it is kept
+    # and only 1991/2015 (no usable UW year in the triangle) stays out. It was ["1991_2015", "1991_2018"] at 38cd750.
+    assert [r["record"] for r in lo["syndicate_1991"]["records"]] == ["1991_2015"]
     # the quartile of a record in the table is the one the primary's committed backtest gives it
     pq = {(s, y): q for s, y, q in zip(prim["per_target"]["targets"]["syndicate"], prim["per_target"]["targets"]["year"],
                                       prim["per_target"]["targets"]["size_quartile"])}

@@ -85,11 +85,12 @@ def test_the_band_count_includes_both_ends_and_only_the_band():
 
 def test_the_recorded_band_count_is_the_working_samples():
     """results/check_pooling_cv_extended_results.json carries the band count, and it is the count on
-    the sample the fits read (oos_validation.load): 455 of 643 on the primary at faf8b41b."""
+    the sample the fits read (oos_validation.load): 455 of 643 on the primary at faf8b41b; 451 of 632 on the primary
+    regenerated at f15a357f (26 October 2026: rule 8 set 11 records aside, four of them inside the 50m to 1bn band)."""
     from oos_validation import load
     with io.open(os.path.join(HERE, "results", "check_pooling_cv_extended_results.json"), encoding="utf-8") as _fh:
         rec = json.load(_fh)
     R = load()[1]
     blk = rec["observed_size_range_m"]
     assert blk["n"] == len(R) and blk["n_in_band"] == int(np.sum((R >= 50.0) & (R <= 1000.0)))
-    assert (blk["n_in_band"], blk["n"]) == (455, 643)
+    assert (blk["n_in_band"], blk["n"]) == (451, 632)

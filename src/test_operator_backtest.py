@@ -436,9 +436,12 @@ def test_a_fold_refit_returns_its_posterior_means_and_diagnostics(monkeypatch):
     r = BT.fit_training(3)
     S, R, H, yr, syn, ritc = am.load_sample()
     held = OV.fold_assignment(syn, BT.K_HONEST) == 3
-    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 643  # 649 until the pass of 38cd750
+    assert (r["n_train"], r["n_held_out"]) == (int((~held).sum()), int(held.sum())) and r["n_train"] + r["n_held_out"] == 632  # 643 at the pass of 38cd750, 649 before it
     assert r["n_held_out_syndicates"] == len(set(syn[held].tolist()))
-    assert r["n_train_syndicates"] + r["n_held_out_syndicates"] == 118
+    # 117 syndicates since the regeneration at f15a357f (26 October 2026): rule 8 set 2008/2023, syndicate 2008's only
+    # record, aside. The folds are the frozen map's deal of the 118 syndicates of the 643-record sample, restricted to
+    # the 117 that remain (src/data/fold_map.json via oos_validation.fold_assignment), so no other syndicate moves fold.
+    assert r["n_train_syndicates"] + r["n_held_out_syndicates"] == 117
     assert set(r["means"]) == set(BT.OPERATOR_PARAMS) and 0.5 < r["means"]["k"] < 1.0
     assert set(r["diagnostics"]) == {"max_rhat", "min_ess_bulk", "divergences"} and r["seconds"] > 0
     # the draws the parameter-uncertainty version mixes: evenly spaced through the 80 (2 chains x 40), gamma exactly 0
@@ -474,12 +477,14 @@ def test_the_record_has_both_versions_all_methods_and_both_pool_rules(small_run)
     # 643 (118 syndicates, 33 RITC-regime) since the recorded pass of 24 October 2026 at 38cd750 (the round-5
     # adjudication and review 8's decisions took six records out of the primary, one of them RITC-regime; no syndicate
     # left, so the syndicates stay 118)
-    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (643, 118, 33)
+    # 632 (117 syndicates, 27 RITC-regime) since the regeneration at f15a357f (26 October 2026): rule 8 set the census's
+    # 11 records aside, six of them RITC-regime, and syndicate 2008 (2008/2023 only) left
+    assert (o["n"], o["n_syndicates"], o["n_ritc"]) == (632, 117, 27)
     for ver in ("honest", "cheap"):
         assert set(o[ver]["pool_rules"]) == set(BT.POOL_RULES)
         for rule in BT.POOL_RULES:
             assert set(BT.METHODS) <= set(o[ver]["pool_rules"][rule])
-    assert o["honest"]["folds"] == 10 and o["cheap"]["folds"] == 118
+    assert o["honest"]["folds"] == 10 and o["cheap"]["folds"] == 117   # the cheap version leaves one syndicate out at a time
     assert o["honest"]["leaks_held_out_syndicate_into_scale_law"] is False
     assert o["cheap"]["leaks_held_out_syndicate_into_scale_law"] is True
 
@@ -530,13 +535,16 @@ def test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly(re
         d = f["diagnostics"]
         assert d["divergences"] == 0 and d["max_rhat"] <= 1.01 and d["min_ess_bulk"] >= 400, (f["fold"], d)
         assert set(f["params"]) == set(BT.FIT_PARAMS) and 0.5 < f["params"]["k"]["mean"] < 1.0
-    assert sum(f["n_held_out"] for f in fits) == 643 and sum(f["n_held_out_syndicates"] for f in fits) == 118
+    # 632 records and 117 syndicates since the regeneration at f15a357f (26 October 2026): see
+    # test_the_record_has_both_versions_all_methods_and_both_pool_rules (643 and 118 at 38cd750)
+    assert sum(f["n_held_out"] for f in fits) == 632 and sum(f["n_held_out_syndicates"] for f in fits) == 117
     assert rec["sampler"] == {"draws": 1500, "tune": 1500, "chains": 4, "target_accept": 0.98, "seed": 42}
 
 
 def test_the_counts_add_up_and_match_the_expected_counts(rec):
     counts = rec["size_quartiles"]["counts"]
-    assert sum(counts) == 643 and len(counts) == 4   # 643 (33 RITC-regime) at 38cd750; 649 (34) before it
+    # 632 (27 RITC-regime) since the regeneration at f15a357f (26 October 2026); 643 (33) at 38cd750; 649 (34) before it
+    assert sum(counts) == 632 and len(counts) == 4
     for ver, rule, blk in _methods_block(rec):
         for m in BT.METHODS:
             for a in BT.LEVELS:
@@ -544,7 +552,7 @@ def test_the_counts_add_up_and_match_the_expected_counts(rec):
                 e, x = row["expected"], row["exceedances"]
                 assert x["clean"] + x["ritc"] == x["all"], (ver, rule, m, a)
                 assert sum(x["size_quartile_%d" % j] for j in (1, 2, 3, 4)) == x["all"], (ver, rule, m, a)
-                assert e["all"] == pytest.approx(643 * (1 - a)) and e["ritc"] == pytest.approx(33 * (1 - a))
+                assert e["all"] == pytest.approx(632 * (1 - a)) and e["ritc"] == pytest.approx(27 * (1 - a))
                 assert [e["size_quartile_%d" % (j + 1)] for j in range(4)] == pytest.approx([c * (1 - a) for c in counts])
                 for g, rate in row["rate_bayes_bootstrap"].items():
                     assert rate["lo"] <= rate["mean"] <= rate["hi"] and rate["nominal"] == pytest.approx(1 - a)
@@ -572,11 +580,12 @@ def test_every_count_the_record_names_is_the_samples(rec):
     Every count the record's strings name is the sample's, and the two labels that carried the stale one are among
     those read."""
     pool_n = len(BT.load_pool()[0])
-    assert rec["n"] == 643 == sum(rec["size_quartiles"]["counts"]) == pool_n
+    # 632 since the regeneration at f15a357f (26 October 2026): rule 8 set the census's 11 records aside
+    assert rec["n"] == 632 == sum(rec["size_quartiles"]["counts"]) == pool_n
     named = [(s, int(m.group(1))) for s in _strings(rec) for m in NAMED_COUNT.finditer(s)]
     assert [(s, n) for s, n in named if n != rec["n"]] == []
-    assert rec["size_quartiles"]["of"] == "R of the 643 targets"
-    assert rec["vignette_figures"]["pool"] == "the published 643-donor pool, full sample (no donor held out)"
+    assert rec["size_quartiles"]["of"] == "R of the 632 targets"
+    assert rec["vignette_figures"]["pool"] == "the published 632-donor pool, full sample (no donor held out)"
     assert {s for s, _n in named} >= {rec["size_quartiles"]["of"], rec["vignette_figures"]["pool"]}
 
 
@@ -589,11 +598,12 @@ def test_exceedances_cannot_rise_with_the_level(rec):
 
 
 def test_the_record_scores_every_target_once(rec):
-    # at 90% the three methods are scored on the same 643 targets: the cheapest sanity that none was dropped
-    # (64.3 = 643 x 0.1 at the recorded pass of 38cd750; 64.9 on the 649)
+    # at 90% the three methods are scored on the same 632 targets: the cheapest sanity that none was dropped
+    # (63.2 = 632 x 0.1 on the regeneration at f15a357f, 26 October 2026; 64.3 on the 643 of the recorded pass of 38cd750;
+    # 64.9 on the 649)
     for _ver, _rule, blk in _methods_block(rec):
         for m in BT.METHODS:
-            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(64.3)
+            assert blk[m]["0.9"]["expected"]["all"] == pytest.approx(63.2)
 
 
 def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(rec):
@@ -611,7 +621,11 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     donor pool); the rest of the test, which ties the record to check_gamma0_vignette_results.json and to the pool, is
     unchanged.
     Re-pinned on 24 October 2026 to the recorded 0.33432015847442714, 0.3343 to four places, at the recorded pass of
-    c733f9f (152468b): the round-8 readings swapped 780/2016 into the donor pool and 2232/2017 out of it."""
+    c733f9f (152468b): the round-8 readings swapped 780/2016 into the donor pool and 2232/2017 out of it.
+    Re-pinned on 26 October 2026 to the recorded 0.34240782846350193, 0.3424 to four places, on the regeneration at
+    f15a357f (632 donors: rule 8, the source-history rule, set the census's 11 records aside, among them 6131/2021, and
+    the calibration was refitted on the smaller sample). The test ties the record to check_gamma0_vignette_results.json
+    and to the pool unchanged, so the pin follows both."""
     vf = rec["vignette_figures"]
     cen = _json("results/check_gamma0_vignette_results.json")[TO.HEADLINE]["centre"]
     assert vf["operator_size_only"]["V1"]["v995"] == cen["V1_v995"] and vf["operator_size_only"]["V1"]["v99"] == cen["V1_v99"]
@@ -622,7 +636,7 @@ def test_the_vignette_figures_are_the_published_operators_and_the_sqrt_r_rule(re
     assert vf["sqrt_R"]["V1"]["v99"] == var_q(S * np.sqrt(R / 500.0), 0.99)
     assert vf["raw_pool"]["v995"] == var_q(S, 0.995)
     assert vf["targets"]["V1"] == [500.0, 0.17]
-    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3343
+    assert round(vf["operator_size_only"]["V1"]["v995"], 4) == 0.3424
 
 
 def test_the_draw_based_block_is_beside_the_plug_in_and_reads_the_same_targets(rec):
@@ -772,7 +786,7 @@ def test_the_per_target_block_in_the_small_run_reproduces_the_blocks_counts(smal
     """The flags, the table and the record's own exceedance counts are three routes to one number; with the draws at the
     means the draw block's flags are the plug-in's."""
     pt = small_run["per_target"]
-    assert len(pt["targets"]["syndicate"]) == 643   # 649 until the recorded pass of 38cd750
+    assert len(pt["targets"]["syndicate"]) == 632   # 643 at the recorded pass of 38cd750, 649 before it
     for src, rule_blocks in (("honest_plug_in", small_run["honest"]["pool_rules"]),
                              ("honest_posterior_draws", small_run["honest_posterior_draws"]["pool_rules"])):
         for rule in BT.POOL_RULES:
@@ -802,7 +816,7 @@ def test_the_record_keeps_the_flags_and_the_quartile_table_and_they_agree_with_t
             for a in BT.LEVELS:
                 key = "%g" % a
                 flags = np.array(pt["exceedance_flags"][src][rule][key])
-                assert len(flags) == 643 and set(flags.tolist()) <= {0, 1}
+                assert len(flags) == 632 and set(flags.tolist()) <= {0, 1}
                 x = blocks[rule]["operator_size_only"][key]["exceedances"]
                 assert int(flags.sum()) == x["all"]
                 tab = pt["by_size_quartile"][src][rule][key]

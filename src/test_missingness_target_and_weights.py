@@ -90,8 +90,10 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # the recorded pass of 24 October 2026 at 38cd750 (the round-5 adjudication and review 8's decisions): six more
     # scientific exclusions (the fifth exchange-rate record 3000/2022, 4 restated-base tables and 1 unmeasurable
     # take-on, 1110/2022) leave the working sample: 256 -> 262 and 649 -> 643
+    # the regeneration at f15a357f (26 October 2026): rule 8, the source-history rule, sets the census's 11 records aside
+    # as scientific exclusions: 262 -> 273 and 643 -> 632
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (262, 9, 24, 643)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (273, 9, 24, 632)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)
@@ -143,7 +145,9 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     # the regeneration of 23 October 2026 on the primary sample (649 records): 609 -> 594
     # the recorded pass of 24 October 2026 at 38cd750 (643 records, the propensity refitted on the smaller sample
     # by the pass): 594 -> 586 (586.16)
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 586
+    # the regeneration at f15a357f (26 October 2026; 632 records, the propensity refitted on the working sample without
+    # the 11 records rule 8 sets aside): 586 -> 562 (561.84, the record's own value)
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 562
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])

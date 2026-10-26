@@ -218,18 +218,27 @@ def test_a_confirmed_record_outside_the_sample_carries_the_loaders_reason(commit
     register's own note, which had said otherwise, must say the same. The decision of 1 October 2026 put three more
     confirmed records in run-off, years whose filings state run-off for the whole year outside the RITC regime:
     780/2020, 1861/2021 and 5820/2019. Their register entries never said they would be in the sample, so their rows
-    carry the loader's reason and the register is not edited (a manifest step reads it)."""
+    carry the loader's reason and the register is not edited (a manifest step reads it). Since rule 8 (26 October
+    2026) the source-history rule sets 1084/2018 aside (the UK Division's RITC to 1274 falls between the diagonals), so
+    a fifth confirmed record is outside the sample, with the loader's pre-corpus disposition CORPUS:SOURCE_HISTORY_SET_ASIDE
+    in place of IN RUNOFF."""
     S, R, keys, _unused = committed
     from fx_sensitivity import fx_map
     ledger = O.loader_dispositions()
     _S2, _R2, rows = O.retained_base(S, R, keys, fx_map(), O.load_register(), ledger)
     reg = O.load_register()["confirmed"]
     outside = [k for k in reg if k not in keys]
-    assert outside == ["780_2020", "1861_2021", "5820_2019", "2468_2022"], outside
+    assert outside == ["780_2020", "1861_2021", "5820_2019", "2468_2022", "1084_2018"], outside
     for key in outside:
         row, disposition = rows[key], ledger[key]
-        assert not disposition.startswith("CORPUS:"), (key, disposition)
         assert row["applied"] is False and row["in_working_sample"] is False
+        if key == "1084_2018":
+            # set aside by rule 8 at the loader's corpus step: the row names the loader's disposition, not run-off
+            assert row["loader_disposition"] == disposition == "CORPUS:SOURCE_HISTORY_SET_ASIDE", (key, disposition)
+            assert "not in the working sample" in row["note"] and "SOURCE_HISTORY_SET_ASIDE" in row["note"], row["note"]
+            assert "run-off" not in row["note"], row["note"]
+            continue
+        assert not disposition.startswith("CORPUS:"), (key, disposition)
         assert row["loader_disposition"] == disposition == "IN RUNOFF", (key, disposition)
         word = DISPOSITION_KEYWORD[disposition]
         assert word in row["note"] and "for the whole year" in row["note"], (key, row["note"])
@@ -327,16 +336,20 @@ def test_the_recorded_run_carries_the_adjusted_records():
     # statements outside the RITC regime), which left 1200/2023 and 1861/2019; the stage-3 outbound register then added
     # eight more records whose filings print an outbound transfer (the 8 additions of the third stage-3 commit, read
     # from the filings' pages), so the regenerated run adjusted ten; 2689/2022 and 1492/2023, added from the two
-    # readings of 22 October 2026 (F1, F2), both in the primary sample, make twelve
-    assert out["n_adjusted"] == 12 and set(out["fits"]) == {"adopted", "retained_base"}
+    # readings of 22 October 2026 (F1, F2), both in the primary sample, make twelve; 1084/2018 left the sample at rule 8
+    # (26 October 2026, the regeneration at f15a357f), which leaves eleven
+    assert out["n_adjusted"] == 11 and set(out["fits"]) == {"adopted", "retained_base"}
     assert out["fits"]["retained_base"]["diagnostics"]["divergences"] == 0
     # the count, the list and the rows are one fact (round 62's verification: n_adjusted retyped 5 -> 6 passed)
     applied = sorted(k for k, r in out["records"].items() if r["applied"])
     assert out["n_adjusted"] == len(out["adjusted"]) == len(applied)
     assert sorted(out["adjusted"]) == applied == sorted(k for k, r in out["records"].items() if r["in_working_sample"])
-    assert applied == ["1084_2018", "1200_2023", "1301_2023", "1492_2023", "1861_2019", "1910_2023", "1955_2021",
+    assert applied == ["1200_2023", "1301_2023", "1492_2023", "1861_2019", "1910_2023", "1955_2021",
                        "2007_2018", "2015_2020", "2468_2018", "2689_2022", "4000_2021"]
     assert out["records"]["2689_2022"]["share_transferred"] == pytest.approx(0.550, abs=0.0005)
     assert out["records"]["1492_2023"]["share_transferred"] == pytest.approx(0.275, abs=0.0005)
     for key in ("780_2020", "1861_2021", "5820_2019", "2468_2022"):
         assert out["records"][key]["loader_disposition"] == "IN RUNOFF", key
+    # a confirmed record that rule 8 sets aside is listed and not applied, with the loader's disposition
+    r84 = out["records"]["1084_2018"]
+    assert r84["loader_disposition"] == "CORPUS:SOURCE_HISTORY_SET_ASIDE" and not r84["in_working_sample"] and not r84["applied"]
