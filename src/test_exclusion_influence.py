@@ -678,17 +678,28 @@ def test_the_primary_must_be_the_stored_working_sample():
         EI.check_base_is_the_stored_sample(fr, records())        # the file still holds the set-aside records
 
 
-def test_the_primary_pool_must_be_the_shipped_tool_to_its_rounding():
+def test_the_primary_pool_is_compared_with_the_shipped_tool_to_its_rounding_and_a_stale_tool_is_recorded(capsys):
     fr = frame()
     p = EI.population_arrays(fr, EI.population_masks(fr)["primary"], EI.fold_map(fr))
     S, R, H, syn, yr, ritc, keys = EI.shipped_precision(p)
     ship = (S.copy(), R.copy(), H.copy(), syn.copy(), yr.copy())
-    assert EI.check_shipped_pool(p, ship) == {"n": 91, "equal": True}
-    bad = (S + np.eye(len(S))[0] * 1e-7, R, H, syn, yr)
-    with pytest.raises(SystemExit, match="differ between the shipped tool and the primary"):
-        EI.check_shipped_pool(p, bad)
-    with pytest.raises(SystemExit, match="rebuild distortion_tool.html"):
-        EI.check_shipped_pool(p, (S[:-1], R[:-1], H[:-1], syn[:-1], yr[:-1]))
+    out = EI.check_shipped_pool(p, ship)
+    assert out["equal"] is True and (out["n_shipped"], out["n_primary"]) == (91, 91)
+    assert out["keys_only_in_the_shipped_tool"] == out["keys_only_in_the_primary"] == out["values_that_differ"] == []
+    assert "WARNING" not in capsys.readouterr().out
+    # a value that differs at the tool's rounding is recorded, not rounded away and not fatal
+    S2 = S.copy()
+    S2[3] += 1e-7
+    out = EI.check_shipped_pool(p, (S2, R, H, syn, yr))
+    assert out["equal"] is False and out["values_that_differ"] == [str(keys[3])]
+    # a tool still holding another pool (the first pass after a change of sample): extra and missing keys are named
+    out = EI.check_shipped_pool(p, (S[:-2], R[:-2], H[:-2], syn[:-2], yr[:-2]))
+    assert out["equal"] is False and out["keys_only_in_the_primary"] == sorted(str(k) for k in keys[-2:])
+    extra = (np.append(S, 0.1), np.append(R, 99.0), np.append(H, 0.3), np.append(syn, 9999), np.append(yr, 2020))
+    out = EI.check_shipped_pool(p, extra)
+    assert out["equal"] is False and out["keys_only_in_the_shipped_tool"] == ["9999_2020"]
+    text = capsys.readouterr().out
+    assert "WARNING" in text and "distortion_tool.html" in text and "rerun run_analysis.py" in text
 
 
 def test_a_primary_refit_that_is_not_the_published_headline_stops_the_run():

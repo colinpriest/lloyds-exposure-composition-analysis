@@ -596,20 +596,29 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
 
 
 def check_shipped_pool(p, shipped):
-    """The primary's donors at the shipped tool's precision must be the shipped tool's pool, key for key and value for
-    value; a tool not rebuilt on the primary would give another population's Vignette 1."""
+    """Whether the primary's donors at the shipped tool's precision are the shipped tool's pool, key for key and value
+    for value, RECORDED and not enforced: the tool is rebuilt by run_analysis.py at the end of a pass, so on the first pass
+    after a change of sample it still holds the earlier pool, and the Vignette 1 figures here do not read it (they are
+    built from each population's own records). The record says so, and the figures the paper prints from the tool and
+    from vignette_uncertainty.py are on the primary only when this is true."""
     S, R, H, synd, year = shipped
     skeys = ["%s_%s" % (s, y) for s, y in zip(synd.tolist(), year.tolist())]
     mS, mR, mH, _syn, _yr, _ritc, mkeys = shipped_precision(p)
-    if sorted(skeys) != sorted(mkeys.tolist()):
-        raise SystemExit("the shipped tool's donor pool (%d) is not the primary (%d): rebuild distortion_tool.html with "
-                         "run_analysis.py first" % (len(skeys), len(mkeys)))
     theirs = {k: (float(s), float(r), float(h)) for k, s, r, h in zip(skeys, S, R, H)}
-    bad = [k for k, s, r, h in zip(mkeys.tolist(), mS, mR, mH) if theirs[k] != (float(s), float(r), float(h))]
-    if bad:
-        raise SystemExit("%d donors differ between the shipped tool and the primary at the tool's precision: %s"
-                         % (len(bad), bad[:5]))
-    return {"n": len(skeys), "equal": True}
+    mine = {k: (float(s), float(r), float(h)) for k, s, r, h in zip(mkeys.tolist(), mS, mR, mH)}
+    only_tool = sorted(set(theirs) - set(mine))
+    only_primary = sorted(set(mine) - set(theirs))
+    differ = sorted(k for k in set(theirs) & set(mine) if theirs[k] != mine[k])
+    equal = not (only_tool or only_primary or differ)
+    out = {"n_shipped": len(skeys), "n_primary": len(mkeys), "equal": bool(equal),
+           "keys_only_in_the_shipped_tool": only_tool, "keys_only_in_the_primary": only_primary,
+           "values_that_differ": differ,
+           "reading": ("the shipped tool's pool is the primary's, to the tool's rounding" if equal else
+                       "the shipped tool (distortion_tool.html) is not rebuilt on the primary: rerun run_analysis.py and "
+                       "the steps that read the tool before the paper quotes their Vignette 1 figures")}
+    if not equal:
+        print("WARNING: %s" % out["reading"])
+    return out
 
 
 def vignette_control(block, rec):
