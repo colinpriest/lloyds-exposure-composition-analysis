@@ -614,6 +614,8 @@ NO_OVERLAY_LEG = {
     "check_cohort_scope.py": "the 672 construction's fit: " + _REFIT,
     "check_cohort_depth_sensitivity.py": "the u <= t-2 and u <= t-3 refits, through check_cohort_scope.fit: " + _REFIT,
     "check_missingness_sensitivity.py": "the unweighted and selection-weighted fits: " + _REFIT,
+    "check_exclusion_influence.py": ("the full and fold refits of the primary, the included-data comparison and the "
+                                     "primary without Syndicate 1991: " + _REFIT),
 }
 
 #: the functions that fit the model with gamma = 0 (scale_block's default; fx_sensitivity's adopted-configuration

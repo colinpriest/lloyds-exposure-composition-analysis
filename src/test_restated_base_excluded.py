@@ -1215,10 +1215,12 @@ def CS_key(o):
 
 #: the modules that open model/exposure_results.json for something other than a fit sample: they take no selection of their
 #: own (the ledgers and documents describe every record; fx_sensitivity and error_rate_propagation take their sample from
-#: adopted_model.load_sample or the working-sample stems)
+#: adopted_model.load_sample or the working-sample stems; check_small_book_diagnosis and check_exclusion_influence take
+#: theirs from adopted_model.load_sample and from the loader's own working sample, and open the file only for the loader's
+#: run identifier)
 NOT_SAMPLE_LOADERS = {"run_analysis.py", "record_tests.py", "skip_budget.py", "build_current_results.py",
                       "generate_data_audit.py", "missingness_check.py", "error_rate_propagation.py", "fx_sensitivity.py",
-                      "build_working_sample.py"}
+                      "build_working_sample.py", "check_small_book_diagnosis.py", "check_exclusion_influence.py"}
 
 
 def test_every_producer_selects_its_sample_on_the_figure_the_mask_blanks():

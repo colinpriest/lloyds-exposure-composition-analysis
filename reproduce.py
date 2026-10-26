@@ -231,6 +231,19 @@ STEPS = [
     # record, so it runs after check_gamma0_vignette.py and the exposure results. Measured on 23 October 2026 with g++
     # off PATH and 3 workers: 269 seconds in all, 172 of them the ten fold fits
     ("check_cohort_depth_sensitivity.py", "tails", 5),
+    # the small-book diagnosis (26 October 2026): the operator backtest's per-target held-out flags on the primary,
+    # counted by the primary's own size quartiles and by the fixed bands of the earlier 643-record sample, at 99 and
+    # 99.5%, with the smallest band's events and their thresholds. No fit: the plug-in thresholds are recomputed from the
+    # fold fits' stored means and must reproduce the stored flags, so it runs after check_operator_backtest.py. About 10
+    # seconds
+    ("check_small_book_diagnosis.py", "tails", 1),
+    # the influence sensitivities (26 October 2026): the adopted model fitted on the primary, on the included-data
+    # comparison (the primary plus the rule-8 set-aside records) and on the primary without Syndicate 1991, each the full
+    # fit and ten held-out folds on one fold map and one set of size bands, the rebuilt pools, the plug-in backtest by
+    # fixed band, Vignette 1's GBP 500m VaR99.5 and the common-target comparison. 33 fits at 3 workers: the ten fold fits of
+    # check_operator_backtest.py took about 195 seconds wall, so about 11 minutes of fitting and 3 of scoring and
+    # intervals. It reads the loader's inputs, vignette_uncertainty.py's record and the shipped tool
+    ("check_exclusion_influence.py", "tails", 15),
 
     ("appendix_c_tail_comparison.py", "outputs", 2),
     ("run_analysis.py", "outputs", 5),
@@ -240,6 +253,9 @@ STEPS = [
     # the Vignette 1 survivor figure (manuscript Figure 5) is generated from the
     # fitted operator too; it was outside the manifest until round 52, and shipped stale
     ("make_v1_ritc_survivor.py", "outputs", 1),
+    # the sources of uncertainty in Vignette 1's GBP 500m VaR99.5, each from its own record and none added to another
+    # (26 October 2026); it reads nine records written above and checks their headline centres agree. No fit
+    ("make_uncertainty_figure.py", "outputs", 1),
     # the current-results document is generated, so it is part of the route
     ("build_current_results.py", "outputs", 1),
     # so is the data-audit appendix: it quotes the loader's counts and the published
@@ -860,6 +876,9 @@ OUTPUTS = {
     "check_bucket_share_sensitivity.py": ("results/check_bucket_share_sensitivity_results.json",),
     "check_low_confidence_sensitivity.py": ("results/check_low_confidence_sensitivity_results.json",),
     "check_cohort_depth_sensitivity.py": ("results/check_cohort_depth_sensitivity_results.json",),
+    "check_small_book_diagnosis.py": ("results/check_small_book_diagnosis_results.json",),
+    "check_exclusion_influence.py": ("results/check_exclusion_influence_results.json",
+                                     "results/check_exclusion_influence_draws.npz"),
     "check_margin_sensitivity.py": ("results/check_margin_sensitivity_results.json",),
     "check_skew_t.py": ("results/check_skew_t_results.json",),
     "audit_pyd_basis.py": (
@@ -936,6 +955,8 @@ OUTPUTS = {
                         "results/disposition_ledger.csv", "paper_pack/table39_reconciliation.tex")
                        + RUN_ANALYSIS_WRITES,
     "make_v1_ritc_survivor.py": ("paper_pack/fig_v1_ritc_survivor.pdf", "paper_pack/fig_v1_ritc_survivor.png"),
+    "make_uncertainty_figure.py": ("paper_pack/fig_uncertainty_sources.pdf", "paper_pack/fig_uncertainty_sources.png",
+                                   "results/make_uncertainty_figure_results.json"),
     "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
                               "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
                               "results/goodness_of_fit_results.json",
