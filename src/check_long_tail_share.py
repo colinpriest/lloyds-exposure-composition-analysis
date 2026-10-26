@@ -35,7 +35,7 @@ import arviz as az
 
 from adopted_model import (SD, RESULTS, load_sample, scale_block, check_against_headline, headline,
                            SAMPLE_CORES)
-from oos_validation import load as load_cv, SEED, K
+from oos_validation import load as load_cv, fold_assignment, SEED, K
 import check_cv_clustered_se as cse
 from compose_robust import LONG_TAIL_IDX, DOM_MAP
 
@@ -68,9 +68,7 @@ def shares():
 
 
 def cross_validate(S, R, H, syn, lt):
-    uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % K for i, s in enumerate(uniq)}
-    fold = np.array([fold_of[s] for s in syn])
+    fold = fold_assignment(syn, K)     # the frozen fold map (data/fold_map.json), never redealt
     cfg = cse.MODELS["composition"]
     e0 = np.full(len(S), np.nan)
     e1 = np.full(len(S), np.nan)

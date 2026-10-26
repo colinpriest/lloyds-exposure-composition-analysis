@@ -49,7 +49,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 from adopted_model import SAMPLE_CORES
 
-from oos_validation import load, REF, HLO, HCE, SEED, K
+from oos_validation import load, fold_assignment, REF, HLO, HCE, SEED, K
 
 BB = 20000   # Bayesian-bootstrap draws
 
@@ -160,8 +160,7 @@ def contrast(d, syn):
 def main():
     S, R, H, syn = load()
     uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % K for i, s in enumerate(uniq)}
-    fold = np.array([fold_of[s] for s in syn])
+    fold = fold_assignment(syn, K)     # the frozen fold map (data/fold_map.json), never redealt
     print(f"n={len(S)}  syndicates={len(uniq)}  folds={K}")
 
     e = {m: np.full(len(S), np.nan) for m in MODELS}

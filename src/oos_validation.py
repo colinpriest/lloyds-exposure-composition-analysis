@@ -83,13 +83,35 @@ def held_out_lppd(S_t, R_t, H_t, dr, kind, thin=800):
     return logsumexp(lp, axis=1) - np.log(lp.shape[1])                    # per-obs elpd
 
 
-def fold_assignment(syn, k=K):
-    """The fold of each observation: the sorted syndicates dealt out in turn, syndicate i to fold i mod k, so that a
-    whole syndicate's years are held out together. Deterministic; check_operator_backtest.py imports it to use the
-    same folds (pinned in src/test_operator_backtest.py)."""
-    uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % k for i, s in enumerate(uniq)}          # deterministic syndicate->fold
-    return np.array([fold_of[s] for s in syn])
+FOLD_MAP = SD / "data" / "fold_map.json"
+
+
+def deal_positions(syndicates):
+    """{syndicate: position}: the dealing rule, the sorted syndicates dealt out in turn (position i = rank, 0-based). It
+    is the rule data/fold_map.json was dealt by, once, on the 643-record sample; nothing calls it to assign folds."""
+    return {int(s): i for i, s in enumerate(sorted(set(int(x) for x in syndicates)))}
+
+
+def load_fold_map(path=None):
+    """{syndicate: position} from the frozen map (data/fold_map.json, dealt once on the 643-record sample's 118
+    syndicates: the file states its rule and its sample)."""
+    with io.open(str(path or FOLD_MAP), encoding="utf-8") as _fh:
+        d = json.load(_fh)
+    return {int(s): int(p) for s, p in d["position"].items()}
+
+
+def fold_assignment(syn, k=K, fold_map=None):
+    """The fold of each observation: the frozen map's position of its syndicate, mod k, so that a whole syndicate's years
+    are held out together and no syndicate moves when another leaves the sample. A syndicate that is not in the map is
+    refused (ValueError); a sample with fewer syndicates than the map simply has fewer. `fold_map` stands in for the file
+    (a test's, for synthetic syndicates). check_operator_backtest.py imports it to use the same folds (pinned in
+    src/test_operator_backtest.py and src/test_fold_map.py)."""
+    pos = load_fold_map() if fold_map is None else fold_map
+    missing = sorted(set(int(s) for s in syn) - set(pos))
+    if missing:
+        raise ValueError("%d syndicate(s) are not in the frozen fold map (data/fold_map.json): %s"
+                         % (len(missing), missing[:10]))
+    return np.array([pos[int(s)] % k for s in syn])
 
 
 def main():

@@ -18,6 +18,7 @@ import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
 from adopted_model import SAMPLE_CORES
+from oos_validation import fold_assignment
 
 SD = Path(__file__).resolve().parent.parent
 REF, HLO, HCE, SEED, K = 500.0, 0.01, 1.0, 42, 5
@@ -90,7 +91,7 @@ def comparison(elpd_size_only, ref):
 
 def main():
     S, R, syn = load()
-    uniq = np.array(sorted(set(syn))); fold = np.array([{s: i % K for i, s in enumerate(uniq)}[s] for s in syn])
+    fold = fold_assignment(syn, K)     # the frozen fold map (data/fold_map.json), never redealt
     elpd = np.full(len(S), np.nan)
     divergences = []
     for f in range(K):

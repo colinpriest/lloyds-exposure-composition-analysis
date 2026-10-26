@@ -261,7 +261,7 @@ def compute(rec, S, R, H, yr, syn, ritc, cfg, fixed_edges=FIXED_BAND_EDGES, leve
                    "loader_run_id_without_calibration": ex.get("analysis_run_id_without_calibration"),
                    "n_working_sample": int(len(S)), "n_syndicates": int(len(set(syn.tolist()))),
                    "n_assumed_business": int(np.asarray(ritc, bool).sum()),
-                   "folds": rec["honest"]["folds"], "fold_rule": "oos_validation.fold_assignment on the primary's own syndicates"},
+                   "folds": rec["honest"]["folds"], "fold_rule": "the frozen fold map (data/fold_map.json) through oos_validation.fold_assignment"},
         "levels": [level_key(a) for a in levels],
         "pool_rules": {"leave_out": "every row whose held-out unit differs from the target's (the primary pool)",
                        "leave_out_and_target_year": "as leave_out, and without the rows of the target's own reporting year"},

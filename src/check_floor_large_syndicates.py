@@ -29,7 +29,7 @@ import pytensor
 pytensor.config.mode = "NUMBA"
 import pymc as pm
 
-from oos_validation import load, REF, HLO, HCE, SEED, K
+from oos_validation import load, fold_assignment, REF, HLO, HCE, SEED, K
 from check_pooling_cv_extended import MODELS, fit, sigma_draws, held_out_lppd
 
 SD = Path(__file__).resolve().parent.parent
@@ -80,8 +80,7 @@ def bayes_boot(diff, syn):
 def main():
     S, R, H, syn = load()
     uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % K for i, s in enumerate(uniq)}
-    fold = np.array([fold_of[s] for s in syn])
+    fold = fold_assignment(syn, K)     # the frozen fold map (data/fold_map.json), never redealt
     print(f"n={len(S)} syndicates={len(uniq)} folds={K}")
     for lo, hi in [(2000.0, np.inf), (5000.0, np.inf), (10000.0, np.inf)]:
         m = (R >= lo) & (R < hi)

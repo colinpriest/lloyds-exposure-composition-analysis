@@ -499,7 +499,7 @@ def honest_backtest(recs, cfg, workers=BT.DEFAULT_WORKERS, k=BT.K_HONEST, fits=N
     plug_in_q, draw_q = {}, {}
     honest = BT.version_block(
         "honest: %d-fold by syndicate, adopted model refitted on each fold's training syndicates, %s outcome" % (k, words),
-        "fold assignment is oos_validation.fold_assignment on this sample's syndicates; held-out syndicates are in "
+        "fold assignment is oos_validation.fold_assignment (the frozen map, data/fold_map.json, restricted to this sample's syndicates); held-out syndicates are in "
         "neither the pool nor the fit",
         False, S, R, H, ritc, syn, yr, fold, thetas, cfg, W, capture=plug_in_q)
     honest["folds"] = k

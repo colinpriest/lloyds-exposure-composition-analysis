@@ -28,10 +28,18 @@ import pytest
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(HERE, "src"))
 
+from fold_test_support import deal_on_the_fly  # noqa: E402
 import check_operator_backtest as BT  # noqa: E402
 import check_small_book_diagnosis as SB  # noqa: E402
 
 CFG = (500.0, 0.01, 1.0)
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_folds(monkeypatch):
+    """The synthetic syndicates are not in the frozen fold map (data/fold_map.json): they are dealt in turn
+    (fold_test_support.deal_on_the_fly)."""
+    deal_on_the_fly(monkeypatch)
 YEARS = (2018, 2019, 2020, 2021, 2022)
 MEANS = {"k": 0.6, "sd_undiv": 0.03, "sd_div": 0.05, "nu_clean": 4.0, "nu_ritc": 6.0, "lambda_ritc": 0.1,
          "beta_ritc": 0.1, "tau_s": 0.1}
@@ -82,8 +90,13 @@ def backtest_record(S, R, H, yr, syn, ritc, draws_flag_rate=0.04):
 
 @pytest.fixture(scope="module")
 def fixture():
-    S, R, H, yr, syn, ritc = sample()
-    return {"arrays": (S, R, H, yr, syn, ritc), "rec": backtest_record(S, R, H, yr, syn, ritc)}
+    mp = pytest.MonkeyPatch()
+    deal_on_the_fly(mp)
+    try:
+        S, R, H, yr, syn, ritc = sample()
+        return {"arrays": (S, R, H, yr, syn, ritc), "rec": backtest_record(S, R, H, yr, syn, ritc)}
+    finally:
+        mp.undo()
 
 
 def run(fixture, rec=None, fixed=None):

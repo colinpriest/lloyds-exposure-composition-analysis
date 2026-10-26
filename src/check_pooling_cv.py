@@ -20,7 +20,7 @@ pytensor.config.mode = "NUMBA"
 import pymc as pm
 from adopted_model import SAMPLE_CORES
 
-from oos_validation import load, sigma_draws, held_out_lppd, REF, HLO, HCE, SEED, K
+from oos_validation import load, fold_assignment, sigma_draws, held_out_lppd, REF, HLO, HCE, SEED, K
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_pooling_cv_results.json"
@@ -53,8 +53,7 @@ def fit_pooling(S, R, H, free_k):
 def main():
     S, R, H, syn = load()
     uniq = np.array(sorted(set(syn)))
-    fold_of = {s: i % K for i, s in enumerate(uniq)}
-    fold = np.array([fold_of[s] for s in syn])
+    fold = fold_assignment(syn, K)     # the frozen fold map (data/fold_map.json), never redealt
     print(f"n={len(S)} syndicates={len(uniq)} folds={K}")
 
     elpd_m1 = np.full(len(S), np.nan); elpd_m2 = np.full(len(S), np.nan)

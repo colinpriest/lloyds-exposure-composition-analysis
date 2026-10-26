@@ -34,12 +34,13 @@ import pytest
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(HERE, "src"))
 
+from fold_test_support import deal_on_the_fly  # noqa: E402
 import check_cohort_scope as CS  # noqa: E402
 import check_exclusion_influence as EI  # noqa: E402
 import check_operator_backtest as BT  # noqa: E402
 import check_small_book_diagnosis as SB  # noqa: E402
 import transfer_operator as TO  # noqa: E402
-from oos_validation import fold_assignment  # noqa: E402
+import oos_validation as OV  # noqa: E402
 from pool_quantile import var_q  # noqa: E402
 from vignette_uncertainty import transfer  # noqa: E402
 
@@ -52,6 +53,19 @@ SYNDICATES = sorted([1100, 1991] + [1200 + 100 * i for i in range(22)])
 SET_ASIDE = ["1100_2019", "1100_2020", "2200_2021"]
 RITC_KEYS = {"1300_2020", "1300_2021", "2100_2022", "2200_2021"}
 YEARS = (2019, 2020, 2021, 2022)
+
+
+#: the tests that read the real loader's data or the committed records see the frozen fold map (data/fold_map.json); the
+#: rest are on synthetic syndicates, which are not in it, and deal them in turn (fold_test_support.deal_on_the_fly)
+REAL_SAMPLE_TESTS = {"test_the_real_loader_gives_the_included_data_base_and_puts_the_register_back",
+                     "test_the_primary_populations_folds_are_the_frozen_maps_restricted_on_the_real_data",
+                     "test_the_primary_backtest_and_the_influence_records_primary_row_agree_on_the_stored_records"}
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_folds(request, monkeypatch):
+    if request.node.name not in REAL_SAMPLE_TESTS:
+        deal_on_the_fly(monkeypatch)
 
 
 def records():
@@ -98,8 +112,13 @@ def stub_fitter(task):
 
 @pytest.fixture(scope="module")
 def run():
-    fr = frame()
-    record, arrays = EI.compute(fr, CFG, TARGET, fitter=stub_fitter, workers=1, edges=edges_of(fr), b=40, reps=60)
+    mp = pytest.MonkeyPatch()
+    deal_on_the_fly(mp)
+    try:
+        fr = frame()
+        record, arrays = EI.compute(fr, CFG, TARGET, fitter=stub_fitter, workers=1, edges=edges_of(fr), b=40, reps=60)
+    finally:
+        mp.undo()
     return {"frame": fr, "record": record, "arrays": arrays}
 
 
@@ -145,7 +164,7 @@ def test_the_labels_say_what_the_included_data_comparison_is_not():
 def test_no_population_redeals_its_folds():
     fr = frame()
     fmap = EI.fold_map(fr)
-    base_folds = fold_assignment(fr["syn"], 10)
+    base_folds = OV.fold_assignment(fr["syn"], 10)
     assert fmap == {int(s): int(f) for s, f in zip(fr["syn"], base_folds)}
     masks = EI.population_masks(fr)
     for name, mask in masks.items():
@@ -155,10 +174,10 @@ def test_no_population_redeals_its_folds():
     # the fixture has power: a fresh deal on the primary's or the third population's syndicates is another map
     for name in ("primary", "primary_without_1991"):
         p = EI.population_arrays(fr, masks[name], fmap)
-        assert not np.array_equal(p["fold"], fold_assignment(p["syn"], 10)), name
+        assert not np.array_equal(p["fold"], OV.fold_assignment(p["syn"], 10)), name
     # and the included-data comparison is the one population a fresh deal would leave as it is
     p = EI.population_arrays(fr, masks["included_data_643"], fmap)
-    assert np.array_equal(p["fold"], fold_assignment(p["syn"], 10))
+    assert np.array_equal(p["fold"], OV.fold_assignment(p["syn"], 10))
 
 
 def test_a_syndicates_rows_share_a_fold():
@@ -744,3 +763,54 @@ def test_the_real_loader_gives_the_included_data_base_and_puts_the_register_back
     # the one syndicate the census removes leaves the primary, so a fresh deal would move other syndicates' folds
     assert 2008 in set(fr["syn"].tolist()) and 2008 not in set(fr["syn"][masks["primary"]].tolist())
     assert EI.check_fixed_bands(fr, EI.FIXED_BAND_EDGES)
+
+
+# ------------------------------------------------------------------------------------ the frozen fold map
+def test_the_primary_populations_folds_are_the_frozen_maps_restricted_on_the_real_data():
+    """Until the regeneration has written the records, the dealing: each population's folds are data/fold_map.json's
+    positions mod 10 for its own syndicates, and the primary's are what check_operator_backtest.py will deal for it (the
+    same oos_validation.fold_assignment on the primary's syndicates), though 2008 has left the primary."""
+    records_, keys = EI.load_base()
+    fr = EI.build_frame(records_, keys)
+    pos = OV.load_fold_map()
+    masks = EI.population_masks(fr)
+    fmap = EI.fold_map(fr)
+    for name, mask in masks.items():
+        p = EI.population_arrays(fr, mask, fmap)
+        assert p["fold"].tolist() == [pos[int(s)] % 10 for s in p["syn"].tolist()], name
+        assert p["fold"].tolist() == OV.fold_assignment(p["syn"], 10).tolist(), name
+    prim = EI.population_arrays(fr, masks["primary"], fmap)
+    assert 2008 not in set(prim["syn"].tolist())
+    # a fresh deal on the primary's 117 syndicates would move syndicates: the frozen map does not
+    redeal = OV.deal_positions(prim["syn"])
+    assert [redeal[int(s)] % 10 for s in prim["syn"].tolist()] != prim["fold"].tolist()
+
+
+def test_the_primary_backtest_and_the_influence_records_primary_row_agree_on_the_stored_records():
+    """After the regeneration: the operator backtest's plug-in flags on the primary, counted by the fixed bands, are the
+    influence record's primary row (the same folds, the same fits, the same pools), and the fits' held-out counts agree."""
+    paths = {n: os.path.join(HERE, "results", n) for n in ("check_operator_backtest_results.json",
+                                                            "check_exclusion_influence_results.json")}
+    for n, path in paths.items():
+        if not os.path.exists(path):
+            pytest.skip("results/%s not present in this checkout" % n)
+    with io.open(paths["check_operator_backtest_results.json"], encoding="utf-8") as fh:
+        bt = json.load(fh)
+    with io.open(paths["check_exclusion_influence_results.json"], encoding="utf-8") as fh:
+        inf = json.load(fh)
+    tg = bt["per_target"]["targets"]
+    syn, yr, R = np.array(tg["syndicate"]), np.array(tg["year"]), np.array(tg["R_gbp_m"])
+    assert len(syn) == inf["populations"]["primary"]["n"]
+    bands = SB.band_of(R, SB.FIXED_BAND_EDGES)
+    for rule in EI.RULES:
+        for a in EI.LEVELS:
+            flags = np.asarray(bt["per_target"]["exceedance_flags"]["honest_plug_in"][rule][EI.level_key(a)], bool)
+            row = inf["plug_in_backtest"]["primary"][rule][EI.level_key(a)]
+            for j in range(1, 5):
+                mine = SB.group_row(flags, bands == j, syn, yr, a)
+                assert mine["exceedances"] == row["fixed_band_%d" % j]["exceedances"], (rule, a, j)
+                assert mine["event_record_ids"] == row["fixed_band_%d" % j]["event_record_ids"], (rule, a, j)
+            assert int(flags.sum()) == row["all"]["exceedances"], (rule, a)
+    for f in bt["honest"]["fits"]:
+        ours = inf["fits"]["primary"]["fold_%d" % f["fold"]]
+        assert (f["n_train"], f["n_held_out"]) == (ours["n_train"], ours["n_held_out"]), f["fold"]

@@ -26,6 +26,7 @@ import re
 import numpy as np
 import pytest
 
+from fold_test_support import deal_on_the_fly  # noqa: E402
 import check_cohort_depth_sensitivity as D
 import check_cohort_scope as CS
 import check_operator_backtest as BT
@@ -34,6 +35,13 @@ import sample_scope as SS
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEANS = {"k": 0.6, "gamma": 0.0, "sd_undiv": 0.03, "sd_div": 0.05, "nu_clean": 4.0, "nu_ritc": 6.0}
 CFG = (500.0, 0.01, 1.0)
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_folds(monkeypatch):
+    """Every test here is on synthetic syndicates, which are not in the frozen fold map (data/fold_map.json): they are
+    dealt in turn (fold_test_support.deal_on_the_fly)."""
+    deal_on_the_fly(monkeypatch)
 
 
 def _recs(n_syn=24, years=3, seed=11):
@@ -62,9 +70,14 @@ def _fits(k=10, n_draws=8, seed=3):
 
 @pytest.fixture(scope="module")
 def run():
-    recs = _recs()
-    fits = _fits()
-    return recs, fits, D.honest_backtest(recs, CFG, fits=fits)
+    mp = pytest.MonkeyPatch()
+    deal_on_the_fly(mp)
+    try:
+        recs = _recs()
+        fits = _fits()
+        return recs, fits, D.honest_backtest(recs, CFG, fits=fits)
+    finally:
+        mp.undo()
 
 
 def test_the_sample_reaches_the_fold_fits(monkeypatch):
@@ -383,7 +396,12 @@ def _two_depths(seed=5):
 
 @pytest.fixture(scope="module")
 def depths():
-    return _two_depths()
+    mp = pytest.MonkeyPatch()
+    deal_on_the_fly(mp)
+    try:
+        return _two_depths()
+    finally:
+        mp.undo()
 
 
 def test_the_depth_names_the_backtest_and_an_unknown_depth_is_refused(depths):

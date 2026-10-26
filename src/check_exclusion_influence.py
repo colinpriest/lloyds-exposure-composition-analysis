@@ -15,12 +15,13 @@ The base is built in memory with run_analysis.load_and_classify under the primar
 if the base without the register's records is not the working sample in model/exposure_results.json, record for record
 and figure for figure, or if the base does not reproduce the fixed original size bands from its own quartiles.
 
-FOLDS ARE NEVER REDEALT. oos_validation.fold_assignment deals the sorted syndicates out in turn, so removing one
-syndicate (the census removes 2008) moves every later syndicate to another fold. The fold map is therefore built once,
-on the base's 118 syndicates, and each population takes the base map restricted to its own syndicates. The primary's
-own operator backtest (check_operator_backtest.py) deals its folds on the primary's 117 syndicates, so its folds are not
-this map; this record is the one that holds the original map fixed across populations. The size bands are fixed too: the
-cutoffs of the earlier 643-record sample, 172.5745, 425.362 and 837.0151141803343 (GBP m).
+FOLDS ARE NEVER REDEALT. Every cross-validation and backtest in the repository takes its folds from the frozen map
+(data/fold_map.json: the 118 syndicates of the 643-record sample, dealt once; oos_validation.fold_assignment reads it and
+refuses a syndicate that is not in it). A population that lacks some syndicates simply has fewer, so removing a syndicate
+(the census removes 2008) or all of Syndicate 1991 moves no other syndicate. Each population here takes the map restricted
+to its own syndicates, and the primary's own operator backtest (check_operator_backtest.py) uses the same map, so its
+folds are this record's primary folds. The size bands are fixed too: the cutoffs of the earlier 643-record sample,
+172.5745, 425.362 and 837.0151141803343 (GBP m).
 
 For each population: the full fit and the ten held-out fold fits of the adopted model (adopted_model.scale_block,
 zero location, gamma fixed at 0, the headline's sampler: 4 chains of 1,500 retained draws after 1,500 warm-up, seed 42,
@@ -133,7 +134,7 @@ def population_masks(frame):
 
 
 def fold_map(frame, k=K_FOLDS):
-    """{syndicate: fold}: oos_validation.fold_assignment on the base's syndicates, dealt once and never again."""
+    """{syndicate: fold}: the frozen map (oos_validation.fold_assignment) on the base's syndicates."""
     folds = BT.fold_assignment(frame["syn"], k)
     return {int(s): int(f) for s, f in zip(frame["syn"].tolist(), np.asarray(folds).tolist())}
 
@@ -558,8 +559,10 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
                   "included_data_643": "every base record (the primary plus the rule-8 set-aside records)",
                   "primary_without_1991": "the primary less every record of Syndicate %d" % EXCLUDED_SYNDICATE,
                   "rule_8_set_aside_records": sorted(frame["set_aside"])},
-        "fold_map": {"rule": ("oos_validation.fold_assignment on the base's %d syndicates, dealt once; every population "
-                              "takes the map restricted to its own syndicates and no fold is redealt" % n_syn),
+        "fold_map": {"rule": ("the frozen map data/fold_map.json (oos_validation.fold_assignment), dealt once on the "
+                              "643-record sample's 118 syndicates; the base has %d of them, and every population takes "
+                              "the map restricted to its own syndicates, so no fold is redealt" % n_syn),
+                     "source_file": "data/fold_map.json",
                      "k": K_FOLDS, "syndicate_to_fold": {str(s): f for s, f in sorted(fmap.items())},
                      "sha256": hashlib.sha256(json.dumps(sorted(fmap.items())).encode()).hexdigest()},
         "fixed_bands": {"edges_gbp_m": [float(e) for e in edges],

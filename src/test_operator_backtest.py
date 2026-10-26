@@ -34,6 +34,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "src"))
 
 import adopted_model as am  # noqa: E402
+from fold_test_support import deal_on_the_fly  # noqa: E402
 import check_operator_backtest as BT  # noqa: E402
 import oos_validation as OV  # noqa: E402
 import transfer_operator as TO  # noqa: E402
@@ -42,6 +43,21 @@ from vignette_uncertainty import transfer  # noqa: E402
 
 SRC = os.path.join(HERE, "src")
 CFG = (500.0, 0.01, 1.0)
+
+
+#: the tests that read the real samples or the committed record: they see the frozen fold map (data/fold_map.json); every
+#: other test here is on synthetic syndicates, which are not in that map, and deals them in turn (fold_test_support.deal_on_the_fly)
+REAL_SAMPLE_TESTS = {
+    "test_the_real_samples_folds_are_the_ones_oos_validation_used_before_the_extraction",
+    "test_the_frozen_fold_map_is_the_643_samples_deal_and_the_real_sample_takes_it_restricted",
+    "test_a_fold_refit_returns_its_posterior_means_and_diagnostics",
+    "test_the_honest_folds_are_oos_validations_and_every_refit_sampled_cleanly"}
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_folds(request, monkeypatch):
+    if request.node.name not in REAL_SAMPLE_TESTS:
+        deal_on_the_fly(monkeypatch)
 
 
 def _json(rel):
@@ -79,13 +95,14 @@ def _digest(syn, k):
 
 
 def test_the_real_samples_folds_are_the_ones_oos_validation_used_before_the_extraction():
-    """Digests of the syndicate-to-fold map of the 118 syndicates, taken from the original inline expression (the sorted
-    syndicates dealt out in turn, syndicate i to fold i mod k). The primary sample (the regeneration of 23 October 2026)
-    has syndicate 6107 in and 1994 out of the 672 construction's 118, which moves the folds of the syndicates between
-    them; the pins are the digests of the same inline rule on the primary's syndicates (they were
+    """Digests of the syndicate-to-fold map of the 118 syndicates of the 643-record sample, taken from the original inline
+    expression (the sorted syndicates dealt out in turn, syndicate i to fold i mod k), which data/fold_map.json froze on
+    26 October 2026. The pins are the digests of that inline rule on the frozen map's 118 syndicates (they were
     f44a6ca19dc52276cd42c8da78718d7f9d8b9af86385c7b3a7cd6bd9cbbd8885 and
-    7e9200380ac8a5305985ff3ee8a5969a5518d8192211b4fc7713bcde8628c31a)."""
-    syn = am.load_sample()[4]
+    7e9200380ac8a5305985ff3ee8a5969a5518d8192211b4fc7713bcde8628c31a before the primary's syndicates moved them). The map,
+    not the working sample, is what is pinned: a sample with fewer syndicates takes the map restricted."""
+    fmap = OV.load_fold_map()
+    syn = np.array(sorted(fmap))
     assert len(set(syn.tolist())) == 118
     assert _digest(syn, 5) == "49eb3843c9cefd6b178a31ede741a3ac76ecf0ffcfece41be2f247ec054ab1b2"
     assert _digest(syn, 10) == "88c78d42a8862e914d531c7ba3685f266881e36ef367e8b2b96fd674c1b6f595"
@@ -94,8 +111,33 @@ def test_the_real_samples_folds_are_the_ones_oos_validation_used_before_the_extr
     for k in (5, 10):
         inline = ",".join("%s:%d" % (u, i % k) for i, u in enumerate(uniq))
         assert hashlib.sha256(inline.encode()).hexdigest() == _digest(syn, k)
-    # and oos_validation's own loader gives the same syndicates as the model's sample
-    assert OV.load()[3].tolist() == syn.tolist()
+    # oos_validation's own loader gives the same syndicates as the model's sample, and the map covers them
+    assert OV.load()[3].tolist() == am.load_sample()[4].tolist()
+    assert set(am.load_sample()[4].tolist()) <= set(fmap)
+
+
+def test_the_frozen_fold_map_is_the_643_samples_deal_and_the_real_sample_takes_it_restricted():
+    """The map states its rule and its sample; it is exactly that rule on its own 118 syndicates; the real working
+    sample's folds are the map's restricted, whatever syndicates have left the sample since (no redeal)."""
+    with io.open(os.path.join(HERE, "data", "fold_map.json"), encoding="utf-8") as fh:
+        d = json.load(fh)
+    assert d["n_syndicates"] == 118 == len(d["position"])
+    assert "dealt out in turn" in d["dealing_rule"] and "643-record" in d["dealt_on"]["sample"]
+    assert d["dealt_on"]["analysis_commit"] and d["dealt_on"]["date"] == "26 October 2026"
+    pos = {int(s): p for s, p in d["position"].items()}
+    assert pos == {s: i for i, s in enumerate(sorted(pos))}
+    syn = am.load_sample()[4]
+    for k in (5, 10):
+        assert OV.fold_assignment(syn, k).tolist() == [pos[int(s)] % k for s in syn.tolist()]
+    # leaving a syndicate out moves no other syndicate: the folds of the rest are what they were
+    keep = syn != sorted(set(syn.tolist()))[3]
+    assert OV.fold_assignment(syn[keep], 10).tolist() == OV.fold_assignment(syn, 10)[keep].tolist()
+
+
+def test_a_syndicate_that_is_not_in_the_frozen_map_is_refused():
+    pos = OV.load_fold_map()
+    with pytest.raises(ValueError, match="not in the frozen fold map"):
+        OV.fold_assignment(np.array([next(iter(pos)), 99999]), 10, fold_map=pos)
 
 
 def test_oos_validation_and_the_backtest_both_call_the_helper():

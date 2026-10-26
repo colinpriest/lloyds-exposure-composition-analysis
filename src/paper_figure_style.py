@@ -29,6 +29,11 @@ TEXT_WIDTH_PT = 402.6
 #: are drawn from the line width over this margin, so their 8 pt text prints at 8.16 pt
 PRINT_MARGIN = 1.02
 SAVED_UNCROPPED = ("systemic_correlation_profile",)
+#: NOTE for the redesign (26 October 2026): paper_pack/fig_uncertainty_sources (make_uncertainty_figure.py) is not listed
+#: below because the manuscript does not include it yet, and src/test_figure_layout.py compares this dict with the
+#: manuscript's includes. When the redesigned paper includes it (Figure 3), add "fig_uncertainty_sources": 0.95 here, the
+#: fraction the figure is drawn for (make_uncertainty_figure.PRINTED_FRACTION), and extend the two figure tests' builders
+#: (test_figure_layout.py, test_figure_presentation.py) to render it.
 #: each paper figure's printed width as a fraction of \linewidth, as the manuscript includes it
 PRINTED_FRACTION = {
     "fig_size_dispersion": 0.75,
