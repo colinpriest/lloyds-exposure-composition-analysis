@@ -257,9 +257,12 @@ def test_the_figure_has_four_bands_and_draws_each_row(values):
         fig = UF.build_figure(values)
     fig.canvas.draw()
     main = [a for a in fig.axes if a.get_title(loc="left")]
-    assert [a.get_title(loc="left") for a in main] == [UF.BAND_TITLES[i] for i in ORDER]
+    # each band's heading carries the letter the caption and text give it: (a) to (d), then the title
+    assert [a.get_title(loc="left") for a in main] == ["(%s) %s" % (c, UF.BAND_TITLES[i])
+                                                       for c, i in zip("abcd", ORDER)]
     for ax, band in zip(main, values["bands"]):
-        assert sorted(t.get_text() for t in ax.get_yticklabels()) == sorted(r["label"] for r in band["rows"])
+        assert sorted(t.get_text() for t in ax.get_yticklabels()) == sorted(
+            UF.row_label_text(r["label"]) for r in band["rows"])
         # one vertical reference line at the headline centre
         lines = [ln for ln in ax.lines if len(ln.get_xdata()) == 2 and ln.get_xdata()[0] == ln.get_xdata()[1]]
         assert [ln.get_xdata()[0] for ln in lines] == [values["headline_centre"]]
@@ -275,6 +278,40 @@ def test_a_dot_is_drawn_at_each_rows_centre_except_off_scale_ones(values):
                     if len(ln.get_xdata()) == 1 and ln.get_marker() in ("o", "s"))
         want = sorted(round(r["point"], 12) for r in band["rows"] if not r["off_scale"])
         assert xs == want
+    plt.close(fig)
+
+
+def _drawn_figure(values):
+    with PFS.style():
+        fig = UF.build_figure(values)
+    fig.canvas.draw()
+    return fig, [a for a in fig.axes if a.get_title(loc="left")]
+
+
+def test_no_figure_text_carries_the_ascii_inequality_and_the_depth_row_has_the_symbol(values):
+    """The depth row printed 'u <= t-3'; the figure sets it as u <= t-3 in mathtext (the record keeps its label)."""
+    fig, main = _drawn_figure(values)
+    texts = [t.get_text() for ax in main for t in ax.get_yticklabels()] + [ax.get_title(loc="left") for ax in main]
+    assert not [t for t in texts if "<=" in t], texts
+    assert r"Cohort depth $u\leq t-3$" in texts
+    assert row_of(values, "depth_t_minus_3")["label"] == "Cohort depth u <= t-3"
+    plt.close(fig)
+
+
+def test_the_off_scale_note_is_clear_of_the_headline_line_and_of_the_axes(values):
+    """The raw pool's note printed across the dotted headline line: no text may straddle or touch it."""
+    fig, main = _drawn_figure(values)
+    renderer = fig.canvas.get_renderer()
+    checked = 0
+    for ax in main:
+        line_x = ax.transData.transform((values["headline_centre"], 0))[0]
+        box_ax = ax.get_window_extent(renderer)
+        for t in ax.texts:
+            box = t.get_window_extent(renderer)
+            checked += 1
+            assert not (box.x0 - 3 <= line_x <= box.x1 + 3), (t.get_text(), box.x0, box.x1, line_x)
+            assert box_ax.x0 <= box.x0 and box.x1 <= box_ax.x1 and box_ax.y0 <= box.y0 and box.y1 <= box_ax.y1
+    assert checked == 1, "the raw pool is the one off-scale row"
     plt.close(fig)
 
 

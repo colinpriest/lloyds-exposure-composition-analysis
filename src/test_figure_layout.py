@@ -84,6 +84,32 @@ def test_the_check_sees_a_curve_through_a_label_and_passes_one_beside_it():
     assert SURV.text_is_clear(fig, ax, clear, curve)
 
 
+def test_the_check_sees_a_leader_that_crosses_a_curve_and_passes_one_that_does_not():
+    """The annotation's leader line must reach its target without crossing a curve (the figure's box sat beyond the
+    raw curve and its leader crossed that curve on its way to the de-RITC one)."""
+    fig, ax, curve = _toy()
+    label = ax.text(0.1, 0.9, "label", ha="center", va="center")
+    assert not SURV.leader_is_clear(fig, ax, label, (0.9, 0.5), curve)       # y = x lies between the two
+    assert SURV.leader_is_clear(fig, ax, label, (0.1, 0.5), curve)           # straight down, y = x is not met
+    assert SURV.leader_is_clear(fig, ax, label, (0.1, 0.1), curve)           # ends on the curve itself: not counted
+
+
+def test_the_check_refuses_a_box_that_leaves_the_axes():
+    fig, ax, curve = _toy()
+    outside = ax.text(0.99, 0.9, "a long label running out of the axes", ha="center", va="center")
+    assert not SURV.text_is_clear(fig, ax, outside, [])
+
+
+@pytest.mark.parametrize("mode", TO.MODES)
+def test_the_survivor_leader_reaches_its_target_without_crossing_another_curve(mode):
+    raw, pure, deritc, _ritc = SURV.pools(mode)
+    fig, ax, note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
+    assert SURV.leader_is_clear(fig, ax, note, (var_q(deritc, 0.995), 1 - 0.995), obstacles)
+    # and the check can fail on this figure: a box above the raw curve's step, leader down across it
+    old = ax.text(0.58, 0.60, "VaR 99.5%", transform=ax.transAxes, ha="center", va="center")
+    assert not SURV.leader_is_clear(fig, ax, old, (var_q(deritc, 0.995), 1 - 0.995), obstacles)
+
+
 def test_with_no_clear_place_the_script_refuses():
     fig, ax, curve = _toy()
     with pytest.raises(SystemExit):

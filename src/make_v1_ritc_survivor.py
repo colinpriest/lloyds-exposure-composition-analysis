@@ -17,7 +17,10 @@ The VaR99.5 annotation is placed where no plotted curve, marker or the legend cr
 the script refuses to write a figure in which it would be struck through: the published
 figure's annotation sat on the transferred curve's vertical step (review of 29 September 2026,
 M-16). place_annotation() and text_is_clear() are that check, and
-src/test_figure_layout.py runs them on the figure built from the committed inputs.
+src/test_figure_layout.py runs them on the figure built from the committed inputs. The check also
+covers the annotation's leader line: it must reach its target without crossing a curve, a marker
+or the legend (the next review found the leader crossing the raw curve on its way to the de-RITC
+one), and the box must lie inside the axes.
 
 Run: python src/make_v1_ritc_survivor.py
 """
@@ -51,11 +54,14 @@ def _savefig_retry(fig, path, attempts=8, wait=0.5, **kw):
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 
 #: candidate places for the VaR99.5 annotation, in axes fractions: a grid over the plot, tried
-#: nearest-first from PREFERRED (the empty band between the transferred and the raw tails at
-#: the 99.5% level); the first place no curve, marker or legend crosses is used
-PREFERRED = (0.58, 0.10)
+#: nearest-first from PREFERRED (the empty corner below and left of the transferred curve, beside
+#: the 99.5% point it names); the first place where no curve, marker or legend crosses the box
+#: or its leader line is used
+PREFERRED = (0.17, 0.12)
+#: display pixels at the leader's target left uncounted: the leader ends on the curve it points at
+LEADER_END_PX = 8.0
 ANNOTATION_CANDIDATES = tuple(sorted(
-    ((round(x, 2), round(y, 2)) for x in np.arange(0.20, 0.86, 0.04) for y in np.arange(0.06, 0.92, 0.04)),
+    ((round(x, 2), round(y, 2)) for x in np.arange(0.08, 0.90, 0.03) for y in np.arange(0.05, 0.92, 0.03)),
     key=lambda p: (p[0] - PREFERRED[0]) ** 2 + (p[1] - PREFERRED[1]) ** 2))
 
 
@@ -86,6 +92,8 @@ def text_is_clear(fig, ax, text, obstacles, pad=1.15):
     # the TEXT's own box: an annotation's get_window_extent also spans its arrow, which is meant to
     # reach the curve it points at
     box = Text.get_window_extent(text, renderer=renderer).expanded(pad, pad)
+    if not ax.get_window_extent(renderer).contains(box.x0, box.y0)             or not ax.get_window_extent(renderer).contains(box.x1, box.y1):
+        return False                                    # the box must lie inside the axes
     for ob in obstacles:
         if hasattr(ob, "overlaps"):                     # a Bbox in display coordinates
             if box.overlaps(ob):
@@ -97,15 +105,38 @@ def text_is_clear(fig, ax, text, obstacles, pad=1.15):
     return True
 
 
+def leader_is_clear(fig, ax, text, xy, obstacles):
+    """True when the straight leader from `text` to the data point `xy` meets none of `obstacles` (curves in data
+    coordinates, boxes in display coordinates) before it lands: the last LEADER_END_PX pixels at the target are left
+    uncounted, since the leader ends on the curve and marker it points at."""
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    box = Text.get_window_extent(text, renderer=renderer)
+    start = np.array([(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2])
+    end = np.asarray(ax.transData.transform(xy), float)
+    length = float(np.hypot(*(end - start)))
+    if length <= LEADER_END_PX:
+        return True
+    leader = MplPath([start, end - (end - start) / length * LEADER_END_PX])
+    for ob in obstacles:
+        if hasattr(ob, "overlaps"):
+            if leader.intersects_bbox(ob, filled=False):
+                return False
+            continue
+        if leader.intersects_path(MplPath(ax.transData.transform(np.asarray(ob, float))), filled=False):
+            return False
+    return True
+
+
 def place_annotation(fig, ax, label, xy, obstacles, candidates=ANNOTATION_CANDIDATES):
-    """Put `label` at the first candidate where it is clear, with an arrow to `xy`, or refuse."""
+    """Put `label` at the first candidate where it and its leader to `xy` are clear, or refuse."""
     for cx, cy in candidates:
         t = ax.annotate(label, xy=xy, xytext=(cx, cy), textcoords="axes fraction", xycoords="data",
                         ha="center", va="center", fontsize=PFS.SMALL_PT,
                         bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#999", lw=0.6),
                         arrowprops=dict(arrowstyle="->", color="#333", lw=0.8,
                                         shrinkA=2, shrinkB=4))
-        if text_is_clear(fig, ax, t, obstacles):
+        if text_is_clear(fig, ax, t, obstacles) and leader_is_clear(fig, ax, t, xy, obstacles):
             return t
         t.remove()
     raise SystemExit("make_v1_ritc_survivor: no candidate place for the VaR99.5 annotation is clear of the "
@@ -165,7 +196,7 @@ def build_figure(raw, pure, deritc, mode):
         marker_boxes.append(Bbox([[px - 6, py - 6], [px + 6, py + 6]]))
     obstacles = curves + marker_boxes + [legend.get_window_extent(renderer)]
     v_pure, v_der = var_q(pure, 0.995), var_q(deritc, 0.995)
-    note = place_annotation(fig, ax, f"VaR 99.5%: {v_pure:.3f}$\\to${v_der:.3f}",
+    note = place_annotation(fig, ax, f"VaR 99.5%:\n{v_pure:.3f}$\\to${v_der:.3f}",
                             (v_der, 1 - 0.995), obstacles)
     return fig, ax, note, obstacles
 
@@ -187,8 +218,9 @@ def main():
     raw, pure, deritc, ritc = pools(mode)
     with PFS.style():                     # drawn at its printed width with 9/8 pt text (paper_figure_style)
         fig, ax, note, obstacles = build_figure(raw, pure, deritc, mode)
-        if not text_is_clear(fig, ax, note, obstacles):
-            raise SystemExit("make_v1_ritc_survivor: the VaR99.5 annotation is struck by a plotted element")
+        if not (text_is_clear(fig, ax, note, obstacles)
+                and leader_is_clear(fig, ax, note, (var_q(deritc, 0.995), 1 - 0.995), obstacles)):
+            raise SystemExit("make_v1_ritc_survivor: the VaR99.5 annotation or its leader is struck by a plotted element")
         out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
         _savefig_retry(fig, out_png, dpi=150, bbox_inches="tight")
         _savefig_retry(fig, out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})

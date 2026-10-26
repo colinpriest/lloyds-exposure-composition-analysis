@@ -19,7 +19,7 @@ no combined interval, and the sources do not share a population, a model or an e
 A dot is the row's centre. A solid bar is a credible interval (the headline's estimator); a dashed bar is the
 conditional resampling interval of a refit whose own record holds no posterior interval. Both are conditional on the
 row's data, its model and the dependence treatment. A row without a bar has no interval in its record. A value beyond
-the axis is marked at the axis edge and named. The vertical line is the headline centre.
+the axis is marked at the axis edge with its figures, beside its own row label. The vertical line is the headline centre.
 
 Before anything is drawn the headline centre read from each file is checked equal (vignette_uncertainty, the gamma = 0
 vignette record, the backtest's vignette figures, and each refit's recorded primary centre); the overlay's centre is
@@ -78,6 +78,16 @@ BAND_TITLES = {
     "influential_donors": "Influential donors",
     "model_alternatives": "Model alternatives",
 }
+#: the letters the manuscript's caption and text give the four bands, drawn before each band's heading
+BAND_LETTERS = {
+    "parameter_and_donor_weights": "(a)",
+    "measurement_definition": "(b)",
+    "influential_donors": "(c)",
+    "model_alternatives": "(d)",
+}
+#: the figure's row labels in mathtext where the record's plain-text label carries an inequality; the record keeps its
+#: label as written
+ROW_LABEL_MATH = {"u <= t-3": r"$u\leq t-3$"}
 NOT_SUMMED = ("The four sources are shown separately and are not added together: they differ in population, model and "
               "estimator, and no combined interval is computed.")
 
@@ -233,6 +243,18 @@ def values_record(src, bands, reserve, consistency, xlim):
     }
 
 
+def row_label_text(label):
+    """The row label as the figure prints it: the record's label with its ASCII inequality set in mathtext."""
+    for plain, math in ROW_LABEL_MATH.items():
+        label = label.replace(plain, math)
+    return label
+
+
+def band_heading(band_id):
+    """The band's heading as the figure prints it: its letter, then its title."""
+    return "%s %s" % (BAND_LETTERS[band_id], BAND_TITLES[band_id])
+
+
 def build_figure(values):
     """The figure for a values record: four bands sharing the x axis, rows labelled at the left."""
     rows_per = [len(b["rows"]) for b in values["bands"]]
@@ -256,19 +278,20 @@ def build_figure(values):
                 ax.hlines(y, r["interval"][0], r["interval"][1], color=col, lw=2.4 if credible else 1.6,
                           ls="-" if credible else "--", zorder=2)
             if r["off_scale"]:
-                ax.annotate("%s %.3f (GBP %.0fm)  →" % ("raw pool" if r["id"] == "raw_pool" else r["label"],
-                                                             r["point"], r["point_gbp_m"]),
-                            xy=(xhi, y), xytext=(xhi - 0.012 * (xhi - xlo), y), ha="right", va="center",
-                            fontsize=PFS.SMALL_PT, color=col)
+                # the row's own label (at the left) names it, so the note gives only the figures, on two lines (one
+                # line ran back across the headline line), a little above the row's centre to clear the axis
+                ax.annotate("%.3f →\nGBP %.0fm" % (r["point"], r["point_gbp_m"]),
+                            xy=(xhi, y), xytext=(xhi - 0.012 * (xhi - xlo), y + 0.12), ha="right", va="center",
+                            fontsize=PFS.SMALL_PT, color=col, linespacing=1.1)
                 continue
             marker = "o" if r["interval"] is not None else "s"
             ax.plot(r["point"], y, marker, color=col, ms=5.5, zorder=3)
         ax.axvline(headline, color="#333333", lw=0.9, ls=":", zorder=1)
         ax.set_yticks(ys)
-        ax.set_yticklabels([r["label"] for r in band["rows"]], fontsize=PFS.SMALL_PT)
+        ax.set_yticklabels([row_label_text(r["label"]) for r in band["rows"]], fontsize=PFS.SMALL_PT)
         ax.set_ylim(-0.7, n - 0.3)
         ax.set_xlim(xlo, xhi)
-        ax.set_title(band["title"], loc="left", fontsize=9.0)
+        ax.set_title(band_heading(band["id"]), loc="left", fontsize=9.0)
         ax.tick_params(axis="x", labelsize=PFS.SMALL_PT, labelbottom=(gi == len(values["bands"]) - 1))
         ax.grid(True, axis="x", alpha=0.2)
         for side in ("top", "right"):
