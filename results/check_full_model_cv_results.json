@@ -1,8 +1,8 @@
 {
  "question": "how does the adopted two-regime model (the headline likelihood, gamma fixed at 0) score held-out syndicates in a new reporting year, against the naive market pool and the single-regime composition and size-only models, on the folds Table 4 uses? (the marginal row leads; the conditional row is beside it, with the reason)",
- "n": 643,
- "n_syndicates": 118,
- "n_ritc": 33,
+ "n": 632,
+ "n_syndicates": 117,
+ "n_ritc": 27,
  "folds": 5,
  "fold_rule": "oos_validation.fold_assignment at K = 5 (the folds of Table 4)",
  "criterion": "held-out ELPD: the sum over held-out syndicate-years of the log of the posterior-mean density",
@@ -23,182 +23,182 @@
   "seed": 42
  },
  "held_out_ELPD": {
-  "adopted_two_regime": 711.1779611463816,
-  "adopted_two_regime_year_shock_marginal": 709.5450289599665,
-  "composition": 710.062377898455,
-  "size_only": 710.967279876788,
-  "naive": 672.67754496344
+  "adopted_two_regime": 702.1048850421488,
+  "adopted_two_regime_year_shock_marginal": 701.047903400801,
+  "composition": 701.0876636256899,
+  "size_only": 702.0499552859706,
+  "naive": 667.6792589335338
  },
  "held_out_ELPD_per_observation": {
-  "adopted_two_regime": 1.1060310437735328,
-  "adopted_two_regime_year_shock_marginal": 1.1034914913840848,
-  "composition": 1.1042960776025739,
-  "size_only": 1.1057033901660778,
-  "naive": 1.0461548133179472
+  "adopted_two_regime": 1.1109254510160582,
+  "adopted_two_regime_year_shock_marginal": 1.1092530117101282,
+  "composition": 1.10931592345837,
+  "size_only": 1.11083853684489,
+  "naive": 1.0564545236290093
  },
  "contrasts": {
   "adopted_two_regime_year_shock_marginal__minus__composition": {
-   "delta_ELPD": -0.5173489384883974,
-   "SE_plain": 1.678633714333818,
-   "SE_clustered": 1.860197351627079,
-   "bb_mean": -0.5222685887693526,
-   "bb_sd": 1.833063384974221,
-   "bb_2.5": -4.04450535490435,
-   "bb_97.5": 3.175929555574378,
-   "P_first_better": 0.38345,
-   "n_clusters": 118,
-   "pct_obs_first_better": 37.791601866251945,
-   "pct_syndicates_first_better": 38.983050847457626
+   "delta_ELPD": -0.03976022488885578,
+   "SE_plain": 1.6547693219954236,
+   "SE_clustered": 1.9603292484371293,
+   "bb_mean": -0.012969267500683092,
+   "bb_sd": 1.9517245441081374,
+   "bb_2.5": -3.7903614580615286,
+   "bb_97.5": 3.965394406675501,
+   "P_first_better": 0.4913,
+   "n_clusters": 117,
+   "pct_obs_first_better": 38.291139240506325,
+   "pct_syndicates_first_better": 41.88034188034188
   },
   "adopted_two_regime_year_shock_marginal__minus__size_only": {
-   "delta_ELPD": -1.422250916821492,
-   "SE_plain": 1.1000960426726556,
-   "SE_clustered": 1.363914929667,
-   "bb_mean": -1.4201587626967465,
-   "bb_sd": 1.3611225613974633,
-   "bb_2.5": -3.984940146804785,
-   "bb_97.5": 1.5311173786094272,
-   "P_first_better": 0.1262,
-   "n_clusters": 118,
-   "pct_obs_first_better": 38.10264385692068,
-   "pct_syndicates_first_better": 34.74576271186441
+   "delta_ELPD": -1.0020518851695246,
+   "SE_plain": 1.0773915808501497,
+   "SE_clustered": 1.4976162762776624,
+   "bb_mean": -0.9886508528799742,
+   "bb_sd": 1.5001388351654386,
+   "bb_2.5": -3.6917969003099826,
+   "bb_97.5": 2.442422289837633,
+   "P_first_better": 0.2137,
+   "n_clusters": 117,
+   "pct_obs_first_better": 37.34177215189873,
+   "pct_syndicates_first_better": 28.205128205128204
   },
   "adopted_two_regime_year_shock_marginal__minus__naive": {
-   "delta_ELPD": 36.867483996526424,
-   "SE_plain": 10.762262252148124,
-   "SE_clustered": 15.234811284474254,
-   "bb_mean": 36.88803781751215,
-   "bb_sd": 15.127376015317008,
-   "bb_2.5": 10.363905661900114,
-   "bb_97.5": 69.73601988527196,
-   "P_first_better": 0.9981,
-   "n_clusters": 118,
-   "pct_obs_first_better": 64.85225505443235,
-   "pct_syndicates_first_better": 63.559322033898304
+   "delta_ELPD": 33.368644467267295,
+   "SE_plain": 10.155331854664242,
+   "SE_clustered": 14.064230213509997,
+   "bb_mean": 33.51037883677606,
+   "bb_sd": 14.004164070107446,
+   "bb_2.5": 8.850396085851639,
+   "bb_97.5": 63.77998757734356,
+   "P_first_better": 0.99665,
+   "n_clusters": 117,
+   "pct_obs_first_better": 64.08227848101265,
+   "pct_syndicates_first_better": 64.95726495726495
   },
   "adopted_two_regime__minus__composition": {
-   "delta_ELPD": 1.1155832479266259,
-   "SE_plain": 2.470334294829458,
-   "SE_clustered": 2.486962663183763,
-   "bb_mean": 1.089076723235755,
-   "bb_sd": 2.473785624811967,
-   "bb_2.5": -3.8676338827931755,
-   "bb_97.5": 5.852085374958156,
-   "P_first_better": 0.6766,
-   "n_clusters": 118,
-   "pct_obs_first_better": 46.81181959564541,
-   "pct_syndicates_first_better": 53.38983050847458
+   "delta_ELPD": 1.0172214164588471,
+   "SE_plain": 2.4488786271703065,
+   "SE_clustered": 2.4403610985486064,
+   "bb_mean": 1.0402767092616572,
+   "bb_sd": 2.412855938558114,
+   "bb_2.5": -3.855506386440522,
+   "bb_97.5": 5.639336345135257,
+   "P_first_better": 0.6793,
+   "n_clusters": 117,
+   "pct_obs_first_better": 47.151898734177216,
+   "pct_syndicates_first_better": 52.13675213675214
   },
   "adopted_two_regime__minus__size_only": {
-   "delta_ELPD": 0.21068126959353117,
-   "SE_plain": 2.237322724653334,
-   "SE_clustered": 2.148883487151882,
-   "bb_mean": 0.19118654930836124,
-   "bb_sd": 2.1475529390080865,
-   "bb_2.5": -4.218803783886592,
-   "bb_97.5": 4.257030607601147,
-   "P_first_better": 0.5484,
-   "n_clusters": 118,
-   "pct_obs_first_better": 45.72317262830482,
-   "pct_syndicates_first_better": 46.61016949152542
+   "delta_ELPD": 0.0549297561781783,
+   "SE_plain": 2.260853950577481,
+   "SE_clustered": 2.1934234930680425,
+   "bb_mean": 0.06459512388236595,
+   "bb_sd": 2.175969090337398,
+   "bb_2.5": -4.482887497760937,
+   "bb_97.5": 4.111676683628846,
+   "P_first_better": 0.52465,
+   "n_clusters": 117,
+   "pct_obs_first_better": 45.88607594936709,
+   "pct_syndicates_first_better": 47.008547008547005
   },
   "adopted_two_regime__minus__naive": {
-   "delta_ELPD": 38.50041618294145,
-   "SE_plain": 10.664388612170145,
-   "SE_clustered": 15.238594859306723,
-   "bb_mean": 38.499383129517255,
-   "bb_sd": 15.131869010264309,
-   "bb_2.5": 11.913853836207442,
-   "bb_97.5": 71.17424503685068,
-   "P_first_better": 0.9981,
-   "n_clusters": 118,
-   "pct_obs_first_better": 64.38569206842924,
-   "pct_syndicates_first_better": 66.10169491525424
+   "delta_ELPD": 34.425626108615,
+   "SE_plain": 10.083159889851151,
+   "SE_clustered": 14.014629606799533,
+   "bb_mean": 34.5636248135384,
+   "bb_sd": 13.964924216546818,
+   "bb_2.5": 9.668417464288181,
+   "bb_97.5": 64.70494513491276,
+   "P_first_better": 0.99685,
+   "n_clusters": 117,
+   "pct_obs_first_better": 63.60759493670886,
+   "pct_syndicates_first_better": 62.39316239316239
   },
   "adopted_two_regime__minus__adopted_two_regime_year_shock_marginal": {
-   "delta_ELPD": 1.6329321864150232,
-   "SE_plain": 2.0711589608190635,
-   "SE_clustered": 2.347439366682866,
-   "bb_mean": 1.6113453120051076,
-   "bb_sd": 2.3531904365890317,
-   "bb_2.5": -3.4552860720757015,
-   "bb_97.5": 5.84211292011098,
-   "P_first_better": 0.7733,
-   "n_clusters": 118,
-   "pct_obs_first_better": 58.63141524105754,
-   "pct_syndicates_first_better": 55.932203389830505
+   "delta_ELPD": 1.056981641347703,
+   "SE_plain": 2.110736480514675,
+   "SE_clustered": 2.448645407186683,
+   "bb_mean": 1.05324597676234,
+   "bb_sd": 2.428103817229481,
+   "bb_2.5": -4.3429603582963106,
+   "bb_97.5": 5.347717961890806,
+   "P_first_better": 0.69395,
+   "n_clusters": 117,
+   "pct_obs_first_better": 57.75316455696202,
+   "pct_syndicates_first_better": 53.84615384615385
   },
   "size_only__minus__naive": {
-   "delta_ELPD": 38.289734913347914,
-   "SE_plain": 10.633925647658867,
-   "SE_clustered": 14.974392715825855,
-   "bb_mean": 38.30819658020889,
-   "bb_sd": 14.862651697393948,
-   "bb_2.5": 12.49250025019375,
-   "bb_97.5": 70.65439518062918,
-   "P_first_better": 0.99885,
-   "n_clusters": 118,
-   "pct_obs_first_better": 64.85225505443235,
-   "pct_syndicates_first_better": 64.40677966101694
+   "delta_ELPD": 34.37069635243682,
+   "SE_plain": 9.949205744235124,
+   "SE_clustered": 13.629316258826778,
+   "bb_mean": 34.499029689656034,
+   "bb_sd": 13.556827626770703,
+   "bb_2.5": 10.713062425978334,
+   "bb_97.5": 63.91764089116195,
+   "P_first_better": 0.9979,
+   "n_clusters": 117,
+   "pct_obs_first_better": 65.18987341772153,
+   "pct_syndicates_first_better": 63.24786324786324
   },
   "composition__minus__naive": {
-   "delta_ELPD": 37.38483293501481,
-   "SE_plain": 10.573404584908916,
-   "SE_clustered": 14.93053217312152,
-   "bb_mean": 37.41030640628151,
-   "bb_sd": 14.852067941762554,
-   "bb_2.5": 11.391502275199366,
-   "bb_97.5": 69.79241193354744,
-   "P_first_better": 0.99855,
-   "n_clusters": 118,
-   "pct_obs_first_better": 66.25194401244168,
-   "pct_syndicates_first_better": 66.10169491525424
+   "delta_ELPD": 33.408404692156154,
+   "SE_plain": 9.961079012200845,
+   "SE_clustered": 13.698823764861098,
+   "bb_mean": 33.52334810427674,
+   "bb_sd": 13.62868955975903,
+   "bb_2.5": 9.634310995894582,
+   "bb_97.5": 62.933077249388106,
+   "P_first_better": 0.99735,
+   "n_clusters": 117,
+   "pct_obs_first_better": 64.71518987341773,
+   "pct_syndicates_first_better": 65.8119658119658
   },
   "composition__minus__size_only": {
-   "delta_ELPD": -0.9049019783330947,
-   "SE_plain": 1.1957181182802492,
-   "SE_clustered": 1.4732983749490838,
-   "bb_mean": -0.8978901739273937,
-   "bb_sd": 1.4536170054722033,
-   "bb_2.5": -3.786173966053283,
-   "bb_97.5": 1.9227917662311582,
-   "P_first_better": 0.26745,
-   "n_clusters": 118,
-   "pct_obs_first_better": 53.18818040435459,
-   "pct_syndicates_first_better": 48.30508474576271
+   "delta_ELPD": -0.9622916602806688,
+   "SE_plain": 1.1797928398507644,
+   "SE_clustered": 1.4206130402604886,
+   "bb_mean": -0.9756815853792912,
+   "bb_sd": 1.4140319403833608,
+   "bb_2.5": -3.801520756327002,
+   "bb_97.5": 1.8004595123989031,
+   "P_first_better": 0.24135,
+   "n_clusters": 117,
+   "pct_obs_first_better": 54.74683544303798,
+   "pct_syndicates_first_better": 50.427350427350426
   }
  },
  "presentation": {
   "lead": {
    "model": "adopted_two_regime_year_shock_marginal",
    "scores": "a held-out syndicate in a NEW reporting year: the year shock is integrated out over N(0, tau_s) and nothing from the held-out year's other syndicates is used; this is the transfer the paper puts the model to",
-   "held_out_ELPD": 709.5450289599665,
+   "held_out_ELPD": 701.047903400801,
    "contrasts": {
     "vs_composition": {
-     "delta_ELPD": -0.5173489384883974,
+     "delta_ELPD": -0.03976022488885578,
      "credible_interval_95": [
-      -4.04450535490435,
-      3.175929555574378
+      -3.7903614580615286,
+      3.965394406675501
      ],
-     "P_first_better": 0.38345,
+     "P_first_better": 0.4913,
      "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
     },
     "vs_size_only": {
-     "delta_ELPD": -1.422250916821492,
+     "delta_ELPD": -1.0020518851695246,
      "credible_interval_95": [
-      -3.984940146804785,
-      1.5311173786094272
+      -3.6917969003099826,
+      2.442422289837633
      ],
-     "P_first_better": 0.1262,
+     "P_first_better": 0.2137,
      "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
     },
     "vs_naive": {
-     "delta_ELPD": 36.867483996526424,
+     "delta_ELPD": 33.368644467267295,
      "credible_interval_95": [
-      10.363905661900114,
-      69.73601988527196
+      8.850396085851639,
+      63.77998757734356
      ],
-     "P_first_better": 0.9981,
+     "P_first_better": 0.99665,
      "reading": "the 95% credible interval lies above zero: the first model scores higher by-syndicate held-out ELPD"
     }
    }
@@ -207,54 +207,54 @@
    "model": "adopted_two_regime",
    "scores": "a held-out syndicate in an observed reporting year, with that year's shock",
    "why_it_is_not_the_lead": "it uses the fold fit's posterior draw of the shock for the held-out record's own reporting year, which the training syndicates' records of that year inform; the single-regime comparators have no year shock, so this row gives the adopted model contemporaneous market information that a transfer to a new reporting year does not have",
-   "held_out_ELPD": 711.1779611463816,
+   "held_out_ELPD": 702.1048850421488,
    "contrasts": {
     "vs_composition": {
-     "delta_ELPD": 1.1155832479266259,
+     "delta_ELPD": 1.0172214164588471,
      "credible_interval_95": [
-      -3.8676338827931755,
-      5.852085374958156
+      -3.855506386440522,
+      5.639336345135257
      ],
-     "P_first_better": 0.6766,
+     "P_first_better": 0.6793,
      "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
     },
     "vs_size_only": {
-     "delta_ELPD": 0.21068126959353117,
+     "delta_ELPD": 0.0549297561781783,
      "credible_interval_95": [
-      -4.218803783886592,
-      4.257030607601147
+      -4.482887497760937,
+      4.111676683628846
      ],
-     "P_first_better": 0.5484,
+     "P_first_better": 0.52465,
      "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
     },
     "vs_naive": {
-     "delta_ELPD": 38.50041618294145,
+     "delta_ELPD": 34.425626108615,
      "credible_interval_95": [
-      11.913853836207442,
-      71.17424503685068
+      9.668417464288181,
+      64.70494513491276
      ],
-     "P_first_better": 0.9981,
+     "P_first_better": 0.99685,
      "reading": "the 95% credible interval lies above zero: the first model scores higher by-syndicate held-out ELPD"
     }
    }
   },
   "conditional_minus_marginal": {
-   "delta_ELPD": 1.6329321864150232,
+   "delta_ELPD": 1.056981641347703,
    "credible_interval_95": [
-    -3.4552860720757015,
-    5.84211292011098
+    -4.3429603582963106,
+    5.347717961890806
    ],
-   "P_first_better": 0.7733,
+   "P_first_better": 0.69395,
    "reading": "the 95% credible interval includes zero: a difference in held-out ELPD is not established"
   },
   "wording_rule": "the adopted model is said to score higher (or to predict better) only where a contrast's 95% credible interval lies above zero; elsewhere the difference is not established"
  },
- "contrast_method": "check_cv_clustered_se.contrast, Table 4's: the paired difference of pointwise held-out log densities summed; bb_* is a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) weights on the 118 syndicate totals, 20000 draws, seed 42): a posterior for the population difference, its mean, SD, 95% credible interval (bb_2.5, bb_97.5) and P_first_better (the posterior probability that the first model scores the higher held-out ELPD); SE_plain and SE_clustered are kept for comparison",
+ "contrast_method": "check_cv_clustered_se.contrast, Table 4's: the paired difference of pointwise held-out log densities summed; bb_* is a Bayesian bootstrap over syndicates (Dirichlet(1, ..., 1) weights on the 117 syndicate totals, 20000 draws, seed 42): a posterior for the population difference, its mean, SD, 95% credible interval (bb_2.5, bb_97.5) and P_first_better (the posterior probability that the first model scores the higher held-out ELPD); SE_plain and SE_clustered are kept for comparison",
  "single_regime_reproduce_table_4": {
   "recorded": {
-   "composition": 710.062377898455,
-   "naive": 672.67754496344,
-   "size_only": 710.967279876788
+   "composition": 701.0876636256899,
+   "naive": 667.6792589335338,
+   "size_only": 702.0499552859706
   },
   "computed_minus_recorded": {
    "composition": 0.0,
@@ -270,55 +270,55 @@
  "fold_fits": [
   {
    "fold": 0,
-   "n_train": 476,
-   "n_held_out": 167,
+   "n_train": 466,
+   "n_held_out": 166,
    "n_held_out_syndicates": 24,
-   "n_held_out_ritc": 9,
+   "n_held_out_ritc": 8,
    "n_held_out_in_unseen_year": 0,
    "diagnostics": {
     "divergences": 0,
-    "max_rhat": 1.0015999751874,
-    "min_ess_bulk": 2157.1579323511196,
-    "min_ess_tail": 2263.0523933132954
+    "max_rhat": 1.004560259017282,
+    "min_ess_bulk": 1975.7081736841171,
+    "min_ess_tail": 2545.2492283412844
    },
    "posterior_means": {
-    "k": 0.5994936336028833,
-    "sd_undiv": 0.02667381523594998,
-    "sd_div": 0.044573441451235096,
-    "nu_clean": 3.656601973975897,
-    "nu_ritc": 5.567884104421765,
-    "lambda_ritc": -0.2741418786756879,
-    "beta_ritc": 0.07249874899258746,
-    "tau_s": 0.09563631390698599
+    "k": 0.6170523215451832,
+    "sd_undiv": 0.024866257595668923,
+    "sd_div": 0.04507840271028202,
+    "nu_clean": 3.5725627102493513,
+    "nu_ritc": 5.01083712139796,
+    "lambda_ritc": -0.18263808960653288,
+    "beta_ritc": 0.04443289288193762,
+    "tau_s": 0.10463570888628301
    },
    "single_regime_divergences": {
-    "composition": 0,
+    "composition": 1,
     "naive": 0,
     "size_only": 0
    }
   },
   {
    "fold": 1,
-   "n_train": 510,
-   "n_held_out": 133,
+   "n_train": 501,
+   "n_held_out": 131,
    "n_held_out_syndicates": 24,
-   "n_held_out_ritc": 11,
+   "n_held_out_ritc": 10,
    "n_held_out_in_unseen_year": 0,
    "diagnostics": {
     "divergences": 0,
-    "max_rhat": 1.0024810847118046,
-    "min_ess_bulk": 1735.6320488108474,
-    "min_ess_tail": 1861.2744552369281
+    "max_rhat": 1.0029929072412942,
+    "min_ess_bulk": 1610.5092318949703,
+    "min_ess_tail": 2424.541892038865
    },
    "posterior_means": {
-    "k": 0.6351552656037278,
-    "sd_undiv": 0.029846064322328714,
-    "sd_div": 0.04418861883408007,
-    "nu_clean": 4.127357113099974,
-    "nu_ritc": 5.79226014785834,
-    "lambda_ritc": -0.17415226377487833,
-    "beta_ritc": 0.00043291647111659765,
-    "tau_s": 0.10632486796789152
+    "k": 0.6343061674776176,
+    "sd_undiv": 0.029210566459555647,
+    "sd_div": 0.043756302758995294,
+    "nu_clean": 3.989223947084894,
+    "nu_ritc": 4.945032222590795,
+    "lambda_ritc": -0.04760471113216615,
+    "beta_ritc": -0.06209018316906116,
+    "tau_s": 0.10770238550814429
    },
    "single_regime_divergences": {
     "composition": 0,
@@ -328,26 +328,26 @@
   },
   {
    "fold": 2,
-   "n_train": 524,
-   "n_held_out": 119,
+   "n_train": 514,
+   "n_held_out": 118,
    "n_held_out_syndicates": 24,
    "n_held_out_ritc": 3,
    "n_held_out_in_unseen_year": 0,
    "diagnostics": {
     "divergences": 0,
-    "max_rhat": 1.0012357821700113,
-    "min_ess_bulk": 1775.6410951592698,
-    "min_ess_tail": 2258.4346579211297
+    "max_rhat": 1.0012223957245105,
+    "min_ess_bulk": 1771.6514961775374,
+    "min_ess_tail": 2428.089600020787
    },
    "posterior_means": {
-    "k": 0.5791329623874996,
-    "sd_undiv": 0.03311169298386844,
-    "sd_div": 0.04071621921856694,
-    "nu_clean": 4.079703489148039,
-    "nu_ritc": 7.531831816025609,
-    "lambda_ritc": -0.46129499289564013,
-    "beta_ritc": -0.1481272561610834,
-    "tau_s": 0.11135823757220344
+    "k": 0.6026787723148269,
+    "sd_undiv": 0.03124599059322097,
+    "sd_div": 0.041164417339196034,
+    "nu_clean": 3.8923377594810917,
+    "nu_ritc": 6.476783780461229,
+    "lambda_ritc": -0.35293742075122375,
+    "beta_ritc": -0.19859795111876147,
+    "tau_s": 0.11253583587468087
    },
    "single_regime_divergences": {
     "composition": 0,
@@ -357,26 +357,26 @@
   },
   {
    "fold": 3,
-   "n_train": 541,
-   "n_held_out": 102,
-   "n_held_out_syndicates": 23,
-   "n_held_out_ritc": 8,
+   "n_train": 535,
+   "n_held_out": 97,
+   "n_held_out_syndicates": 22,
+   "n_held_out_ritc": 4,
    "n_held_out_in_unseen_year": 0,
    "diagnostics": {
     "divergences": 0,
-    "max_rhat": 1.002235838025202,
-    "min_ess_bulk": 1426.8511752869142,
-    "min_ess_tail": 1338.1959541003996
+    "max_rhat": 1.0006142793270645,
+    "min_ess_bulk": 1848.81264829277,
+    "min_ess_tail": 2079.372590714499
    },
    "posterior_means": {
-    "k": 0.596787317345875,
-    "sd_undiv": 0.03160927666984511,
-    "sd_div": 0.042058143105714235,
-    "nu_clean": 3.935211309040659,
-    "nu_ritc": 5.44973279331314,
-    "lambda_ritc": -0.1880387780354221,
-    "beta_ritc": -0.17009640096744247,
-    "tau_s": 0.18345098492701445
+    "k": 0.6181675772151035,
+    "sd_undiv": 0.030907211352282478,
+    "sd_div": 0.04271531264653281,
+    "nu_clean": 3.9062924998655033,
+    "nu_ritc": 5.317796753610408,
+    "lambda_ritc": -0.16006032208437918,
+    "beta_ritc": -0.15710679184960172,
+    "tau_s": 0.18519155499195222
    },
    "single_regime_divergences": {
     "composition": 0,
@@ -386,26 +386,26 @@
   },
   {
    "fold": 4,
-   "n_train": 521,
-   "n_held_out": 122,
+   "n_train": 512,
+   "n_held_out": 120,
    "n_held_out_syndicates": 23,
    "n_held_out_ritc": 2,
    "n_held_out_in_unseen_year": 0,
    "diagnostics": {
     "divergences": 0,
-    "max_rhat": 1.0020642229450463,
-    "min_ess_bulk": 1591.8575175626981,
-    "min_ess_tail": 1952.0426291585704
+    "max_rhat": 1.0016466337687264,
+    "min_ess_bulk": 1663.866885288089,
+    "min_ess_tail": 1973.908471916337
    },
    "posterior_means": {
-    "k": 0.6259268942446697,
-    "sd_undiv": 0.030820120880596727,
-    "sd_div": 0.044677803645876216,
-    "nu_clean": 5.450774164867755,
-    "nu_ritc": 7.910665932573664,
-    "lambda_ritc": -0.22204822915593808,
-    "beta_ritc": -0.02622036129874953,
-    "tau_s": 0.14337965580387493
+    "k": 0.6572843711668952,
+    "sd_undiv": 0.028337990859406772,
+    "sd_div": 0.04613629145226603,
+    "nu_clean": 5.362794291178797,
+    "nu_ritc": 7.111731256427372,
+    "lambda_ritc": -0.11603756854639817,
+    "beta_ritc": -0.04448483424741439,
+    "tau_s": 0.13897427094645676
    },
    "single_regime_divergences": {
     "composition": 0,
@@ -416,15 +416,15 @@
  ],
  "fold_fits_converged": true,
  "runtime_seconds": {
-  "total": 168.43311977386475,
-  "fold_fits_wall": 168.27264857292175,
+  "total": 170.4843680858612,
+  "fold_fits_wall": 170.3007414340973,
   "workers": 3,
   "folds_seconds": [
-   78.8657968044281,
-   82.88844180107117,
-   81.34502339363098,
-   76.41460537910461,
-   77.47298550605774
+   77.47326231002808,
+   79.64559054374695,
+   79.1393473148346,
+   80.03322649002075,
+   81.8609983921051
   ],
   "logical_processors": 28
  }

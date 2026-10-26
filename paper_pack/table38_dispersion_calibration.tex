@@ -6,21 +6,21 @@
 \toprule
 \textbf{Parameter} & \textbf{Posterior mean} & \textbf{SD} & \textbf{95\% HDI} & \textbf{Interpretation} \\
 \midrule
-\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ $\cdot\, e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it) \quad ($n = 643$, 10 reporting years)} \\
+\multicolumn{5}{p{15cm}}{\textbf{Model:} $S \sim t_{\nu}(0,\sigma)$ with $\nu_{it}=\nu_{\text{clean}}$ (clean) or $\nu_{\text{clean}}e^{-\lambda_{\text{RITC}}}$ (RITC), $\sigma = \sqrt{\sigma_{\text{undiv}}^2 + \sigma_{\text{div}}^2\,[(R/R_{\text{ref}})(1/H)^{\gamma}]^{2(k-1)}}\cdot e^{s_t}$ $\cdot\, e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ (fitted scale multiplier; the transfer operator omits it) \quad ($n = 632$, 10 reporting years)} \\
 \midrule
-$k$ & 0.602 & 0.053 & [0.509,\; 0.699] & diversifiable-term pooling exponent ($\tfrac12$=finite-variance independent $\sqrt N$, $1$=comonotonic) \\
-$\gamma$ & 0 & --- & --- & concentration (effective-line $1/H$) exponent, fixed at 0 in the likelihood (the headline); the gamma-free fit, the overlay's source, gives 0.370 [0.000,\; 0.864] \\
-$\sigma_{\text{undiv}}$ & 0.0310 & 0.0070 & [0.0170,\; 0.0430] & undiversifiable floor (very-large-book dispersion) \\
-$\sigma_{\text{div}}$ & 0.0430 & 0.0060 & [0.0320,\; 0.0540] & diversifiable scale at reference ($\pounds500$m, single-line) \\
-$\nu_{\text{clean}}$ & 4.07 & 0.71 & [2.79,\; 5.48] & Student-$t$ tail index, clean regime \\
-$\nu_{\text{RITC}}$ & 6.26 & 4.05 & [1.43,\; 14.23] & Student-$t$ tail index, RITC regime \\
-$\lambda_{\text{RITC}}$ & -0.288 & 0.538 & [-1.333,\; 0.748] & log tail-weight shift ($>0\Rightarrow$ RITC heavier) \\
-$\beta_{\text{RITC}}$ & -0.056 & 0.175 & [-0.403,\; 0.276] & RITC scale term, omitted from the operator (not shown to be 0) \\
-$\tau_s$ & 0.133 & 0.073 & [0.000,\; 0.259] & reporting-year shared-shock SD (log-scale) \\
+$k$ & 0.624 & 0.057 & [0.524,\; 0.735] & diversifiable-term pooling exponent ($\tfrac12$=finite-variance independent $\sqrt N$, $1$=comonotonic) \\
+$\gamma$ & 0 & --- & --- & concentration (effective-line $1/H$) exponent, fixed at 0 in the likelihood (the headline); the gamma-free fit, the overlay's source, gives 0.394 [0.000,\; 0.932] \\
+$\sigma_{\text{undiv}}$ & 0.0290 & 0.0080 & [0.0130,\; 0.0430] & undiversifiable floor (very-large-book dispersion) \\
+$\sigma_{\text{div}}$ & 0.0440 & 0.0060 & [0.0320,\; 0.0560] & diversifiable scale at reference ($\pounds500$m, single-line) \\
+$\nu_{\text{clean}}$ & 3.96 & 0.66 & [2.79,\; 5.30] & Student-$t$ tail index, clean regime \\
+$\nu_{\text{RITC}}$ & 5.39 & 3.52 & [1.13,\; 11.80] & Student-$t$ tail index, RITC regime \\
+$\lambda_{\text{RITC}}$ & -0.166 & 0.543 & [-1.225,\; 0.885] & log tail-weight shift ($>0\Rightarrow$ RITC heavier) \\
+$\beta_{\text{RITC}}$ & -0.095 & 0.192 & [-0.487,\; 0.271] & RITC scale term, omitted from the operator (not shown to be 0) \\
+$\tau_s$ & 0.137 & 0.073 & [0.000,\; 0.267] & reporting-year shared-shock SD (log-scale) \\
 \midrule
-\multicolumn{5}{l}{$P(k<1)$, $P(k>\tfrac12)$: one by construction on the bracketed support, not evidence;\quad $P(\nu_{\text{RITC}}<\nu_{\text{clean}}) = 0.31$,\quad $P(\nu_{\text{clean}}<2) = 0.00$,\quad $P(\nu_{\text{RITC}}<2) = 0.02$} \\
+\multicolumn{5}{l}{$P(k<1)$, $P(k>\tfrac12)$: one by construction on the bracketed support, not evidence;\quad $P(\nu_{\text{RITC}}<\nu_{\text{clean}}) = 0.40$,\quad $P(\nu_{\text{clean}}<2) = 0.00$,\quad $P(\nu_{\text{RITC}}<2) = 0.05$} \\
 \midrule
-\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 1154$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma$ is fixed at 0 in the likelihood (the gamma-free fit, the concentration overlay's source, has a half-normal prior on it). The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated conditional on fitting the floored specification rather than shrunk toward zero; comparison with the floorless specification does not identify the asymptotic floor. Concentration does not enter this fit ($\gamma = 0$); it enters only the concentration overlay (the gamma-free fit), through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
+\multicolumn{5}{p{15cm}}{Fitted by Hamiltonian Monte Carlo (NUTS, 4 chains, 1500 post-warmup draws each) with $\mu=0$ fixed. Convergence: max $\hat R = 1.00$, min bulk-ESS $= 1416$, 0 divergences. The pooling exponent $k$ is constrained to $[0.5,1]$ via a logistic transform; $\gamma$ is fixed at 0 in the likelihood (the gamma-free fit, the concentration overlay's source, has a half-normal prior on it). The undiversifiable variance share at the reference has a uniform (Beta$(1,1)$) prior, so the share is estimated conditional on fitting the floored specification rather than shrunk toward zero; comparison with the floorless specification does not identify the asymptotic floor. Concentration does not enter this fit ($\gamma = 0$); it enters only the concentration overlay (the gamma-free fit), through the effective line count $n_{\text{eff}} = 1/H$, well-defined for single-line reporters ($H=1$).} \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -1,0 +1,2344 @@
+{
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "question": "Where does the operator's held-out adverse tail fail by size of book, on the primary: at 99 and 99.5%, by the primary's own quartiles and by the fixed bands of the earlier 643-record sample?",
+ "inputs": {
+  "backtest_record": "results/check_operator_backtest_results.json",
+  "backtest_record_sha256": "12dcdc1ee3866a3cd9378d752802ef4ad09a2b4ae5fefa991aa3df76fabb996b",
+  "backtest_record_sha256_is": "the canonical JSON content (volatile fields such as runtime_seconds removed)",
+  "loader_run_id_without_calibration": "929db703-c343-582e-8aa8-5231b30e3864",
+  "n_working_sample": 632,
+  "n_syndicates": 117,
+  "n_assumed_business": 27,
+  "folds": 10,
+  "fold_rule": "the frozen fold map (data/fold_map.json) through oos_validation.fold_assignment"
+ },
+ "levels": [
+  "0.99",
+  "0.995"
+ ],
+ "pool_rules": {
+  "leave_out": "every row whose held-out unit differs from the target's (the primary pool)",
+  "leave_out_and_target_year": "as leave_out, and without the rows of the target's own reporting year"
+ },
+ "groupings": {
+  "own_quartiles": {
+   "reading": "the primary's own descriptive quartiles, recomputed from its opening reserves",
+   "edges_gbp_m": [
+    171.98130979747208,
+    421.462,
+    815.5955
+   ],
+   "counts": [
+    158,
+    158,
+    158,
+    158
+   ],
+   "distinct_syndicates": [
+    63,
+    53,
+    42,
+    28
+   ]
+  },
+  "fixed_original_bands": {
+   "reading": "the cutoffs of the earlier 643-record sample, held fixed; not a size boundary the data certify as safe or unsafe",
+   "edges_gbp_m": [
+    172.5745,
+    425.362,
+    837.0151141803343
+   ],
+   "counts": [
+    159,
+    158,
+    161,
+    154
+   ],
+   "distinct_syndicates": [
+    63,
+    53,
+    42,
+    28
+   ]
+  }
+ },
+ "regrouping": {
+  "in_own_quartile_1_not_fixed_band_1": [],
+  "in_fixed_band_1_not_own_quartile_1": [
+   {
+    "record_id": "4141_2018",
+    "R_gbp_m": 172.403
+   }
+  ],
+  "reading": "the two groupings use the same forecasts and the same flags; a record that crosses a cutoff moves between groups and changes the denominators, not an event"
+ },
+ "exceedance": "S_target > VaR of the transferred pool (strict); expected rate 1 - level",
+ "versions": {
+  "honest_plug_in": {
+   "pool_rules": {
+    "leave_out": {
+     "own_quartiles": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5800000000000014,
+        "rate": 0.056962025316455694,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7900000000000007,
+        "rate": 0.0379746835443038,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     },
+     "fixed_original_bands": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5900000000000014,
+        "rate": 0.05660377358490566,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.6100000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5400000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7950000000000007,
+        "rate": 0.03773584905660377,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.8050000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7700000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     }
+    },
+    "leave_out_and_target_year": {
+     "own_quartiles": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5800000000000014,
+        "rate": 0.056962025316455694,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7900000000000007,
+        "rate": 0.0379746835443038,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     },
+     "fixed_original_bands": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5900000000000014,
+        "rate": 0.05660377358490566,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.6100000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5400000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7950000000000007,
+        "rate": 0.03773584905660377,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.8050000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7700000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     }
+    }
+   },
+   "thresholds": "recomputed from the fold fits' stored posterior means; equal flags to the record's at every target"
+  },
+  "honest_posterior_draws": {
+   "pool_rules": {
+    "leave_out": {
+     "own_quartiles": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5800000000000014,
+        "rate": 0.056962025316455694,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7900000000000007,
+        "rate": 0.0379746835443038,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     },
+     "fixed_original_bands": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5900000000000014,
+        "rate": 0.05660377358490566,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.6100000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5400000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 6,
+        "expected": 0.7950000000000007,
+        "rate": 0.03773584905660377,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2019",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 0.7900000000000007,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.8050000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7700000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     }
+    },
+    "leave_out_and_target_year": {
+     "own_quartiles": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5800000000000014,
+        "rate": 0.056962025316455694,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5800000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 158,
+        "n_syndicates": 63,
+        "exceedances": 5,
+        "expected": 0.7900000000000007,
+        "rate": 0.03164556962025317,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_3": {
+        "n_targets": 158,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 158,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     },
+     "fixed_original_bands": {
+      "0.99": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 9,
+        "expected": 1.5900000000000014,
+        "rate": 0.05660377358490566,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         1945,
+         1991,
+         3334,
+         5820
+        ],
+        "n_event_syndicates": 4,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2017",
+         "1991_2018",
+         "1991_2019",
+         "1991_2020",
+         "3334_2016",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 1,
+        "expected": 1.5800000000000014,
+        "rate": 0.006329113924050633,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [
+         3010
+        ],
+        "n_event_syndicates": 1,
+        "event_record_ids": [
+         "3010_2024"
+        ]
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 1.6100000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 1.5400000000000014,
+        "rate": 0.0,
+        "nominal_rate": 0.010000000000000009,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      },
+      "0.995": {
+       "band_1": {
+        "n_targets": 159,
+        "n_syndicates": 63,
+        "exceedances": 5,
+        "expected": 0.7950000000000007,
+        "rate": 0.031446540880503145,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [
+         1945,
+         1991,
+         5820
+        ],
+        "n_event_syndicates": 3,
+        "event_record_ids": [
+         "1945_2020",
+         "1991_2015",
+         "1991_2016",
+         "1991_2020",
+         "5820_2016"
+        ]
+       },
+       "band_2": {
+        "n_targets": 158,
+        "n_syndicates": 53,
+        "exceedances": 0,
+        "expected": 0.7900000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_3": {
+        "n_targets": 161,
+        "n_syndicates": 42,
+        "exceedances": 0,
+        "expected": 0.8050000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       },
+       "band_4": {
+        "n_targets": 154,
+        "n_syndicates": 28,
+        "exceedances": 0,
+        "expected": 0.7700000000000007,
+        "rate": 0.0,
+        "nominal_rate": 0.0050000000000000044,
+        "event_syndicates": [],
+        "n_event_syndicates": 0,
+        "event_record_ids": []
+       }
+      }
+     }
+    }
+   },
+   "thresholds": "not available: the fold fits' draws are not written to the backtest record, so only its flags are counted"
+  }
+ },
+ "smallest_band_events": {
+  "0.99": {
+   "own_quartile_1": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.4548766372739261,
+       "observed_over_threshold": 1.3298924229333002
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4109413078123584,
+       "observed_over_threshold": 1.4720763811755724
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.44074136954982085,
+       "observed_over_threshold": 1.4386522131430326
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4382026129747052,
+       "observed_over_threshold": 1.4469871423681862
+      }
+     }
+    },
+    {
+     "record_id": "1991_2017",
+     "syndicate": 1991,
+     "year": 2017,
+     "R_gbp_m": 77.553,
+     "observed_S": 0.35944450891648294,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      }
+     }
+    },
+    {
+     "record_id": "1991_2018",
+     "syndicate": 1991,
+     "year": 2018,
+     "R_gbp_m": 107.368,
+     "observed_S": 0.39746479397958423,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.273701292883696,
+       "observed_over_threshold": 2.5989560879406697
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.27212471985258735,
+       "observed_over_threshold": 2.6140133164037898
+      }
+     }
+    },
+    {
+     "record_id": "3334_2016",
+     "syndicate": 3334,
+     "year": 2016,
+     "R_gbp_m": 37.456,
+     "observed_S": 0.6201943613840238,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6201568816324335,
+       "observed_over_threshold": 1.000060435919846
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5232530862388391,
+       "observed_over_threshold": 1.1852665138432377
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3797492307460257,
+       "observed_over_threshold": 1.770730959555145
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3775618008312066,
+       "observed_over_threshold": 1.7809898095328176
+      }
+     }
+    }
+   ],
+   "fixed_band_1": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.4548766372739261,
+       "observed_over_threshold": 1.3298924229333002
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4109413078123584,
+       "observed_over_threshold": 1.4720763811755724
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.44074136954982085,
+       "observed_over_threshold": 1.4386522131430326
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4382026129747052,
+       "observed_over_threshold": 1.4469871423681862
+      }
+     }
+    },
+    {
+     "record_id": "1991_2017",
+     "syndicate": 1991,
+     "year": 2017,
+     "R_gbp_m": 77.553,
+     "observed_S": 0.35944450891648294,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      }
+     }
+    },
+    {
+     "record_id": "1991_2018",
+     "syndicate": 1991,
+     "year": 2018,
+     "R_gbp_m": 107.368,
+     "observed_S": 0.39746479397958423,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.273701292883696,
+       "observed_over_threshold": 2.5989560879406697
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.27212471985258735,
+       "observed_over_threshold": 2.6140133164037898
+      }
+     }
+    },
+    {
+     "record_id": "3334_2016",
+     "syndicate": 3334,
+     "year": 2016,
+     "R_gbp_m": 37.456,
+     "observed_S": 0.6201943613840238,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6201568816324335,
+       "observed_over_threshold": 1.000060435919846
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5232530862388391,
+       "observed_over_threshold": 1.1852665138432377
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3797492307460257,
+       "observed_over_threshold": 1.770730959555145
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3775618008312066,
+       "observed_over_threshold": 1.7809898095328176
+      }
+     }
+    }
+   ],
+   "own_quartile_1_target_year_rule": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.4548766372739261,
+       "observed_over_threshold": 1.3298924229333002
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4109413078123584,
+       "observed_over_threshold": 1.4720763811755724
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.44074136954982085,
+       "observed_over_threshold": 1.4386522131430326
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4382026129747052,
+       "observed_over_threshold": 1.4469871423681862
+      }
+     }
+    },
+    {
+     "record_id": "1991_2017",
+     "syndicate": 1991,
+     "year": 2017,
+     "R_gbp_m": 77.553,
+     "observed_S": 0.35944450891648294,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      }
+     }
+    },
+    {
+     "record_id": "1991_2018",
+     "syndicate": 1991,
+     "year": 2018,
+     "R_gbp_m": 107.368,
+     "observed_S": 0.39746479397958423,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.273701292883696,
+       "observed_over_threshold": 2.5989560879406697
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.27212471985258735,
+       "observed_over_threshold": 2.6140133164037898
+      }
+     }
+    },
+    {
+     "record_id": "3334_2016",
+     "syndicate": 3334,
+     "year": 2016,
+     "R_gbp_m": 37.456,
+     "observed_S": 0.6201943613840238,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6201568816324335,
+       "observed_over_threshold": 1.000060435919846
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5232530862388391,
+       "observed_over_threshold": 1.1852665138432377
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3797492307460257,
+       "observed_over_threshold": 1.770730959555145
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3775618008312066,
+       "observed_over_threshold": 1.7809898095328176
+      }
+     }
+    }
+   ],
+   "fixed_band_1_target_year_rule": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.4548766372739261,
+       "observed_over_threshold": 1.3298924229333002
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4109413078123584,
+       "observed_over_threshold": 1.4720763811755724
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.664524069986479,
+       "observed_over_threshold": 1.5275319227423967
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.44074136954982085,
+       "observed_over_threshold": 1.4386522131430326
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.4382026129747052,
+       "observed_over_threshold": 1.4469871423681862
+      }
+     }
+    },
+    {
+     "record_id": "1991_2017",
+     "syndicate": 1991,
+     "year": 2017,
+     "R_gbp_m": 77.553,
+     "observed_S": 0.35944450891648294,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3437053848531,
+       "observed_over_threshold": 1.0457924861145538
+      }
+     }
+    },
+    {
+     "record_id": "1991_2018",
+     "syndicate": 1991,
+     "year": 2018,
+     "R_gbp_m": 107.368,
+     "observed_S": 0.39746479397958423,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.30990261579713607,
+       "observed_over_threshold": 1.2825473994700543
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.28181720120023607,
+       "observed_over_threshold": 1.4199431360038857
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.273701292883696,
+       "observed_over_threshold": 2.5989560879406697
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.27212471985258735,
+       "observed_over_threshold": 2.6140133164037898
+      }
+     }
+    },
+    {
+     "record_id": "3334_2016",
+     "syndicate": 3334,
+     "year": 2016,
+     "R_gbp_m": 37.456,
+     "observed_S": 0.6201943613840238,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6201568816324335,
+       "observed_over_threshold": 1.000060435919846
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5232530862388391,
+       "observed_over_threshold": 1.1852665138432377
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3797492307460257,
+       "observed_over_threshold": 1.770730959555145
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3775618008312066,
+       "observed_over_threshold": 1.7809898095328176
+      }
+     }
+    }
+   ]
+  },
+  "0.995": {
+   "own_quartile_1": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5660901107099982,
+       "observed_over_threshold": 1.0686231429149204
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.48968968316734557,
+       "observed_over_threshold": 1.235347637645132
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6254964249301428,
+       "observed_over_threshold": 1.0137125033086416
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5431977064164467,
+       "observed_over_threshold": 1.1672979087294297
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3884345605504991,
+       "observed_over_threshold": 1.831293385452594
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.33732688785147924,
+       "observed_over_threshold": 2.1087487153722146
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5389368972652353,
+       "observed_over_threshold": 1.2477039949601059
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.46802711387258056,
+       "observed_over_threshold": 1.436740949013281
+      }
+     }
+    }
+   ],
+   "fixed_band_1": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5660901107099982,
+       "observed_over_threshold": 1.0686231429149204
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.48968968316734557,
+       "observed_over_threshold": 1.235347637645132
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6254964249301428,
+       "observed_over_threshold": 1.0137125033086416
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5431977064164467,
+       "observed_over_threshold": 1.1672979087294297
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3884345605504991,
+       "observed_over_threshold": 1.831293385452594
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.33732688785147924,
+       "observed_over_threshold": 2.1087487153722146
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5389368972652353,
+       "observed_over_threshold": 1.2477039949601059
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.46802711387258056,
+       "observed_over_threshold": 1.436740949013281
+      }
+     }
+    }
+   ],
+   "own_quartile_1_target_year_rule": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5660901107099982,
+       "observed_over_threshold": 1.0686231429149204
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.48968968316734557,
+       "observed_over_threshold": 1.235347637645132
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6254964249301428,
+       "observed_over_threshold": 1.0137125033086416
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5431977064164467,
+       "observed_over_threshold": 1.1672979087294297
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3884345605504991,
+       "observed_over_threshold": 1.831293385452594
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.33732688785147924,
+       "observed_over_threshold": 2.1087487153722146
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5389368972652353,
+       "observed_over_threshold": 1.2477039949601059
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.46802711387258056,
+       "observed_over_threshold": 1.436740949013281
+      }
+     }
+    }
+   ],
+   "fixed_band_1_target_year_rule": [
+    {
+     "record_id": "1945_2020",
+     "syndicate": 1945,
+     "year": 2020,
+     "R_gbp_m": 96.577,
+     "observed_S": 0.6049369932799735,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5660901107099982,
+       "observed_over_threshold": 1.0686231429149204
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.48968968316734557,
+       "observed_over_threshold": 1.235347637645132
+      }
+     }
+    },
+    {
+     "record_id": "1991_2015",
+     "syndicate": 1991,
+     "year": 2015,
+     "R_gbp_m": 11.073,
+     "observed_S": 1.0150817303350492,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.9430869411717095,
+       "observed_over_threshold": 1.0763395038360852
+      }
+     }
+    },
+    {
+     "record_id": "1991_2016",
+     "syndicate": 1991,
+     "year": 2016,
+     "R_gbp_m": 36.521,
+     "observed_S": 0.6340735467265409,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.6254964249301428,
+       "observed_over_threshold": 1.0137125033086416
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.5431977064164467,
+       "observed_over_threshold": 1.1672979087294297
+      }
+     }
+    },
+    {
+     "record_id": "1991_2019",
+     "syndicate": 1991,
+     "year": 2019,
+     "R_gbp_m": 145.985,
+     "observed_S": 0.4001644004521012,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.3999525890084171,
+       "observed_over_threshold": 1.0005295913803414
+      }
+     }
+    },
+    {
+     "record_id": "1991_2020",
+     "syndicate": 1991,
+     "year": 2020,
+     "R_gbp_m": 160.783,
+     "observed_S": 0.711337641417314,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.3884345605504991,
+       "observed_over_threshold": 1.831293385452594
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.33732688785147924,
+       "observed_over_threshold": 2.1087487153722146
+      }
+     }
+    },
+    {
+     "record_id": "5820_2016",
+     "syndicate": 5820,
+     "year": 2016,
+     "R_gbp_m": 57.106,
+     "observed_S": 0.6724337197492383,
+     "own_quartile": 1,
+     "fixed_band": 1,
+     "thresholds": {
+      "leave_out": {
+       "threshold": 0.5389368972652353,
+       "observed_over_threshold": 1.2477039949601059
+      },
+      "leave_out_and_target_year": {
+       "threshold": 0.46802711387258056,
+       "observed_over_threshold": 1.436740949013281
+      }
+     }
+    }
+   ]
+  }
+ },
+ "codex_prototype_cross_check": {
+  "reference": {
+   "label": "recommendation of the Codex analysis, 642-record prototype (only 6131/2021 omitted), plug-in version, pool rule leave_out; a cross-check, not a result of this repository",
+   "own_quartile_1": {
+    "0.99": [
+     8,
+     161
+    ],
+    "0.995": [
+     6,
+     161
+    ]
+   },
+   "fixed_band_1": {
+    "0.99": [
+     8,
+     160
+    ],
+    "0.995": [
+     6,
+     160
+    ]
+   },
+   "events_0.995": [
+    "1991_2015",
+    "1991_2016",
+    "1991_2019",
+    "1991_2020",
+    "1945_2020",
+    "5820_2016"
+   ],
+   "events_0.99_extra": [
+    "1991_2017",
+    "1991_2018"
+   ]
+  },
+  "this_primary": {
+   "own_quartile_1": {
+    "0.99": [
+     9,
+     158
+    ],
+    "0.995": [
+     6,
+     158
+    ]
+   },
+   "fixed_band_1": {
+    "0.99": [
+     9,
+     159
+    ],
+    "0.995": [
+     6,
+     159
+    ]
+   }
+  },
+  "expected_to_differ": "the primary here sets aside the census's rule-8 records as well as 6131/2021, so its bands and denominators are not the prototype's",
+  "events_0.995_this_primary_own_quartile_1": [
+   "1945_2020",
+   "1991_2015",
+   "1991_2016",
+   "1991_2019",
+   "1991_2020",
+   "5820_2016"
+  ],
+  "same_counts_as_prototype": false
+ },
+ "note": "counts are the stored flags of the backtest on this primary; the events of one syndicate are repeated outcomes, not independent firms: read n_event_syndicates beside exceedances. The record gives no explanation of the events and claims no calibration for any band"
+}

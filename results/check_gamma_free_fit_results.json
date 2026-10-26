@@ -1,7 +1,7 @@
 {
   "question": "The headline fixes gamma at 0 in the likelihood (option B). What does the gamma-free fit, the overlay's source, say beside it, and how far is the retired zeroing construction (the headline before option B) from the headline?",
-  "n": 643,
-  "n_ritc": 33,
+  "n": 632,
+  "n_ritc": 27,
   "n_years": 10,
   "fit_seed": 42,
   "headline_fit": {
@@ -12,61 +12,61 @@
     "spec": "adopted_model.scale_block(gamma_prior='fixed_0'): gamma = 0, no concentration term in the likelihood",
     "params": {
       "k": {
-        "mean": 0.6019834079546242,
-        "sd": 0.053,
-        "hdi_2.5": 0.509,
-        "hdi_97.5": 0.699
+        "mean": 0.6238737606675849,
+        "sd": 0.057,
+        "hdi_2.5": 0.524,
+        "hdi_97.5": 0.735
       },
       "sd_undiv": {
-        "mean": 0.030780291058684107,
-        "sd": 0.007,
-        "hdi_2.5": 0.017,
+        "mean": 0.02889828625880412,
+        "sd": 0.008,
+        "hdi_2.5": 0.013,
         "hdi_97.5": 0.043
       },
       "sd_div": {
-        "mean": 0.0427505378010639,
+        "mean": 0.04354753264647732,
         "sd": 0.006,
         "hdi_2.5": 0.032,
-        "hdi_97.5": 0.054
+        "hdi_97.5": 0.056
       },
       "nu_clean": {
-        "mean": 4.068680316834287,
-        "sd": 0.711,
-        "hdi_2.5": 2.787,
-        "hdi_97.5": 5.484
+        "mean": 3.9565744487254086,
+        "sd": 0.663,
+        "hdi_2.5": 2.793,
+        "hdi_97.5": 5.302
       },
       "nu_ritc": {
-        "mean": 6.260113650279553,
-        "sd": 4.055,
-        "hdi_2.5": 1.43,
-        "hdi_97.5": 14.233
+        "mean": 5.390226997674685,
+        "sd": 3.518,
+        "hdi_2.5": 1.132,
+        "hdi_97.5": 11.803
       },
       "lambda_ritc": {
-        "mean": -0.28801219984779564,
-        "sd": 0.538,
-        "hdi_2.5": -1.333,
-        "hdi_97.5": 0.748
+        "mean": -0.16645634746920882,
+        "sd": 0.543,
+        "hdi_2.5": -1.225,
+        "hdi_97.5": 0.885
       },
       "beta_ritc": {
-        "mean": -0.05580683316492052,
-        "sd": 0.175,
-        "hdi_2.5": -0.403,
-        "hdi_97.5": 0.276
+        "mean": -0.0950371086193051,
+        "sd": 0.192,
+        "hdi_2.5": -0.487,
+        "hdi_97.5": 0.271
       },
       "tau_s": {
-        "mean": 0.133,
+        "mean": 0.137,
         "sd": 0.073,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.259
+        "hdi_97.5": 0.267
       }
     },
     "diagnostics": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 1154.0,
+      "min_ess_bulk": 1416.0,
       "divergences": 0
     },
     "posterior_prob": {
-      "nu_ritc_lt_nu_clean": 0.31033333333333335
+      "nu_ritc_lt_nu_clean": 0.3975
     }
   },
   "gamma_free_fit": {
@@ -77,68 +77,68 @@
     "spec": "adopted_model.scale_block(gamma_prior='halfnormal'): gamma ~ HalfNormal(1); every other term as the headline",
     "params": {
       "k": {
-        "mean": 0.6083862640263693,
-        "sd": 0.055,
-        "hdi_2.5": 0.509,
-        "hdi_97.5": 0.708
+        "mean": 0.6321006680067495,
+        "sd": 0.058,
+        "hdi_2.5": 0.522,
+        "hdi_97.5": 0.74
       },
       "sd_undiv": {
-        "mean": 0.031846831436313505,
-        "sd": 0.007,
-        "hdi_2.5": 0.017,
-        "hdi_97.5": 0.045
+        "mean": 0.03019038350569552,
+        "sd": 0.008,
+        "hdi_2.5": 0.014,
+        "hdi_97.5": 0.044
       },
       "sd_div": {
-        "mean": 0.04850051140972085,
+        "mean": 0.0493403580834006,
         "sd": 0.008,
-        "hdi_2.5": 0.034,
-        "hdi_97.5": 0.064
+        "hdi_2.5": 0.035,
+        "hdi_97.5": 0.065
       },
       "nu_clean": {
-        "mean": 4.07351161609859,
-        "sd": 0.7,
-        "hdi_2.5": 2.829,
-        "hdi_97.5": 5.457
+        "mean": 3.972291756162814,
+        "sd": 0.685,
+        "hdi_2.5": 2.78,
+        "hdi_97.5": 5.362
       },
       "nu_ritc": {
-        "mean": 6.349198410241753,
-        "sd": 4.305,
-        "hdi_2.5": 1.279,
-        "hdi_97.5": 14.329
+        "mean": 5.49783732850242,
+        "sd": 3.67,
+        "hdi_2.5": 1.103,
+        "hdi_97.5": 12.207
       },
       "lambda_ritc": {
-        "mean": -0.29875456926482474,
-        "sd": 0.532,
-        "hdi_2.5": -1.411,
-        "hdi_97.5": 0.679
+        "mean": -0.17456609710609575,
+        "sd": 0.549,
+        "hdi_2.5": -1.271,
+        "hdi_97.5": 0.856
       },
       "beta_ritc": {
-        "mean": -0.06714210542555431,
-        "sd": 0.171,
-        "hdi_2.5": -0.384,
-        "hdi_97.5": 0.292
+        "mean": -0.10370195935027123,
+        "sd": 0.195,
+        "hdi_2.5": -0.5,
+        "hdi_97.5": 0.269
       },
       "tau_s": {
-        "mean": 0.131,
-        "sd": 0.073,
+        "mean": 0.129,
+        "sd": 0.074,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.263
+        "hdi_97.5": 0.258
       },
       "gamma": {
-        "mean": 0.3696627665338856,
-        "sd": 0.264,
+        "mean": 0.3940608192850906,
+        "sd": 0.283,
         "hdi_2.5": 0.0,
-        "hdi_97.5": 0.864
+        "hdi_97.5": 0.932
       }
     },
     "diagnostics": {
       "max_rhat": 1.0,
-      "min_ess_bulk": 1427.0,
+      "min_ess_bulk": 1387.0,
       "divergences": 0
     },
     "posterior_prob": {
-      "gamma_gt_0.05": 0.9281666666666667,
-      "nu_ritc_lt_nu_clean": 0.29333333333333333
+      "gamma_gt_0.05": 0.9283333333333333,
+      "nu_ritc_lt_nu_clean": 0.3893333333333333
     },
     "prior_prob": {
       "gamma_gt_0.05": 0.960122388323255
@@ -146,22 +146,22 @@
   },
   "relative_change_of_means": {
     "note": "gamma-free fit's mean / headline's - 1",
-    "k": 0.010636266692964469,
-    "sd_undiv": 0.03465010696604476,
-    "sd_div": 0.1345006145984402,
-    "nu_clean": 0.0011874364383734903,
-    "nu_ritc": 0.014230533970932102,
-    "lambda_ritc": 0.03729831383082405,
-    "beta_ritc": 0.2031162067042176,
-    "tau_s": -0.015037593984962405
+    "k": 0.013186814156699311,
+    "sd_undiv": 0.044711898668307715,
+    "sd_div": 0.1330230459656565,
+    "nu_clean": 0.00397245335354901,
+    "nu_ritc": 0.0199639701396912,
+    "lambda_ritc": 0.04871997830174113,
+    "beta_ritc": 0.09117334120164933,
+    "tau_s": -0.058394160583941646
   },
   "retired_relative_to_headline": {
     "note": "retired zeroing construction / headline - 1",
-    "V1_v99": -0.008531290837784478,
-    "V1_v995": -0.009497519775737095,
-    "V2_old_v995": -0.015517880977602427,
-    "V2_new_v995": -0.012702057839274916,
-    "V2_d995": 0.04361830117309795
+    "V1_v99": 0.0013537684583333487,
+    "V1_v995": -0.0008567622847128753,
+    "V2_old_v995": -0.004616461806589034,
+    "V2_new_v995": -0.002789765387569032,
+    "V2_d995": 0.033264321129366614
   },
   "headline_quantities_moved_by_2pct_or_more": [
     "V2_d995",
@@ -175,51 +175,51 @@
     "rows": [
       {
         "param": "k",
-        "refit": 0.6083862640263693,
-        "headline": 0.602,
-        "gap_in_sd": 0.12049554766734577
+        "refit": 0.6321006680067495,
+        "headline": 0.624,
+        "gap_in_sd": 0.14211698257455205
       },
       {
         "param": "sd_undiv",
-        "refit": 0.031846831436313505,
-        "headline": 0.031,
-        "gap_in_sd": 0.12097591947335792
+        "refit": 0.03019038350569552,
+        "headline": 0.029,
+        "gap_in_sd": 0.14879793821193998
       },
       {
         "param": "sd_div",
-        "refit": 0.04850051140972085,
-        "headline": 0.043,
-        "gap_in_sd": 0.9167519016201423
+        "refit": 0.0493403580834006,
+        "headline": 0.044,
+        "gap_in_sd": 0.890059680566767
       },
       {
         "param": "nu_clean",
-        "refit": 4.07351161609859,
-        "headline": 4.069,
-        "gap_in_sd": 0.006345451615456898
+        "refit": 3.972291756162814,
+        "headline": 3.957,
+        "gap_in_sd": 0.023064488933354575
       },
       {
         "param": "nu_ritc",
-        "refit": 6.349198410241753,
-        "headline": 6.26,
-        "gap_in_sd": 0.021997141859865135
+        "refit": 5.49783732850242,
+        "headline": 5.39,
+        "gap_in_sd": 0.030653021177492867
       },
       {
         "param": "lambda_ritc",
-        "refit": -0.29875456926482474,
-        "headline": -0.288,
-        "gap_in_sd": 0.019989905696700304
+        "refit": -0.17456609710609575,
+        "headline": -0.166,
+        "gap_in_sd": 0.015775501116198413
       },
       {
         "param": "beta_ritc",
-        "refit": -0.06714210542555431,
-        "headline": -0.056,
-        "gap_in_sd": 0.06366917386031033
+        "refit": -0.10370195935027123,
+        "headline": -0.095,
+        "gap_in_sd": 0.04532270494932929
       },
       {
         "param": "tau_s",
-        "refit": 0.131,
-        "headline": 0.133,
-        "gap_in_sd": 0.02739726027397263
+        "refit": 0.129,
+        "headline": 0.137,
+        "gap_in_sd": 0.10958904109589052
       }
     ]
   },
@@ -229,11 +229,11 @@
       "headline": "model/dispersion_posterior_draws_ritc.npz",
       "gamma_free": "model/dispersion_posterior_draws_ritc_gamma_free.npz"
     },
-    "k": 0.1215184437747212,
-    "sd_undiv": 0.15621244903359893,
-    "sd_div": 0.987994319530838,
-    "nu_clean": 0.00679102003404363,
-    "nu_ritc": 0.02196982713554112
+    "k": 0.1441081345287372,
+    "sd_undiv": 0.1694400806503286,
+    "sd_div": 0.923867387934799,
+    "nu_clean": 0.023711572998137476,
+    "nu_ritc": 0.030592402210117765
   },
   "vignettes": {
     "seed": 20240704,
@@ -244,30 +244,30 @@
       "operator_role": "headline",
       "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
       "centre": {
-        "V1_v99": 0.26725377454342286,
-        "V1_v995": 0.33432015847442714,
-        "V2_old_v995": 0.29798452181192386,
-        "V2_new_v995": 0.3128827171731634,
-        "V2_d995": 0.014898195361239541
+        "V1_v99": 0.27603898912667046,
+        "V1_v995": 0.34240782846350193,
+        "V2_old_v995": 0.3049613352310951,
+        "V2_new_v995": 0.32041233767833627,
+        "V2_d995": 0.01545100244724118
       },
       "intervals": {
         "V1_v99": {
-          "mean": 0.2639671013511144,
-          "sd": 0.05101955842075917,
-          "lo": 0.18278588890972874,
-          "hi": 0.3623120912421036
+          "mean": 0.2698071148406804,
+          "sd": 0.05553473254942222,
+          "lo": 0.18333491336068947,
+          "hi": 0.3710719712053621
         },
         "V1_v995": {
-          "mean": 0.3242633404002734,
-          "sd": 0.06080222163487145,
-          "lo": 0.19717637716306327,
-          "hi": 0.4904983147623646
+          "mean": 0.33013879656193745,
+          "sd": 0.06306717744402952,
+          "lo": 0.19739954013896216,
+          "hi": 0.4910822039888939
         },
         "V2_d995": {
-          "mean": 0.013919109802171025,
-          "sd": 0.003210018826429607,
-          "lo": 0.007740922327090196,
-          "hi": 0.020204157560750065
+          "mean": 0.014161834247660097,
+          "sd": 0.003328417816738168,
+          "lo": 0.007650481146105404,
+          "hi": 0.020515673380621536
         }
       }
     },
@@ -277,30 +277,30 @@
       "operator_construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
       "construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
       "centre": {
-        "V1_v99": 0.26497375486529723,
-        "V1_v995": 0.3311449461578887,
-        "V2_old_v995": 0.29336043346927865,
-        "V2_new_v995": 0.3089084628027204,
-        "V2_d995": 0.015548029333441737
+        "V1_v99": 0.2764126820034204,
+        "V1_v995": 0.34211446635008397,
+        "V2_old_v995": 0.30355349287451433,
+        "V2_new_v995": 0.31951846242893117,
+        "V2_d995": 0.01596496955441684
       },
       "intervals": {
         "V1_v99": {
-          "mean": 0.26303394053043544,
-          "sd": 0.04997174683631177,
-          "lo": 0.1826298645324338,
-          "hi": 0.35901941727181946
+          "mean": 0.2692767067181166,
+          "sd": 0.0550909895390797,
+          "lo": 0.18367256208858812,
+          "hi": 0.3690212993424431
         },
         "V1_v995": {
-          "mean": 0.32162586022347484,
-          "sd": 0.05901475750966634,
-          "lo": 0.19958675586358876,
-          "hi": 0.48125425819122947
+          "mean": 0.32817266381111465,
+          "sd": 0.062146672127845984,
+          "lo": 0.1974918643524678,
+          "hi": 0.48711671940254303
         },
         "V2_d995": {
-          "mean": 0.014469302791123703,
-          "sd": 0.003159585714784961,
-          "lo": 0.008265522637717855,
-          "hi": 0.02053319719117262
+          "mean": 0.014592975950414528,
+          "sd": 0.003203579550900108,
+          "lo": 0.008110662258633031,
+          "hi": 0.020413302775014627
         }
       }
     },
@@ -308,55 +308,55 @@
       "operator": "overlay",
       "operator_role": "sensitivity",
       "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
-      "gamma_in_force_posterior_mean": 0.3696627665338856,
+      "gamma_in_force_posterior_mean": 0.3940608192850906,
       "centre": {
-        "V1_v99": 0.25173238102650614,
-        "V1_v995": 0.32061805754350226,
-        "V2_old_v995": 0.29496016204661824,
-        "V2_new_v995": 0.313329203671561,
-        "V2_d995": 0.01836904162494274
+        "V1_v99": 0.25402454171450534,
+        "V1_v995": 0.32868655542447844,
+        "V2_old_v995": 0.30261952617886234,
+        "V2_new_v995": 0.3219871521115104,
+        "V2_d995": 0.01936762593264807
       },
       "intervals": {
         "V1_v99": {
-          "mean": 0.25039260322417994,
-          "sd": 0.0488768440564661,
-          "lo": 0.1736388763572993,
-          "hi": 0.3507231975722138
+          "mean": 0.25446528214067166,
+          "sd": 0.05333605228852274,
+          "lo": 0.17156547276864004,
+          "hi": 0.356859494906444
         },
         "V1_v995": {
-          "mean": 0.3073084413207775,
-          "sd": 0.05734464464518024,
-          "lo": 0.19174775702457683,
-          "hi": 0.43617921885598726
+          "mean": 0.31155582762818723,
+          "sd": 0.058980804926380914,
+          "lo": 0.1879811420486368,
+          "hi": 0.4254682948893985
         },
         "V2_d995": {
-          "mean": 0.016465180230252466,
-          "sd": 0.004339305105979961,
-          "lo": 0.008595673539388723,
-          "hi": 0.025770878395082266
+          "mean": 0.017059062050000063,
+          "sd": 0.004733414005512726,
+          "lo": 0.008570835967915913,
+          "hi": 0.02718679147495404
         }
       }
     },
     "retired_pct_change_from_headline": {
-      "V1_v99": -0.8531290837784478,
-      "V1_v995": -0.9497519775737095,
-      "V2_old_v995": -1.5517880977602427,
-      "V2_new_v995": -1.2702057839274916,
-      "V2_d995": 4.361830117309795
+      "V1_v99": 0.13537684583333487,
+      "V1_v995": -0.08567622847128753,
+      "V2_old_v995": -0.4616461806589034,
+      "V2_new_v995": -0.2789765387569032,
+      "V2_d995": 3.3264321129366614
     },
     "retired_change_from_headline": {
-      "V1_v99": -0.0022800196781256332,
-      "V1_v995": -0.003175212316538445,
-      "V2_old_v995": -0.004624088342645216,
-      "V2_new_v995": -0.00397425437044302,
-      "V2_d995": 0.0006498339722021962
+      "V1_v99": 0.00037369287674993146,
+      "V1_v995": -0.0002933621134179609,
+      "V2_old_v995": -0.0014078423565807574,
+      "V2_new_v995": -0.0008938752494050961,
+      "V2_d995": 0.0005139671071756613
     },
     "overlay_pct_change_from_headline": {
-      "V1_v99": -5.807735940655478,
-      "V1_v995": -4.0984967802870305,
-      "V2_old_v995": -1.0149385434235714,
-      "V2_new_v995": 0.14270091439740895,
-      "V2_d995": 23.29709189297691
+      "V1_v99": -7.975122457089934,
+      "V1_v995": -4.007289523897695,
+      "V2_old_v995": -0.7679035935680645,
+      "V2_new_v995": 0.4914961903730086,
+      "V2_d995": 25.34866911568068
     }
   },
   "size_ratio_100_2000_size_only": {
@@ -364,15 +364,15 @@
     "operator": "size_only",
     "operator_role": "headline",
     "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
-    "headline": 2.20127849311902
+    "headline": 2.188204734377286
   },
   "size_ratio_100_2000_retired_zeroing": {
     "scale_law": "the retired construction's posterior-mean scale law at H = 0.4 (the gamma-free fit, gamma zeroed): the bridge to the ratio the paper printed before option B",
     "operator": "retired_zeroing",
     "operator_role": "retired construction (bridge only)",
     "operator_construction": "retired size-only construction: the gamma-free fit with gamma set to zero in every retained posterior draw (and in the posterior mean); k, sigma_undiv, sigma_div, nu_clean and nu_RITC keep the gamma-free fit's values; not a refit. The paper's headline before option B (10 October 2026); recorded as the bridge to the figures printed then",
-    "retired_zeroing": 2.269140979083962,
-    "retired_pct_change": 3.082866896536407
+    "retired_zeroing": 2.226201402638404,
+    "retired_pct_change": 1.7364311329822302
   },
   "size_ratio_100_2000_overlay": {
     "H": 0.4,
@@ -380,7 +380,7 @@
     "operator": "overlay",
     "operator_role": "sensitivity",
     "operator_construction": "concentration overlay: the gamma-free fit, its fitted concentration exponent gamma (each posterior draw, or the posterior mean) and its own k, sigma_undiv, sigma_div and nu; a labelled sensitivity, not the headline",
-    "gamma_free_fit": 2.1318967583078474
+    "gamma_free_fit": 2.103576251067176
   },
   "concentration_effect_500m": {
     "scale_law": "the gamma-free fit's posterior-mean scale law (its fitted gamma) at R = 500m; under the size-only headline sigma does not depend on H",
@@ -390,9 +390,9 @@
     "R_m": 500.0,
     "H_low": 0.1,
     "H_high": 0.9,
-    "sigma_H_low": 0.04713735784406036,
-    "sigma_H_high": 0.05740946551452407,
-    "ratio": 1.2179186136067672
+    "sigma_H_low": 0.04647742244566985,
+    "sigma_H_high": 0.05720737288673311,
+    "ratio": 1.2308637156805784
   },
-  "runtime_seconds": 8.834787607192993
+  "runtime_seconds": 7.912678241729736
 }

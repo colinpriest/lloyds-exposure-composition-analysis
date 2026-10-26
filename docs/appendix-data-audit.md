@@ -24,15 +24,15 @@
 | **Corpus (kept records)** | **902** | — |
 | — Development on a net or unstated basis (82 net, 16 unstated) | | 98 |
 | — Take-on, not development (`data/takeon_not_development.json`) | | 8 |
-| — Unusable severity ($S_{i,t}$ not computable) | | 82 |
+| — Unusable severity ($S_{i,t}$ not computable) | | 93 |
 | — Missing opening reserves ($R_{i,t}$) | | 0 |
 | — Missing LoB weights | | 71 |
-| **Working sample** | **643** | 259 excluded |
+| **Working sample** | **632** | 270 excluded |
 
 - **The operational stages above are disjoint and subtract to the corpus.** 1065 - 20 - 107 - 4 - 28 - 4 = 902. Separately, 117 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
 
 - **File → record reconciliation.** 1065 retrieved PDFs; 117 produced no usable dual-model output, leaving 948 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 948 filings. The 902-record corpus sits inside these: 948 - 46 = 902, the 46 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 117 unextracted filings (46 + 117 = 163 = 1065 - 902), so they are not subtracted from 948 again. No usable output is an operational state, not a finding that every one of those PDFs failed OCR: disclosure absence, economic eligibility and extraction status are recorded separately in the inferential ledger below.
-- **Working-sample exclusions:** of the 259 corpus records dropped, 98 carry a development figure on a net or unstated basis (82 net, 16 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 8 carry a figure the filing shows to be dominated by a transfer (the reserves or premium a transfer brought in, or the commutation of one back to its cedant), which is not development, 71 lack usable LoB weights (12 of them because the classes of the adopted mix, with their signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that produced the mix gave: a total or subtotal row, part of a table, or a table from another period, is not a partition), 82 an unusable severity, and **0 are missing reserves**. These are operational loader stages, not mutually interchangeable statements about economic eligibility, disclosure availability or extraction success.
+- **Working-sample exclusions:** of the 270 corpus records dropped, 98 carry a development figure on a net or unstated basis (82 net, 16 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 8 carry a figure the filing shows to be dominated by a transfer (the reserves or premium a transfer brought in, or the commutation of one back to its cedant), which is not development, 71 lack usable LoB weights (12 of them because the classes of the adopted mix, with their signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that produced the mix gave: a total or subtotal row, part of a table, or a table from another period, is not a partition), 93 an unusable severity, and **0 are missing reserves**. These are operational loader stages, not mutually interchangeable statements about economic eligibility, disclosure availability or extraction success.
 
 ### Inferential disposition
 
@@ -42,10 +42,10 @@ Every filing receives one mutually exclusive inferential disposition in `results
 |---|---:|
 | Structural no eligible outcome (no mature cohort) | 107 |
 | Eligibility unresolved (no deterministic reading; the filing was not read) | 20 |
-| Scientific exclusion | 262 |
+| Scientific exclusion | 273 |
 | Eligible outcome unavailable | 9 |
 | Eligible outcome observed; composition unavailable | 24 |
-| Working sample | 643 |
+| Working sample | 632 |
 | **Total** | **1065** |
 
 The scientific exclusions by detail:
@@ -57,6 +57,7 @@ The scientific exclusions by detail:
 | scope: the filing prints no premium amount for any non-life line of business (a contract form or distribution channels only) | 37 |
 | run-off year (no gross premium written, or a stated run-off year) | 28 |
 | scope: life business | 13 |
+| specific source evidence raises a material unresolved concern about overlapping claims history, gross/net mixing or cohort reassignment through closure, and the declared outcome cannot be reconstructed or validated (the primary outcome, rule 8 of the round-5 decision rules, the source-history rule, 26 October 2026) | 11 |
 | adjudicated a take-on, not development | 8 |
 | the development table is not retranslated across a sterling/dollar move of 5% or more, and the roll-forward prints an exchange line of 5% or more of the opening reserves (the primary outcome, the author's rule B, 22 October 2026) | 5 |
 | no opening-reserve base above the floor | 4 |
@@ -67,7 +68,7 @@ The scientific exclusions by detail:
 
 A record is a scope exclusion only if its filing prints no premium amount for any non-life line of business (life books are out of scope as life business). A page reading of the filing (`data/composition_page_readings.json`) decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (reason `extraction_lost_lines`, 11 records), or, for a record no page has been read for, another model reads a line with a positive amount (reason `readers_disagree`, 0 records), the extraction lost the lines: the record stays in the supported target as composition unavailable and gets no weights.
 
-The supported disclosure-defined target contains **676** records: the 9 eligible outcomes unavailable, the 24 observed eligible outcomes without composition and the 643 model records. If all 20 unresolved filings were economically eligible, the broader potential target would contain **696** records.
+The supported disclosure-defined target contains **665** records: the 9 eligible outcomes unavailable, the 24 observed eligible outcomes without composition and the 632 model records. If all 20 unresolved filings were economically eligible, the broader potential target would contain **685** records.
 
 - **Round-55 data correction.** Two extraction rules were corrected on 10 September 2026 -- the percentage-against-monetary unit decision, and the transposed-grid parser's handling of a page carrying a gross and a net triangle under one header -- and the records they touch were re-extracted offline from the committed caches. Every record that moved is listed, with its development figure and adoption route on both sides, in `docs/extraction-changelog.md` in the extraction repository; the counts in the table above are after that correction. Reports whose page caches cannot serve an offline replay are listed in `pdf_extraction/audit/offline_unservable.json` and their committed records stand unchanged.
 
@@ -80,16 +81,16 @@ The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` pa
 |---|---:|---:|
 | 2014 | 67 | 0 |
 | 2015 | 85 | 62 |
-| 2016 | 86 | 61 |
-| 2017 | 85 | 62 |
-| 2018 | 88 | 69 |
+| 2016 | 86 | 60 |
+| 2017 | 85 | 61 |
+| 2018 | 88 | 67 |
 | 2019 | 84 | 66 |
 | 2020 | 83 | 62 |
-| 2021 | 79 | 57 |
-| 2022 | 79 | 58 |
-| 2023 | 82 | 71 |
-| 2024 | 84 | 75 |
-| **Total** | **902** | **643** |
+| 2021 | 79 | 54 |
+| 2022 | 79 | 57 |
+| 2023 | 82 | 69 |
+| 2024 | 84 | 74 |
+| **Total** | **902** | **632** |
 
 ## B.3 Line-of-business taxonomy
 
@@ -127,40 +128,40 @@ Disclosed class labels are folded into 13 categories by the classifier the analy
 
 ## B.5 Coverage
 
-The working sample spans **118 syndicates / 643 syndicate-years** (corpus 133 / 902). Coverage against the active-syndicate denominator (2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; 2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles):
+The working sample spans **117 syndicates / 632 syndicate-years** (corpus 133 / 902). Coverage against the active-syndicate denominator (2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; 2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles):
 
 | Year | Active syndicates | Corpus | Working sample | Sample coverage |
 |---|---:|---:|---:|---:|
 | 2014 | 92 | 67 | 0 | 0% |
 | 2015 | 94 | 85 | 62 | 66% |
-| 2016 | 99 | 86 | 61 | 62% |
-| 2017 | 95 | 85 | 62 | 65% |
-| 2018 | 99 | 88 | 69 | 70% |
+| 2016 | 99 | 86 | 60 | 61% |
+| 2017 | 95 | 85 | 61 | 64% |
+| 2018 | 99 | 88 | 67 | 68% |
 | 2019 | 93 | 84 | 66 | 71% |
 | 2020 | 98 | 83 | 62 | 63% |
-| 2021 | 92 | 79 | 57 | 62% |
-| 2022 | 93 | 79 | 58 | 62% |
-| 2023 | 95 | 82 | 71 | 75% |
-| 2024 | 95 | 84 | 75 | 79% |
-| **Total** | **1045** | **902** | **643** | **62%** |
+| 2021 | 92 | 79 | 54 | 59% |
+| 2022 | 93 | 79 | 57 | 61% |
+| 2023 | 95 | 82 | 69 | 73% |
+| 2024 | 95 | 84 | 74 | 78% |
+| **Total** | **1045** | **902** | **632** | **60%** |
 
 ### Coverage by year
 
-The working sample covers 643 of the 1045 active syndicate-years (62%), between 0% and 79% by year; the earliest year is the weakest (2014: 0%). The per-year comparison with the official active lists follows:
+The working sample covers 632 of the 1045 active syndicate-years (60%), between 0% and 78% by year; the earliest year is the weakest (2014: 0%). The per-year comparison with the official active lists follows:
 
 | Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |
 |---|---:|---:|---:|---:|---:|
 | 2014 | 92 | 96 | 26 | 67 | 0 |
 | 2015 | 94 | 102 | 11 | 85 | 62 |
-| 2016 | 99 | 98 | 10 | 86 | 61 |
-| 2017 | 95 | 100 | 8 | 85 | 62 |
-| 2018 | 99 | 107 | 13 | 88 | 69 |
+| 2016 | 99 | 98 | 10 | 86 | 60 |
+| 2017 | 95 | 100 | 8 | 85 | 61 |
+| 2018 | 99 | 107 | 13 | 88 | 67 |
 | 2019 | 93 | 100 | 8 | 84 | 66 |
 | 2020 | 98 | 90 | 5 | 83 | 62 |
-| 2021 | 92 | 91 | 7 | 79 | 57 |
-| 2022 | 93 | 92 | 11 | 79 | 58 |
-| 2023 | 95 | 94 | 11 | 82 | 71 |
-| 2024 | 95 | 95 | 7 | 84 | 75 |
+| 2021 | 92 | 91 | 7 | 79 | 54 |
+| 2022 | 93 | 92 | 11 | 79 | 57 |
+| 2023 | 95 | 94 | 11 | 82 | 69 |
+| 2024 | 95 | 95 | 7 | 84 | 74 |
 
 - **Retrieval now matches the market** (90–107 PDFs/year throughout, vs 92–99 active syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.
 - The residual shortfall to 100% combines scope, disclosure availability and extraction/output states. 117 of 1065 PDFs yielded no usable dual-model output (most often in 2014, 26 of 96), but that operational count overlaps the loader stages and is not evidence that all 117 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
@@ -175,13 +176,13 @@ The working sample covers 643 of the 1045 active syndicate-years (62%), between 
 | 2024 | 95 | 82 | 13 | 6 | 2 |
 
   Of the 6 corpus records whose syndicate is not on that year's list, 3 have filings that state that the syndicate is in run-off or has ceased underwriting (1110/2020, 1884/2022, 1110/2024); 2 are legacy vehicles whose filings, on the register's reading, do not state that the syndicate is in run-off (1884/2023, 1884/2024; each says "Syndicate 1884 (“the Syndicate”) underwrites Reinsurance to Close (“RITC”) and legacy reinsurance in the Lloyd’s market ..."); and 1 has a filing that the register reviewed and found not to state that the syndicate is in run-off (1110/2023). The register is `pdf_extraction/audit/runoff_corpus_register.json`.
-- **Implication.** Working-sample coverage is 62% of active syndicate-years, 0-79% by year and only 0% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 676 records, of which 643 enter the model and 9 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 696. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.602 to 0.628, and the eligible-outcome stress moves the conditional bracketed estimate from 0.597 at $c=1$ to 0.565 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.10 at $c=1$ to 3.47 under it (headline 4.07).
+- **Implication.** Working-sample coverage is 60% of active syndicate-years, 0-78% by year and only 0% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 665 records, of which 632 enter the model and 9 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 685. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.624 to 0.675, and the eligible-outcome stress moves the conditional bracketed estimate from 0.617 at $c=1$ to 0.576 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.00 at $c=1$ to 3.41 under it (headline 3.96).
 
 ## B.6 RITC and discontinuities
 
-- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is its flag file) flags **47 syndicate-years** as accepting RITC. Confirmed inward transfers of prior-year liabilities join the same regime. The combined union is read by `src/assumed_business.py` from the hand-adjudicated transfer register `pdf_extraction/audit/portfolio_transfer_adjudication.json` (18) and the confirmed take-on register `data/opening_reserves_takeon_base.json` (18), with 5 overlapping: 18 + 18 - 5 = 31 syndicate-years (PLAN R195/R221), 13 of them not RITC-flagged. The regime holds **60 syndicate-years** (60 strong / 0 weak, a confirmed transfer counting as strong; 33 strong / 0 weak in the working sample): 55 in the corpus, **33 in the 643-record working sample** (~5%). A typical note records an incoming transfer, e.g. one syndicate "assumed the liabilities of Syndicate 4000 under a Reinsurance to Close (RITC) contract", transferring gross technical provisions onto the receiving syndicate's balance sheet.
+- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is its flag file) flags **47 syndicate-years** as accepting RITC. Confirmed inward transfers of prior-year liabilities join the same regime. The combined union is read by `src/assumed_business.py` from the hand-adjudicated transfer register `pdf_extraction/audit/portfolio_transfer_adjudication.json` (18) and the confirmed take-on register `data/opening_reserves_takeon_base.json` (18), with 5 overlapping: 18 + 18 - 5 = 31 syndicate-years (PLAN R195/R221), 13 of them not RITC-flagged. The regime holds **60 syndicate-years** (60 strong / 0 weak, a confirmed transfer counting as strong; 27 strong / 0 weak in the working sample): 55 in the corpus, **27 in the 632-record working sample** (~4%). A typical note records an incoming transfer, e.g. one syndicate "assumed the liabilities of Syndicate 4000 under a Reinsurance to Close (RITC) contract", transferring gross technical provisions onto the receiving syndicate's balance sheet.
 
-- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year development that is not a portfolio-composition property. Because the extraction records a **flag and no transfer amount** (some filings disclose an RITC premium or a take-on reserve, but none discloses the transaction's contribution to the gross mature-cohort development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take their own tail index $\nu_{\text{RITC}}=\nu_{\text{clean}}\,e^{-\lambda_{\text{RITC}}}$, lighter in the adopted fit ($P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.31$; the prior on $\lambda_{\text{RITC}}$ admits both signs, so the ordering is not imposed). The fitted likelihood also carries a RITC scale multiplier $e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ ($\beta_{\text{RITC}}=-0.06$ [$-0.40$, $+0.28$], $P(|\beta_{\text{RITC}}|>0.1)=0.58$); the transfer operator omits that multiplier as a structural simplification, not because it was shown to be zero, at an assessed vignette cost of about 0%. The transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC donors onto the clean-composition tail, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's own regime makes the map the identity (see `docs/current-results.md` and Section 3.5 of the manuscript). Separately, *run-off* years leave before the corpus (28 records): a year the syndicate's own filing states it was in run-off for the whole year, with or without a development figure (a record the extraction left unread has none), unless the model assigns the year to the assumed-business (RITC) regime (`pdf_extraction/audit/runoff_corpus_register.json`); or with no gross premium written, or a negative premium where the filing states run-off that year (`pdf_extraction/audit/runoff_register.json`). Each reading carries its page, file hash and quote.
+- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year development that is not a portfolio-composition property. Because the extraction records a **flag and no transfer amount** (some filings disclose an RITC premium or a take-on reserve, but none discloses the transaction's contribution to the gross mature-cohort development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take their own tail index $\nu_{\text{RITC}}=\nu_{\text{clean}}\,e^{-\lambda_{\text{RITC}}}$, lighter in the adopted fit ($P(\nu_{\text{RITC}}<\nu_{\text{clean}})=0.40$; the prior on $\lambda_{\text{RITC}}$ admits both signs, so the ordering is not imposed). The fitted likelihood also carries a RITC scale multiplier $e^{\beta_{\text{RITC}}\mathbf{1}_{\text{RITC}}}$ ($\beta_{\text{RITC}}=-0.10$ [$-0.49$, $+0.27$], $P(|\beta_{\text{RITC}}|>0.1)=0.64$); the transfer operator omits that multiplier as a structural simplification, not because it was shown to be zero, at an assessed vignette cost of about 0%. The transfer operator rank-maps a donor's residual between tail regimes via a Student-$t$ quantile transform, with the target regime a user choice: a clean target **de-RITCs** RITC donors onto the clean-composition tail, an RITC-affected target maps clean donors into the RITC regime, and preserving each donor's own regime makes the map the identity (see `docs/current-results.md` and Section 3.5 of the manuscript). Separately, *run-off* years leave before the corpus (28 records): a year the syndicate's own filing states it was in run-off for the whole year, with or without a development figure (a record the extraction left unread has none), unless the model assigns the year to the assumed-business (RITC) regime (`pdf_extraction/audit/runoff_corpus_register.json`); or with no gross premium written, or a negative premium where the filing states run-off that year (`pdf_extraction/audit/runoff_register.json`). Each reading carries its page, file hash and quote.
 - **Syndicate identity continuity.** The panel is **unbalanced**: of 133 distinct syndicate numbers, only **39 appear in all 11 years**, while 13 appear once (distribution of years-present: {1: 13, 2: 16, 3: 8, 4: 8, 5: 8, 6: 11, 7: 7, 8: 2, 9: 9, 10: 12, 11: 39}). Syndicate numbers are Lloyd's stable identifiers and are used as the panel key; mergers, transfers of business and renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Entry/exit is thus genuine (syndicates opening, closing, or going into run-off), and the reporting-year shared-shock and any within-syndicate clustering treat each number as one entity across the window.
 
 ---

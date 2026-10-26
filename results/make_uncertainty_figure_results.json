@@ -1,0 +1,268 @@
+{
+ "operator": "size_only",
+ "operator_role": "headline",
+ "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+ "figure": "paper_pack/fig_uncertainty_sources.pdf and .png",
+ "vignette": "Vignette 1",
+ "statistic": "VaR at 99.5% of the transferred pool, as a fraction of the book's opening reserves",
+ "reserve_size_gbp_m": 500.0,
+ "headline_centre": 0.34240782846350193,
+ "headline_centre_gbp_m": 171.20391423175096,
+ "consistency": {
+  "headline_centre": 0.34240782846350193,
+  "centres_read": {
+   "vignette_uncertainty": 0.34240782846350193,
+   "gamma0_size_only": 0.34240782846350193,
+   "backtest_operator": 0.34240782846350193,
+   "cohort_scope_headline": 0.34240782846350193,
+   "depth_primary": 0.34240782846350193,
+   "earned_primary": 0.34240782846350193,
+   "bucket_primary": 0.34240782846350193,
+   "least_certain_primary": 0.34240782846350193,
+   "donors_with": 0.34240782846350193
+  },
+  "overlay_centre_vignette_uncertainty": 0.32868655542447844,
+  "overlay_centre_gamma0_record": 0.32868655542447844
+ },
+ "x_axis_reserve_fraction": [
+  0.0,
+  0.6000000000000001
+ ],
+ "bands": [
+  {
+   "id": "parameter_and_donor_weights",
+   "title": "Parameter and donor-weight uncertainty",
+   "rows": [
+    {
+     "id": "headline",
+     "label": "Headline: draws and donor weights",
+     "point": 0.34240782846350193,
+     "interval": [
+      0.23376682371558039,
+      0.5160678945749384
+     ],
+     "interval_kind": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
+     "source": "results/vignette_uncertainty_results.json",
+     "detail": "centre at the posterior means on the full pool; interval from the 4,000 replicates",
+     "point_gbp_m": 171.20391423175096,
+     "interval_gbp_m": [
+      116.8834118577902,
+      258.0339472874692
+     ],
+     "off_scale": false
+    }
+   ]
+  },
+  {
+   "id": "measurement_definition",
+   "title": "Measurement definition",
+   "rows": [
+    {
+     "id": "construction_672",
+     "label": "672-record construction",
+     "point": 0.29505437438720905,
+     "interval": [
+      0.2321140878119094,
+      0.48451029984773786
+     ],
+     "interval_kind": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
+     "source": "results/check_cohort_scope_results.json",
+     "detail": "the extraction's precedence construction, refitted on its own donors",
+     "point_gbp_m": 147.52718719360453,
+     "interval_gbp_m": [
+      116.0570439059547,
+      242.25514992386894
+     ],
+     "off_scale": false
+    },
+    {
+     "id": "depth_t_minus_3",
+     "label": "Cohort depth u <= t-3",
+     "point": 0.2622404892427716,
+     "interval": [
+      0.13924796418792812,
+      0.35084562467114433
+     ],
+     "interval_kind": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval",
+     "source": "results/check_cohort_depth_sensitivity_results.json",
+     "detail": "the records that have a figure at u <= t-3, refitted at that outcome",
+     "point_gbp_m": 131.1202446213858,
+     "interval_gbp_m": [
+      69.62398209396406,
+      175.42281233557216
+     ],
+     "off_scale": false
+    },
+    {
+     "id": "earned_basis",
+     "label": "Earned-basis records out",
+     "point": 0.3514233137707236,
+     "interval": [
+      0.19336535213009143,
+      0.5215927452227963
+     ],
+     "interval_kind": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval",
+     "source": "results/check_earned_basis_sensitivity_results.json",
+     "detail": "the records whose filings say the t-2 cohort was still earning, left out and the fit redone",
+     "point_gbp_m": 175.7116568853618,
+     "interval_gbp_m": [
+      96.68267606504571,
+      260.79637261139817
+     ],
+     "off_scale": false
+    },
+    {
+     "id": "older_years_bucket",
+     "label": "Large older-years bucket out",
+     "point": 0.34328940529557894,
+     "interval": [
+      0.20189475372674792,
+      0.5154356721405107
+     ],
+     "interval_kind": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval",
+     "source": "results/check_bucket_share_sensitivity_results.json",
+     "detail": "the records whose 'X and prior' bucket holds more than 30% of the gross reserves, left out",
+     "point_gbp_m": 171.64470264778947,
+     "interval_gbp_m": [
+      100.94737686337396,
+      257.7178360702553
+     ],
+     "off_scale": false
+    },
+    {
+     "id": "least_certain",
+     "label": "Least-certain records out",
+     "point": 0.3494521930190584,
+     "interval": [
+      0.20067446564847685,
+      0.5212272742044404
+     ],
+     "interval_kind": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval",
+     "source": "results/check_low_confidence_sensitivity_results.json",
+     "detail": "the records the filing readings could not settle, left out and the fit redone",
+     "point_gbp_m": 174.72609650952919,
+     "interval_gbp_m": [
+      100.33723282423843,
+      260.6136371022202
+     ],
+     "off_scale": false
+    }
+   ]
+  },
+  {
+   "id": "influential_donors",
+   "title": "Influential donors",
+   "rows": [
+    {
+     "id": "most_adverse_donor_out",
+     "label": "Most adverse donor out",
+     "point": 0.2854534341904631,
+     "interval": [
+      0.22948194068838396,
+      0.39178421386853485
+     ],
+     "interval_kind": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
+     "source": "results/check_donor_influence_results.json",
+     "detail": "the donor 1991_2020, refitted and re-pooled without it",
+     "point_gbp_m": 142.72671709523155,
+     "interval_gbp_m": [
+      114.74097034419198,
+      195.89210693426742
+     ],
+     "off_scale": false
+    }
+   ]
+  },
+  {
+   "id": "model_alternatives",
+   "title": "Model alternatives",
+   "rows": [
+    {
+     "id": "concentration_overlay",
+     "label": "Concentration overlay (exploratory)",
+     "point": 0.32868655542447844,
+     "interval": [
+      0.2167769027431716,
+      0.47338367972555057
+     ],
+     "interval_kind": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
+     "source": "results/vignette_uncertainty_results.json",
+     "detail": "the gamma-free fit's fitted concentration exponent; exploratory",
+     "point_gbp_m": 164.34327771223923,
+     "interval_gbp_m": [
+      108.3884513715858,
+      236.69183986277528
+     ],
+     "off_scale": false
+    },
+    {
+     "id": "square_root_scaling",
+     "label": "Square-root scaling, no floor",
+     "point": 0.30392736681827054,
+     "interval": null,
+     "interval_kind": null,
+     "source": "results/check_operator_backtest_results.json",
+     "detail": "each donor scaled by the square root of the reserve ratio; no interval recorded",
+     "point_gbp_m": 151.96368340913526,
+     "interval_gbp_m": null,
+     "off_scale": false
+    },
+    {
+     "id": "raw_pool",
+     "label": "Raw pool, no transfer",
+     "point": 0.67243372,
+     "interval": null,
+     "interval_kind": null,
+     "source": "results/check_operator_backtest_results.json",
+     "detail": "the donors' own severities; no interval recorded",
+     "point_gbp_m": 336.21686,
+     "interval_gbp_m": null,
+     "off_scale": true
+    }
+   ]
+  }
+ ],
+ "reading": "The four sources are shown separately and are not added together: they differ in population, model and estimator, and no combined interval is computed.",
+ "interval_kinds": {
+  "credible": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
+  "conditional_resampling": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval"
+ },
+ "inputs": {
+  "vignette_uncertainty": {
+   "file": "results/vignette_uncertainty_results.json",
+   "sha256": "8aaecc704e999e62148df6fd8d706e45875a5438aa83ccc5165a53a31c888353"
+  },
+  "gamma0": {
+   "file": "results/check_gamma0_vignette_results.json",
+   "sha256": "15553f1580d4e9e95caf2fe4f81e8fc4c3a1ae91208387a5a79e82f077ce3a5d"
+  },
+  "backtest": {
+   "file": "results/check_operator_backtest_results.json",
+   "sha256": "12dcdc1ee3866a3cd9378d752802ef4ad09a2b4ae5fefa991aa3df76fabb996b"
+  },
+  "cohort_scope": {
+   "file": "results/check_cohort_scope_results.json",
+   "sha256": "8a1c560a044b2b73fcd6e11219aefe9ccaf17db1fc7bfdc5ae8712e6ff1d2dcb"
+  },
+  "depth": {
+   "file": "results/check_cohort_depth_sensitivity_results.json",
+   "sha256": "e63ce91a5ec4734781bd124c67e0b79532dcbb071545cf258288db2ad425627c"
+  },
+  "earned": {
+   "file": "results/check_earned_basis_sensitivity_results.json",
+   "sha256": "eef6a5e98d4ede98e39af041e611d8d62c7bb2ef07f2bf0bea4ce7c60af1a1d5"
+  },
+  "bucket": {
+   "file": "results/check_bucket_share_sensitivity_results.json",
+   "sha256": "8d1b32cc08afcd813142d43e9aeb53ab60eb957b30ae0f3f6000e6df2355158a"
+  },
+  "least_certain": {
+   "file": "results/check_low_confidence_sensitivity_results.json",
+   "sha256": "16c44dd64d7687427a9764984c9c6354d92cd9e5f798851d6b2353f3b843c102"
+  },
+  "donors": {
+   "file": "results/check_donor_influence_results.json",
+   "sha256": "fd7121d8450ac054e649b1eee1c79d356376f314b34e51d8e48a732f391b7964"
+  }
+ }
+}

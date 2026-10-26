@@ -12,31 +12,31 @@
  ],
  "threshold": 0.3,
  "distribution": {
-  "n": 643,
-  "n_measured": 482,
-  "n_unmeasured": 161,
+  "n": 632,
+  "n_measured": 475,
+  "n_unmeasured": 157,
   "by_method": {
-   "reading": 12,
-   "reserve_line": 114,
-   "design_dlp": 322,
+   "reading": 11,
+   "reserve_line": 113,
+   "design_dlp": 317,
    "bucket_line": 7,
    "developed_column": 23,
    "eye_bucket": 4
   },
   "reasons_unmeasured": {
-   "line_text": 12,
+   "line_text": 11,
    "no_total": 21,
-   "single_total": 106,
+   "single_total": 105,
    "bucket_unplaced": 81,
    "dlp_not_payments": 39,
    "fewer_cells": 8,
-   "no_ordering": 12,
+   "no_ordering": 10,
    "ambiguous_ordering": 2
   },
-  "n_above_2_pct": 229,
-  "n_above_10_pct": 106,
-  "n_above_30_pct": 20,
-  "median_measured": 0.01515,
+  "n_above_2_pct": 224,
+  "n_above_10_pct": 104,
+  "n_above_30_pct": 19,
+  "median_measured": 0.014361124049060647,
   "unmeasured_reason_text": {
    "line_text": "the reserve line's text does not end with the census's amounts",
    "no_total": "the census placed no reconciling gross total for the table",
@@ -50,15 +50,15 @@
  },
  "adjudication_comparison": {
   "note": "the adjudication's script measure (pop_classified.json) on the same records: measured in its classes 'reserves outside the developed years (measured)', 'table covers the reserves (within 2%)' and 'older-years column developed in the grid'",
-  "n_measured": 375,
-  "n_above_30_pct": 11,
-  "n_above_10_pct": 71,
-  "n_above_2_pct": 162
+  "n_measured": 370,
+  "n_above_30_pct": 10,
+  "n_above_10_pct": 70,
+  "n_above_2_pct": 159
  },
  "cross_check": {
   "reading__vs__reserve_line": {
-   "n": 6,
-   "n_agree_within_2pct": 6,
+   "n": 5,
+   "n_agree_within_2pct": 5,
    "disagree": []
   },
   "reading__vs__design_dlp": {
@@ -72,8 +72,8 @@
    "disagree": []
   },
   "design_dlp__vs__reserve_line": {
-   "n": 191,
-   "n_agree_within_2pct": 185,
+   "n": 188,
+   "n_agree_within_2pct": 183,
    "disagree": [
     {
      "record": "1206_2016",
@@ -96,11 +96,6 @@
      "reserve_line": 2.220446049250313e-16
     },
     {
-     "record": "2008_2023",
-     "design_dlp": 0.3096,
-     "reserve_line": 0.0
-    },
-    {
      "record": "5820_2017",
      "design_dlp": 0.079,
      "reserve_line": 0.0006783906486457214
@@ -108,8 +103,8 @@
    ]
   },
   "design_dlp__vs__bucket_line": {
-   "n": 26,
-   "n_agree_within_2pct": 26,
+   "n": 23,
+   "n_agree_within_2pct": 23,
    "disagree": []
   },
   "developed_column__vs__design_dlp": {
@@ -136,7 +131,6 @@
   "780_2016",
   "1209_2015",
   "1218_2016",
-  "2008_2023",
   "2468_2015",
   "2488_2015",
   "2488_2017",
@@ -378,11 +372,6 @@
    ]
   },
   "1084_2017": {
-   "reasons": [
-    "line_text"
-   ]
-  },
-  "1084_2018": {
    "reasons": [
     "line_text"
    ]
@@ -867,11 +856,6 @@
     "single_total"
    ]
   },
-  "3500_2023": {
-   "reasons": [
-    "single_total"
-   ]
-  },
   "3902_2019": {
    "reasons": [
     "bucket_unplaced",
@@ -1044,16 +1028,6 @@
   "6111_2016": {
    "reasons": [
     "single_total"
-   ]
-  },
-  "6111_2017": {
-   "reasons": [
-    "no_ordering"
-   ]
-  },
-  "6111_2018": {
-   "reasons": [
-    "no_ordering"
    ]
   },
   "6112_2016": {
@@ -1910,13 +1884,6 @@
     "reserve_line": 0.0
    }
   },
-  "1416_2024": {
-   "share": -0.0,
-   "method": "design_dlp",
-   "other_methods": {
-    "reserve_line": 0.0
-   }
-  },
   "1458_2015": {
    "share": 0.0,
    "method": "design_dlp",
@@ -2241,11 +2208,6 @@
    "other_methods": {
     "reserve_line": 0.014205020351199082
    }
-  },
-  "1884_2021": {
-   "share": 0.0375272500778574,
-   "method": "reserve_line",
-   "other_methods": {}
   },
   "1884_2022": {
    "share": 0.06471645693740813,
@@ -2758,14 +2720,6 @@
     "reserve_line": 1.1102230246251565e-16
    }
   },
-  "2008_2023": {
-   "share": 0.3096,
-   "method": "design_dlp",
-   "other_methods": {
-    "reserve_line": 0.0,
-    "bucket_line": 0.3096240793675508
-   }
-  },
   "2010_2018": {
    "share": 0.0801,
    "method": "design_dlp",
@@ -3274,13 +3228,6 @@
    "method": "reserve_line",
    "other_methods": {}
   },
-  "3000_2016": {
-   "share": 0.29,
-   "method": "reading",
-   "other_methods": {
-    "reserve_line": 0.29389377322577714
-   }
-  },
   "3000_2017": {
    "share": 0.22911654721096908,
    "method": "reserve_line",
@@ -3413,20 +3360,6 @@
    "method": "design_dlp",
    "other_methods": {
     "bucket_line": 0.1539104998373003
-   }
-  },
-  "3500_2021": {
-   "share": 0.0532,
-   "method": "design_dlp",
-   "other_methods": {
-    "bucket_line": 0.053153216879608625
-   }
-  },
-  "3500_2022": {
-   "share": 0.0543,
-   "method": "design_dlp",
-   "other_methods": {
-    "bucket_line": 0.05425804979415588
    }
   },
   "3623_2024": {
@@ -3957,13 +3890,6 @@
     "reserve_line": 0.0
    }
   },
-  "6131_2021": {
-   "share": 0.0,
-   "method": "design_dlp",
-   "other_methods": {
-    "reserve_line": 0.0
-   }
-  },
   "6134_2020": {
    "share": 0.0,
    "method": "design_dlp",
@@ -3983,10 +3909,10 @@
  "operator_role": "headline",
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "sensitivity": "bucket_share_above_30pct",
- "rule": "without the 20 primary records whose measured older-years share is above 30% (adjudication.md, Q5 option B); the 161 records whose share is not measured stay in the fit",
- "n_primary": 643,
- "n_left_out": 20,
- "n_fit": 623,
+ "rule": "without the 19 primary records whose measured older-years share is above 30% (adjudication.md, Q5 option B); the 157 records whose share is not measured stay in the fit",
+ "n_primary": 632,
+ "n_left_out": 19,
+ "n_fit": 613,
  "n_syndicates_fit": 116,
  "left_out": [
   {
@@ -4098,15 +4024,6 @@
    "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years"
   },
   {
-   "record": "2008_2023",
-   "severity": 0.05573587781210663,
-   "opening_reserves_gbp_m": 1421.221,
-   "v1_top_donor_rank": null,
-   "share": 0.3096,
-   "method": "design_dlp",
-   "detail": "the table's latest diagonal less its payments against CO_g (measures/measure_pop.py): the census's payments line, one cell for each of the grid's years; the reserve line's oldest cell holds 421.573m more than its year's diagonal less payments (an older-years amount folded into it)"
-  },
-  {
    "record": "2468_2015",
    "severity": 0.058539532564525786,
    "opening_reserves_gbp_m": 549.509,
@@ -4172,47 +4089,47 @@
  ],
  "fit": {
   "k": {
-   "mean": 0.6057764271734184,
-   "sd": 0.053725708628073174,
-   "hdi_2.5%": 0.5095111920448483,
-   "hdi_97.5%": 0.70284554777422
+   "mean": 0.6278558348610521,
+   "sd": 0.05673675324228434,
+   "hdi_2.5%": 0.5194310346657609,
+   "hdi_97.5%": 0.7291762690964939
   },
   "sd_undiv": {
-   "mean": 0.0307482165361019,
-   "sd": 0.006983794258378791,
-   "hdi_2.5%": 0.016148319421394764,
-   "hdi_97.5%": 0.043331377674192074
+   "mean": 0.028907699791815938,
+   "sd": 0.007842964290471757,
+   "hdi_2.5%": 0.012096274569936505,
+   "hdi_97.5%": 0.042804931503193415
   },
   "sd_div": {
-   "mean": 0.0437580935349101,
-   "sd": 0.005995119189137004,
-   "hdi_2.5%": 0.03243269065702705,
-   "hdi_97.5%": 0.055525525681662025
+   "mean": 0.04463062489955939,
+   "sd": 0.006173036684960997,
+   "hdi_2.5%": 0.03282389280067264,
+   "hdi_97.5%": 0.05637453882836531
   },
   "nu_clean": {
-   "mean": 4.072216368552224,
-   "sd": 0.7213057894498066,
-   "hdi_2.5%": 2.8119406186623976,
-   "hdi_97.5%": 5.515407010053674
+   "mean": 3.981892981149704,
+   "sd": 0.6832446646272623,
+   "hdi_2.5%": 2.7808996376544757,
+   "hdi_97.5%": 5.3420016504490135
   },
   "nu_ritc": {
-   "mean": 5.958823110371973,
-   "sd": 3.687875106564336,
-   "hdi_2.5%": 1.3164584030186262,
-   "hdi_97.5%": 13.284373836440047
+   "mean": 5.445027055350808,
+   "sd": 3.4650256791372085,
+   "hdi_2.5%": 1.1779189279748847,
+   "hdi_97.5%": 12.111260179293046
   },
   "tau_s": {
-   "mean": 0.11908748363482273,
-   "sd": 0.0730176956379487,
-   "hdi_2.5%": 2.6724508514099885e-05,
-   "hdi_97.5%": 0.24825068140049653
+   "mean": 0.11998006098758271,
+   "sd": 0.07224526516220993,
+   "hdi_2.5%": 0.00032170560172948914,
+   "hdi_97.5%": 0.24593758548891456
   }
  },
  "fit_convergence": {
   "divergences": 0,
-  "max_rhat": 1.0043781872673554,
-  "min_ess_bulk": 1152.615548802371,
-  "min_ess_tail": 1516.1487155974382,
+  "max_rhat": 1.0009886453221082,
+  "min_ess_bulk": 1503.5549756459968,
+  "min_ess_tail": 2120.7732468902595,
   "parameters": [
    "k",
    "sd_undiv",
@@ -4226,141 +4143,141 @@
  },
  "primary_fit": {
   "k": {
-   "mean": 0.6019834079546242,
-   "sd": 0.052694796862779794,
+   "mean": 0.6238737606675849,
+   "sd": 0.05709318927339448,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_undiv": {
-   "mean": 0.030780291058684107,
-   "sd": 0.0068280682730742105,
+   "mean": 0.02889828625880412,
+   "sd": 0.007626323890803026,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_div": {
-   "mean": 0.0427505378010639,
-   "sd": 0.0058203298534741515,
+   "mean": 0.04354753264647732,
+   "sd": 0.006270714074751521,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_clean": {
-   "mean": 4.068680316834287,
-   "sd": 0.7114839742315636,
+   "mean": 3.9565744487254086,
+   "sd": 0.6629090941374685,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_ritc": {
-   "mean": 6.260113650279553,
-   "sd": 4.055206446124693,
+   "mean": 5.390226997674685,
+   "sd": 3.5178440299404543,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "tau_s": {
-   "mean": 0.133,
+   "mean": 0.137,
    "sd": 0.073,
    "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
   }
  },
  "shift_vs_primary": {
-  "k": 0.003793019218794158,
-  "sd_undiv": -3.2074522582206666e-05,
-  "sd_div": 0.0010075557338461993,
-  "nu_clean": 0.0035360517179370277,
-  "nu_ritc": -0.3012905399075807,
-  "tau_s": -0.013912516365177277
+  "k": 0.003982074193467189,
+  "sd_undiv": 9.413533011818492e-06,
+  "sd_div": 0.00108309225308207,
+  "nu_clean": 0.02531853242429527,
+  "nu_ritc": 0.054800057676122726,
+  "tau_s": -0.0170199390124173
  },
  "shift_vs_primary_in_primary_sd": {
-  "k": 0.07198090598340084,
-  "sd_undiv": -0.004697451943866652,
-  "sd_div": 0.17310973075603092,
-  "nu_clean": 0.004969966782113583,
-  "nu_ritc": -0.07429721369561967,
-  "tau_s": -0.19058241596133257
+  "k": 0.06974692155309042,
+  "sd_undiv": 0.0012343473928730924,
+  "sd_div": 0.17272231522133114,
+  "nu_clean": 0.0381930684737973,
+  "nu_ritc": 0.015577739436347413,
+  "tau_s": -0.23314984948516854
  },
  "vignettes": {
   "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
   "seed": 20240704,
   "B": 4000,
   "pool": {
-   "n_donors": 623,
-   "n_assumed_business": 32
+   "n_donors": 613,
+   "n_assumed_business": 27
   },
   "centre": {
-   "V1_v99": 0.2679525388984791,
-   "V1_v995": 0.33478598990560965,
-   "V2_old_v99": 0.23856773902572673,
-   "V2_old_v995": 0.298071953330256,
-   "V2_new_v99": 0.25063267007723816,
-   "V2_new_v995": 0.3131461522978334,
-   "V2_d99": 0.012064931051511435,
-   "V2_d995": 0.01507419896757739
+   "V1_v99": 0.2771240438417936,
+   "V1_v995": 0.34328940529557894,
+   "V2_old_v99": 0.24663339178394444,
+   "V2_old_v995": 0.30551889044992736,
+   "V2_new_v99": 0.2592309937963243,
+   "V2_new_v995": 0.3211242606770201,
+   "V2_d99": 0.01259760201237986,
+   "V2_d995": 0.01560537022709274
   },
   "intervals": {
    "V1_v99": {
-    "mean": 0.26715684997218714,
-    "sd": 0.05196218680506928,
-    "lo": 0.18369990625450922,
-    "hi": 0.3639224200100334
+    "mean": 0.27341312344353286,
+    "sd": 0.05572256034745447,
+    "lo": 0.1840918267840773,
+    "hi": 0.3721843579171504
    },
    "V1_v995": {
-    "mean": 0.3272082532147275,
-    "sd": 0.06207164713813973,
-    "lo": 0.19660634690972667,
-    "hi": 0.502734327300998
+    "mean": 0.3367939071303211,
+    "sd": 0.06523071070383575,
+    "lo": 0.20189475372674792,
+    "hi": 0.5154356721405107
    },
    "V2_d995": {
-    "mean": 0.014091136957013226,
-    "sd": 0.00333230186604415,
-    "lo": 0.0077431527708744135,
-    "hi": 0.021171623207038096
+    "mean": 0.01446944738821668,
+    "sd": 0.003429747339670802,
+    "lo": 0.007760690607316377,
+    "hi": 0.02211941603497446
    }
   },
   "primary_centre": {
-   "V1_v99": 0.26725377454342286,
-   "V1_v995": 0.33432015847442714,
-   "V2_old_v99": 0.23820725789661057,
-   "V2_old_v995": 0.29798452181192386,
-   "V2_new_v99": 0.25011679683182003,
-   "V2_new_v995": 0.3128827171731634,
-   "V2_d99": 0.011909538935209463,
-   "V2_d995": 0.014898195361239541
+   "V1_v99": 0.27603898912667046,
+   "V1_v995": 0.34240782846350193,
+   "V2_old_v99": 0.24585074201621018,
+   "V2_old_v995": 0.3049613352310951,
+   "V2_new_v99": 0.2583068798202698,
+   "V2_new_v995": 0.32041233767833627,
+   "V2_d99": 0.012456137804059603,
+   "V2_d995": 0.01545100244724118
   },
   "primary_intervals": {
    "V1_v99": {
-    "mean": 0.2639671013511144,
-    "sd": 0.05101955842075917,
-    "lo": 0.18278588890972874,
-    "hi": 0.3623120912421036
+    "mean": 0.2698071148406804,
+    "sd": 0.05553473254942222,
+    "lo": 0.18333491336068947,
+    "hi": 0.3710719712053621
    },
    "V1_v995": {
-    "mean": 0.3242633404002734,
-    "sd": 0.06080222163487145,
-    "lo": 0.19717637716306327,
-    "hi": 0.4904983147623646
+    "mean": 0.33013879656193745,
+    "sd": 0.06306717744402952,
+    "lo": 0.19739954013896216,
+    "hi": 0.4910822039888939
    },
    "V2_d995": {
-    "mean": 0.013919109802171025,
-    "sd": 0.003210018826429607,
-    "lo": 0.007740922327090196,
-    "hi": 0.020204157560750065
+    "mean": 0.014161834247660097,
+    "sd": 0.003328417816738168,
+    "lo": 0.007650481146105404,
+    "hi": 0.020515673380621536
    }
   },
   "relative_to_primary": {
-   "V1_v99": 0.0026146098637895854,
-   "V1_v995": 0.0013933692581034052,
-   "V2_old_v99": 0.0015133087559935365,
-   "V2_old_v995": 0.0002934095965807515,
-   "V2_new_v99": 0.0020625293940774725,
-   "V2_new_v995": 0.0008419612532455378,
-   "V2_d99": 0.013047702110664305,
-   "V2_d995": 0.011813753415783168
+   "V1_v99": 0.003930802378881548,
+   "V1_v995": 0.002574639826527836,
+   "V2_old_v99": 0.0031834346372754396,
+   "V2_old_v995": 0.0018282816685917247,
+   "V2_new_v99": 0.003577581738037683,
+   "V2_new_v995": 0.0022218963347115928,
+   "V2_d99": 0.011356988060468698,
+   "V2_d995": 0.009990793825751076
   },
   "centre_decomposition": {
    "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
    "primary_fit_on_reduced_pool": {
-    "V1_v99": 0.26725377454342286,
-    "V1_v995": 0.33432015847442714,
-    "V2_old_v99": 0.23820725789661057,
-    "V2_old_v995": 0.29798452181192386,
-    "V2_new_v99": 0.25011679683182003,
-    "V2_new_v995": 0.3128827171731634,
-    "V2_d99": 0.011909538935209463,
-    "V2_d995": 0.014898195361239541
+    "V1_v99": 0.27603898912667046,
+    "V1_v995": 0.34240782846350193,
+    "V2_old_v99": 0.24585074201621018,
+    "V2_old_v995": 0.3049613352310951,
+    "V2_new_v99": 0.2583068798202698,
+    "V2_new_v995": 0.32041233767833627,
+    "V2_d99": 0.012456137804059603,
+    "V2_d995": 0.01545100244724118
    },
    "primary_fit_on_reduced_pool_relative": {
     "V1_v99": 0.0,
@@ -4373,24 +4290,24 @@
     "V2_d995": 0.0
    },
    "reduced_fit_on_primary_pool": {
-    "V1_v99": 0.2679525388984791,
-    "V1_v995": 0.33478598990560965,
-    "V2_old_v99": 0.23856773902572673,
-    "V2_old_v995": 0.298071953330256,
-    "V2_new_v99": 0.25063267007723816,
-    "V2_new_v995": 0.3131461522978334,
-    "V2_d99": 0.012064931051511435,
-    "V2_d995": 0.01507419896757739
+    "V1_v99": 0.2771240438417936,
+    "V1_v995": 0.34328940529557894,
+    "V2_old_v99": 0.24663339178394444,
+    "V2_old_v995": 0.30551889044992736,
+    "V2_new_v99": 0.2592309937963243,
+    "V2_new_v995": 0.3211242606770201,
+    "V2_d99": 0.01259760201237986,
+    "V2_d995": 0.01560537022709274
    },
    "reduced_fit_on_primary_pool_relative": {
-    "V1_v99": 0.0026146098637895854,
-    "V1_v995": 0.0013933692581034052,
-    "V2_old_v99": 0.0015133087559935365,
-    "V2_old_v995": 0.0002934095965807515,
-    "V2_new_v99": 0.0020625293940774725,
-    "V2_new_v995": 0.0008419612532455378,
-    "V2_d99": 0.013047702110664305,
-    "V2_d995": 0.011813753415783168
+    "V1_v99": 0.003930802378881548,
+    "V1_v995": 0.002574639826527836,
+    "V2_old_v99": 0.0031834346372754396,
+    "V2_old_v995": 0.0018282816685917247,
+    "V2_new_v99": 0.003577581738037683,
+    "V2_new_v995": 0.0022218963347115928,
+    "V2_d99": 0.011356988060468698,
+    "V2_d995": 0.009990793825751076
    }
   },
   "order_statistics": {
@@ -4404,5 +4321,5 @@
    }
   }
  },
- "runtime_seconds": 50.297622203826904
+ "runtime_seconds": 47.80485224723816
 }

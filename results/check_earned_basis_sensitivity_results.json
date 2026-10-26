@@ -5,14 +5,14 @@
  "not_named_note": "780/2016 is an earned-basis table found by reading, but the adjudication names it for its basis and its older-years bucket, not for a t-2 cohort still earning; it stays",
  "earned_basis_population": {
   "method": "measures/classify_pop.py's classes (results/extraction_error_rate/mature-cohort/measures/), from measures/measure_pop.py's text of each used table's page and the page before (the census's offline text loader): an earned-basis table is one whose wording says so ('estimates of earned ultimate', 'claims on premium earned', 'pure year earned', ...). A lower bound: a scanned or reflowed page can hide the wording, and 3 records were found only by reading",
-  "n_primary": 643,
-  "n_classified": 643,
+  "n_primary": 632,
+  "n_classified": 632,
   "not_classified": [],
   "by_class": {
    "earned-basis table": 129,
    "first diagonal earned": 8,
    "ultimate basis, unearned portion deducted": 26,
-   "no earned wording found": 480
+   "no earned wording found": 469
   },
   "earned_basis_tables_by_wording": 129,
   "found_only_by_reading": [
@@ -164,10 +164,10 @@
  "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
  "sensitivity": "earned_basis_option_b",
  "rule": "without the 21 records whose filings say the t-2 cohort was still earning in year t (adjudication.md, Q4 option B and Q7)",
- "n_primary": 643,
+ "n_primary": 632,
  "n_left_out": 21,
- "n_fit": 622,
- "n_syndicates_fit": 116,
+ "n_fit": 611,
+ "n_syndicates_fit": 115,
  "left_out": [
   {
    "record": "1225_2016",
@@ -319,47 +319,47 @@
  ],
  "fit": {
   "k": {
-   "mean": 0.6115861565687417,
-   "sd": 0.05722062619915742,
-   "hdi_2.5%": 0.5081450014775819,
-   "hdi_97.5%": 0.7151044119953309
+   "mean": 0.6349977089504458,
+   "sd": 0.059967955006670286,
+   "hdi_2.5%": 0.5213733090598771,
+   "hdi_97.5%": 0.7416376111922705
   },
   "sd_undiv": {
-   "mean": 0.031254822658125354,
-   "sd": 0.007192856667549588,
-   "hdi_2.5%": 0.016205541619714752,
-   "hdi_97.5%": 0.04427052826616451
+   "mean": 0.029273525238257186,
+   "sd": 0.00798350165060082,
+   "hdi_2.5%": 0.011503666909527923,
+   "hdi_97.5%": 0.042998673349444023
   },
   "sd_div": {
-   "mean": 0.042644768982016405,
-   "sd": 0.0062410134734639765,
-   "hdi_2.5%": 0.03133977017161758,
-   "hdi_97.5%": 0.055080572460250825
+   "mean": 0.043372760102148154,
+   "sd": 0.006448930948260009,
+   "hdi_2.5%": 0.03154575489099359,
+   "hdi_97.5%": 0.05586625960270831
   },
   "nu_clean": {
-   "mean": 3.988327345939044,
-   "sd": 0.6914237784626996,
-   "hdi_2.5%": 2.7287080656410225,
-   "hdi_97.5%": 5.3120849144866735
+   "mean": 3.864724811979037,
+   "sd": 0.6511799087353349,
+   "hdi_2.5%": 2.7085760827059397,
+   "hdi_97.5%": 5.19936025911618
   },
   "nu_ritc": {
-   "mean": 6.080855952338666,
-   "sd": 3.621629471568184,
-   "hdi_2.5%": 1.5507962211214041,
-   "hdi_97.5%": 13.388437746296805
+   "mean": 5.257483975019882,
+   "sd": 3.287617380754644,
+   "hdi_2.5%": 0.931791957280287,
+   "hdi_97.5%": 11.458575707549832
   },
   "tau_s": {
-   "mean": 0.12498806094505907,
-   "sd": 0.0704693041802448,
-   "hdi_2.5%": 0.00045354249195866746,
-   "hdi_97.5%": 0.25091462968180195
+   "mean": 0.12243265913315403,
+   "sd": 0.07188692584268504,
+   "hdi_2.5%": 0.0002672524921472568,
+   "hdi_97.5%": 0.25157660630626266
   }
  },
  "fit_convergence": {
   "divergences": 0,
-  "max_rhat": 1.001572820822641,
-  "min_ess_bulk": 1742.8256498483381,
-  "min_ess_tail": 2742.701295068876,
+  "max_rhat": 1.002136340684406,
+  "min_ess_bulk": 1465.1507067113023,
+  "min_ess_tail": 1544.2764702051165,
   "parameters": [
    "k",
    "sd_undiv",
@@ -373,141 +373,141 @@
  },
  "primary_fit": {
   "k": {
-   "mean": 0.6019834079546242,
-   "sd": 0.052694796862779794,
+   "mean": 0.6238737606675849,
+   "sd": 0.05709318927339448,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_undiv": {
-   "mean": 0.030780291058684107,
-   "sd": 0.0068280682730742105,
+   "mean": 0.02889828625880412,
+   "sd": 0.007626323890803026,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "sd_div": {
-   "mean": 0.0427505378010639,
-   "sd": 0.0058203298534741515,
+   "mean": 0.04354753264647732,
+   "sd": 0.006270714074751521,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_clean": {
-   "mean": 4.068680316834287,
-   "sd": 0.7114839742315636,
+   "mean": 3.9565744487254086,
+   "sd": 0.6629090941374685,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "nu_ritc": {
-   "mean": 6.260113650279553,
-   "sd": 4.055206446124693,
+   "mean": 5.390226997674685,
+   "sd": 3.5178440299404543,
    "source": "model/dispersion_posterior_draws_ritc.npz"
   },
   "tau_s": {
-   "mean": 0.133,
+   "mean": 0.137,
    "sd": 0.073,
    "source": "model/dispersion_calibration_ritc.json (rounded to three decimals)"
   }
  },
  "shift_vs_primary": {
-  "k": 0.009602748614117473,
-  "sd_undiv": 0.0004745315994412469,
-  "sd_div": -0.00010576881904749563,
-  "nu_clean": -0.08035297089524329,
-  "nu_ritc": -0.17925769794088708,
-  "tau_s": -0.008011939054940936
+  "k": 0.011123948282860896,
+  "sd_undiv": 0.0003752389794530672,
+  "sd_div": -0.00017477254432916867,
+  "nu_clean": -0.09184963674637148,
+  "nu_ritc": -0.13274302265480298,
+  "tau_s": -0.014567340866845982
  },
  "shift_vs_primary_in_primary_sd": {
-  "k": 0.1822333358476278,
-  "sd_undiv": 0.06949719605360623,
-  "sd_div": -0.018172306675086857,
-  "nu_clean": -0.11293714799694302,
-  "nu_ritc": -0.04420433344699194,
-  "tau_s": -0.10975258979371147
+  "k": 0.19483844613397125,
+  "sd_undiv": 0.049203126542473115,
+  "sd_div": -0.02787123479810297,
+  "nu_clean": -0.13855540308415876,
+  "nu_ritc": -0.0377341978567054,
+  "tau_s": -0.19955261461432852
  },
  "vignettes": {
   "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
   "seed": 20240704,
   "B": 4000,
   "pool": {
-   "n_donors": 622,
-   "n_assumed_business": 33
+   "n_donors": 611,
+   "n_assumed_business": 27
   },
   "centre": {
-   "V1_v99": 0.2749961739718047,
-   "V1_v995": 0.3423034688880056,
-   "V2_old_v99": 0.24611909282255193,
-   "V2_old_v995": 0.3063585140692409,
-   "V2_new_v99": 0.2579764166181594,
-   "V2_new_v995": 0.32111800329537427,
-   "V2_d99": 0.011857323795607472,
-   "V2_d995": 0.014759489226133349
+   "V1_v99": 0.2829178443346532,
+   "V1_v995": 0.3514233137707236,
+   "V2_old_v99": 0.2531221626168982,
+   "V2_old_v995": 0.3144129327891493,
+   "V2_new_v99": 0.26543783010506067,
+   "V2_new_v995": 0.32971070479842907,
+   "V2_d99": 0.012315667488162485,
+   "V2_d995": 0.015297772009279786
   },
   "intervals": {
    "V1_v99": {
-    "mean": 0.27211067145146844,
-    "sd": 0.05499139828888824,
-    "lo": 0.1830282716087427,
-    "hi": 0.3699128159126357
+    "mean": 0.27871219825849813,
+    "sd": 0.061562618487825675,
+    "lo": 0.18194572809150644,
+    "hi": 0.38598853334695793
    },
    "V1_v995": {
-    "mean": 0.3337462625711532,
-    "sd": 0.06343325576383951,
-    "lo": 0.19744498883593498,
-    "hi": 0.5068179509990051
+    "mean": 0.3431334892141811,
+    "sd": 0.06878644779206003,
+    "lo": 0.19336535213009143,
+    "hi": 0.5215927452227963
    },
    "V2_d995": {
-    "mean": 0.0137207221878494,
-    "sd": 0.003386415958594064,
-    "lo": 0.007374319645917456,
-    "hi": 0.020246328376030256
+    "mean": 0.014026245916091817,
+    "sd": 0.003444149763306017,
+    "lo": 0.007356310806215399,
+    "hi": 0.02125553256272903
    }
   },
   "primary_centre": {
-   "V1_v99": 0.26725377454342286,
-   "V1_v995": 0.33432015847442714,
-   "V2_old_v99": 0.23820725789661057,
-   "V2_old_v995": 0.29798452181192386,
-   "V2_new_v99": 0.25011679683182003,
-   "V2_new_v995": 0.3128827171731634,
-   "V2_d99": 0.011909538935209463,
-   "V2_d995": 0.014898195361239541
+   "V1_v99": 0.27603898912667046,
+   "V1_v995": 0.34240782846350193,
+   "V2_old_v99": 0.24585074201621018,
+   "V2_old_v995": 0.3049613352310951,
+   "V2_new_v99": 0.2583068798202698,
+   "V2_new_v995": 0.32041233767833627,
+   "V2_d99": 0.012456137804059603,
+   "V2_d995": 0.01545100244724118
   },
   "primary_intervals": {
    "V1_v99": {
-    "mean": 0.2639671013511144,
-    "sd": 0.05101955842075917,
-    "lo": 0.18278588890972874,
-    "hi": 0.3623120912421036
+    "mean": 0.2698071148406804,
+    "sd": 0.05553473254942222,
+    "lo": 0.18333491336068947,
+    "hi": 0.3710719712053621
    },
    "V1_v995": {
-    "mean": 0.3242633404002734,
-    "sd": 0.06080222163487145,
-    "lo": 0.19717637716306327,
-    "hi": 0.4904983147623646
+    "mean": 0.33013879656193745,
+    "sd": 0.06306717744402952,
+    "lo": 0.19739954013896216,
+    "hi": 0.4910822039888939
    },
    "V2_d995": {
-    "mean": 0.013919109802171025,
-    "sd": 0.003210018826429607,
-    "lo": 0.007740922327090196,
-    "hi": 0.020204157560750065
+    "mean": 0.014161834247660097,
+    "sd": 0.003328417816738168,
+    "lo": 0.007650481146105404,
+    "hi": 0.020515673380621536
    }
   },
   "relative_to_primary": {
-   "V1_v99": 0.028970215450124126,
-   "V1_v995": 0.0238792373454475,
-   "V2_old_v99": 0.0332140800234364,
-   "V2_old_v995": 0.028102104788524596,
-   "V2_new_v99": 0.031423798344995646,
-   "V2_new_v995": 0.026320680786126927,
-   "V2_d99": -0.0043843124310734005,
-   "V2_d995": -0.009310264212742392
+   "V1_v99": 0.024919868130752088,
+   "V1_v995": 0.026329670520902404,
+   "V2_old_v99": 0.029576565606658,
+   "V2_old_v995": 0.03099277339827977,
+   "V2_new_v99": 0.02760650544713572,
+   "V2_new_v995": 0.02902000337273991,
+   "V2_d99": -0.01127719668060645,
+   "V2_d995": -0.009917184239961907
   },
   "centre_decomposition": {
    "note": "centre-only legs at the posterior means: the primary fit on the reduced pool changes the pool alone; the reduced fit on the primary's pool changes the posterior alone",
    "primary_fit_on_reduced_pool": {
-    "V1_v99": 0.26725377454342286,
-    "V1_v995": 0.33432015847442714,
-    "V2_old_v99": 0.23820725789661057,
-    "V2_old_v995": 0.29798452181192386,
-    "V2_new_v99": 0.25011679683182003,
-    "V2_new_v995": 0.3128827171731634,
-    "V2_d99": 0.011909538935209463,
-    "V2_d995": 0.014898195361239541
+    "V1_v99": 0.27603898912667046,
+    "V1_v995": 0.34240782846350193,
+    "V2_old_v99": 0.24585074201621018,
+    "V2_old_v995": 0.3049613352310951,
+    "V2_new_v99": 0.2583068798202698,
+    "V2_new_v995": 0.32041233767833627,
+    "V2_d99": 0.012456137804059603,
+    "V2_d995": 0.01545100244724118
    },
    "primary_fit_on_reduced_pool_relative": {
     "V1_v99": 0.0,
@@ -520,24 +520,24 @@
     "V2_d995": 0.0
    },
    "reduced_fit_on_primary_pool": {
-    "V1_v99": 0.2749961739718047,
-    "V1_v995": 0.3423034688880056,
-    "V2_old_v99": 0.24611909282255193,
-    "V2_old_v995": 0.3063585140692409,
-    "V2_new_v99": 0.2579764166181594,
-    "V2_new_v995": 0.32111800329537427,
-    "V2_d99": 0.011857323795607472,
-    "V2_d995": 0.014759489226133349
+    "V1_v99": 0.2829178443346532,
+    "V1_v995": 0.3514233137707236,
+    "V2_old_v99": 0.2531221626168982,
+    "V2_old_v995": 0.3144129327891493,
+    "V2_new_v99": 0.26543783010506067,
+    "V2_new_v995": 0.32971070479842907,
+    "V2_d99": 0.012315667488162485,
+    "V2_d995": 0.015297772009279786
    },
    "reduced_fit_on_primary_pool_relative": {
-    "V1_v99": 0.028970215450124126,
-    "V1_v995": 0.0238792373454475,
-    "V2_old_v99": 0.0332140800234364,
-    "V2_old_v995": 0.028102104788524596,
-    "V2_new_v99": 0.031423798344995646,
-    "V2_new_v995": 0.026320680786126927,
-    "V2_d99": -0.0043843124310734005,
-    "V2_d995": -0.009310264212742392
+    "V1_v99": 0.024919868130752088,
+    "V1_v995": 0.026329670520902404,
+    "V2_old_v99": 0.029576565606658,
+    "V2_old_v995": 0.03099277339827977,
+    "V2_new_v99": 0.02760650544713572,
+    "V2_new_v995": 0.02902000337273991,
+    "V2_d99": -0.01127719668060645,
+    "V2_d995": -0.009917184239961907
    }
   },
   "order_statistics": {
@@ -551,5 +551,5 @@
    }
   }
  },
- "runtime_seconds": 49.37414264678955
+ "runtime_seconds": 48.17348265647888
 }
