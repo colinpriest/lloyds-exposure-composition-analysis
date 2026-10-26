@@ -5,7 +5,11 @@ eighth review: rule 5b (23 October 2026, after the round-7 readings U1 and U2 of
 amount the round-5 readings did not print); rule 6's take-on clause, take_on_table_unreconciled (23 October, after the
 readings of 3500/2023; applied to 3500/2022 after review 8); rule 1's exact control clause (23 October, after review 8);
 and rule 4b (24 October 2026, after the round-8 readings Z7 and Z8, `../round8/`). Review 8 also added rule 6's
-derived-correction clause (derived_correction, 1274/2016).
+derived-correction clause (derived_correction, 1274/2016). Rule 8, the source-history rule, was added on 26 October 2026
+after the census of `../round9/` (see rule 8): it sets 11 records aside, moves 3000/2016, 3500/2022 and 3500/2023 from
+rule 6's list to the excluded set, reverses the rule-4 correction of 1609/2024, applies rule 3 to 3330/2018 and an
+accounts roll-forward (a derived figure) to 3330/2017, and adds 1110/2020, 1254/2023, 1686/2021, 3330/2017 and 1609/2024
+to rule 6's list (6118/2018 was already on it).
 
 Written before the adjudication, applied the same way to every record (82 read in round 5, plus 2689/2023 read by V1, V2
 and W1, W2). Every decision rests on facts both readings report; where the two readings give conflicting facts (not
@@ -47,10 +51,22 @@ labels), a third reading decides.
    figure: the register carries that figure. Expected: 2232/2020 (+19.3m against +55.2m); and, after review 8, 4242/2022
    (-80.015m USD against -44.371m: both readings give the same movement on the 2021 report's printed cells, which
    reconcile with the 2022 accounts, 79.3m against 78.3m, once the merged '2016 & Prior' column is set aside; M uses
-   no cell of that column on either base).
+   no cell of that column on either base). The source-history census (26 October 2026, rule 8) applied
+   it to 3330/2018: the 2018 table's end-2017 cells for 2011 and 2012 sit 2,478 above the 2017 report's printed cells
+   (translation explains at most about 0.47m); the 2017 report's cells as the base reproduce the 2018 reserves to the pound
+   and give +1.094m GBP (2011 +560, 2012 +534) against the table's own -1.384m (readings L4 and Z12, which agree on every
+   cell).
 4. **Known-cause correction.** The printed or stored table is wrong for a stated, checkable reason (transposed body,
    misprinted cell proved by the same report's own arithmetic or the previous report, wrong grid): the register carries
-   the corrected figure that both readings give. Expected: 318/2024 (-27.99m), 1274/2016 (misprinted 2012 cell). The
+   the corrected figure that both readings give. Expected: 318/2024 (-27.99m), 1274/2016 (misprinted 2012 cell). 1609/2024's correction (+13.935m USD,
+   rounds 5 and 6) was REVERSED on 26 October 2026: the round-10 tie-break readers Z9 and Z10 and the cohort-depth
+   second reading read the 2024 table as labelled (the 2022 and 2024 tables share an orientation and the 2023 table is
+   the mirror); decisive is the 2021 gross ultimate loss ratio, 49.6% to 36.2% (2023 p5, 2024 p6), which only the
+   as-labelled reading shows, with the implied premium and the net combined ratio agreeing. The earlier test compared the
+   2024 rows with the transposed 2023 table, which was circular. M is -0.185m USD as printed (UW2021 -11,123; UW2022
+   +10,938; at t-3, -11.123m), the register entry is removed, the earlier readings are kept, and the record joins rule
+   6's list (clause orientation_outside_evidence: its orientation needed evidence outside the table). 1609/2023
+   (+8.834m, transposed) is confirmed. The
    1274/2016 figure is not one either reader gives: it is the session's derivation from cells both readers quote, the
    previous report's 2012 cell at the 2012 column's own exchange factor (its paid cells at end-2015, 129,350 in the 2016
    table over 131,423 in the 2015 report, 0.98423), +22.694m USD. The register keeps each reader's own figures as they
@@ -101,12 +117,21 @@ labels), a third reading decides.
    other rule covers an explained take-on table that fails the tie. 3500/2022 joined it after review 8, on the same
    all-prior-years scope (-389.8m against note 7's -293.1m; the whole table -26.4m): the readings conflict on where the
    loss portfolio transfers sit, and either way the acquired share outside R is at most 9.1% of R (the two mid-2022
-   LPTs, 360.9m of 3,955.0m; 9.8% with all four), so rule 5b would list it too.
+   LPTs, 360.9m of 3,955.0m; 9.8% with all four), so rule 5b would list it too. (Both 3500/2022 and 3500/2023 left this list on 26 October 2026: the
+   source-history census sets them aside under rule 8.)
 6. **Least certain: stays, listed.** The table ties to the year's accounts (or its basis explains the gap), but an
    underwriting year u <= t-2 moved beyond the exchange rate without explanation by more than 1% of R; or the two
    readings disagree on a label but not on the facts; or (added 23 October 2026) an explained take-on already in R has a
    table that does not reconcile with the filing's own roll-forward (3500/2023, and 3500/2022 after review 8); or (added
    after review 8) the record's corrected figure is the session's derivation from cells both readers quote (1274/2016).
+   Added 26 October 2026 (the source-history census, rule 8): the clause census_residual_concern (a specific concern
+   the census readings leave short of rule 8's set-aside test, because the outcome is bridged or validated well enough:
+   1110/2020, 1254/2023, 1686/2021), the clause orientation_outside_evidence (1609/2024) and derived_correction for
+   3330/2017 (+0.559m GBP, the accounts' roll-forward). 1254/2023 and 1686/2021 were checked against the 1%-of-R clause
+   before listing: 1254/2023's end-2022 diagonal sits about 23m (41% of R) above the 2022 report's at a like-for-like
+   rate and 1686/2021's 2018 row sits 110-130m above 2007's own cells (5-6% of R on the take-on-inclusive base), both
+   over 1% and neither explained in the filing as an amount, so both are listed. 3000/2016, 3500/2022 and 3500/2023 left
+   this list for rule 8's excluded set.
    These stay in the primary and join the least-certain sensitivity, derived by this rule from the register (never typed).
    780/2016 joined after the round-8 readings (24 October 2026): its 2016 table re-cuts its history (end-2015 diagonal
    528.0 against 701.6 in the 2015 report, unexplained, far over 1% of R) while the year t table ties to the accounts
@@ -114,3 +139,20 @@ labels), a third reading decides.
    2001/2016 was checked against the 1% of R after review 8: its UY2013 and UY2014 cells fall 24.9m and 16.7m (1.56% and
    1.04% of R, 1,601.0m) against an exchange uplift, 2.60% together, and every measure is over 1%, so it stays listed.
 7. **Stands.** Every other record: valid, screen misread, or a units slip that does not reach the analysis figure.
+8. **Source history: leaves the primary** (added 26 October 2026). Rule 8 is the recommendation of the Codex analysis,
+   adopted on Colin's instruction of 26 October 2026 and applied by the Claude analysis session. It was found during
+   Codex's tail investigation of 6131/2021, after the results were seen (post hoc), and the census applied it to the
+   population its source-feature criteria select, chosen without any outcome value, size or sign (`../round9/population.md`,
+   criteria S1 to S6 and H: 81 core records of 48 syndicates and 20 host-side records, each read twice). Its exact text:
+   "set aside an observation when specific source evidence raises a material unresolved concern about overlapping claims
+   history, gross/net mixing or cohort reassignment through closure, and the declared gross original-cohort outcome cannot
+   be defensibly reconstructed or validated; regardless of the outcome's size or sign; an unexpired exposure, ordinary
+   internal RITC, funds-withheld arrangement, unusual business, youth or SPA status is not sufficient by itself; a
+   calendar/triangle inequality alone is insufficient where FX or accounting scope differs." The reading protocol: two
+   independent arms (K1-K8 and L1-L8, `../round9/briefs/brief_r9.md`), a third reading where the facts conflict (Z11, Z12,
+   Z13; round 10, Z9 and Z10), and a decision rests on facts at least two readings report. It decides 11 records, set
+   aside with the reason code source_history_unresolved (`data/restated_base_excluded.json`, bucket
+   source_history_set_aside, tag SOURCE_HISTORY_SET_ASIDE): 6131/2021, 1884/2021, 2008/2023, 1084/2018, 6111/2017,
+   6111/2018, 1416/2024, 3500/2021, 3500/2022, 3500/2023 and 3000/2016 (`../round9/adjudication.md`). The loader reads the
+   bucket as one mask: a set-aside record has no figure, so it leaves estimation, donor pools, tools and scoring together.
+   6131/2020 and the six 1991 records stay. The 672 sensitivity keeps every record.

@@ -405,9 +405,15 @@ def test_the_kept_candidates_stay_in_the_primary(loaded):
     # kept record is in the restated-base register's excluded bucket
     prim = loaded[ra.MATURE_COHORT_OUTCOME]
     restated = ra.load_restated_base()
+    # ... or rule 8, the source-history rule (26 October 2026): 2008/2023 was read and kept for its exchange line and is set
+    # aside by the census (data/restated_base_excluded.json, source_history_set_aside)
+    set_aside = ra.load_source_history_set_aside()
     for key in _register()["_population"]["round2"]["records_are"]:
         if key in restated:
             assert prim["by_key"][key]["data_quality_tag"] == ra.RESTATED_BASE_TAG, key
+            continue
+        if key in set_aside:
+            assert prim["by_key"][key]["data_quality_tag"] == ra.SOURCE_HISTORY_TAG, key
             continue
         assert key in ws, key
     assert sorted(set(restated) & set(_register()["read_and_kept"])) == []

@@ -1,0 +1,59 @@
+{
+ "1609_2022": {
+  "read_by": "text layer (PyMuPDF) and page image (renders/r2022_p41.png, 110 dpi)",
+  "filing": "D:/tmp/r62/finalv/Efull/syndicate_reports/pdfs/syndicate_1609_2022.pdf",
+  "pages": [7, 31, 41],
+  "table": {"page_pdf": 41, "page_printed": 38, "heading": "Gross Claims development table", "units": "$'000", "basis": "gross"},
+  "labels_as_printed": "column header 'Underwriting year' over columns 2021, 2022 ($'000); rows 'Estimate of cumulative gross claims incurred:', 'At end of first underwriting year', 'One Year Later', 'Less cumulative gross paid', 'Liability for gross outstanding claims (all years)', 'Total gross outstanding claims (all years)'",
+  "cells": {"At end of first underwriting year": {"2021": 15778, "2022": 32225}, "One Year Later": {"2021": 56966}, "Less cumulative gross paid": {"2021": -314, "2022": -34}, "Liability": {"2021": 56652, "2022": 32191}, "Total gross outstanding": 88843},
+  "orientation": "as_labelled (columns are underwriting years)",
+  "by_uw_as_labelled": {"2021": {"2021": 15778, "2022": 56966}, "2022": {"2022": 32225}},
+  "ties": "As labelled, ties to the 2024 table read as labelled at ratios 1.0055 / 1.0058 (UW2021 end-21, end-22) and 1.0044 (UW2022 end-22), and to the 2023 table read transposed. Read transposed it would need ratios 1.778 and 0.568 against 2024-as-labelled.",
+  "reserve_tie": "Liability row = column bottom less paid (56,966-314=56,652; 32,225-34=32,191); total 88,843 = gross claims outstanding at 31 Dec 2022 in note 4 (p31, 88,843). The total is orientation-invariant.",
+  "net_table": "p41 Net Claims development table, same layout: 2021 col 11,806 / 44,511; 2022 col 21,205; ties 2024 net as labelled at 1.0071/1.0068/1.0049, so same orientation as gross.",
+  "verdict": "as_labelled",
+  "note": "No loss-ratio statement per underwriting year in this report. KPI (p7): gross written premiums 2021 calendar year 111,910 ($'000) -- all of it underwriting year 2021, the syndicate's first year -- used below as a floor on UW2021 premium."
+ },
+ "1609_2023": {
+  "read_by": "text layer (PyMuPDF) and page image (renders/r2023_p41.png, renders/r2023_p5.png)",
+  "filing": "D:/tmp/r62/finalv/Efull/syndicate_reports/pdfs/syndicate_1609_2023.pdf",
+  "pages": [5, 31, 41],
+  "table": {"page_pdf": 41, "page_printed": 38, "heading": "Gross Claims development table", "units": "$'000", "basis": "gross"},
+  "labels_as_printed": "column header 'Underwriting year' over columns 2021, 2022, 2023 ($'000); rows 'At end of first underwriting year', 'One Year Later', 'Two Years Later', 'Less cumulative gross paid', 'Liability for gross outstanding claims (all years)', 'Total gross outstanding claims (all years)'",
+  "cells": {"At end of first underwriting year": {"2021": 16028, "2022": 57866, "2023": 66700}, "One Year Later": {"2021": 32794, "2022": 108475}, "Two Years Later": {"2021": 44451}, "Less cumulative gross paid": {"2021": -7525, "2022": -9650, "2023": -41}, "Liability": {"2021": 36926, "2022": 98825, "2023": 66659}, "Total gross outstanding": 202410},
+  "orientation": "transposed development block (rows are underwriting years 2021, 2022, 2023; columns are development ages); the paid row is per underwriting year as labelled (41 under 2023 after one year)",
+  "by_uw_transposed": {"2021": {"2021": 16028, "2022": 57866, "2023": 66700}, "2022": {"2022": 32794, "2023": 108475}, "2023": {"2023": 44451}},
+  "by_uw_as_labelled": {"2021": {"2021": 16028, "2022": 32794, "2023": 44451}, "2022": {"2022": 57866, "2023": 108475}, "2023": {"2023": 66700}},
+  "ties": "Transposed 2023 ties 2024-as-labelled at 0.98983/0.99015/0.99030 (UW2021), 0.98701/0.98858 (UW2022), 0.98380 (UW2023): near-constant within each UW year. As labelled it would need 1.747, 1.486, 0.559, 0.656 against 2024-as-labelled. Transposed 2023 also ties 2022-as-labelled (16,028/15,778; 57,866/56,966; 32,794/32,225).",
+  "reserve_tie": "Liability row is column arithmetic (44,451-7,525=36,926; 108,475-9,650=98,825; 66,700-41=66,659); total 202,410 = note 4 gross claims outstanding 31 Dec 2023 (p31, 202,410). Total is orientation-invariant; read transposed, the per-column liability pairs one UW year's latest estimate with another's paid, so the per-column liabilities are an artefact of the transposition.",
+  "text_statement": {"page_pdf": 5, "quote": "Incurred experience to date is 13.1% better than expected in terms of the GULR, which is currently forecast to be only 2% favourable to plan at 49.6%.", "subject": "2021 year of account, at end 2023", "test": "UW2021 premium >= 111,910 (2021 calendar GWP, all UW2021). Transposed: 66,700/0.496 = 134.5m premium, consistent. As labelled: 44,451/0.496 = 89.6m < 111.9m written in 2021 alone, inconsistent."},
+  "net_table": "p41 net table has the same transposed layout (2021 col 12,002/21,579/34,086; 2022 col 45,257/80,139; 2023 col 54,122); transposed it ties 2024 net as labelled at 0.990-0.985.",
+  "M_2023_check": {"orientation": "transposed", "cells": "UW2021: end-2023 66,700 (row 'At end of first underwriting year', col 2023) less end-2022 57,866 (same row, col 2022)", "M_usd000": 8834, "alternative_as_labelled_M_usd000": 11657, "cross_check_from_2024_as_labelled": "66,053 - 57,296 = 8,757"},
+  "stated_prior_year_line": {"value_usd000": 248, "page": "2024 report p37 (2023 comparative)", "quote": "Change in estimates of prior year provisions 248"},
+  "verdict": "transposed"
+ },
+ "1609_2024": {
+  "read_by": "text layer and page image of the HTML filing's converted PDF (pdf_extraction/html_converted/syndicate_1609_2024.pdf; renders/r2024_p51.png, renders/r2024_p6.png)",
+  "filing": "D:/tmp/r62/finalv/Efull/syndicate_reports/pdfs/syndicate_1609_2024.html",
+  "pages": [6, 9, 37, 51],
+  "table": {"page_pdf": 51, "page_printed": 48, "heading": "Claims development (gross table: 'Estimate of ultimate gross claims')", "units": "$'000", "basis": "gross"},
+  "labels_as_printed": "column header 'Pure underwriting year' over columns 2021, 2022, 2023, 2024, Total ($'000); rows 'Estimate of ultimate gross claims', 'At end of first underwriting year', 'One year later', 'Two years later', 'Three years later', 'Less gross claims paid', 'Gross claims reserves'",
+  "cells": {"At end of first underwriting year": {"2021": 15865, "2022": 32368, "2023": 43731, "2024": 57359, "Total": 149323}, "One year later": {"2021": 57296, "2022": 107236, "2023": 107543, "Total": 272075}, "Two years later": {"2021": 66053, "2022": 118174, "Total": 184227}, "Three years later": {"2021": 54930, "Total": 54930}, "Less gross claims paid": {"2021": 11286, "2022": 48102, "2023": 3698, "2024": 3931, "Total": 67017}, "Gross claims reserves": {"Total": 270989}},
+  "by_uw_as_labelled": {"2021": {"2021": 15865, "2022": 57296, "2023": 66053, "2024": 54930}, "2022": {"2022": 32368, "2023": 107236, "2024": 118174}, "2023": {"2023": 43731, "2024": 107543}, "2024": {"2024": 57359}},
+  "by_uw_transposed": {"2021": {"2021": 15865, "2022": 32368, "2023": 43731, "2024": 57359}, "2022": {"2022": 57296, "2023": 107236, "2024": 107543}, "2023": {"2023": 66053, "2024": 118174}, "2024": {"2024": 54930}},
+  "ties_as_labelled": "vs 2023 transposed: UW2021 0.98983/0.99015/0.99030, UW2022 0.98701/0.98858, UW2023 0.98380; vs 2022 as labelled: UW2021 1.00551/1.00579, UW2022 1.00444. Ratios are near-constant within each UW year (one currency mix per year), as a balance-sheet-rate retranslation should give.",
+  "ties_transposed": "vs 2023 as labelled: the same number pairs, but grouped UW2021 0.98983/0.98701/0.98380 (spread 0.006) -- constant by development age, not by UW year; vs 2022 transposed: UW2021 1.00551/1.00444. Transposed 2024 ties only an as-labelled 2023 and a transposed 2022, i.e. it requires the 2023 table to be the correctly labelled one.",
+  "reserve_tie": "Total row: 338,006 latest diagonal less 67,017 paid = 270,989 = 'Gross claims reserves' and = note 5 gross claims outstanding 31 Dec 2024 (p37, 270,989). Orientation-invariant (the diagonal maps to itself). Per-UW reserves not printed.",
+  "text_statements": [
+   {"page_pdf": 6, "quote": "Our first year of trading, 2021, was closed through the RITC process at the end of 2023, on a year-of-account basis. The ultimate gross loss ratio is 36.2% with a very low incurred gross loss ratio of 10.9% (as at Q4 2024).", "test": "With the 2023 report's 49.6% at end 2023, UW2021's GULR fell by 27% in 2024 on a closed year's (fixed) premium. As labelled: UW2021 66,053 -> 54,930 (-16.8%), direction agrees; implied premium 133.2m and 151.7m, both above the 111.9m floor. Transposed: 43,731 -> 57,359 (+31.2%), wrong direction; implied premium 88.2m at end 2023 (below the 111.9m written in calendar 2021 alone) and 158.5m at end 2024, a 79% premium rise in year four of a closed year."},
+   {"page_pdf": 6, "quote": "The 2024 GAAP result produced an excellent 79.4% net combined ratio, driven by recognising a benign claims environment on prior years", "test": "As labelled UW2021 falls 11,123 in 2024; transposed, no underwriting year falls (+13,628, +307, +52,121)."}
+  ],
+  "net_table": "p51 net table same layout (2021 col 11,890/44,815/53,598/46,491; 2022 col 21,309/79,265/81,487; 2023 col 33,580/84,810; 2024 col 41,409; total reserves 206,014 = note 5 net 206,014); its as-labelled reading ties the 2023 net table transposed and the 2022 net table as labelled, so gross and net agree in orientation.",
+  "stated_prior_year_line": {"value_usd000": -15263, "page": 37, "quote": "Change in estimates of prior year provisions (15,263)", "stated_less_triangle_usd000_as_labelled": -15078, "stated_less_triangle_usd000_transposed": -29198, "note": "Earned/calendar-basis line; the UW-year triangle's all-prior-years (u<=2023) movement is +63,627 as labelled and +66,056 transposed because UW2023 earns through 2024, so this line does not discriminate by itself."},
+  "transaction": "2021 year of account closed by RITC at end 2023 (p6 quote above); the table is by 'Pure underwriting year', so the RITC does not move the UW cells. No take-on or portfolio transfer found.",
+  "verdict": "as_labelled",
+  "M_2024": {"orientation": "as_labelled", "cells": "UW2021: end-2024 54,930 ('Three years later', col 2021) less end-2023 66,053 ('Two years later', col 2021) = -11,123; UW2022: end-2024 118,174 ('Two years later', col 2022) less end-2023 107,236 ('One year later', col 2022) = +10,938", "M_usd000": -185, "M_m": -0.185},
+  "M_2024_if_transposed": {"cells": "UW2021 57,359 - 43,731 = +13,628; UW2022 107,543 - 107,236 = +307", "M_usd000": 13935},
+  "decisive_evidence": "(1) UW2021 GULR 49.6% at end 2023 (2023 report p5) falling to 36.2% at end 2024 (2024 report p6): as labelled the UW2021 ultimate falls 66,053 -> 54,930; transposed it rises 43,731 -> 57,359, and 43,731 at 49.6% implies 88.2m premium, below the 111,910 GWP the syndicate wrote in 2021 (2022 report p7, all UW2021). (2) Retranslation ratios are near-constant within each underwriting year only under 2024-as-labelled paired with 2023-transposed and 2022-as-labelled. (3) The 2023 table is the odd one out: 2022 and 2024 tables share an orientation and the 2023 one is their mirror; the 2023 GULR test (66,700 transposed gives 134.5m premium; 44,451 as labelled gives 89.6m < 111.9m) independently confirms 2023 transposed, hence 2024 as labelled."
+ }
+}

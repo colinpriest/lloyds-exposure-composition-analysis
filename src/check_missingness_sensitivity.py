@@ -67,7 +67,7 @@ def load_sample():
         and row.get("data_quality_tag") not in (
             "NET_BASIS", "UNKNOWN_BASIS", "TAKEON_NOT_DEVELOPMENT",
             "PROVISION_MOVEMENT_NOT_DEVELOPMENT", "GROSS_TRIANGLE_DOES_NOT_RECONCILE", "NO_MATURE_COHORT_FIGURE",
-            "FX_UNTRANSLATED_TABLE", "RESTATED_BASE_TABLE", "TAKEON_BASE_UNMEASURABLE",
+            "FX_UNTRANSLATED_TABLE", "RESTATED_BASE_TABLE", "TAKEON_BASE_UNMEASURABLE", "SOURCE_HISTORY_SET_ASIDE",
         )
     ]
     S = np.array([row["s_raw_a"] for row in records], float)

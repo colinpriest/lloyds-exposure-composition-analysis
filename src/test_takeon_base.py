@@ -108,7 +108,7 @@ RECORDS = ("1884_2021", "3500_2021", "2003_2018", "457_2016")
 OPENING_2003 = dict(EVIDENCE, opening_reserves_m=5344.064)
 
 
-def _load(factory, base, openings):
+def _load(factory, base, openings, outcome=None):
     d = factory.mktemp("records")
     for key in RECORDS:
         shutil.copy(os.path.join(HERE, "pdf_extraction", "syndicate_%s.json" % key), str(d))
@@ -126,7 +126,7 @@ def _load(factory, base, openings):
         mp.setattr(ra, "TAKEON_REGISTER", paths["takeons"])
         mp.setattr(ra, "OPENING_RESERVES_CONFIRMED", paths["openings"])
         mp.setattr(ra, "TAKEON_BASE_REGISTER", paths["base"])
-        records, counters, log, files = ra.load_and_classify()
+        records, counters, log, files = ra.load_and_classify(outcome)
     finally:
         mp.undo()
     assert len(files) == len(RECORDS)
@@ -148,7 +148,29 @@ def unadjusted(tmp_path_factory):
     return _load(tmp_path_factory, {"_purpose": "empty"}, {"_purpose": "test", "2003_2018": OPENING_2003})
 
 
-def test_the_loader_adds_the_take_on_for_the_registered_records_only(adjusted, unadjusted):
+# The primary sets 1884/2021 and 3500/2021 aside (rule 8, the source-history rule, 26 October 2026): they keep their opening
+# reserves but carry no figure, so the figure assertions below read the 672 construction, which does not read that register.
+@pytest.fixture(scope="module")
+def adjusted672(tmp_path_factory):
+    return _load(tmp_path_factory,
+                 {"_purpose": "test", "1884_2021": ENTRY,
+                  "3500_2021": dict(EVIDENCE, opening_reserves_m=770.428, takeon_m=2425.117),
+                  "2003_2018": dict(EVIDENCE, opening_reserves_m=5344.064, takeon_m=532.922)},
+                 {"_purpose": "test", "2003_2018": OPENING_2003}, ra.PRECEDENCE_672_OUTCOME)
+
+
+@pytest.fixture(scope="module")
+def unadjusted672(tmp_path_factory):
+    return _load(tmp_path_factory, {"_purpose": "empty"}, {"_purpose": "test", "2003_2018": OPENING_2003},
+                 ra.PRECEDENCE_672_OUTCOME)
+
+
+def test_the_loader_adds_the_take_on_for_the_registered_records_only(adjusted672, unadjusted672, adjusted, unadjusted):
+    # the primary: the take-on still enters R, and the source-history rule gives the record no figure
+    assert adjusted["by_key"]["1884_2021"]["data_quality_tag"] == ra.SOURCE_HISTORY_TAG
+    assert adjusted["by_key"]["1884_2021"]["opening_reserves_gbp_m"] == pytest.approx(73.709 + 839.787)
+    assert adjusted["by_key"]["1884_2021"]["pyd_gbp_m"] is None and unadjusted["by_key"]["1884_2021"]["pyd_gbp_m"] is None
+    adjusted, unadjusted = adjusted672, unadjusted672
     was, now = unadjusted["by_key"]["1884_2021"], adjusted["by_key"]["1884_2021"]
     assert now["fx_applied"] is False
     assert was["opening_reserves_gbp_m"] == pytest.approx(73.709)
@@ -163,7 +185,8 @@ def test_the_loader_adds_the_take_on_for_the_registered_records_only(adjusted, u
     assert unadjusted["counters"]["takeon_base_applied"] == 0
 
 
-def test_the_take_on_is_added_in_the_reports_currency_before_the_fx_conversion(adjusted, unadjusted):
+def test_the_take_on_is_added_in_the_reports_currency_before_the_fx_conversion(adjusted672, unadjusted672):
+    adjusted, unadjusted = adjusted672, unadjusted672
     was, now = unadjusted["by_key"]["3500_2021"], adjusted["by_key"]["3500_2021"]
     assert now["fx_applied"] is True
     rate = now["fx_rate_usd_per_gbp"]

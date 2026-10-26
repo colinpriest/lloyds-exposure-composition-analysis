@@ -198,8 +198,15 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
 - Rules 3 and 4 (corrections): `data/mature_cohort_figures.json` carries 2232/2020 at +19.331m (the 2019 report's printed
   base, `previous_report_base`), 4242/2022 at -80.015m USD (the 2021 report's printed base, which reconciles with the 2022
   accounts once the merged '2016 & Prior' column both readers call unreadable is set aside; it was excluded under rule 1
-  before review 8 and is in the primary again), 318/2024 at -27.990m and 1609/2024 at +13.935m USD (tables
-  printed transposed against their labels) and 1274/2016 at +22.694m USD, each with a `correction` object. 1274/2016's
+  before review 8 and is in the primary again), 318/2024 at -27.990m (a table printed transposed against its labels)
+  and 1274/2016 at +22.694m USD, each with a `correction` object. 1609/2024's correction (+13.935m USD) was REVERSED on
+  26 October 2026 (round 10: Z9 and Z10 read the 2024 table as labelled; the 2021 gross ultimate loss ratio falls from
+  49.6% to 36.2%, which only the as-labelled reading shows): the entry is removed, the record is back at the printed
+  -0.185m USD (-11.123m at t-3), the reversal is recorded under `_reversed_corrections` and the earlier readings are
+  kept. The source-history census (rule 8, below) adds 3330/2018 at +1.094m GBP (rule 3: the 2017 report's printed
+  end-2017 cells as the base; the 2018 table's own are 2,478 too high) and 3330/2017 at +0.559m GBP (`accounts_roll_forward`,
+  DERIVED: the year's gross claims incurred from the opening and closing gross provision, paid and exchange line, the
+  whole reserve being in the two mature columns). 1274/2016's
   figure is DERIVED (a misprinted 2012 cell replaced by the 2015 report's at the 2012 column's own paid factor, 129,350 /
   131,423 = 0.98423; the other columns' factors give +21.8m to +25.7m): neither reader gives it, so it is stored as
   `correction.derived_figure_m` apart from each reader's own `figure_m` (+57.503m as printed), allowed only while both
@@ -220,17 +227,43 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   The 672 construction keeps the record. 1458/2024 (an external RITC restating the 2020 and 2021 years; at most USD
   164.1m of cumulative incurred, 8.0% of R, and the movement within the table, -33.258m USD, already excludes the
   take-on) stays and is listed under `history_restated` with the clause `take_on_base_bounded`.
-- Rule 6 (least certain): 29 records stay in the primary and are listed under `history_restated` in
-  `data/restated_base_excluded.json`: the 25 of rule 6 (780/2016 among them since the round-8 readings, 2232/2017 no
-  longer), 1458/2024 (rule 5b), 3500/2023 (its take-on is explained and
-  in R, but its table does not reconcile with note 7, -52.1m against -184.8m on the old years; clause
-  `take_on_table_unreconciled`), 3500/2022 (the same clause, after review 8: -389.8m against note 7's -293.1m on the
-  all-prior-years scope, the readings conflicting on where the loss portfolio transfers sit, and the acquired share
-  outside R at most 9.1% of R either way) and 1274/2016 (clause `derived_correction`);
+- Rule 6 (least certain): 31 records stay in the primary and are listed under `history_restated` in
+  `data/restated_base_excluded.json`: the 24 of rule 6 (780/2016 among them since the round-8 readings, 2232/2017 no
+  longer, 3000/2016 no longer), 1458/2024 (rule 5b), 1274/2016 (clause `derived_correction`) and, from the census of
+  26 October 2026, 1609/2024 (clause `orientation_outside_evidence`), 1110/2020, 1254/2023 and 1686/2021 (clause
+  `census_residual_concern`) and 3330/2017 (clause `derived_correction`); 6118/2018 was already listed. 3500/2023
+  and 3500/2022 (clause `take_on_table_unreconciled`, until then) and 3000/2016 left the list for rule 8's excluded set.
+  1254/2023 and 1686/2021 were checked against rule 6's 1%-of-R clause: 1254/2023's end-2022 diagonal sits about 23m (41%
+  of R) above the 2022 report's at a like-for-like rate, 1686/2021's 2018 row 110-130m above 2007's own cells (5-6% of R
+  on the take-on-inclusive base), both unexplained as amounts, so both are listed.
   `src/check_low_confidence_sensitivity.py` reads them from there. 2001/2016 was checked against the 1% of R after review 8
   (its UY2013 and UY2014 cells fall 24.9m and 16.7m, 2.60% of R together) and stays.
+- Rule 8 (the source-history rule; 26 October 2026; the recommendation of the Codex analysis, adopted on Colin's
+  instruction and applied by the Claude analysis session): "set aside an observation when specific source evidence raises
+  a material unresolved concern about overlapping claims history, gross/net mixing or cohort reassignment through closure,
+  and the declared gross original-cohort outcome cannot be defensibly reconstructed or validated; regardless of the
+  outcome's size or sign; an unexpired exposure, ordinary internal RITC, funds-withheld arrangement, unusual business,
+  youth or SPA status is not sufficient by itself; a calendar/triangle inequality alone is insufficient where FX or
+  accounting scope differs." Codex found the concern in its tail investigation of 6131/2021, after the results were seen
+  (post hoc); the census applied the rule to every record its source-feature criteria select (`round9/population.md`:
+  81 core records of 48 syndicates and 20 host-side records, chosen without any outcome value, size or sign), each read
+  twice (arms K and L, `round9/briefs/brief_r9.md`) and a third time where the facts conflicted (Z11-Z13; round 10, Z9
+  and Z10). It sets 11 records aside, with the reason code `source_history_unresolved`: 6131/2021, 1884/2021, 2008/2023,
+  1084/2018, 6111/2017, 6111/2018, 1416/2024, 3500/2021, 3500/2022, 3500/2023 and 3000/2016 (`round9/adjudication.md`),
+  in the bucket `source_history_set_aside` of `data/restated_base_excluded.json`. The loader reads the bucket as one
+  mask: a set-aside record gets no figure (so no severity), the tag `SOURCE_HISTORY_SET_ASIDE` and the counter
+  `source_history_set_aside`, and leaves estimation, donor pools, tools and scoring together; the 672 construction does
+  not read it. 6131/2020 and the six 1991 records stay. Take-on bases (rule 5) of 4444/2018, 4444/2023, 3268/2020,
+  4000/2022, 1856/2024, 1686/2021, 2488/2019 and 3500/2019 were checked against the census readings: all are in
+  `data/opening_reserves_takeon_base.json` with the amounts and pages the readings print, so no R changes. The outbound
+  register's named entries 6103/2015 (4,250), 6103/2023 (7,172) and 3334/2018 (37,982) carry the amounts both readings
+  print (`census_resolution`), and 33/2021-24 are marked not an outbound transfer (6104 is a ceded quota-share reinsurer).
+- Cohort-depth repair (26 October 2026): the register figures no stored grid computes carry their per-cohort cells
+  (`cohort_cells`, read twice, `round9/depth/`), the depth sensitivity reads them where no grid reproduces, and an empty
+  set of years is no figure at t-3, never zero (5678/2016 leaves; 1609/2023 has none).
 - Primary at 35a259c: 649 records; 643 after the round-5 decisions, rule 5b, review 8 and the round-8 readings (2689/2023
-  and 6134/2022 under rule 1, 4747/2024 and 2232/2017 under rule 4b, 3000/2022 and 1110/2022 leave; 780/2016 is back).
+  and 6134/2022 under rule 1, 4747/2024 and 2232/2017 under rule 4b, 3000/2022 and 1110/2022 leave; 780/2016 is back);
+  632 of 117 syndicates after rule 8 (11 set aside; predicted on the loader, to be confirmed by the regeneration).
 
 <!-- coverage:start -->
 Coverage is **67 % of active syndicate-years overall** (643 of 953; it was ~47 % on the

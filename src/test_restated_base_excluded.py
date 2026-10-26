@@ -39,8 +39,16 @@ RULE_1 = ["2689_2023", "6134_2022"]
 #: rule 4b (24 October 2026): 4747/2024, and 2232/2017, which the rule-4b population scan found
 RULE_4B = ["2232_2017", "4747_2024"]
 EXCLUDED = RULE_1 + RULE_4B
-CORRECTED = {"318_2024": "printed_table_error", "1274_2016": "printed_table_error", "1609_2024": "printed_table_error",
+#: 1609/2024's rule-4 correction was REVERSED on 26 October 2026 (round 10: Z9, Z10); 3330/2018 (rule 3) and 3330/2017 (the
+#: accounts' roll-forward, derived) are the census's figure changes, in data/mature_cohort_figures.json
+CORRECTED = {"318_2024": "printed_table_error", "1274_2016": "printed_table_error",
              "2232_2020": "previous_report_base", "4242_2022": "previous_report_base"}
+#: rule 8, the source-history rule (26 October 2026): the 11 records the census set aside
+SET_ASIDE = ["1084_2018", "1416_2024", "1884_2021", "2008_2023", "3000_2016", "3500_2021", "3500_2022", "3500_2023",
+             "6111_2017", "6111_2018", "6131_2021"]
+#: the records the census adds to rule 6's list that were not among the 83 (6118/2018 was already on it; 1609/2024, whose
+#: correction was reversed, and 1686/2021, a take-on whose rule 5 holds, are among the 83)
+CENSUS_LISTED_NEW = ["1110_2020", "1254_2023", "3330_2017"]
 TAKEON_IN_R = ["1686_2021", "1856_2024", "1884_2021", "2488_2019", "3000_2016", "3500_2022", "3500_2023", "4000_2022",
                "4444_2018", "4444_2023"]
 #: rule 5b (after the round-7 readings U1, U2): the take-on leaves the primary (1110/2022), or the filing bounds it at or
@@ -50,8 +58,8 @@ BOUNDED = ["1458_2024"]
 
 
 def adj_keys_of_rule_6_alone(adj):
-    """The records whose only rule is rule 6, or rules 5 and 6 for a take-on already in the register (3000/2016)."""
-    return [k for k, a in adj.items() if a["rule"] == "6" or k == "3000_2016"]
+    """The records whose only rule is rule 6."""
+    return [k for k, a in adj.items() if a["rule"] == "6"]
 
 
 def _register():
@@ -108,9 +116,10 @@ def test_every_record_of_the_round_has_one_rule_and_one_outcome():
     counts = {}
     for k, a in adj.items():
         counts[a["outcome"]] = counts.get(a["outcome"], 0) + 1
-    assert counts == {"corrected": 4, "corrected_least_certain": 1, "excluded": 5, "least_certain": 24, "stands": 37,
-                      "take_on_base": 7, "take_on_base_and_least_certain": 3, "take_on_bounded_least_certain": 1,
-                      "take_on_unmeasurable": 1}
+    assert counts == {"corrected": 3, "corrected_least_certain": 1, "correction_reversed_least_certain": 1,
+                      "excluded": 5, "least_certain": 24, "stands": 36, "stands_then_set_aside": 1, "take_on_base": 5,
+                      "take_on_base_and_least_certain": 1, "take_on_base_and_set_aside": 4,
+                      "take_on_bounded_least_certain": 1, "take_on_unmeasurable": 1}
     assert reg["_population"]["outcomes"] == dict(sorted(counts.items()))
     assert sorted(reg["excluded"], key=rb.order_key) == sorted(EXCLUDED, key=rb.order_key)
     assert sorted(k for k, a in adj.items() if a["rule"] in ("1", "4b")) == sorted(reg["excluded"])
@@ -119,11 +128,15 @@ def test_every_record_of_the_round_has_one_rule_and_one_outcome():
     # 780/2016 is back under rule 6 after the round-8 readings
     assert adj["780_2016"] == {"rule": "6", "outcome": "least_certain", "where": adj["780_2016"]["where"],
                                "readers": ["P6", "Q5", "Z7", "Z8"]}
-    assert sorted(k for k, a in adj.items() if "6" in a["rule"]) == sorted(reg["history_restated"])
+    # the round-5 records on rule 6's list, and the four the census adds (they were not among the 83)
+    assert sorted(k for k, a in adj.items() if "6" in a["rule"]) == sorted(set(reg["history_restated"]) - set(CENSUS_LISTED_NEW))
+    assert not set(CENSUS_LISTED_NEW) & set(adj)
     assert sorted(k for k, a in adj.items() if a["rule"] == "5b") == sorted(reg["takeon_unmeasurable"]) == UNMEASURABLE
-    assert len(reg["history_restated"]) == 29
+    assert len(reg["history_restated"]) == 31
     assert sorted(set(reg["history_restated"]) - set(adj_keys_of_rule_6_alone(adj))) == [
-        "1274_2016", "1458_2024", "3500_2022", "3500_2023"]
+        "1110_2020", "1254_2023", "1274_2016", "1458_2024", "1609_2024", "1686_2021", "3330_2017"]
+    # 3000/2016, 3500/2022 and 3500/2023 left rule 6's list for rule 8's excluded set
+    assert sorted(reg["source_history_set_aside"]) == sorted(SET_ASIDE) and not set(SET_ASIDE) & set(reg["history_restated"])
 
 
 def test_each_outcome_is_in_the_register_that_carries_it():
@@ -148,15 +161,26 @@ def test_each_outcome_is_in_the_register_that_carries_it():
     assert adj["1110_2022"]["outcome"] == "take_on_unmeasurable" and "1110_2022" in reg["takeon_unmeasurable"]
     assert adj["1458_2024"]["outcome"] == "take_on_bounded_least_certain"
     assert reg["history_restated"]["1458_2024"]["clauses"] == ["take_on_base_bounded"]
-    assert reg["history_restated"]["3500_2023"]["clauses"] == ["take_on_table_unreconciled"]
-    assert adj["3500_2023"]["outcome"] == "take_on_base_and_least_certain" and "3500_2023" in takeon
-    # 3500/2022 joined 3500/2023 on the list after review 8, on the same all-prior-years scope; R already holds its RITCs
-    assert reg["history_restated"]["3500_2022"]["clauses"] == ["take_on_table_unreconciled"]
-    assert adj["3500_2022"]["outcome"] == "take_on_base_and_least_certain" and "3500_2022" in takeon
+    # 3000/2016, 3500/2022 and 3500/2023: rule 5 holds (R already holds their take-ons) and rule 8 sets them aside
+    for k in ("1884_2021", "3000_2016", "3500_2022", "3500_2023"):
+        assert adj[k]["outcome"] == "take_on_base_and_set_aside" and adj[k]["rule"] == "5 and 8", k
+        assert k in takeon and k in reg["source_history_set_aside"] and k not in reg["history_restated"], k
+        assert k in reg["source_history_set_aside"], k
+    for k in ("3000_2016", "3500_2022", "3500_2023"):
+        assert reg["source_history_set_aside"][k]["earlier_listing"]["rule"] == "6", k
+    assert adj["1416_2024"]["outcome"] == "stands_then_set_aside"
+    assert adj["1686_2021"]["outcome"] == "take_on_base_and_least_certain" and "1686_2021" in takeon
+    assert reg["history_restated"]["1686_2021"]["clauses"] == ["census_residual_concern"]
+    assert reg["source_history_set_aside"]["3500_2023"]["earlier_listing"]["clauses"] == ["take_on_table_unreconciled"]
+    assert reg["source_history_set_aside"]["3500_2022"]["earlier_listing"]["clauses"] == ["take_on_table_unreconciled"]
+    # 1609/2024: the rule-4 correction is reversed, the record stays at the printed figure and is listed
+    assert adj["1609_2024"]["outcome"] == "correction_reversed_least_certain" and "1609_2024" not in mature
+    assert reg["history_restated"]["1609_2024"]["clauses"] == ["orientation_outside_evidence"]
     # the records that stand are in no bucket of this register and in no correction
     for k, a in adj.items():
         if a["outcome"] == "stands":
             assert k not in reg["excluded"] and k not in reg["history_restated"] and k not in fx, k
+            assert k not in reg["source_history_set_aside"], k
             assert (mature.get(k) or {}).get("correction") is None, k
 
 
@@ -165,13 +189,20 @@ def test_every_entry_rests_on_two_readings_with_the_year_t_filings_pages_and_the
     for bucket in ra.RESTATED_BUCKETS:
         for k, e in reg[bucket].items():
             assert ra._restated_entry_gaps(e, bucket) == [], k
+            census = bucket == ra.SOURCE_HISTORY_BUCKET or k in CENSUS_LISTED_NEW or k == "1686_2021"
             for r in e["readings"]:
                 with io.open(os.path.join(HERE, *r["source"].split("/")), encoding="utf-8") as fh:
                     arch = json.load(fh)[k]
+                if census:
+                    # a round-9 reading: the archived entry verbatim (its own verdict field, which may be absent)
+                    assert r["verdict_as_read"] == arch.get("verdict") and r["pages_as_read"] == arch.get("pages"), (
+                        k, r["reader"])
+                    assert r["source"].endswith("round9/readings/%s.json" % r["reader"]), (k, r["reader"])
+                    continue
                 assert r["verdict"] == arch["verdict"] and r["pages_as_read"] == arch["pages"], (k, r["reader"])
                 assert set(r["pages"]) <= set(rb._ints(arch["pages"] if isinstance(arch["pages"], list)
                                                        else list(arch["pages"].values()))), (k, r["reader"])
-            day = "24" if (k in RULE_4B or k in rb.ROUND8_RULE6) else "23"
+            day = "26" if census else ("24" if (k in RULE_4B or k in rb.ROUND8_RULE6) else "23")
             assert e["decision"].startswith("decision of the Claude analysis session, %s October 2026" % day), k
             # the round-8 control readings are the archive's, verbatim
             for r in e.get("control_readings", []):
@@ -383,9 +414,12 @@ def test_the_loader_refuses_a_rule_5b_entry_that_does_not_show_its_share_of_r(tm
 
 
 def test_a_listed_take_on_without_the_bounded_clause_needs_no_take_on_object(tmp_path):
-    """3500/2023's clause is take_on_table_unreconciled: it carries no amount, because R already holds its take-on."""
+    """Only the clause take_on_base_bounded (1458/2024) carries a take-on object: 382/2022's clause is
+    unexplained_history_move, and 3500/2023 (take_on_table_unreconciled until the census) is set aside now, with R holding
+    its take-on."""
     reg = _register()
-    assert "take_on" not in reg["history_restated"]["3500_2023"]
+    assert "take_on" not in reg["history_restated"]["382_2022"]
+    assert "take_on" in reg["history_restated"]["1458_2024"]
     p = tmp_path / "reg.json"
     p.write_text(json.dumps(reg), encoding="utf-8")
     assert sorted(ra.load_takeon_unmeasurable(p)) == UNMEASURABLE
@@ -438,7 +472,8 @@ def test_the_primary_removes_the_four_records_with_a_named_countable_reason(load
     assert prim["counters"]["restated_base_excluded"] == len(EXCLUDED) == 4
     assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.RESTATED_BASE_TAG) == 4
     assert set(EXCLUDED) <= _ws(old["records"]) and not set(EXCLUDED) & _ws(prim["records"])
-    assert len(_ws(prim["records"])) == 643
+    # 643 until rule 8: the census set 11 records aside (the primary is 632)
+    assert len(_ws(prim["records"])) == 632
     # 4242/2022 (rule 3 after review 8) is in the primary at the previous report's base: -80.015m USD
     r = prim["by_key"]["4242_2022"]
     assert r["data_quality_tag"] == "RELIABLE" and r["pyd_basis_source"] == "mature-cohort-figure:register"
@@ -473,6 +508,7 @@ def test_the_primary_removes_the_unmeasurable_take_on_with_its_own_countable_tag
     r = prim["by_key"]["1458_2024"]
     assert r["data_quality_tag"] == "RELIABLE" and r["pyd_gbp_m"] == pytest.approx(-26.5618, abs=1e-4)
     assert prim["counters"]["restated_base_excluded"] == 4
+    assert prim["counters"]["source_history_set_aside"] == 11
 
 
 def test_the_new_tag_reaches_the_ledgers_unusable_severity_step_and_the_missingness_exclusions():
@@ -574,7 +610,7 @@ def test_a_record_cannot_be_both_unmeasurable_and_excluded_or_listed(tmp_path):
 
 def test_a_mistyped_key_in_either_bucket_stops_the_primary_load(monkeypatch):
     real = ra.restated_register_keys()
-    assert len(real) == 34 and "1110_2022" in real
+    assert len(real) == 47 and "1110_2022" in real and "6131_2021" in real
     for bogus in ("9999_2032", "4747_2042"):
         monkeypatch.setattr(ra, "restated_register_keys", lambda path=None, b=bogus: real + [b])
         with pytest.raises(ValueError, match=r"data/restated_base_excluded.json: 1 key\(s\).*%s" % bogus):
@@ -935,8 +971,10 @@ def test_every_rule_6_entry_states_any_paid_miss_over_ten_percent_its_readings_r
     assert {"382_2023", "1947_2022", "2001_2017", "1910_2018", "6118_2018", "4444_2017"} <= set(seen)
 
 
-def test_3500_2022_joins_the_list_with_the_lpt_placement_conflict_and_the_share_of_r():
-    e = _register()["history_restated"]["3500_2022"]
+def test_3500_2022_keeps_its_earlier_listing_with_the_lpt_placement_conflict_and_the_share_of_r():
+    """3500/2022 was listed under rule 6 (take_on_table_unreconciled, review 8) until the census set it aside under rule 8; its
+    earlier listing and round-5 readings are kept in the entry."""
+    e = _register()["source_history_set_aside"]["3500_2022"]["earlier_listing"]
     assert e["clauses"] == ["take_on_table_unreconciled"] and "take_on" not in e
     f = e["facts"]
     for needle in ("-389.8m", "-293.1m", "-26.4m", "266.7m", "P6", "ninth", "293.8m", "67.1m", "388.7m", "9.1%",
@@ -944,7 +982,7 @@ def test_3500_2022_joins_the_list_with_the_lpt_placement_conflict_and_the_share_
         assert needle in f, needle
     assert round(100 * (293.8 + 67.1) / 3955.045, 1) == 9.1 and round(100 * 388.7 / 3955.045, 1) == 9.8
     assert round(-291.756 - 98.057, 1) == -389.8
-    assert [r["reader"] for r in e["readings"]] == ["P6", "Q7"]
+    assert [r["reader"] for r in e["round5_readings"]] == ["P6", "Q7"]
     assert "3500_2022" in ra.load_takeon_base()
 
 
@@ -961,3 +999,460 @@ def test_2001_2016_stays_listed_because_its_move_is_over_one_percent_of_r():
     falls = (786.4 - 761.5, 821.4 - 804.7)
     assert [round(100 * x / R, 2) for x in falls] == [1.56, 1.04] and all(x > 0.01 * R for x in falls)
     assert round(100 * sum(falls) / R, 2) == 2.60 and 0.02 * 1089.5 > 0.01 * R
+
+
+
+# --- rule 8, the source-history rule (26 October 2026): the census, the register, the loader's one mask --------------------
+
+ROUND9 = os.path.join(HERE, "results", "extraction_error_rate", "mature-cohort", "round9")
+
+
+def _round9_text(*parts):
+    with io.open(os.path.join(ROUND9, *parts), encoding="utf-8") as fh:
+        return fh.read()
+
+
+def test_rule_8_is_in_rules_md_with_its_exact_text_date_label_and_the_post_hoc_disclosure():
+    rules = _round5_text("rules.md")
+    i = rules.index("8. **Source history: leaves the primary**")
+    text = " ".join(rules[i:].split())
+    assert "added 26 October 2026" in text
+    assert "recommendation of the Codex analysis, adopted on Colin's instruction of 26 October 2026 and applied by the Claude analysis session" in text
+    assert "found during Codex's tail investigation of 6131/2021, after the results were seen (post hoc)" in text
+    assert "chosen without any outcome value, size or sign" in text
+    # the exact text of the rule, word for word
+    assert '"' + rb.CODEX_RULE_TEXT + '"' in text
+    for needle in ("overlapping claims history, gross/net mixing or cohort reassignment through closure",
+                   "regardless of the outcome's size or sign", "ordinary internal RITC", "funds-withheld arrangement",
+                   "unusual business, youth or SPA status is not sufficient by itself", "FX or accounting scope differs",
+                   "source_history_unresolved", "../round9/population.md", "11 records"):
+        assert needle in text, needle
+    # the register carries the same text, label and disclosure
+    meta = _register()["_source_history"]
+    assert meta["rule_text"] == rb.CODEX_RULE_TEXT and "post hoc" in meta["found"]
+    assert meta["label"].startswith("recommendation of the Codex analysis, adopted on Colin's instruction of 26 October 2026")
+    assert "26 October 2026" in meta["rule"]
+
+
+def test_the_census_population_and_criteria_are_archived_beside_the_rule():
+    pop = json.loads(_round9_text("population.json"))
+    md = _round9_text("population.md")
+    assert pop["totals"]["selected_core"] == 81 and pop["totals"]["selected_host_side"] == 20
+    assert pop["totals"]["selected_core_syndicates"] == 48 and pop["primary"]["records"] == 643
+    assert len(pop["selected"]) == 81 and len(pop["selected_host_side"]) == 20 and len(pop["touched_out"]) == 254
+    assert pop["totals"]["neither"] == 288 and sum(pop["totals"]["by_criterion_core"].values()) == 86
+    for needle in ("S1 SPA vehicle", "S2 Inward closure", "S3 Outward closure", "S5", "S6", "outcome value",
+                   "Selected, core (S1-S6)", "Selected, host side (H, conditional)"):
+        assert needle in md, needle
+    assert "81 core" in _round9_text("adjudication.md")
+    for name in ("briefs/brief_r9.md", "briefs/brief_r10.md", "criteria.md", "depth/audit.md", "depth/second_reading.md"):
+        assert os.path.exists(os.path.join(ROUND9, *name.split("/"))), name
+    for rid in rb.CENSUS_READERS:
+        assert os.path.exists(os.path.join(ROUND9, "readings", rid + ".json")), rid
+    # every set-aside record is in the census population, selected by the criteria its entry shows
+    sel = {x["id"]: x for x in pop["selected"]}
+    for k, e in _register()["source_history_set_aside"].items():
+        assert k in sel and e["census"]["criteria"] == sel[k]["criteria"], k
+        assert e["census"]["evidence"] == sel[k]["evidence"], k
+
+
+def test_the_register_sets_aside_exactly_the_11_census_records_each_on_readings_that_set_it_aside():
+    reg = _register()
+    sa = reg["source_history_set_aside"]
+    assert sorted(sa, key=rb.order_key) == sorted(SET_ASIDE, key=rb.order_key) and len(sa) == 11
+    assert reg["_source_history"]["set_aside"] == sorted(SET_ASIDE, key=rb.order_key)
+    for k, e in sa.items():
+        assert ra._restated_entry_gaps(e, ra.SOURCE_HISTORY_BUCKET) == [], k
+        assert e["rule"] == "8" and e["reason_code"] == ra.SOURCE_HISTORY_REASON_CODE == "source_history_unresolved", k
+        assert set(e["concern"]) <= set(ra.SOURCE_HISTORY_CONCERNS) and e["concern"], k
+        assert sum(1 for v in e["verdicts"].values() if v == "set_aside") >= 2, (k, e["verdicts"])
+        assert e["decision"].startswith("decision of the Claude analysis session, 26 October 2026"), k
+        assert "recommendation of the Codex analysis, adopted on Colin's instruction of 26 October 2026" in e["decision"], k
+        assert all(isinstance(p, int) and p >= 1 for p in e["pages"]) and e["pages"] and e["quote"].strip(), k
+    # a decision rests on facts at least two readings report: 3000/2016 is set aside by K3 and the third reading Z13
+    assert sa["3000_2016"]["verdicts"] == {"K3": "set_aside", "Z13": "set_aside", "L3": "concern_resolved"}
+    for k in SET_ASIDE:
+        if k != "3000_2016":
+            assert len(sa[k]["verdicts"]) == 2, k
+
+
+def test_the_loader_refuses_a_set_aside_entry_without_two_readings_that_set_it_aside(tmp_path):
+    """Mutation checks of the validator: one reading, a reading that finds the concern resolved, no census criteria, no
+    concern, a wrong reason code or rule each stop the load."""
+    for change in ("one-reading", "second-reading-resolved", "no-criteria", "no-concern", "unknown-concern",
+                   "wrong-code", "wrong-rule", "no-facts", "no-pages", "in-two-buckets"):
+        reg = _register()
+        e = reg["source_history_set_aside"]["6131_2021"]
+        if change == "one-reading":
+            e["readings"] = e["readings"][:1]
+        elif change == "second-reading-resolved":
+            e["readings"][1]["verdict"] = "concern_resolved"
+        elif change == "no-criteria":
+            e["census"] = {}
+        elif change == "no-concern":
+            e["concern"] = []
+        elif change == "unknown-concern":
+            e["concern"] = ["a_size_of_outcome"]
+        elif change == "wrong-code":
+            e["reason_code"] = "restated_base"
+        elif change == "wrong-rule":
+            e["rule"] = "6"
+        elif change == "no-facts":
+            e["facts"] = " "
+        elif change == "no-pages":
+            e["pages"] = []
+        else:
+            reg["history_restated"]["6131_2021"] = copy.deepcopy(reg["history_restated"]["382_2022"])
+        p = tmp_path / ("reg_%s.json" % change)
+        p.write_text(json.dumps(reg), encoding="utf-8")
+        with pytest.raises(ValueError):
+            ra.load_source_history_set_aside(p)
+    # the unmutated register loads, and the loader returns the right bucket
+    assert sorted(ra.load_source_history_set_aside(), key=rb.order_key) == sorted(SET_ASIDE, key=rb.order_key)
+
+
+def test_the_primary_sets_the_11_records_aside_with_one_tag_one_counter_and_no_figure(loaded):
+    """The loader reads the bucket as one mask: each record gets the tag SOURCE_HISTORY_SET_ASIDE and no figure (so no
+    severity), a ledger reason and one count; the 672 construction keeps all of them, as before. 6131/2020 and the six 1991
+    records stay."""
+    prim, old = loaded[ra.MATURE_COHORT_OUTCOME], loaded[ra.PRECEDENCE_672_OUTCOME]
+    assert ra.SOURCE_HISTORY_TAG == "SOURCE_HISTORY_SET_ASIDE"
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
+        # the committed loader output at 9c227e7a: the 643-record primary before rule 8
+        committed = json.load(fh)["observations"]
+    committed_by_key = {"%s_%s" % (o["syndicate"], o["year"]): o for o in committed}
+    assert len({ra.SOURCE_HISTORY_TAG, ra.RESTATED_BASE_TAG, ra.TAKEON_UNMEASURABLE_TAG, ra.TAKEON_TAG}) == 4
+    for k in SET_ASIDE:
+        r = prim["by_key"][k]
+        assert r["data_quality_tag"] == ra.SOURCE_HISTORY_TAG, k
+        assert r["s_raw_a"] is None and r["pyd_gbp_m"] is None and r["pyd_pct"] is None, k
+        entry = prim["log"]["syndicate_%s.json" % k]
+        assert entry["status"] == ra.SOURCE_HISTORY_TAG and entry["reason"] == ra.SOURCE_HISTORY_LOG_REASON, k
+        assert "rule 8" in entry["reason"] and "data/restated_base_excluded.json" in entry["reason"], k
+        o = old["by_key"][k]
+        # the 672 construction does not read the register: whatever its own tag, never the set-aside one
+        assert o["data_quality_tag"] != ra.SOURCE_HISTORY_TAG, k
+        # the mask moves no denominator: R is the committed loader output's (take-on bases included) for every record
+        assert r["opening_reserves_gbp_m"] == committed_by_key[k]["opening_reserves_gbp_m"], k
+    assert prim["counters"]["source_history_set_aside"] == 11
+    assert sum(1 for r in prim["records"] if r["data_quality_tag"] == ra.SOURCE_HISTORY_TAG) == 11
+    assert "source_history_set_aside" not in old["counters"]
+    assert not any(e["status"] == ra.SOURCE_HISTORY_TAG for e in old["log"].values())
+    ws_new = _ws(prim["records"])
+    ws_old = _ws(committed)
+    assert set(SET_ASIDE) <= ws_old and not set(SET_ASIDE) & ws_new
+    assert len(ws_new) == 632 and len(ws_old) == 643 and ws_old - ws_new == set(SET_ASIDE)
+    # 6131/2020 is read under the same protocol and stays; every 1991 record stays
+    assert "6131_2020" in ws_new and prim["by_key"]["6131_2020"]["data_quality_tag"] == "RELIABLE"
+    s1991 = sorted(k for k in ws_old if k.startswith("1991_"))
+    assert len(s1991) == 6 and set(s1991) <= ws_new, s1991
+    # the primary: 632 records of 117 syndicates, 27 of them assumed-business (RITC or a confirmed inward transfer)
+    import assumed_business
+    occ = assumed_business.keys()
+    assert len({prim["by_key"][k]["syndicate"] for k in ws_new}) == 117
+    assert len({o["syndicate"] for o in committed if "%s_%s" % (o["syndicate"], o["year"]) in ws_old}) == 118
+    assert sum(1 for k in ws_new if k in occ) == 27 and sum(1 for k in ws_old if k in occ) == 33
+
+
+def test_no_consumer_of_the_loaders_records_can_still_see_a_set_aside_record(loaded):
+    """compute_eligibility (eligible_for_capital and every other flag that needs a figure), the donor pool of the vignettes
+    and the distributions all start from the figure; a set-aside record has none, so it is in none of them."""
+    recs = copy.deepcopy(loaded[ra.MATURE_COHORT_OUTCOME]["records"])
+    ra.assign_event_groups(recs, min_events=ra.ANALYSIS_CONFIG["min_events_for_fe"])
+    _meta, subsets = ra.build_subsets(recs)
+    ra.compute_eligibility(recs, subsets)
+    by_key = {"%s_%s" % (r["syndicate"], r["year"]): r for r in recs}
+    for k in SET_ASIDE:
+        r = by_key[k]
+        for flag in ("eligible_for_distribution", "eligible_for_boxplot_reserves", "eligible_for_n1", "eligible_for_n3",
+                     "eligible_for_capital"):
+            assert not r[flag], (k, flag)
+    pool = {"%s_%s" % (r["syndicate"], r["year"]) for r in ra._vig_donor_pool(recs)}
+    assert not pool & set(SET_ASIDE)
+    assert {"6131_2020", "1991_2018"} <= pool
+    # a control: the same consumers do see a record that stays (so the assertions above could have failed)
+    assert by_key["6131_2020"]["eligible_for_capital"] and by_key["1458_2024"]["eligible_for_capital"]
+
+
+def test_every_sample_loader_that_reads_the_loaders_output_drops_a_set_aside_record(loaded, monkeypatch, tmp_path):
+    """The producers read model/exposure_results.json with their own filters. Written from the loader's records on fixed
+    inputs, each of the sample loaders below returns the same 632 records and none of the 11."""
+    import adopted_model
+    import calibrate_dispersion_ritc as cdr
+    import check_cohort_scope as cs
+    import check_missingness_sensitivity as cms
+    import oos_validation
+    recs = loaded[ra.MATURE_COHORT_OUTCOME]["records"]
+    (tmp_path / "model").mkdir()
+    out = tmp_path / "model" / "exposure_results.json"
+    out.write_text(json.dumps({"observations": recs}, default=float), encoding="utf-8")
+    expected = sorted(_ws(recs))
+    assert len(expected) == 632 and not set(expected) & set(SET_ASIDE)
+    monkeypatch.setattr(adopted_model, "RESULTS", out)
+    monkeypatch.setattr(cdr, "RESULTS", out)
+    for mod in (cs, cms, oos_validation):
+        monkeypatch.setattr(mod, "SD", tmp_path)
+    S, R, H, yr, syn, _ritc = adopted_model.load_sample()
+    got = {"adopted_model.load_sample": sorted("%s_%s" % (a, b) for a, b in zip(syn, yr))}
+    got["calibrate_dispersion_ritc.load_sample"] = sorted(cdr.load_sample()[4])
+    got["check_cohort_scope.load"] = sorted(CS_key(o) for o in cs.load())
+    got["check_missingness_sensitivity.load_sample"] = sorted(
+        str(k).replace("syndicate_", "").replace(".json", "") for k in cms.load_sample()[4])
+    for name, keys in got.items():
+        assert keys == expected, (name, set(keys) ^ set(expected))
+    # oos_validation.load returns no keys: its severities are the same 632
+    assert len(oos_validation.load()[0]) == 632
+    # a mutation: a producer that kept a set-aside record would fail the comparison above
+    leaky = [dict(o, s_raw_a=0.1) if "%s_%s" % (o["syndicate"], o["year"]) == "6131_2021" else o for o in recs]
+    out.write_text(json.dumps({"observations": leaky}, default=float), encoding="utf-8")
+    _S, _R, _H, yr2, syn2, _r = adopted_model.load_sample()
+    assert "6131_2021" in {"%s_%s" % (a, b) for a, b in zip(syn2, yr2)}
+
+
+def CS_key(o):
+    return "%s_%s" % (o["syndicate"], o["year"])
+
+
+#: the modules that open model/exposure_results.json for something other than a fit sample: they take no selection of their
+#: own (the ledgers and documents describe every record; fx_sensitivity and error_rate_propagation take their sample from
+#: adopted_model.load_sample or the working-sample stems)
+NOT_SAMPLE_LOADERS = {"run_analysis.py", "record_tests.py", "skip_budget.py", "build_current_results.py",
+                      "generate_data_audit.py", "missingness_check.py", "error_rate_propagation.py", "fx_sensitivity.py",
+                      "build_working_sample.py"}
+
+
+def test_every_producer_selects_its_sample_on_the_figure_the_mask_blanks():
+    """A gate that generalises (not a list of the producers a reviewer named): every source module that opens
+    exposure_results.json and is not one of the ledgers or documents selects its observations on s_raw_a being present, the
+    field the loader blanks for every record it sets aside, or on the data-quality tag list that includes the rule-8 tag."""
+    import glob
+    bad = []
+    for path in sorted(glob.glob(os.path.join(HERE, "src", "*.py"))):
+        name = os.path.basename(path)
+        if name.startswith("test_") or name in NOT_SAMPLE_LOADERS:
+            continue
+        with io.open(path, encoding="utf-8") as fh:
+            src = fh.read()
+        opens = [ln for ln in src.splitlines() if "exposure_results" in ln
+                 and ("open(" in ln or "RESULTS =" in ln or '/ "model"' in ln)]
+        if not opens:
+            continue
+        if not re.search(r"s_raw_a[\"']\]?\)? is not None", src):
+            bad.append(name)
+    assert bad == [], "producers that do not select on s_raw_a: %s" % bad
+    with io.open(os.path.join(HERE, "src", "check_missingness_sensitivity.py"), encoding="utf-8") as fh:
+        assert '"%s"' % ra.SOURCE_HISTORY_TAG in fh.read()
+    with io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8") as fh:
+        mc = fh.read()
+    assert 'obs.get("data_quality_tag") == "%s"' % ra.SOURCE_HISTORY_TAG in mc
+    assert '"CORPUS:%s"' % ra.SOURCE_HISTORY_TAG in mc
+    import build_current_results as bcr
+    import generate_data_audit as gda
+    for words in (bcr.SCIENTIFIC_DETAIL_WORDS, gda.SCIENTIFIC_DETAIL_WORDS):
+        assert "rule 8" in words["source_history_set_aside"]
+
+
+def test_an_entry_that_reaches_no_record_in_the_set_aside_bucket_stops_the_run(monkeypatch):
+    """The per-record guard and the stale-entry guard of rule 8: a record in run-off (1206/2019) or not gross (1218/2015)
+    cannot be named in the source_history_set_aside bucket."""
+    real = ra.load_source_history_set_aside()
+    for bogus, msg in (("1206_2019", "1206_2019"), ("1218_2015", "is no reliable gross record")):
+        extra = dict(real)
+        extra[bogus] = real["6131_2021"]
+        monkeypatch.setattr(ra, "load_source_history_set_aside", lambda path=None, e=extra: e)
+        with pytest.raises(ValueError, match=msg):
+            ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)
+
+
+def test_the_672_construction_does_not_read_the_set_aside_bucket(monkeypatch):
+    monkeypatch.setattr(ra, "load_source_history_set_aside", lambda path=None: pytest.fail("the 672 reads the bucket"))
+    records, counters, log, files = ra.load_and_classify(ra.PRECEDENCE_672_OUTCOME)
+    assert "source_history_set_aside" not in counters
+    assert sum(1 for r in records if r["data_quality_tag"] == ra.SOURCE_HISTORY_TAG) == 0
+
+
+# --- the figures: 3330/2018, 3330/2017, and 1609/2024's reversal ---------------------------------------------------------
+
+def test_3330_2018_is_corrected_under_rule_3_and_3330_2017_is_derived_from_the_accounts_roll_forward(loaded):
+    mature = ra.load_mature_cohort_figures()
+    e = mature["3330_2018"]
+    assert e["figure_m"] == pytest.approx(1.094) and e["displaced"]["by"] == "previous_report_base"
+    assert e["displaced"]["figure_m"] == pytest.approx(-1.384) and e["correction"]["figure_as_printed_m"] == -1.384
+    assert "rule 3" in e["correction"]["rule"] and "derived_figure_m" not in e["correction"]
+    assert [r["reader"] for r in e["readings"]] == ["L4", "Z12"] and all(r["figure_m"] == pytest.approx(1.094) for r in e["readings"])
+    assert [t["term"] for t in e["cohort_cells"]["terms"]] == [560.0, 534.0]
+    d = mature["3330_2017"]
+    assert d["figure_m"] == pytest.approx(0.559) and d["displaced"]["by"] == "accounts_roll_forward"
+    assert d["displaced"]["figure_m"] == pytest.approx(-0.99)
+    assert d["correction"]["derived_figure_m"] == pytest.approx(0.559) and "DERIVED" in d["correction"]["derivation"]
+    assert d["correction"]["cells_used"] == ["14,059", "559", "2,270", "647", "11,701"]
+    assert 11701 - 14059 + 2270 + 647 == 559
+    for r in d["readings"]:
+        assert r["derived_figure_m"] == pytest.approx(0.559) and r["figure_m"] == pytest.approx(-0.99), r["reader"]
+        assert set(d["correction"]["cells_used"]) <= set(r["cells_quoted"]), r["reader"]
+    # the loader carries them: GBP, so no exchange conversion
+    prim = loaded[ra.MATURE_COHORT_OUTCOME]["by_key"]
+    assert prim["3330_2018"]["pyd_gbp_m"] == pytest.approx(1.094) and prim["3330_2017"]["pyd_gbp_m"] == pytest.approx(0.559)
+    assert prim["3330_2018"]["pyd_basis_source"] == prim["3330_2017"]["pyd_basis_source"] == "mature-cohort-figure:register"
+    assert prim["3330_2018"]["opening_reserves_gbp_m"] == pytest.approx(11.701)
+    assert prim["3330_2017"]["opening_reserves_gbp_m"] == pytest.approx(14.059)
+    # 3330/2017 is on the least-certain list (derived_correction); 3330/2018 is a rule-3 correction and is not
+    assert _register()["history_restated"]["3330_2017"]["clauses"] == ["derived_correction"]
+    assert "3330_2018" not in _register()["history_restated"]
+
+
+def test_1609_2024_is_back_at_the_printed_figure_with_the_reversal_and_the_earlier_readings_recorded(loaded):
+    mature = ra.load_mature_cohort_figures()
+    assert "1609_2024" not in mature
+    with io.open(os.path.join(HERE, "data", "mature_cohort_figures.json"), encoding="utf-8") as fh:
+        raw = json.load(fh)
+    rev = raw["_reversed_corrections"]["1609_2024"]
+    assert rev["was"]["figure_m"] == 13.935 and rev["now"]["figure_m"] == -0.185 and rev["now"]["figure_at_t_minus_3_m"] == -11.123
+    assert "36.2%" in rev["reason"] and "49.6%" in rev["reason"]
+    assert any(x.endswith("Z9.json") for x in rev["readings"]) and any(x.endswith("Z10.json") for x in rev["readings"])
+    assert [x.rsplit("/", 1)[1] for x in rev["was"]["readings_kept"]] == ["P3.json", "Q2.json", "Z5.json", "Z6.json"]
+    r = loaded[ra.MATURE_COHORT_OUTCOME]["by_key"]["1609_2024"]
+    assert r["pyd_basis_source"] == "triangle-route:gross" and r["data_quality_tag"] == "RELIABLE"
+    rate = ra.FX_RATES[2024]["usd_per_gbp"]
+    assert r["pyd_gbp_m"] == pytest.approx(-0.185 / rate, abs=1e-6)
+    e = _register()["history_restated"]["1609_2024"]
+    assert e["clauses"] == ["orientation_outside_evidence"] and [x["reader"] for x in e["census_readings"]] == ["Z9", "Z10"]
+    assert [x["reader"] for x in e["readings"]] == ["P3", "Q2", "Z5", "Z6"]
+    assert "REVERSED" in e["facts"] and "49.6% to 36.2%" in e["facts"]
+    # the readings the reversal rests on: both round-10 readers read the as-labelled orientation and M = -185 (USD 000)
+    for rid in ("Z9", "Z10"):
+        with io.open(os.path.join(ROUND9, "readings", rid + ".json"), encoding="utf-8") as fh:
+            assert json.load(fh)["1609_2024"]["verdict"] == "as_labelled"
+    # 1609/2023 (+8.834m, transposed) is confirmed and unchanged
+    assert ra.load_pyd_confirmed_figures()["1609_2023"]["figure_m"] == 8.834
+
+
+def test_the_census_figure_changes_move_only_three_records_and_no_r_in_the_working_sample(loaded):
+    """On fixed inputs (the loader against the committed model/exposure_results.json, the loader's output at 9c227e7a):
+    of the 632 records that remain in the working sample, exactly 1609/2024, 3330/2017 and 3330/2018 change their figure, and
+    no record's R changes."""
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as fh:
+        old = {"%s_%s" % (o["syndicate"], o["year"]): o for o in json.load(fh)["observations"]}
+    prim = loaded[ra.MATURE_COHORT_OUTCOME]["by_key"]
+    moved, r_moved = [], []
+    for k in sorted(_ws(loaded[ra.MATURE_COHORT_OUTCOME]["records"])):
+        n, o = prim[k], old[k]
+        if abs(n["pyd_gbp_m"] - o["pyd_gbp_m"]) > 1e-9:
+            moved.append(k)
+        if abs(n["opening_reserves_gbp_m"] - o["opening_reserves_gbp_m"]) > 1e-9:
+            r_moved.append(k)
+    assert moved == ["1609_2024", "3330_2017", "3330_2018"] and r_moved == []
+
+
+# --- the rule-4b scan, the take-on bases, the outbound register and the least-certain list (census follow-ups) ----------------
+
+def test_2488_2016_is_answered_on_incurred_and_the_scan_answers_follow_the_stated_incurred_miss():
+    """2488/2016's (ii) was answered 'no' on a paid bridge although both readings give an implied incurred miss of +59.5%;
+    incurred first, (ii) holds. (i) is no (no reading quotes a paid cell falling), so rule 4b does not reach the record and
+    no outcome moves. The check generalises: for EVERY scan answer that begins yes or no and states an incurred miss, (ii)
+    is yes exactly when the miss is over 10% in absolute value."""
+    with io.open(str(rb.RULE_4B_SCAN), encoding="utf-8") as fh:
+        scan = json.load(fh)
+    reads = rb.load_readings()
+    a = scan["read"]["2488_2016"]
+    assert a["ii"].startswith("yes") and "+59.5%" in a["ii"] and a["i"].startswith("no")
+    assert [_incurred_t(r) for _rid, r in reads["2488_2016"]] == [59.5, 59.5]
+    assert a["outcome"] == "unchanged: rule 6, least certain" and "2488_2016" not in scan["decides"]
+    adj = _register()["_adjudicated"]
+    assert adj["2488_2016"]["outcome"] == "least_certain" and "2488_2016" in _register()["history_restated"]
+    # the generalisation, over every answer that states an incurred miss in the form 'incurred ... +x%'
+    checked = []
+    for k, ans in scan["read"].items():
+        ii = ans.get("ii")
+        m = re.search(r"incurred[^%]*?([+-]\d+(?:\.\d+)?)%", ii or "")
+        if not m or _scan_answer(ii) not in (True, False):
+            continue
+        checked.append(k)
+        assert _scan_answer(ii) is (abs(float(m.group(1))) > 10.0), (k, ii[:80])
+    assert "2488_2016" in checked and "2232_2017" in checked and len(checked) >= 15, checked
+
+
+#: the eight take-on bases the census readings were checked against (rule 5): the amount both readings print and the page
+TAKEON_BASE_CHECK = {
+    "4444_2018": ("277,329", 277.329, 42, ("K5", "L5")), "4444_2023": ("313,953", 313.953, 45, ("K5", "L5")),
+    "3268_2020": ("20,660", 20.66, 30, ("K5", "L5")), "4000_2022": ("181,247", 181.247, 37, ("K6", "L6")),
+    "1856_2024": ("96,610", 96.61, 101, ("K4", "L4")), "1686_2021": ("903,214", 903.214, 25, ("K3", "L3")),
+    "2488_2019": ("143,759", 143.759, 51, ("K3", "L3")), "3500_2019": ("552,752", 552.752, 30, ("K3", "L3")),
+}
+
+
+def test_the_eight_take_on_bases_hold_the_amounts_and_pages_both_census_readings_print():
+    """Rule 5 (R includes the acquired book where the table shows it as if always), checked against the census readings: each
+    of the eight records is in data/opening_reserves_takeon_base.json with the amount both readings print (their text carries
+    the figure as printed) and the page they cite; the record's R is the filing's opening reserves plus that amount, so no
+    record's R changes with the census."""
+    base = ra.load_takeon_base()
+    for k, (printed, amount, page, readers) in TAKEON_BASE_CHECK.items():
+        e = base[k]
+        assert e["takeon_m"] == pytest.approx(amount) and page in e["pages"], k
+        texts = []
+        for rid in readers:
+            with io.open(os.path.join(ROUND9, "readings", rid + ".json"), encoding="utf-8") as fh:
+                texts.append(json.dumps(json.load(fh)[k], ensure_ascii=False))
+        # as printed in thousands, or to one decimal in millions (a reader may round: 903,214 is '903.2m')
+        prints = [printed in t or ("%.1fm" % amount) in t or ("%.1f" % amount) in t for t in texts]
+        assert any(prints), (k, printed)
+        if not all(prints):
+            # 1686/2021: only K3 prints the RITC amount; L3 measures M on "the RITC-inclusive base" without printing it
+            assert k == "1686_2021" and prints == [True, False] and "RITC-inclusive base" in texts[1], (k, prints)
+            assert e["opening_reserves_m"] + e["takeon_m"] == pytest.approx(2076.819)
+        assert e["opening_reserves_m"] > 0
+    # a control: a wrong amount would not be in the readings
+    with io.open(os.path.join(ROUND9, "readings", "K5.json"), encoding="utf-8") as fh:
+        assert "277,330" not in json.dumps(json.load(fh)["4444_2018"])
+
+
+def test_the_outbound_register_settles_the_named_amounts_and_marks_33_not_an_outbound_transfer():
+    with io.open(os.path.join(HERE, "data", "outbound_transfer_retained_base.json"), encoding="utf-8") as fh:
+        reg = json.load(fh)
+    named = reg["named_not_adjusted"]
+    for k, amount, page, readers in (("6103_2015", 4.25, 41, ("K7", "L7")), ("6103_2023", 7.172, 52, ("K7", "L7")),
+                                     ("3334_2018", 37.982, 34, ("K6", "L6"))):
+        e, res = named[k], named[k]["census_resolution"]
+        assert (e["amount_m"] if "amount_m" in e else e["amount_gbp_m"]) == amount and res["amount_m"] == amount, k
+        assert res["page"] == page == e["page"], k
+        assert [x.rsplit("/", 1)[1][:-5] for x in res["readings"]] == list(readers), k
+        assert res["decision"].startswith("decision of the Claude analysis session, 26 October 2026"), k
+        printed = "{:,.0f}".format(amount * 1000)
+        for rid in readers:
+            with io.open(os.path.join(ROUND9, "readings", rid + ".json"), encoding="utf-8") as fh:
+                assert printed in json.dumps(json.load(fh)[k], ensure_ascii=False), (k, rid, printed)
+        assert k not in reg["confirmed"], k
+    # the 1 January 2023 date of 6103/2023 rests on one reading (K7), so the entry is not moved to confirmed
+    assert "K7 alone dates it" in named["6103_2023"]["census_resolution"]["facts"]
+    for k in ("33_2021", "33_2022", "33_2023", "33_2024"):
+        e = named[k]
+        assert e["not_an_outbound_transfer"] is True and e["counterparty"] == "6104", k
+        assert "quota share" in e["census_resolution"]["facts"] and "not an RITC counterparty" in e["census_resolution"]["facts"], k
+        with io.open(os.path.join(ROUND9, "readings", "K5.json"), encoding="utf-8") as fh:
+            assert "quota-share reinsurer" in json.dumps(json.load(fh)[k], ensure_ascii=False), k
+
+
+def test_the_least_certain_list_is_derived_from_the_register_and_follows_the_census():
+    """check_low_confidence_sensitivity derives the list from the register (never typed): after the census it holds 6118/2018,
+    1110/2020, 3330/2017, 1609/2024 and, under rule 6's 1%-of-R clause, 1254/2023 and 1686/2021; 3000/2016, 3500/2022 and
+    3500/2023 left it for the excluded set."""
+    import check_low_confidence_sensitivity as LC
+    import sample_scope as SS
+    reg = _register()
+    out = LC.restated_records(reg)
+    listed = set(out)
+    assert {"6118_2018", "1110_2020", "3330_2017", "1609_2024", "1254_2023", "1686_2021"} <= listed
+    assert not listed & {"3000_2016", "3500_2022", "3500_2023"} and not listed & set(SET_ASIDE)
+    assert sorted(listed) == sorted(reg["history_restated"]) and len(listed) == 31
+    # why each census listing is listed: the clause and the facts the entry states
+    for k, clause in (("1110_2020", "census_residual_concern"), ("1254_2023", "census_residual_concern"),
+                      ("1686_2021", "census_residual_concern"), ("3330_2017", "derived_correction"),
+                      ("1609_2024", "orientation_outside_evidence")):
+        assert clause in out[k], k
+    # the 1%-of-R clause: 1254/2023's restated base (about 23m) against R 55.574m (GBP), and 1686/2021's 2018 row (110m
+    # at least) against the take-on-inclusive R of 2,076.8m USD; both over 1%
+    assert 23.0 / 55.574 > 0.01 and 110.0 / 2076.819 > 0.01
+    assert "1%-of-R" in reg["history_restated"]["1254_2023"]["facts"] or "over 1%" in reg["history_restated"]["1254_2023"]["facts"]
+    assert "over rule 6's 1% of R" in reg["history_restated"]["1686_2021"]["facts"]
+    assert SS.order_key("1110_2020") < SS.order_key("1254_2023")

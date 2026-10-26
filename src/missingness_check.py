@@ -383,6 +383,17 @@ def classify_filings():
                         "its own cells prove it inconsistent (a cumulative paid figure falls between reports), and it "
                         "fails the year's accounts with no base that reconciles (data/restated_base_excluded.json, "
                         "rules 1 and 4b)")
+        elif obs.get("data_quality_tag") == "SOURCE_HISTORY_SET_ASIDE":
+            # the primary outcome (rule 8 of the round-5 decision rules, the source-history rule of 26 October 2026,
+            # run_analysis.SOURCE_HISTORY_TAG): specific source evidence raises a material unresolved concern about
+            # overlapping claims history, gross/net mixing or cohort reassignment through closure, and the declared
+            # outcome cannot be reconstructed or validated
+            category, detail = "scientific_exclusion", "source_history_set_aside"
+            economic, disclosure, extraction = "eligible", "development_observed", "parsed"
+            evidence = ("specific source evidence raises a material unresolved concern about overlapping claims history, "
+                        "gross/net mixing or cohort reassignment through closure, and the declared gross "
+                        "original-cohort outcome cannot be reconstructed or validated "
+                        "(data/restated_base_excluded.json, rule 8)")
         elif obs.get("data_quality_tag") == "TAKEON_BASE_UNMEASURABLE":
             # the primary outcome (rule 5b of the round-5 decision rules, 23 October 2026,
             # run_analysis.TAKEON_UNMEASURABLE_TAG): the year's take-on is not in R, the filing prints no transferred
@@ -520,7 +531,8 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
                                        "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
                                        "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE",
-                                       "CORPUS:RESTATED_BASE_TABLE", "CORPUS:TAKEON_BASE_UNMEASURABLE")]
+                                       "CORPUS:RESTATED_BASE_TABLE", "CORPUS:TAKEON_BASE_UNMEASURABLE",
+                                       "CORPUS:SOURCE_HISTORY_SET_ASIDE")]
     components = dict(sorted(Counter(r["detail"] for r in severity).items()))
     if len(severity) != tows["unusable_severity"]:
         raise AssertionError("basis exclusions: %d records at the unusable-severity step against the flow's %d"

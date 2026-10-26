@@ -1,0 +1,678 @@
+{
+ "1884_2021": {
+  "id": "1884_2021",
+  "read_by": "text layer with positional layout (PyMuPDF words); no OCR needed",
+  "1_table": {
+   "page": 32,
+   "heading": "The table below shows the Gross insurance contract outstanding claims provision at 31 December 2021 (Gross Basis, GBP m, 'All values are converted using the reporting period end rates')",
+   "basis": "estimate of cumulative claims incurred (ultimate/incurred, pure underwriting years 2012-2018 plus a '2011 & prior' column that prints only its cumulative total 486.2, no history)",
+   "combined_report": "no, Syndicate 1884 only",
+   "cells_end2020_to_end2021": {
+    "2012": [
+     160.5,
+     155.8
+    ],
+    "2013": [
+     153.4,
+     145.5
+    ],
+    "2014": [
+     177.9,
+     178.0
+    ],
+    "2015": [
+     258.6,
+     260.2
+    ],
+    "2016": [
+     379.7,
+     375.2
+    ],
+    "2017": [
+     1004.1,
+     979.9
+    ],
+    "2018": [
+     847.3,
+     866.8
+    ]
+   },
+   "M_m": -20.1,
+   "R_m": 913.5,
+   "R_basis": "opening gross claims outstanding 73.709 (p24 'At 1 January 2021 (73,709)') plus RITC accepted 839.787 (p24 'Reinsurance to close accepted (839,787)')",
+   "M_over_R": -0.022,
+   "note": "'2011 & prior' has no two diagonals, so it is not in M. u <= 2019 covers every printed column."
+  },
+  "2_selection_event": "p33: 'The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021.' Also p4: the 2018 YOA of Syndicate 1884 itself was closed by RITC into the new 2021 YOA. Effective at the OPENING of year t (1 Jan 2021), so between neither diagonal: both diagonals of the 2012-2018 columns are taken-on-inclusive (restated as if always).",
+  "3_overlap": "The 2012-2018 columns are the pure-underwriting-year development of the assumed reserves (p33: 'The claims development by pure underwriting year of the assumed reserves have been disclosed above'), i.e. 1884's own 2015-2018 years plus the 1861/1955 books. The 2020 report prints only 1884's own 2015-2018 years (p33 of the 2020 report: total 293,634k current estimate, 2018 col 78,793k) against 866.8m in the 2021 table for 2018. So the end-2020 cells are a restated pro-forma that no earlier report printed. The restated base is the same base as the opening R (R includes the take-on), so the movement is like for like. The 2022 report reprints the same history (cells 2013-2018, development index by index) at a near-constant ratio 1.076-1.097 (FX at end-2022 rates), so the history did not move between the 2021 and 2022 reports. BUT: re-deriving the end-2021 cells from the 2022 report (2022 cell at the same development index, divided by the constant per-cohort FX ratio seen on every earlier diagonal) gives end-2021 cohort estimates about 25.7m higher in total for 2013-2018 than the 2021 report printed (2013 -0.8, 2014 +0.4, 2015 +2.6, 2016 +5.9, 2017 +11.7, 2018 +5.9). Only the last diagonal moved; every earlier diagonal reproduces at the same FX ratio. Script D:/tmp/r62/oc/readings/L8/chk1884b.py.",
+  "4_gross_net": "Gross table (p32) and net table (p33) differ cell by cell (e.g. 2018 at end 2021: gross 866.8, net 589.6); no net row enters the gross table. RITC accepted is shown gross 839,787 and net 551,036 separately (p24).",
+  "5_accounts_test": {
+   "table_implied_incurred_2021_m": -20.1,
+   "table_scope": "2012-2018 only; the '2011 & prior' column prints no history and cannot be differenced",
+   "accounts_gross_incurred_2021_m": 2.859,
+   "accounts_quote": "p24 note 3: 'Claims incurred in current underwriting year (2,859)' (liability roll, so a 2.859m cost); p12 income statement: gross claims paid (269,764), gross change in claims outstanding 266,906",
+   "gap_m": 23.0,
+   "gap_reading": "the gap is exactly what the unprinted '2011 & prior' column would have to have moved by (+23.0m on a 486.2m base, 4.7%). Not checkable from the pages.",
+   "control_2022": "2022 table (p32 of 2022 report): 2013-2018 changes 0.1,-0.1,-5.8,-1.2,+18.8,-2.7 = +9.1 plus the new 2022 column 147.1 = 156.2 against gross incurred 159.487 (p24 of 2022 report): within 2% (3.3m left to '2012 & prior').",
+   "control_2020": "2020 table (p33 of 2020 report, own business only): 2015-2018 diagonal changes +0.446, -3.725, +7.859, -5.396 = -0.816m against 2020 gross incurred -1.518m (credit) (p25 of the 2020 report, 'Claims incurred in current underwriting year 1,518' in the liability roll): same sign and size order."
+  },
+  "6_reconstruction": "Roll-forward closes exactly in the accounts: 913.496 opening incl. take-on + 2.859 incurred - 269.765 paid - 4.396 FX = 642.194, which is the table's gross outstanding total 642.2 (p32) and the balance-sheet figure (642,194, p16). Closing outstanding by cohort is printed (cumulative less paid). The end-2020 cohort split cannot be rebuilt independently (no end-2020 paid by cohort), and the cohort allocation of the 23.0m gap between table and accounts sits in the unprinted '2011 & prior' column, outside M. The 2022 report's reprint of the end-2021 diagonal, FX-adjusted, would make the 2012-2018 movement about +5.6m (+10.3 for 2013-2018 and -4.7 for 2012 as printed), which with the accounts' +2.859 leaves about -2.8m for the unprinted '2011 & prior' column (a small, 2022-like residual). That is a reconstruction by inference from the next report, not a figure printed in the 2021 report.",
+  "verdict": "set_aside",
+  "reason": "The declared 2021 outcome (-20.1m, sign negative) fails the accounts test by 23.0m (table -20.1 against gross incurred +2.859 in the note), and the gap would have to sit in an unprinted column that moved only +3.3m in the control year. The 2022 report reprints the 2013-2018 end-2021 cells about 25.7m higher than the 2021 report printed them (earlier diagonals unchanged at constant FX), which would flip M to about +5.6m. The as-if-always take-on table therefore has an unresolved specific discrepancy and the declared figure cannot be validated; the +5.6m is an inference, not a printed figure.",
+  "alternative_if_reconstructed_m": 5.6
+ },
+ "1884_2022": {
+  "id": "1884_2022",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 32,
+   "heading": "The table below shows the Gross insurance contract outstanding claims provision at 31 December 2022 (Gross Basis, GBP m, converted at reporting period end rates)",
+   "basis": "estimate of cumulative claims incurred (pure underwriting years; columns '2012 & prior' (cumulative total 687.6 only, no history), 2013-2018, and 2022)",
+   "combined_report": "no, Syndicate 1884 only",
+   "cells_end2021_to_end2022": {
+    "2013": [
+     155.7,
+     155.8
+    ],
+    "2014": [
+     192.7,
+     192.6
+    ],
+    "2015": [
+     283.7,
+     277.9
+    ],
+    "2016": [
+     411.1,
+     409.9
+    ],
+    "2017": [
+     1074.6,
+     1093.4
+    ],
+    "2018": [
+     948.4,
+     945.7
+    ]
+   },
+   "M_m": 9.1,
+   "R_m": 642.194,
+   "R_basis": "opening gross claims outstanding p24 'At 1 January 2022 (642,194)'; no RITC accepted in 2022 (p24 'Reinsurance to close accepted -')",
+   "M_over_R": 0.014,
+   "note": "u <= 2020 is every column except 2022 and '2012 & prior' (no two diagonals)."
+  },
+  "2_selection_event": "p4: 'During 2022, the Syndicate completed a Loss Portfolio Transfer (LPT) of certain classes written by Syndicate 33 in the 2018 and prior YOAs.' It is written into the Syndicate's 2022 YOA (p4 'For the 2022 YOA the LPT written covers General Liability, D&O and Professional Indemnity'). The accounts book it as 2022 gross premium written 168,966 (p24 note 4) and as claims incurred, not as RITC accepted ('Reinsurance to close accepted -', p24). Effective date within 2022 is not stated on the pages read; either way it enters the new 2022 column, not u <= 2020.",
+  "3_overlap": "The LPT's own history is not carried into any mature column: the 2022 column prints one cell (147.1) while the 2013-2018 columns reproduce the 2021 report's 2013-2018 history at a near-constant FX ratio (1.076 to 1.088 on every diagonal up to end-2020; the end-2021 diagonal is reprinted about 26m higher than the 2021 report's, so it is the 2022 report's own end-2021 estimate). The 2021 report's '2012' column is merged into '2012 & prior' in 2022. No cohort reassigned or merged into 2013-2018.",
+  "4_gross_net": "Gross (p32) and net tables differ on every mature cell (e.g. 2018 at end 2022: gross 945.7, net 643.5). Only the 2022 LPT column is equal on gross and net (147.1 / paid 42.7 / outstanding 104.4), consistent with an LPT with no outward reinsurance (net incurred p24: 157,385 vs gross 159,487, reinsurers' share 2,102); it lies outside M.",
+  "5_accounts_test": {
+   "table_implied_incurred_2022_m": 156.2,
+   "table_scope": "mature changes 0.1, -0.1, -5.8, -1.2, +18.8, -2.7 = +9.1, plus the 2022 column 147.1; '2012 & prior' unprinted",
+   "accounts_gross_incurred_2022_m": 159.487,
+   "accounts_quote": "p24 note 3: 'Claims incurred in current underwriting year (159,487)'; paid 239,443",
+   "diff_pct": -2.1,
+   "control_2021": "does not tie: table -20.1 (2012-2018) against +2.859 (see 1884_2021)",
+   "note": "2022 ties within 2%, the residual 3.3m sitting in '2012 & prior'."
+  },
+  "6_reconstruction": "Yes for the mature part: the table's gross total ties to the balance sheet (cumulative 3,910.0 less paid 3,298.1 = 611.9; note 3 closing 611,868) and the table-implied incurred ties to the accounts within 2.1% (155.2/156.2 vs 159.5). The mature M = +9.1m is within 3.3m of accounts incurred less the LPT column.",
+  "verdict": "stands",
+  "reason": "The LPT is an additional 2022 underwriting-year column booked through premium and claims incurred, so it does not touch the u <= 2020 cells; the opening R (642.2m) excludes it and no RITC enters. The gross table ties to the balance sheet and its implied incurred ties to the accounts within 2.1%, and the mature columns reproduce the earlier report's history at constant FX."
+ },
+ "1884_2023": {
+  "id": "1884_2023",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 33,
+   "heading": "The table below shows the Gross insurance contract outstanding claims provision at 31 December 2022 [sic, the 2023 report's heading; the cells are the 2023 table, 'Gross outstanding claims' total 449.3 = balance sheet 449,383] (Gross Basis, GBP m, reporting period end rates)",
+   "basis": "estimate of cumulative claims incurred, pure underwriting years; columns '2013 & prior' (cumulative total 810.4, no history), 2014-2018, 2022, 2023",
+   "combined_report": "no, Syndicate 1884 only",
+   "cells_end2022_to_end2023": {
+    "2014": [
+     185.2,
+     187.3
+    ],
+    "2015": [
+     266.3,
+     272.4
+    ],
+    "2016": [
+     390.6,
+     388.4
+    ],
+    "2017": [
+     1043.7,
+     1049.8
+    ],
+    "2018": [
+     899.3,
+     923.2
+    ]
+   },
+   "M_m": 36.0,
+   "R_m": 611.867,
+   "R_basis": "opening gross claims outstanding p25 'At 1 January 2023 (611,867)'; no RITC accepted in 2023",
+   "M_over_R": 0.059,
+   "note": "u <= 2021 is 2014-2018 (2022 and 2023 columns are u > t-2; '2013 & prior' has no history)."
+  },
+  "2_selection_event": "p4: 'The Syndicate has completed two Loss Portfolio Transfers (LPTs) with Syndicate 33. The LPTs cover various classes of business written by Syndicate 33 for the 2019 and prior YOAs.' The first is the 2022 YOA LPT; the second is 'the new LPT transaction with Syndicate 33' of 2023, booked as 2023 reinsurance premium (p23: reinsurance gross written premium 55,852). The 2023 effective date is not stated in the pages read. Both LPTs are written as new 2022 and 2023 underwriting years (columns 2022 and 2023), so they enter the table outside u <= 2021.",
+  "3_overlap": "The 2023 table restates the pre-2021 history of the 2017 and 2018 columns: against the 2022 report the early cells of 2017 are 306.9, 477.8, 559.9, 567.9 (2023 report) against 532.5, 907.8, 1,047.9, 1,087.9 (2022 report), ratio 0.52-0.58; 2018: 204.3, 395.0, 407.1 against 362.3, 795.6, 922.2, ratio 0.44-0.56. So the 2023 report shows the 2021 RITC take-on as a step in the 2021 diagonal (2018: 407.1 -> 901.7; 2017: 567.9 -> 1,024.2) rather than as-if-always as the 2021 and 2022 reports did. The end-2021 and end-2022 cells do reproduce the 2022 report's at the FX ratio (0.951-0.955 on the last two diagonals of 2017 and 2018; 0.96-0.97 for 2014-2016). M uses only the end-2022 and end-2023 diagonals, which are on the same post-take-on base, so the change of presentation does not enter M.",
+  "4_gross_net": "Gross (p33) and net tables differ cell by cell (e.g. 2018 at end 2023: gross 923.2, net 621.3). The 2022 and 2023 LPT columns are equal on gross and net (45.8/145.6), outside M. No net RITC amount appears in a gross row.",
+  "5_accounts_test": {
+   "table_implied_incurred_2023_m": 88.6,
+   "table_scope": "mature 2014-2018: +2.1, +6.1, -2.2, +6.1, +23.9 = +36.0; 2022 column 138.8 -> 145.6 = +6.8; 2023 column 45.8; '2013 & prior' unprinted",
+   "accounts_gross_incurred_2023_m": 91.348,
+   "accounts_quote": "p23 note 2 segmental: gross claims incurred (91,348) for 2023 (comparative 2022: (159,487)); p25 note 3 'Claims incurred in current underwriting year (91,348)'",
+   "diff_pct": -3.0,
+   "control_2022": "156.2 against 159.487, within 2.1% (see 1884_2022)"
+  },
+  "6_reconstruction": "Yes. The table's total ties to the balance sheet (449.3 vs 449,383; cumulative 3,822.9 less paid 3,373.6), the implied incurred ties to the accounts within 3.0% with the 2.7m residual in the unprinted '2013 & prior' column (control 2022: 3.3m), and the end-2022 diagonal reproduces the 2022 report's at the FX ratio.",
+  "verdict": "stands",
+  "reason": "Both LPTs are new 2022 and 2023 underwriting-year columns, outside u <= 2021, and the opening R (611.9m) has no take-on. The restated pre-2021 history of 2017 and 2018 is a change of presentation of the 2021 RITC, but M reads only post-take-on diagonals that reproduce the prior report at constant FX. The gross table ties to the balance sheet and its implied incurred ties to the accounts within 3%."
+ },
+ "1910_2023": {
+  "id": "1910_2023",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 36,
+   "heading": "20. Risk management (continued): Gross insurance contract outstanding claims provision as at 31 December 2023 (GBP m; underwriting years 2021, 2022, 2023; 'Estimate of cumulative claims incurred')",
+   "basis": "cumulative claims incurred (notified plus IBNR) by underwriting year, gross, translated at the balance sheet rate throughout (p35 'consistent rate of exchange as determined by the balance sheet date'); no 'and prior' column",
+   "combined_report": "no, Syndicate 1910 only (the PDF also holds the 2021-year pages after p50, which I did not use)",
+   "cells": {
+    "2021": {
+     "end_2021": 248.8,
+     "end_2022": 306.2,
+     "end_2023": 295.6,
+     "paid": 188.6,
+     "outstanding": 107.0
+    },
+    "2022": {
+     "end_2022": 462.1,
+     "end_2023": 508.4,
+     "paid": 253.1,
+     "outstanding": 255.3
+    },
+    "2023": {
+     "end_2023": 97.7,
+     "paid": 11.9,
+     "outstanding": 85.8
+    }
+   },
+   "M_m": -10.6,
+   "M_cells": "2021 only (u <= t-2 = 2021): 295.6 (two years later) - 306.2 (one year later) = -10.6",
+   "R_m": 576.2,
+   "R_basis": "opening gross claims outstanding 792.7 less external RITC movement (216.5) = 576.2 (p26); equals the 2022 report's 2021 + 2022 liabilities 170.3 + 406.0 = 576.3 (p36 of the 2022 report)",
+   "M_over_R": -0.018
+  },
+  "2_selection_event": "Outbound. p26: 'External RITC movements (216.5) gross, 124.0 reinsurers' share, (92.5) net ... relate to an opening balance sheet adjustment for the 2020 and prior year of account external RITC.' The 2021-year page of the PDF says the 2020 year of account and previous years 'were reinsured to close into a third party, Syndicate 3500 managed by Riverstone Managing Agency Limited' (p55 note 3, gross RITC received nil). So the 2020-and-prior business left the balance sheet at the opening of 2023 (an opening adjustment, outside both diagonals); the 2022 report still carried it (792.7 includes 2013-2020 columns liabilities 214.0 plus 2012 and prior 2.4 = 216.4, equal to the 216.5 removed).",
+  "3_overlap": "None. The transferred cohorts (2020 and prior) are absent from the 2023 table, and the 2021 cohort is the syndicate's own. The 2021 and 2022 rows reproduce the 2022 report's rows at a uniform exchange ratio (2021: 248.8/260.6 = 0.955, 306.2/321.4 = 0.953; 2022: 462.1/489.1 = 0.945), so there is no restatement or reassignment of the retained cohorts.",
+  "4_gross_net": "Gross (p36) and net tables differ cell by cell (2021 latest gross 295.6, net 124.1; 2022 latest gross 508.4, net 227.6). The net RITC movement (92.5) is shown only in the net column of the roll-forward.",
+  "5_accounts_test": {
+   "table_implied_incurred_2023_m": 133.4,
+   "table_scope": "2021 -10.6 (306.2 -> 295.6); 2022 +46.3 (462.1 -> 508.4); 2023 97.7 new",
+   "accounts_gross_incurred_2023_m": 136.4,
+   "accounts_quote": "p25 segmental analysis 2023: 'Gross claims incurred (136.4)' (total), reinsurance acceptances (135.7)",
+   "diff_pct": -2.2,
+   "control_2022": "2022 report table (p36 of the 2022 file): 2013-2022 latest less previous diagonal sums to 559.9 against gross claims incurred 542.6 (p25 of the 2023 file's 2022 comparative): +3.2%"
+  },
+  "6_reconstruction": "Yes. The 2023 table's liability total equals the gross claims outstanding (448.1 = p26 and p19), its retained rows reproduce the 2022 report's at the exchange ratio, the removed cohorts equal the external RITC (216.4 vs 216.5), and the implied incurred ties within 2.2%.",
+  "verdict": "stands",
+  "reason": "The transfer to Syndicate 3500 takes out the 2020 and prior cohorts as an opening balance sheet adjustment, so the table prints only the retained 2021-2023 years and the single mature cohort (2021) carries no transferred history. The table ties to the balance sheet and the accounts within 2.2%, and the retained rows match the prior report at constant FX."
+ },
+ "1910_2024": {
+  "id": "1910_2024",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 39,
+   "heading": "Gross insurance contract outstanding claims provision as at 31 December 2024 (Pure underwriting year 2021, 2022, 2023, 2024; GBP 000; 'Estimate of gross claims')",
+   "basis": "gross estimate of claims by pure underwriting year, no 'and prior' column; the net table prints below it",
+   "combined_report": "no, Syndicate 1910 only (the same PDF also holds the closed 2022 year of account's underwriting-year accounts from p43, which are not used)",
+   "cells": {
+    "2021": {
+     "end_2021": 250477,
+     "end_2022": 307611,
+     "end_2023": 297113,
+     "end_2024": 301638,
+     "paid": 224898
+    },
+    "2022": {
+     "end_2022": 467218,
+     "end_2023": 514116,
+     "end_2024": 521523,
+     "paid": 322502
+    },
+    "2023": {
+     "end_2023": 98718,
+     "end_2024": 117168,
+     "paid": 25186
+    },
+    "2024": {
+     "end_2024": 644194,
+     "paid": 58527
+    }
+   },
+   "M_m": 11.932,
+   "M_cells": "u <= 2022: 2021: 301,638 - 297,113 = 4,525; 2022: 521,523 - 514,116 = 7,407; sum 11,932 (GBP 000 = 11.9m)",
+   "R_m": 448.1,
+   "R_basis": "opening gross claims outstanding p39 'Balance at 1 January 448,100'",
+   "M_over_R": 0.027
+  },
+  "2_selection_event": "Host-side. p40 note 13: 'Syndicate 6117 closed year 2021 RITC into Syndicate 1910 at 31 December 2023' (and the 2020-and-prior external RITC opening adjustment 'at 31 December 2022'). p41: 'Syndicate 6117 ... has written a whole account quota share of the net premiums, claims and expenses of Syndicate 1910 ... placed on a funds withheld basis ... will not become payable until the relevant underwriting year closes after 36 months.' The closure is effective at 31 December 2023, the opening of year t = 2024.",
+  "SPA_closure_in_gross": "No. The 2024 claims roll (p39) line 'Other' is: gross 129, reinsurance assets (9,604), net (9,475); in the 2023 column of the same note the 'Other' is gross (216,468) / reinsurance 124,021 and relates to the 3500 RITC. For 2024 unearned premiums (p40) 'Other: gross -, reinsurance assets 1,526'. So the 6117 closure only moves the reinsurance asset; the gross provision moves by 129k. The 6117 QS covers the net business (after external reinsurance), i.e. an outward cession in the host's accounts.",
+  "3_overlap": "None found. The 2021 and 2022 rows of the 2024 table reproduce the 2023 report's rows (2021: 250.477/248.8 = 1.007, 307.611/306.2 = 1.005, 297.113/295.6 = 1.005; 2022: 467.218/462.1 = 1.011, 514.116/508.4 = 1.011) at a uniform per-cohort exchange ratio, so there is no restatement and no cohort reassigned.",
+  "4_gross_net": "Gross table and net table differ cell by cell (2022 latest gross 521,523, net 232,165; 2021 gross 301,638, net 123,251). The 6117 amounts are net/reinsurance (9,604 reinsurance asset, p39).",
+  "5_accounts_test": {
+   "table_implied_incurred_2024_m": 674.6,
+   "table_scope": "2021 +4.525; 2022 +7.407; 2023 +18.450 (98,718 -> 117,168); 2024 644.194 new",
+   "accounts_gross_incurred_2024_m": 650.7,
+   "accounts_quote": "p39 note 13 claims outstanding 2024 gross: 'Expected cost of current year claims 696,007' and 'Change in estimates of prior year provisions (45,340)' = 650,667",
+   "diff_pct": 3.7,
+   "control_2023": "133.4 against 136.4 (see 1910_2023): -2.2%"
+  },
+  "6_reconstruction": "Yes. The table's gross reserve total (953,410) equals the closing gross claims provision (p39), the earlier rows reproduce the 2023 report at the exchange ratio, and the implied incurred ties within 3.7%.",
+  "verdict": "stands",
+  "reason": "The 6117 closure at 31 December 2023 enters the accounts only through the reinsurance asset (gross 129k against 9,604k reinsurance), so no SPA history is in the gross triangle; the funds-withheld quota share is an outward cession of net business. The gross table ties to the closing provision, its retained rows match the prior report at uniform FX and its implied incurred ties within 3.7%."
+ },
+ "1955_2019": {
+  "id": "1955_2019",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 47,
+   "heading": "Gross insurance ultimate contract outstanding claims provisions as at 31 December 2019 (Estimate of ultimate gross claims, GBP m; columns 2013 & Prior, 2014-2019)",
+   "basis": "estimate of ultimate gross claims on an underwriting-year basis (earned plus unearned; a 'Gross unearned claims reserve (99.8)' line closes it to the balance sheet), gross of the SPA cessions and external reinsurance",
+   "combined_report": "no, Syndicate 1955 only",
+   "cells_end2018_to_end2019": {
+    "2013 & Prior": [
+     833.8,
+     812.2
+    ],
+    "2014": [
+     178.6,
+     177.0
+    ],
+    "2015": [
+     222.4,
+     232.7
+    ],
+    "2016": [
+     301.0,
+     308.1
+    ],
+    "2017": [
+     378.4,
+     428.4
+    ]
+   },
+   "M_m": 44.2,
+   "R_m": 830.4,
+   "R_basis": "p40 note 12 'At 1 January 2019 830.4'",
+   "M_over_R": 0.053,
+   "x_and_prior": "'2013 & Prior' last two diagonals 833.8 (five years later) and 812.2 (six years later), like for like in the same table; it reconciles to the 2018 report's '2012 & Prior' plus '2013' (707.0 + 154.4 = 861.4 x 0.968 = 833.8)"
+  },
+  "2_selection_event": "Host-side. p59 (2019) says SPA 6118's 2017 YOA ('Effective 31 December 2019, SPA 6118 was closed into the Syndicate's 2018 Year of Account. A premium of 48.0m was payable'); the 2018 report p60 says 'Effective 31 December 2018, SPA 6118 was closed into the Syndicate, with a quota share contract put in place to reinsure the risk into the 2017 Year of Account of SPA 6118. A premium of 42.5m was payable'. So for t = 2019 the closure that touches the opening is the 31 December 2018 one; the 31 December 2019 closure is at the year end and sits after the end-2019 diagonal.",
+  "SPA_closure_in_gross": "No. p20 note 1b: 'Amounts ceded from the Syndicate to the SPAs are gross of external reinsurance, are recognised as reinsurance balances in the Syndicate'. The SPA closure is a reinsurance item: in 2018 the SPA 6120 closure enters note 12 as '6120 Reinsurance to Close: gross -, reinsurer's share 13.7' (p40) and in the 2019 roll there is no closure line at all. The gross table prints gross of the QS, so nothing of the SPA enters the gross cells.",
+  "3_overlap": "None found. The end-2018 cells in the 2019 table reproduce the 2018 report's last diagonal at a constant 0.961-0.970 (2014 178.6/184.2, 2015 222.4/230.5, 2016 301.0/312.6, 2017 378.4/393.8, 2018 271.6/281.3), i.e. exchange only; no cohort merged or reassigned.",
+  "4_gross_net": "Gross table (p47) and net table differ (2017 at two years: gross 428.4, net 95.6; 2013 & Prior latest gross 812.2, net 516.9). SPA cessions are reinsurance balances in the Syndicate, so they sit in the gross-to-net difference, not in the gross rows.",
+  "5_accounts_test": {
+   "table_implied_ultimate_basis_incurred_2019_m": 301.7,
+   "table_scope": "-21.6, -1.6, +10.3, +7.1, +50.0 (2013&P-2017) + 48.3 (2018: 271.6 -> 319.9) + 209.2 (2019 new)",
+   "accounts_gross_incurred_2019_m": 348.0,
+   "accounts_quote": "p14 gross claims paid (327.1) and change in gross claims outstanding (20.9); p40 'Claims incurred in the current accident year 220.7; prior accident years 127.3'",
+   "adjustment": "the table is on an ultimate (written) basis; add the fall in the gross unearned claims reserve (99.8 at end-2019 less 143.5 at end-2018 x 0.96 = -38.0) to put it on the earned basis of the accounts: 301.7 + 38.0 = 339.7",
+   "diff_pct": -2.4,
+   "paid_cross_check": "table cumulative payments 1,566.1 (end 2019, p47) less 1,289.9 x 0.962 (end 2018, p48 of the 2018 report) = 327.8 against gross claims paid 327.1: within 0.3%",
+   "control_2018": "no 2017 report in the corpus (syndicate_1955_2016 and 2017 are absent), so no control"
+  },
+  "6_reconstruction": "Validated rather than reconstructed: the table ties to the balance sheet (2,487.5 - 1,566.1 - 99.8 = 821.6 = p40 closing), its end-2018 diagonal reproduces the 2018 report at FX, and implied incurred and paid tie to the accounts within 2.4% and 0.3%.",
+  "verdict": "stands",
+  "reason": "The SPA 6118 closure is a reinsurance-to-close of the host's own ceded liabilities; it enters only the reinsurers' share (gross nil, as the 2018 SPA 6120 closure shows in note 12), so it never reaches the gross triangle. The gross table ties to the balance sheet and its implied paid and earned incurred tie to the accounts within 2.4%, with the previous diagonal reproduced at FX."
+ },
+ "1955_2020": {
+  "id": "1955_2020",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 51,
+   "heading": "Gross insurance ultimate contract outstanding claims provisions as at 31 December 2020 (Estimate of ultimate gross claims, GBP m; columns 2014 & Prior, 2015-2020)",
+   "basis": "estimate of ultimate gross claims on an underwriting-year basis (with a 'Gross unearned claims reserve (126.2)' line), gross of SPA cessions and external reinsurance",
+   "combined_report": "no, Syndicate 1955 only",
+   "cells_end2019_to_end2020": {
+    "2014 & Prior": [
+     979.5,
+     984.7
+    ],
+    "2015": [
+     229.9,
+     227.7
+    ],
+    "2016": [
+     302.8,
+     312.1
+    ],
+    "2017": [
+     421.3,
+     420.3
+    ],
+    "2018": [
+     316.2,
+     320.8
+    ]
+   },
+   "M_m": 15.9,
+   "R_m": 821.6,
+   "R_basis": "p44 note 12 'At 1 January 2020 821.6'",
+   "M_over_R": 0.019,
+   "x_and_prior": "'2014 & Prior' diagonals 979.5 (five years later) and 984.7 (six years later), like for like in the same table"
+  },
+  "2_selection_event": "Host-side. p65 / p64 related parties: SPA 6118 closed into the Syndicate's 2018 YOA 'Effective 31 December 2019' (2019 report p59: 'A premium of 48.0m was payable'), i.e. at the opening of 2020, outside the two diagonals' span but at the start of the year t.",
+  "SPA_closure_in_gross": "No. In the 2020 roll-forward (p44 note 12) the closure appears as 'Other balance sheet transfers: gross -, reinsurer's share 47.8, net 47.8' (close to the 48.0m premium), and in the unearned premium roll 'Other balance sheet transfers: gross -, reinsurer's share (1.0)'. The gross column is nil in both. Cessions to the SPAs are 'reinsurance balances in the Syndicate' (p24).",
+  "3_overlap": "None found. The end-2019 cells in the 2020 table are the 2019 report's last diagonal at a near-constant ratio (2014&P 979.5 vs 2013&P+2014 812.2+177.0 = 989.2: 0.990; 2015 229.9/232.7 = 0.988; 2016 302.8/308.1 = 0.983; 2017 421.3/428.4 = 0.983; 2018 316.2/319.9 = 0.988). No cohort merged or reassigned.",
+  "4_gross_net": "Gross table (p51) and net table differ cell by cell (2017 latest gross 420.3, net 143.4; 2014&P gross 984.7, net 628.7). The 47.8 closure amount is only in the reinsurers' share.",
+  "5_accounts_test": {
+   "table_implied_ultimate_basis_incurred_2020_m": 254.1,
+   "table_scope": "+5.2, -2.2, +9.3, -1.0, +4.6 (=15.9 mature) + 30.1 (2019: 206.5 -> 236.6) + 208.1 (2020 new)",
+   "accounts_gross_incurred_2020_m": 246.4,
+   "accounts_quote": "p44 note 12: 'Claims incurred in the current accident year 157.3; prior accident years 89.1'; claims paid (263.9)",
+   "adjustment": "ultimate-basis table: add the rise in the gross unearned claims reserve (126.2 less 99.8 x about 0.985 = 27.9) to the accounts' earned incurred: expected about 274",
+   "diff_pct": -7.3,
+   "paid_cross_check": "table cumulative payments 1,789.2 (end 2020, p51) less 1,566.1 (end 2019, p47 of the 2019 report) x 0.985 = 246.4 against gross claims paid 263.9: 7% short",
+   "control_2019": "within 0.3% paid and 2.4% incurred (see 1955_2019)",
+   "note": "The shortfall (about 18-20m, about 2% of the 2,710m ultimate) is in both the paid and incurred test. The table ties to the balance sheet at end 2020 (2,710.3 - 1,789.2 - 126.2 = 794.9 = p44 closing) and its end-2019 diagonal reproduces the prior report at a uniform ratio 0.983-0.990, so the gap is not located; the exchange mix 2019-2020 is not printed."
+  },
+  "6_reconstruction": "The mature figure +15.9m is read directly from two diagonals of one gross table that ties to the closing balance sheet and whose earlier diagonal reproduces the previous report at uniform FX; it cannot be separately bridged by cohort because the cumulative payments are printed only in total. The 7% accounts shortfall is unexplained by the pages but nothing points at the SPA closure, which has a nil gross entry.",
+  "verdict": "stands",
+  "reason": "The 31 December 2019 SPA 6118 closure is booked only in the reinsurers' share (gross nil), so the gross table has no overlapping or reassigned history, and the table is gross and ties to the balance sheet. The incurred and paid tests are 7% short of the accounts, an unexplained but uniform gap with no source evidence of overlap, gross/net mixing or cohort reassignment, so it is a caveat and not grounds to set the observation aside."
+ },
+ "1955_2021": {
+  "id": "1955_2021",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 48,
+   "heading": "14 Technical Provisions (continued) (c) Gross claims development triangles - by underwriting year (GBP 000; 'Underlying Pure Year', At end of u/w year, One year later, Two years later, Cumulative payments, Outstanding reserves)",
+   "basis": "gross, pure underwriting year (2019, 2020, 2021 only); a net table (d) prints beside it",
+   "combined_report": "no, Syndicate 1955 only",
+   "cells": {
+    "2019": {
+     "end_of_uw_year_2019": 128329,
+     "one_year_later_end2020": 222141,
+     "two_years_later_end2021": 237085,
+     "cumulative_payments": 90816,
+     "outstanding": 146269
+    },
+    "2020": {
+     "end_2020": 110089,
+     "end_2021": 170725,
+     "payments": 27896,
+     "outstanding": 142829
+    },
+    "2021": {
+     "end_2021": 140660,
+     "payments": 11547,
+     "outstanding": 129113
+    }
+   },
+   "M_m": 14.944,
+   "M_cells": "2019 cohort only (u <= t-2 = 2019): 237,085 - 222,141 = 14,944 (GBP 000)",
+   "R_m": 283.342,
+   "R_basis": "opening gross claims provision 794,858 (p49 'At 1 January 794,858') less the outbound RITC impact 511,516 (p49 'RITC impact (511,516)') = 283,342 retained; the batch's retained base",
+   "M_over_R": 0.053,
+   "x_and_prior": "none: the table has only the three retained years"
+  },
+  "2_selection_event": "Outbound. p5: 'As at the 31 December 2020, AMAL on behalf of the Members of the Syndicate entered into an agreement with an external party for the reinsurance to close (RITC) of the Syndicates 2018 underwriting year. The RITC covers legacy business underwritten by the Syndicate on the 2018 and prior underwriting years, resulting in the Syndicate having only transactions relating to 2019 to 2021 underwriting years during the 2021 financial year.' Syndicate 1884's 2021 report (p33) dates the acceptance 'effective 1 January 2021'. The closure is therefore at the opening of year t, before both diagonals' span for the retained years; the cohorts it took (2018 and prior) do not appear in the table at all.",
+  "3_overlap": "None. The table prints 2019-2021 only, so the transferred cohorts are outside it; the 2019 row is a retained underwriting year. The RITC enters the roll-forward as a separate line (p49 'RITC impact (511,516)' gross, 238,502 ceded, (273,014) net; unearned (16,428)) and is not inside the 'Movement per technical account' (134,762). Basis note: the 2021 table is on 'underlying pure year' and is not comparable with the 2020 report's ultimate underwriting-year table (2019 at end-2020 222.1 here against 236.6 there), but M reads only the 2021 table's two cells of one row.",
+  "4_gross_net": "Gross table (c) 2019: 128,329 / 222,141 / 237,085; net table (d) 2019: 56,438 / 104,965 / 110,936: distinct. Both gross and net outstanding totals tie to the roll-forward (418,211 gross; 221,318 net). No net RITC figure sits in a gross row.",
+  "5_accounts_test": {
+   "table_implied_incurred_2021_m": 216.24,
+   "table_scope": "2019 +14.944 (222,141 -> 237,085); 2020 +60.636 (110,089 -> 170,725); 2021 140.660 new",
+   "accounts_gross_incurred_2021_m": 211.54,
+   "accounts_quote": "p20 technical account: claims paid gross amount (76,778) plus change in the provision for claims gross amount (134,762) = 211,540; p49 'Movement per technical account 134,762'",
+   "diff_pct": 2.2,
+   "control_2020": "the 2020 report's table is on an ultimate underwriting-year basis (not comparable); paid/incurred test there 7% short (see 1955_2020)"
+  },
+  "6_reconstruction": "Yes. The retained table's outstanding total equals the gross closing provision (418,211, p48 and p49), the implied incurred ties to the accounts within 2.2%, and the roll-forward closes: 794,858 + 134,762 - 511,516 + 107 = 418,211. The 2019 cohort's M of 14.9m is within the validated table.",
+  "verdict": "stands",
+  "reason": "The outbound RITC removed 2018 and prior at the opening of 2021, and the 2021 gross table prints only the retained 2019-2021 years, so the only mature cohort (2019) carries no transferred or reassigned history. The gross table ties to the closing provision and its implied incurred ties to the accounts within 2.2%."
+ },
+ "2008_2023": {
+  "id": "2008_2023",
+  "read_by": "text layer with positional layout (PyMuPDF words); arithmetic in D:/tmp/r62/oc/readings/L8/chk2008.py",
+  "1_table": {
+   "page": 49,
+   "heading": "17. Claims development ... on an underwriting year basis. Balances have been translated at exchange rates prevailing at 31 December 2023 in all cases. 'Pure underwriting year - Gross', Estimate of ultimate gross claims (GBP 000), columns 2014-2023 and a separate 'Provision in respect of prior years 421,573' (2013 and prior, no history)",
+   "basis": "gross estimate of ultimate claims by pure underwriting year; the net table prints beneath. The 2022 column is blank ('-').",
+   "combined_report": "no, Syndicate 2008 only",
+   "cells_end2022_to_end2023_gross": {
+    "2014": [
+     1061374,
+     1046776
+    ],
+    "2015": [
+     1211401,
+     1249079
+    ],
+    "2016": [
+     852391,
+     855177
+    ],
+    "2017": [
+     386601,
+     388040
+    ],
+    "2018": [
+     282351,
+     277975
+    ],
+    "2019": [
+     113262,
+     126212
+    ],
+    "2020": [
+     64256,
+     62953
+    ],
+    "2021": [
+     1638140,
+     1682777
+    ]
+   },
+   "M_m": 79.213,
+   "M_cells": "u <= 2021: -14,598 + 37,678 + 2,786 + 1,439 - 4,376 + 12,950 - 1,303 + 44,637 = 79,213 (GBP 000); 2021 alone supplies 44,637",
+   "R_m": "1186.259 opening gross claims outstanding (p50) plus take-ons: RITC 234.962 (p50 'RITC take on reserves') and QBE LPT 319.0 (p50 note), in the pipeline's adopted base",
+   "net_cells_for_comparison": "net mature u<=2021 movement = +228.774 (2014 +6.098, 2015 +38.777, 2016 +3.029, 2017 +80.326, 2018 +47.749, 2019 +12.232, 2020 -4.074, 2021 +44.637)"
+  },
+  "2_selection_event": "p6: 'Syndicate 2008 assumed Syndicate 1301's assets and liabilities in respect of the 2020 and prior YOAs with effect from 1 January 2023 ... net reserves of 163.1m' and 'RITC agreement with Probitas ... Syndicate 1492, reinsuring their 2018 and prior years ... effective from 1 January 2023 ... net reserves of 49.7m (a conversion of a 2022 calendar year LPT into an RITC)' and 'LPT agreements with QBE Syndicates 386 and 2999, effective 1 January 2023 ... take-on gross reserves totalled 319.0m' with a 50% quota share to Cavello Bay. All three are effective at the opening of year t (1 January 2023), i.e. before both diagonals' span. p50: RITC take on reserves 234,962 gross (net 158,012); p41: the 2023 claims movements 'include the take-on balances of the RITC with Syndicate 1301 (235.0m Gross and 158.0m Net) and LPT contract with QBE (319.0m Gross and 159.5m Net)'.",
+  "3_overlap": "Yes, stated by the filing and visible in the cells. (a) p49: 'The calendar year developments in the tables above include the impact of reserves newly acquired through RITC and LPT transactions.' The table prints no split of the acquired amounts from development. (b) The 2021 column is the Hiscox LPT book (2021 report p7: LPT effective 1 January 2021, Hiscox Syndicate 3624's 2019 and prior business, funds withheld): its cumulative paid is 1,473,750 against a reserve of 209,027 (2023 table), i.e. other vehicles' paid history sits in the 2021 pure year; gross and net are identical in every cell of that column (1,606,621; 1,638,140; 1,682,777; paid 1,473,750). It supplies 44.6m of the 79.2m. (c) The history of the older columns is not that of the 2021 report: end-2021 cells in the 2023 table against the 2021 report p53 (same cohort and development age): 2014 1,067,606 vs 944,592 (x1.130), 2015 1,199,692 vs 1,030,604 (x1.164), 2016 767,336 vs 575,831 (x1.333), whereas the 2021 column moves only x1.043 (1,606,621 vs 1,539,763) over the same period. The earlier cells were therefore restated upward by 8-28 per cent beyond exchange, without an explanation on the pages read. The 2022 report is not in the corpus, so the end-2022 diagonal cannot be compared with any earlier printed table.",
+  "4_gross_net": "Net moves far more than gross on the mature cohorts: net +228.8m against gross +79.2m, a 149.5m excess (2017: net +80.3 against gross +1.4; 2018: net +47.7 against gross -4.4; 2014: net +6.1 against gross -14.6). Ceded reserves cannot rise while gross rises less than net unless the reinsurance share is being reduced or the cells are being rebuilt; p50 shows the opposite sign for the year's ceded movement on the accounts (change in prior year provisions: gross 388,016, reinsurers (164,341), net 223,675). So the gross and net rows of the same cohorts are not on one consistent basis.",
+  "5_accounts_test": {
+   "table_implied_incurred_2023_m": 442.4,
+   "table_scope": "mature 79.2 + the 2023 column 363.2; '2013 and prior' (421.6m reserve) has no history and is not counted; the 2022 column is blank",
+   "accounts_gross_incurred_2023_m": 622.0,
+   "accounts_quote": "p40 analysis of underwriting result, year 2023: 'Total ... Gross claims incurred (621,998)'; p50 roll: change in prior year provisions 388,016 plus RITC take on reserves 234,962",
+   "diff_pct": -29,
+   "alternative": "if the 235.0m RITC take-on were in the history (as-if-always) the expected table incurred would be 622.0 - 235.0 = 387.0, against 442.4 (+14%): ties neither way unless the unprinted '2013 and prior' column moved by -55m to -180m.",
+   "net_test": "net table implied 410.4 (mature 228.8 + 181.6) against net claims incurred 380.7 (p41): +7.8%, the net side close to the accounts while the gross side is not",
+   "control": "no 2022 report in the corpus (syndicate_2008_2022 is absent), so no t-1 control; the 2021 report is two years back"
+  },
+  "6_reconstruction": "No. The pages give no split of the 1 January 2023 take-ons (RITC 1301 and 1492, QBE LPT) between the older pure-year cells and the 2023 column, no table for the end-2022 base, and no closing-account style bridge by cohort. The outcome of 79.2m cannot be rebuilt from paid plus outstanding by cohort because the cohort split of the end-2022 paid is not printed.",
+  "verdict": "set_aside",
+  "reason": "The filing itself says the calendar-year developments in the table include newly acquired RITC and LPT reserves, the mature gross movement is 56 per cent the Hiscox LPT column (which carries another vehicle's paid history and is equal on gross and net), the older columns were restated beyond exchange against the 2021 report, and the table's implied gross incurred is 29 per cent short of the accounts while net moves 149m more than gross. With three take-ons effective on the opening day and no printed split, the gross original-cohort outcome cannot be reconstructed or validated."
+ },
+ "6107_2023": {
+  "id": "6107_2023",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 30,
+   "heading": "9 Technical provisions continued: 'Gross amounts $m', Total development by months (12 to 120 months) for years of account 2014 to 2023, a '2013 ae' column with its total ultimate only, 'Total ultimate losses', 'Less paid claims', 'Less unearned portion of ultimate losses', 'Gross claims liabilities' (USD m); a 'Net amounts' table beneath",
+   "basis": "gross ultimate losses by year of account (ultimate basis, with the unearned portion deducted to reach the balance sheet liability); the SPA reinsures its hosts' gross-of-SPA business, so 'gross' is gross of external reinsurance",
+   "combined_report": "no, Syndicate 6107 only (the PDF also holds the 2021 closed year of account accounts, pp. 32-46, not used for the table)",
+   "cells_end2022_to_end2023": {
+    "2014": [
+     7.2,
+     7.2
+    ],
+    "2015": [
+     9.2,
+     9.2
+    ],
+    "2016": [
+     16.0,
+     16.0
+    ],
+    "2017": [
+     70.7,
+     69.1
+    ],
+    "2018": [
+     64.0,
+     62.5
+    ],
+    "2019": [
+     35.8,
+     34.1
+    ],
+    "2020": [
+     62.6,
+     62.7
+    ],
+    "2021": [
+     77.3,
+     70.4
+    ],
+    "2022": [
+     60.4,
+     44.9
+    ],
+    "2023": [
+     null,
+     23.3
+    ]
+   },
+   "M_m": -11.6,
+   "M_cells": "u <= 2021, USD m: 0.0 + 0.0 + 0.0 - 1.6 - 1.5 - 1.7 + 0.1 - 6.9 = -11.6 ('2013 ae' has no history and is excluded)",
+   "R_m": 138.7,
+   "R_basis": "opening gross claims outstanding p29 'As at 1 January 2023 ... 138.7' (USD m)",
+   "M_over_R": -0.084
+  },
+  "2_selection_event": "SPA vehicle (S1). p21: 'Syndicate 6107 is accounted for on a cash withheld basis on the three youngest underwriting years'; p27: 'syndicate 6107 is a special purpose syndicate'; p30 (2022 report) and p27: business is ceded from host syndicates 623 and 2623 (reduced ceding percentages in 2023). The closing event is the 2021 year of account, closed by reinsurance to close at 31 December 2023 (p33 'These accounts relate to the 2021 YOA which has been closed by reinsurance to close at 31 December 2023'; p43 'The 2021 YOA has closed and all assets and liabilities have been transferred to a reinsuring YOA'), i.e. at the end of year t, after the end-2023 diagonal. An internal RITC between years of account of one syndicate does not change the calendar-year annual accounts.",
+  "3_overlap": "None found. The cells of the 2014-2021 rows reproduce the 2022 report's end-2022 cells within rounding (2022 report p29 total ultimate in USD m: 2017 70.6, 2018 63.5, 2019 35.4, 2020 62.4, 2021 76.7, 2022 60.2; the 2023 report's end-2022 cells for the same years: 70.7, 64.0, 35.8, 62.6, 77.3, 60.4). The 2023 closure leaves 2021 in the table as an open row at its final figure.",
+  "4_gross_net": "Gross and net tables differ (2017 latest gross 69.1, net 55.0; 2021 gross 70.4, net 50.7; paid gross 40.8, net 34.4). Net amounts do not enter the gross rows. No RITC amount enters either table.",
+  "5_accounts_test": {
+   "table_implied_ultimate_basis_incurred_2023_m": -3.8,
+   "table_scope": "u <= 2021 -11.6; 2022 (60.4 -> 44.9) -15.5; 2023 +23.3",
+   "accounts_gross_incurred_2023_m": 8.8,
+   "accounts_quote": "p15: gross claims paid (34.6) and change in the gross provision for claims 25.8, so gross incurred 34.6 - 25.8 = 8.8 (earned basis)",
+   "adjustment": "the table is on an ultimate basis: change in the unearned portion of ultimate losses is 12.1 at end 2023 (p30) less 24.5 at end 2022 (2022 report p29) = -12.4, so the expected ultimate-basis incurred is 8.8 - 12.4 = -3.6",
+   "diff": "-3.8 against -3.6: 0.2m",
+   "control_2022": "not computed: the 2022 report prints development as percentages of premium, only its total ultimate losses in USD m; its end-2022 totals agree with the 2023 report's end-2022 cells within 0.6m per year"
+  },
+  "6_reconstruction": "Validated: the table's gross claims liabilities total 113.6 = the balance sheet claims outstanding (p29), the ultimate-basis incurred ties to the accounts to 0.2m, and the previous diagonal agrees with the 2022 report's totals within rounding.",
+  "verdict": "stands",
+  "reason": "6107 is a quota-share special purpose syndicate whose 2014-2021 rows hold only its own years of account, with no take-on or reassignment; the only closure (the 2021 YOA at 31 December 2023) is internal and at year end, after the diagonal. Gross and net are separate, the table ties to the balance sheet and its implied incurred ties to the accounts after the unearned-portion adjustment."
+ },
+ "6131_2020": {
+  "id": "6131_2020",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 32,
+   "heading": "Claims development table: 'Estimate of cumulative gross claims incurred' by underwriting year 2018, 2019, 2020 (GBP 000), with cumulative gross paid and a net table beneath; 'consistent rate of exchange as determined by the balance sheet date'",
+   "basis": "gross cumulative incurred (notified plus IBNR) by underwriting year of account; no 'and prior' column",
+   "combined_report": "no, SPA 6131 only (host is Syndicate 1729)",
+   "cells": {
+    "2018": {
+     "end_2018": 964,
+     "end_2019": 3338,
+     "end_2020": 4597,
+     "paid": 3577,
+     "outstanding": 1020
+    },
+    "2019": {
+     "end_2019": 1619,
+     "end_2020": 7892,
+     "paid": 5142,
+     "outstanding": 2750
+    },
+    "2020": {
+     "end_2020": 3203,
+     "paid": 278,
+     "outstanding": 2925
+    }
+   },
+   "M_m": 1.259,
+   "M_cells": "u <= 2018: 4,597 - 3,338 = 1,259 (GBP 000)",
+   "R_m": 1.645,
+   "R_basis": "opening gross claims outstanding p26 'Balance at 1 January 1,645'",
+   "M_over_R": 0.765
+  },
+  "2_selection_event": "SPA vehicle (S1). p5: 'The SPA's principal activity is a whole account quota share of its host, Dale Underwriting Partners Syndicate 1729'; p20: all insurance receivables are due from the host at the end of 36 months on a funds-withheld basis. p35 note 16 post balance sheet events: 'The SPA will RITC into the 2019 YOA. The host will collect 2,130,741 from the member in 2021, in relation to the 2018 year of account losses in US Dollars.' So the 2018 YOA closes by RITC into the 2019 YOA at 31 December 2020, the end of year t: after the end-2020 diagonal, not between the diagonals. The 2018 YOA is the SPA's first venture (the 2019 report p5 shows 2018 as the comparative year, gross written premium 2,868; no earlier SPA year of account exists in the corpus).",
+  "3_overlap": "None found in the cells. The 2018 row end-2018 and end-2019 cells are the 2019 report's (952, 3,260) restated slightly (964, 3,338: +1.3%, +2.4%), a small revision rather than a reassignment; the 2019 row is 1,645/1,619 at end of year. No acquired book 'as if always'; the closure is a post-balance-sheet event that the 2020 cumulative paid and incurred have not absorbed (see the accounts test).",
+  "4_gross_net": "Gross (p32) and net tables differ for the 2018 row: gross incurred 4,597 vs net 2,397; gross paid 3,577 vs net 2,028. For 2019 and 2020 gross paid equals net paid (5,142; 278) although incurred differs; this is consistent with the year's accounts, where the cumulative reinsurers' share of paid (3,260 - 2,162 + 462 = about 1,560) equals the difference between the table's gross and net paid totals (8,997 - 7,448 = 1,549). No net RITC amount enters a gross row.",
+  "5_accounts_test": {
+   "table_implied_incurred_2020_m": 10.735,
+   "table_scope": "2018 +1,259; 2019 +6,273 (1,619 -> 7,892); 2020 3,203 new",
+   "accounts_gross_incurred_2020_m": 11.133,
+   "accounts_quote": "p15 gross claims paid (5,880) and change in gross claims outstanding (5,253); p25 segmental 'Gross claims incurred (11,133)'",
+   "diff_pct": -3.6,
+   "paid_test": "table cumulative gross paid 3,577 + 5,142 + 278 = 8,997 at end 2020; at end 2019 (2019 report p31) 2,433 + 827 = 3,260; implied 5,737 against gross claims paid 5,880: -2.4%",
+   "net_paid_test": "net 2,028 + 5,142 + 278 = 7,448 less 2019's 1,335 + 827 = 2,162 gives 5,286 against net claims paid 5,418: -2.4%",
+   "control_2019": "2019 report table: (3,260 - 952) + 1,645 = 3,953 against gross claims incurred 4,043 (p25 of the 2020 report, comparative): -2.2%"
+  },
+  "6_reconstruction": "Validated rather than reconstructed: the table's incurred and paid tie to the year's accounts within 4%, gross and net, and the outstanding total ties (1,020 + 2,750 + 2,925 = 6,695 = p26 closing). The one mature cohort (2018) is the SPA's first venture and its two cells are on the same basis.",
+  "verdict": "stands",
+  "reason": "The cohort selected (2018) is the SPA's first venture with no inherited predecessor, and its RITC into 2019 is a post-balance-sheet event at 31 December 2020 that the year's table has not absorbed: paid and incurred each tie to the 2020 accounts within 4% on gross and net. The size of M relative to R (76.5%) reflects a book of 1.6m of reserves, not an overlapping-history problem."
+ },
+ "6131_2021": {
+  "id": "6131_2021",
+  "read_by": "text layer with positional layout (PyMuPDF words)",
+  "1_table": {
+   "page": 32,
+   "heading": "Claims development table: 'Estimate of cumulative gross claims incurred' by underwriting year 2018, 2019, 2020, 2021 (GBP 000); net table on p33",
+   "basis": "gross cumulative incurred by underwriting year of account; no 'and prior' column",
+   "combined_report": "no, SPA 6131 only (host Syndicate 1729)",
+   "cells": {
+    "2018": {
+     "end_2018": 941,
+     "end_2019": 3220,
+     "end_2020": 4500,
+     "end_2021": 4696,
+     "paid": 4114,
+     "outstanding": 582
+    },
+    "2019": {
+     "end_2019": 1617,
+     "end_2020": 7939,
+     "end_2021": 13360,
+     "paid": 11984,
+     "outstanding": 1376
+    },
+    "2020": {
+     "end_2020": 3064,
+     "end_2021": 3942,
+     "paid": 1568,
+     "outstanding": 2374
+    },
+    "2021": {
+     "end_2021": 4569,
+     "paid": 1852,
+     "outstanding": 2717
+    }
+   },
+   "M_m": 5.617,
+   "M_cells": "u <= 2019: 2018: 4,696 - 4,500 = 196; 2019: 13,360 - 7,939 = 5,421; sum 5,617 (GBP 000)",
+   "R_m": 6.695,
+   "R_basis": "opening gross claims outstanding p26 'Balance at 1 January 6,695'",
+   "M_over_R": 0.839
+  },
+  "2_selection_event": "SPA vehicle (S1) with serial closures. p37 note 16: 'The SPA will RITC into the 2020 YOA. The host will collect 3,132,803 from the member in 2022, in relation to the 2019 year of account losses in US Dollars. The RITC value will be passed through to the SPA 2020 experience account.' So the 2019 year closes by RITC into the 2020 YOA at 31 December 2021 (end of year t). The 2020 report (p35) had already said the 2018 YOA would RITC into 2019 with the host collecting 2,130,741 from the member in 2021 'in relation to the 2018 year of account losses', i.e. during year t (2021) the 2018 venture was closed into the 2019 venture. Both closures lie between or at the end of the diagonals.",
+  "3_overlap": "Yes, in the paid and incurred figures. Cumulative gross paid in the table at end 2021 is 4,114 + 11,984 + 1,568 + 1,852 = 19,518. The same cohorts at end 2020 (2020 report p32) were 3,577 + 5,142 + 278 = 8,997, so the table implies 10,521 paid in 2021, against gross claims paid of 6,515 in the 2021 accounts (p15): 61.5% too much (excess about 4.0m). Through the calendar accounts the cumulative gross paid should be 3,260 (end 2019, 2019 report p31) + 5,880 + 6,515 = 15,655 against 19,518 (+24.7%); at end 2020 the same sum ties (9,140 against 8,997, -1.6%), so the excess arises only in 2021. On the net table (p33) cumulative net paid is 4,114 + 9,367 + 285 + 1,800 = 15,566 against the accounts' 2,162 + 5,418 + 2,564 = 10,144 (excess 5,422), which is close to the sum of the two outgoing closing amounts quoted in the post balance sheet notes (2,130,741 for the 2018 YOA in 2021 and 3,132,803 for the 2019 YOA, together 5,263). The 2018 row's net paid rose from 2,028 (2020 report) to 4,114 (+2,086 against a gross rise of 537) and now equals its gross paid (4,114): the closure amount is inside the 2018 and 2019 rows' paid and so inside their cumulative incurred.",
+  "4_gross_net": "Yes. The 2018 row has gross paid equal to net paid (4,114 and 4,114, p32 and p33) although the 2020 report had gross 3,577 against net 2,028, and its net paid grew by 2,086 in 2021 against a gross growth of 537; the 2019 row's net paid grew from 5,142 to 9,367 (+4,225) in a year when the whole account's net claims paid were 2,564. A net closing (RITC) amount appears in the cumulative paid rows that M's cohorts use.",
+  "5_accounts_test": {
+   "table_implied_incurred_2021_m": 11.064,
+   "table_scope": "2018 +196; 2019 +5,421; 2020 +878 (3,064 -> 3,942); 2021 4,569 new",
+   "accounts_gross_incurred_2021_m": 6.882,
+   "accounts_quote": "p15: gross claims paid (6,515) and change in claims outstanding gross (367); roll-forward p26 closing 7,049 against opening 6,695",
+   "diff_pct": 60.8,
+   "paid_test": "table implied gross paid 10,521 against 6,515: +61.5%",
+   "control_2020": "within 4% on incurred and 2.4% on paid, gross and net (see 6131_2020); the end-2020 cumulative paid ties to the calendar sum (-1.6%)"
+  },
+  "6_reconstruction": "No. The excess (about 4.0m gross paid, 4.2m incurred, 5.4m net paid) sits in the 2019 and 2018 cohort rows, and the pages give no split of the closing amounts by cohort or between gross and net; the 2019 row alone contributes 5,421 of M's 5,617. The closing accounts for the 2018 and 2019 years of account are not in the corpus (only the annual reports syndicate_6131_2018 to 2021 are). The calendar accounts give year totals only, so the cohort movement cannot be rebuilt from them.",
+  "verdict": "set_aside",
+  "reason": "Specific evidence from the filing's own figures: the table's 2021 paid and incurred movements exceed the 2021 accounts by about 4.0 to 4.2m gross (61%), the excess matches the closing (RITC) amounts the notes name, and the 2018 and 2019 rows carry net amounts (gross paid equal to net paid on the 2018 row). The mature outcome of 5.6m (84% of opening reserves) rests mainly on the 2019 row that carries the closure, and neither the closing accounts nor any roll-forward is available to rebuild it."
+ }
+}

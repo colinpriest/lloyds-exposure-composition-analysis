@@ -1,0 +1,81 @@
+{
+ "6118_2018": {
+  "read_by": "text layer for all five reports (2014-2018) plus page image of the 2018 table (p39 PDF = 'Page 37 of 71'); the 2016 report via its OCR cache",
+  "reader": "Z11",
+  "table": {
+   "page": 39,
+   "heading": "Gross insurance ultimate contract outstanding claims provisions as at 31 December 2018 (GBP 000), underwriting-year basis, ultimate (unearned included)",
+   "basis": "gross, ultimate; no '& prior' column in 2018 (columns 2014..2018, Total)"
+  },
+  "cells": {
+   "2014": "21,530 / 22,063 / 21,613 / 21,267 (end-2017) / 20,919 (end-2018)",
+   "2015": "41,889 / 44,117 / 43,126 (end-2017) / 42,161 (end-2018)",
+   "2016": "77,678 / 88,101 (end-2017) / 96,993 (end-2018)",
+   "2017": "149,075 (end-2017) / 155,961 (end-2018)",
+   "2018": "95,085",
+   "total_latest_diag": "411,119; cumulative payments (156,686); gross unearned claims reserve (42,807); gross claims reserve 211,626"
+  },
+  "M_gbp000": {
+   "2014": -348,
+   "2015": -965,
+   "2016": 8892,
+   "sum": 7579,
+   "R": 183372,
+   "ratio": 0.04133,
+   "equals_two_readers": true
+  },
+  "R_source": "2018 balance sheet p18 comparative and note 9 p33: claims outstanding, gross, 1 Jan 2018 = 183,372; 2017 report table p36 'Gross claims reserve 183,372'",
+  "selection_event": "SPA 6118 (host 1955, QS). 'Effective 31 December 2018, the Syndicate was closed into Barbican Syndicate 1955, with a quota share contract put in place to transfer the risk back to the 2017 Year of Account' (p50); RITC premium 42.5m net, 69,887 gross (526 unearned + 35,107 claims outstanding + 34,254 IBNR) for the 2016 and prior YoAs (p72, p58). Effective at the end-2018 diagonal date, so after year-t movement; the annual accounts continue to show all YoAs (balance sheet claims outstanding 211,626 equals the table reserve).",
+  "(a)_basis": {
+   "policy_quote_p20": "Amounts ceded from Barbican Syndicate 1955 to the Syndicate are taken gross of external reinsurance for the 2018 Year of Account ... For all other years of account, amounts ceded from Barbican Syndicate 1955 to the Syndicate are taken net of external reinsurance.",
+   "also": "p6: 'The quota share was ceded gross of external reinsurance and gross of acquisition costs ... a change from the 2017 Year of Account which had a quota share gross of external reinsurance and net of acquisition costs' (this contradicts p20 for 2017; 2017 report p33 says 2017 YoA 39.6% 'based on its result net of external reinsurance'; 2017 YoA is outside M)",
+   "settled": "The 'gross' table mixes bases across underwriting years: 2018 YoA is gross of 1955's external reinsurance, 2014-2017 YoAs are taken net of it (as ceded). But every cohort in M (2014, 2015, 2016) is on the same net-of-external-cession basis on BOTH diagonals; the 2014-2016 YoA basis is stated net in the 2015, 2016 and 2017 reports too (2015 p696; 2016 OCR; 2017 p745, p2497 'based on its result net of external reinsurance'). No restatement of old years to gross is shown: net/gross of the 2014 column is 0.787 in 2018 (16,459/20,919) and 0.779 in 2015 (14,159/18,182). Gross and net tables differ for every column, so no cell is gross=net."
+  },
+  "(b)_2014_end2017_cell": {
+   "cells": "2017 report p36: 2014 col 121,093 / 119,653 / 125,747 / 101,239 (end-2017). 2018 report p37: 2014 col 21,530 / 22,063 / 21,613 / 21,267 (end-2017). The whole column (every vintage), gross and net (net 70,392 -> 16,648 at end-2017), is about 5.6x smaller; 2015, 2016, 2017 columns move only 3-4% (2015: 41,766 -> 43,126; 2016: 84,968 -> 88,101; 2017: 142,866 -> 149,075).",
+   "cause_found": "A back-year block inside the old 2014 column. The 2016 report (OCR p6) says the Syndicate was established as 'an 11.5% quota share reinsurance of all Barbican Syndicate 1955 classes of business on all underwriting years from 2008 to 2014'; the 2014 YoA premium of 25.0m 'An adjustment of 46.5m was made to premium written during 2014 in respect of the 2008 to 2013 Years of Account, bringing total premium written during 2014 to 71.5m', and 'Cumulative gross written premium of 70.5m on the 2014 YOA, includes the 46.5m adjustment'. The 2015 report (p1621) printed those back years in separate columns (2011 & Prior 55,936; 2012 19,528; 2013 18,071; sum 93,535 at end-2015) and the 2014 YoA alone at 17,573 (end UY) / 18,182 (end 2015). The 2016-2017 reports show a single '2014' column of ~120m (2016 report 120,357 / 125,156 / 131,412), i.e. 2014 YoA plus the 2008-2013 block; the 2018 report's 2014 column (21,530 / 22,063) matches the 2014 YoA alone (17,573 / 18,182 in 2015 after the ~16-20 pc sterling fall).",
+   "explained_in_filings": "Composition yes (2015 and 2016 reports); the change of presentation itself is NOT stated in the 2017 or 2018 report: searched 2018 for restat, re-present, reclass, comparative, 2008, 2013, back year, legacy: no hit in the claims note. Not an FX effect (80 pc fall, other columns +3-4 pc). Not an RITC cession of 2008-2013 either: the 2014 YoA closed into 1955 at 31 Dec 2016 (28.2m RITC, 2017 report p70) and 2015 at 31 Dec 2017 (33.9m), but the 2014 column kept its ~100m through end-2017. Fully-paid legacy block is only partly right: the implied paid on the block is about 66.3m of 79.97m ultimate (see (c)), leaving about 13.7m outstanding at end-2017 on the old base.",
+   "effect_on_M": "None within the 2018 table: M takes both diagonals from the 2018 table (end-2017 cell 21,267 against end-2018 cell 20,919, -348), both on the restated 2014-YoA-only base. The change would matter only for a cross-report difference (2018 end-2018 cell against the 2017 report's 101,239), which is not the outcome definition."
+  },
+  "(c)_accounts_tests": {
+   "incurred_2018": {
+    "table_implied_all_printed_years": 109550,
+    "calc": "411,119 latest diagonal - 301,569 end-2017 diagonal (21,267+43,126+88,101+149,075)",
+    "accounts_gross_claims_incurred": 111831,
+    "page": "p15 income statement: claims paid gross (91,262) + change in claims outstanding gross (20,569); note 9 p33: current accident year 65,325 + prior accident years 46,506",
+    "diff_pct": -2.0,
+    "also": "on the identity incurred + FX = change in ultimate - change in unearned claims reserve: 109,550 + 12,917 (55,724 -> 42,807) = 122,467 against 111,831 + FX 7,685 = 119,516 (+2.5 pc); the end-2017 unearned reserve on the restated base is not printed so this uses the 2017 report's 55,724"
+   },
+   "incurred_2017_control": {
+    "table_implied": 127348,
+    "calc": "2017 report p36: latest 370,839 - end-2016 diagonal (125,747 + 42,790 + 74,954 = 243,491)",
+    "accounts_gross_claims_incurred": 135897,
+    "page": "2018 report p15 comparative: paid (54,279) + change in claims outstanding (81,618); note 9 p34: 107,209 + 28,688",
+    "diff_pct": -6.3,
+    "note": "within 0.4 pc of incurred + FX (135,897 - 9,024 = 126,873); the 2017 table (with the back-year block) ties no better than the 2018 table"
+   },
+   "paid_test": {
+    "table_implied_2018": 24943,
+    "calc": "cumulative payments (156,686) 2018 report p37 less (131,743) 2017 report p36",
+    "accounts_gross_paid_2018": 91262,
+    "page": "p15",
+    "reading": "Not a valid test here: the opening cumulative payments on the restated base are not printed in the 2018 report, so the two totals are on different bases. If the 2018 total is on the restated base, the removed block carries about 66,319 of cumulative payments (131,743 - (156,686 - 91,262)), the same order as the 2008-2013 block's cumulative paid at end-2015 in the 2015 report (44,245 + 9,723 + 7,495 = 61,463). The same total-to-total test fails in 2017 as well (131,743 - 107,336 = 24,407 against 54,279 paid), so the cumulative-payments total is not a roll-forward of annual paid in either year.",
+    "year_2017_control": {
+     "table_implied": 24407,
+     "accounts": 54279
+    }
+   },
+   "table_validity": "End-2018 reserve identity ties to the balance sheet: 411,119 - 156,686 - 42,807 = 211,626 = claims outstanding gross (p18, p33). End-2017 on the 2017 report: 370,839 - 131,743 - 55,724 = 183,372 = balance sheet. No column repeats the previous report shifted by one."
+  },
+  "(d)_bridge": {
+   "reconstruct_M_by_cohort": "No. The filings print no cumulative payments or outstanding by underwriting year in the 2018 report, only totals; the closing account of the 2016 YoA gives the RITC for 2016 and prior YoAs together (gross claims reserve 69,361 = 35,107 + 34,254), not by cohort.",
+   "what_validates_it": "M is a difference of two diagonals of one printed table. (1) The end-2018 diagonal ties to the balance sheet by the reserve identity; (2) the all-years movement of the table (109,550) ties to gross claims incurred (111,831, -2.0 pc; 2.5 pc on the unearned-adjusted identity); (3) the restatement of the end-2017 cells for 2015-2017 (+3.3, +3.7, +4.3 pc) matches the sterling retranslation of reserves (FX 7,685 = 4.2 pc of 183,372, p33), so the end-2017 diagonal is on the closing-2018 rate, like the end-2018 diagonal; (4) the 2014 cell at end-2017 (21,267) is the 2014 YoA alone, the same scale as the 2015 report's 18,182 after sterling's fall.",
+   "not_reconstructed": "the split of the 109,550 into cohorts (M's 7,579 is 6.9 pc of it) and the restated opening reserve, payments and unearned claims reserve."
+  },
+  "overlap_and_cohort_reassignment": "Rows u<=2016 of the 2018 table carry no other vehicle's history: the 2008-2013 block that sat in the old 2014 column is absent from the 2018 table, and the 2014 YoA closed into 1955 at 31 Dec 2016 and the 2015 YoA at 31 Dec 2017 (successive internal RITCs into the next YoA of the same Syndicate) without changing the table's underwriting-year rows. The 2016 and prior RITC is effective 31 Dec 2018, after the diagonal.",
+  "denominator_note": "R = 183,372 was reported on the old base (back-year block inside it, about 13.7m by the implied-paid arithmetic, which is inferred not printed); on a restated base R would be lower, M/R slightly higher (4.1 pc to about 4.5 pc). Not decisive.",
+  "limits": "The reason for dropping the 2008-2013 block from the table is inferred from the 2015 and 2016 reports; neither the 2017 nor the 2018 report states it. The unearned-claims-reserve test uses the 2017 report's 55,724 because the restated figure is not printed.",
+  "verdict": "concern_resolved",
+  "reason": "The concern (2014 column 101,239 vs 21,267; gross vs net-of-external across years) is real but it sits outside M: the 2008-2013 back-year block left the 2014 column, and the 2014-2016 cohorts in M are on one stable net-of-external basis on both diagonals of the same printed table. The table's end-2018 diagonal ties to the balance sheet and its year movement ties to gross claims incurred within 2.0 to 2.5 pc, so the outcome M = +7,579 is validated as a within-table movement, though not reconstructable by cohort."
+ }
+}

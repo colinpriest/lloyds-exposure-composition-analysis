@@ -1,0 +1,340 @@
+{
+ "1301_2022": {
+  "read_by": "text layer (note 15, pp 70-71 of the report; PDF pages 71-72)",
+  "table": {
+   "page": 71,
+   "heading": "15. Claims development ... Pure underwriting estimate - gross, 2013 ... 2022, Total, $'m, 'Estimate of gross claims at end of underwriting year ... Nine years later'; 'Balances have been translated at exchange rates prevailing at 31 December 2022 in all cases'",
+   "basis": "gross, ultimate (pure underwriting-year) estimate, USD millions, one column per underwriting year 2013-2022 (not '2020 and prior' combined in this table); 'Gross claims reserve for 2012 and prior years 4.7'; gross claims reserves 786.5; net table follows on the next page"
+  },
+  "cells_u_le_t_minus_2": "End-2022 (latest) vs end-2021 (same table, $m): 2013: 106.9 (nine years later) vs 107.7 = -0.8; 2014: 118.4 vs 119.3 = -0.9; 2015: 172.8 vs 173.1 = -0.3; 2016: 217.4 vs 214.3 = +3.1; 2017: 347.0 vs 341.6 = +5.4; 2018: 253.3 vs 257.5 = -4.2; 2019: 143.9 vs 148.3 = -4.4; 2020: 81.6 (two years later) vs 113.1 (one year) = -31.5.",
+  "M_usd_m": -33.6,
+  "R_opening_gross_claims_outstanding_usd000": 538214,
+  "M_over_R": -0.0624,
+  "selection_event": "Outbound RITC: the 2020 and prior years of account (held by Enstar's SGL No. 1 Limited, managed by EMAL since 1 June 2021) 'will be reinsured to close into Syndicate 2008 at the close of the 2020 underwriting year from 1 January 2023' (p. directors' report text, PDF p. 9 and p. 14 area). The date is 1 January 2023, after both diagonals (end-2021 and end-2022), so the transfer falls outside the interval; the 2022 accounts still carry the 2020-and-prior years in full ('The Syndicate financial statements ... reports the 2022 year of account, the 2021 year of account, and the 2020 and prior years of account combined').",
+  "overlap_history": "None found. The end-2021 cells in this table equal the 2021 report's latest cells after a uniform currency retranslation (2021 report at 31 Dec 2021 rates vs this report at 31 Dec 2022 rates): 2013 111.8 -> 107.7 (0.963), 2014 122.2 -> 119.3 (0.976), 2015 177.1 -> 173.1 (0.977), 2016 218.7 -> 214.3 (0.980), 2017 348.8 -> 341.6 (0.979), 2018 263.3 -> 257.5 (0.978), 2019 150.3 -> 148.3 (0.987), 2020 114.3 -> 113.1 (0.989). No cohort reassigned or merged.",
+  "gross_net": "Gross and net tables printed separately and differ (e.g. 2022 first year gross 393.3 vs a lower net). No net figure in the gross rows.",
+  "accounts_test": {
+   "basis": "incurred, ultimate-basis table vs earned accounts",
+   "table_implied_2022_usd_m": "-33.6 (2013-2020) + 83.8 (2021: 252.1 less 168.3) + 393.3 (2022 first year) = 443.5",
+   "accounts": "Income statement p25: gross claims paid (191,456) + change in the gross provision (256,903) = gross claims incurred 448,359 ($000)",
+   "diff_pct": -1.1,
+   "control_prev_year": "2021 report table (p67): existing columns +22.9 (2012-2020) + 2021 first year 169.6 = 192.5 vs accounts gross claims paid 155,835 + change in provision 44,740 = 200,575: -4.0%"
+  },
+  "bridge": "Yes: the table's implied incurred ties to the accounts within 1.1% (4.0% for 2021), liabilities (gross claims reserves 786.5 = balance sheet gross claims outstanding 786,531), and the retranslation of the prior diagonal is a uniform currency factor.",
+  "verdict": "stands",
+  "reason": "The named RITC to Syndicate 2008 is effective 1 January 2023, after the 2022 closing diagonal, so it touches neither diagonal. The 2022 table ties to the accounts (443.5m implied against 448.4m gross incurred) and its end-2021 cells match the 2021 report apart from currency retranslation. The large 2020 movement (-31.5m, 113.1 to 81.6) is inside a table that reconciles, with no overlap or net mixing."
+ },
+ "1301_2023": {
+  "read_by": "OCR text plus page image (PDF p70, copied to renders/syndicate_1301_2023_p70.png); the page image confirms every cell quoted",
+  "table": {
+   "page": 70,
+   "heading": "15. Claims development, Pure underwriting estimate - gross, columns 2021 2022 2023 Total, $'m, 'Estimate of ultimate gross claims at end of underwriting year / one year later / two years later'; 'Balances have been translated at exchange rates prevailing at 31 December 2023'",
+   "basis": "gross, ultimate (pure underwriting-year) estimate, USD millions; only three underwriting years because 2020 and prior were transferred by RITC; gross ultimate claims reserve total 739.0; the net table beneath it is separate"
+  },
+  "cells_u_le_t_minus_2": "Only u=2021 (t-2 = 2021): 2021 column: end of UY 168.4, one year later 252.7 (end-2022), two years later 274.8 (end-2023): M = 274.8 - 252.7 = +22.1. (2022 column 393.0 -> 524.7 = +131.7 and the 2023 column 330.1 are u=t-1 and t.)",
+  "M_usd_m": 22.1,
+  "R_opening_gross_claims_outstanding_usd000": "786,531 as printed at 1 January 2023 (p71, note 16); 502,246 after the 284,285 'External RITC' (the retained base)",
+  "M_over_R": "0.0281 on 786,531; 0.0440 on the retained 502,246",
+  "selection_event": "Outbound: the 2020 and prior years of account (Enstar's SGL 1, managed by EMAL) 'were transferred through Reinsurance to Close (RITC) to Syndicate 2008 on 1 January 2023' (p. directors' report; note 19, p73). Effective at the opening of year t, between the end-2022 and end-2023 diagonals, but it removes whole columns (2013-2020 and prior), not cells of the 2021 column. Note 16 (p71): 'External RITC (284,285) 93,103 (191,182)' in the gross, reinsurers' and net provision movements, and 'Technical provision balances relating to the 2020 and prior years of account were transferred through Reinsurance to Close to Syndicate 2008 on 1 January 2023.' 284,285 equals the 2022 report's gross reserves for 2013-2020 plus 2012 and prior (2.5+15.5+20.1+22.2+51.4+64.6+57.3+45.9+4.7 = 284.2).",
+  "overlap_history": "None. The 2021 column's end-2022 cell (252.7) equals the 2022 report's 252.1 after currency retranslation (31 Dec 2023 vs 31 Dec 2022 rates, factor 1.002); end-of-UY cell 168.4 vs 168.3. The 2021 underwriting year was never part of the transferred 2020-and-prior years, so no cohort was reassigned or merged.",
+  "gross_net": "Gross table and net table printed separately (2021 column net 140.2, 202.8, 186.8). No net figure in the gross row. The net RITC (191,182) appears only in the provision roll-forward, not in the table.",
+  "accounts_test": {
+   "basis": "incurred (ultimate-basis table vs earned accounts)",
+   "table_implied_2023_usd_m": "2021: 274.8-252.7 = +22.1; 2022: 524.7-393.0 = +131.7; 2023 first year 330.1; total 483.9",
+   "accounts": "Income statement p25: gross claims paid (250,926) + change in the gross provision (235,629) = gross claims incurred 486,555 ($000); the External RITC (284,285) is a separate line in note 16 and is not in the P&L claims lines",
+   "diff_pct": -0.5,
+   "control_prev_year": "2022 report: table-implied 443.5 vs accounts 448.4 (-1.1%) (see 1301_2022)"
+  },
+  "bridge": "Yes: the table ties to the accounts within 0.5%, the previous diagonal reproduces the 2022 report's 2021 cells apart from currency, and the transferred reserve (284,285) reconciles to the 2022 report's own reserves for the transferred columns.",
+  "verdict": "stands",
+  "reason": "The RITC out at 1 January 2023 removes the 2020-and-prior columns from the table and leaves only the retained 2021 year, whose two diagonals reproduce the 2022 report apart from currency. The ultimate-basis table ties to gross claims incurred (483.9m vs 486.6m). The only point to watch is the denominator: R should be the retained base (502.2m), not the 786.5m that still contains the transferred 284.3m."
+ },
+ "1686_2021": {
+  "read_by": "text layer (PDF page 32); cross-read against the 2020 report of Syndicate 1686 (PDF text layer) and the 2019 report of Syndicate 2007 and 2018 report of Syndicate 6129 (text/OCR), all from the corpus",
+  "table": {
+   "page": 32,
+   "heading": "16. Risk management, c) Insurance risk management, Claims development table: 'Estimate of cumulative gross claims incurred' by Underwriting Year 2014 ... 2021, USD'000, with 'Less cumulative gross paid', 'Liability for gross outstanding claims' and 'Total gross outstanding claims all years 2,167,158'",
+   "basis": "gross, cumulative incurred (notified plus IBNR), underwriting-year basis, USD'000; no '& prior' column; net table printed beneath"
+  },
+  "cells_u_le_t_minus_2": "End-2021 (latest) vs end-2020, USD'000: 2014: 139,165 (seven years later) vs 138,157 (six) = +1,008; 2015: 107,814 (six) vs 112,877 (five) = -5,063; 2016: 1,154,069 (five) vs 1,125,373 (four) = +28,696; 2017: 1,442,470 (four) vs 1,382,452 (three) = +60,018; 2018: 1,612,609 (three) vs 1,594,488 (two) = +18,121; 2019: 853,999 (two) vs 851,258 (one) = +2,741. (2020: 711,504 vs 314,747 = +396,757 and 2021: 331,648 are u=t-1 and t.)",
+  "M_usd000": 105521,
+  "M_m": 105.521,
+  "R_opening_gross_claims_outstanding_usd000": "1,173,605 at 31 December 2020 (note 4, PDF p24); about 2.1bn with the RITC",
+  "M_over_R": "0.0899 on 1,173,605; about 0.050 on the RITC-inclusive base",
+  "selection_event": "'With effect from 1 January 2021, the 2018 year of account of Syndicate 2007 and Syndicate 6129 closed by way of an RITC into the 2019 year of account of Syndicate 1686' (PDF p7; p6). Accounted for 'as a balance sheet claims portfolio transfer with no entries recorded in the statement of comprehensive income' (p20). 'Special purpose Syndicate 6129 reinsured to close into Syndicate 1686 concurrently alongside Syndicate 2007, the host syndicate. Syndicate 6129's liabilities were eliminated against reinsurance assets from the Syndicate 2007 balance sheet. There was no impact to the total gross liabilities of Syndicate 1686.' (p21). Opening of year t, so both table diagonals include the transferred history. Note the 1686/2007 Part VII transfer on 30 December 2020 is a separate, net-neutral item.",
+  "overlap_history": "Yes: the 2021 table's 2016-2018 columns hold Syndicate 2007's history as if always. 1686 own table in the 2020 report (end-2020 cells): 2016 256,846, 2017 381,938, 2018 356,605; the 2021 report's same cells: 1,125,373, 1,382,452, 1,594,488. 2014, 2015 and 2019 are unchanged (138,157/138,158, 112,877, 851,258). Cross-check to 2007's own 2019 report (GBP'000, UY 2016: 640,512 at end-2019; UY2017: 728,511; UY2018: 669,255): at 1.3532 USD/GBP these are 866.7m, 985.8m, 905.6m versus the 2021 table's cells less 1686's own 2020-report cells at end-2019: 856.6m, 972.2m, 1,034.0m. 2016 and 2017 match within about 1.5%; 2018 is about 128m (14%) higher (end of UY 2018: 575.4m vs 466.8m, +108.6m), which is of the order of 6129's own UY2018 cell (GBP 92.0m = about 124m, 6129 report p21) but the filing says 6129 was eliminated. Cohorts are by origin year; nothing is reassigned into 1686's 2019 column (unchanged).",
+  "gross_net": "Gross and net tables separate and consistent in shape. The 6129 quota share is inside 2007's gross; 'no impact to the total gross liabilities of Syndicate 1686' (p21). No net figure in the gross rows; gross liabilities by column 9,664+13,402+208,463+336,974+440,487+391,732+469,681+296,755 = 2,167,158 = note 4 gross claims outstanding at 31 December 2021.",
+  "accounts_test": {
+   "basis": "incurred",
+   "table_implied_2021_usd000": "u<=2019 +105,521; 2020 +396,757; 2021 first year 331,648; total 833,926",
+   "accounts": "Statement of comprehensive income (PDF p15): gross claims paid (768,504) + change in gross provision (63,267) = gross claims incurred 831,771; the RITC is outside it ('no entries recorded in the statement of comprehensive income')",
+   "diff_pct": 0.3,
+   "control_prev_year": "2020 report table: 2014 -2,140, 2015 +3,375, 2016 +3,372, 2017 +8,149, 2018 +41,251, 2019 +523,363, 2020 first year 314,746 = 892,116 vs accounts (2020 column of the P&L) gross paid 445,896 + change 414,611 = 860,507: +3.7%"
+  },
+  "bridge": "Yes, mostly. The table ties to the balance sheet exactly and to the year's gross incurred within 0.3% (2020 control 3.7%); the RITC's gross liabilities (about 930m) are outside P&L incurred, so M is post-transfer development; 2016 and 2017 cells reconcile to Syndicate 2007's own 2019 table within about 1.5%. The residual is the 2018 column, about 110-130m above 2007's own cells, which cannot be split between 2007 and 6129 from the pages; it is inside M only through the 2018 movement (+18.1m of 105.5m).",
+  "verdict": "concern_resolved",
+  "reason": "The 2018 YoA of Syndicate 2007 and its SPA 6129 closed into 1686 at the opening of 2021, and the 2016-2018 columns now carry 2007's history as if always (they are four to ten times 1686's own cells in the 2020 report). The concern is resolved because the table ties to the balance sheet and to gross claims incurred within 0.3% with the RITC outside the P&L, the filing states 6129 was eliminated with no effect on gross liabilities, and the 2016-2017 rows reconcile to 2007's own filing. The 2018 row sits 110-130m above 2007's own cells (possible 6129 overlap) and is the weak point, worth 18.1m of M."
+ },
+ "2488_2019": {
+  "read_by": "page image/OCR of PDF page 49 (the page is printed upside down; read with a 180 degree rotation of the OCR, text clean); 2018 reports of 2488 and 1882 from the text layer",
+  "table": {
+   "page": 49,
+   "heading": "15. CLAIMS DEVELOPMENT TABLES, 'Claims development as at 31 December 2019 - Gross', 2011 ... 2019 Total, GBP'000, 'Estimate of ultimates' by underwriting year, 'Provision for prior financial years 218,648', 'Liability in the balance sheet 964,380'",
+   "basis": "gross, estimate of ultimates (underwriting-year basis), translated at current year-end rates; no '& prior' column; the filing states 'The data for claims development periods prior to 2019 includes data in those periods relating to Syndicate 1882, which was reinsured and closed into Syndicate 2488 with effect from 1 January 2019'"
+  },
+  "cells_u_le_t_minus_2": "End-2019 (latest) vs end-2018, GBP'000: 2011: 371,395 (eight years later) vs 377,123 (seven) = -5,728; 2012: 295,618 (seven) vs 293,319 (six) = +2,299; 2013: 259,562 (six) vs 261,822 (five) = -2,260; 2014: 285,884 (five) vs 288,856 (four) = -2,972; 2015: 293,534 (four) vs 315,733 (three) = -22,199; 2016: 324,239 (three) vs 329,541 (two) = -5,302; 2017: 334,706 (two) vs 301,503 (one) = +33,203. (2018: 267,339 vs 101,458 = +165,881 and 2019: 95,603 are u=t-1 and t.)",
+  "M_gbp000": -2959,
+  "M_m": -2.959,
+  "R_opening_gross_claims_outstanding_gbp000": "956,510 at 1 January 2019 (note 16, p51); with the RITC 143,759 about 1,100,269",
+  "M_over_R": "-0.0031 on 956,510; -0.0027 on 1,100,269",
+  "selection_event": "'With effect from 1 January 2019, Syndicate 2488 accepted the reinsurance to close of the liabilities of Syndicate 1882. Syndicate 1882 was also managed by CUAL and had been in run-off since 31 December 2016. The 2016 year of account was its last year of account. ... transfer ... of gross and net technical provisions of 150.2 million and 135.0 million' (p7). Note 16 (p51): 'RITC from Syndicate 1882' gross provision for claims 143,759 (reinsurers' 14,517) and gross unearned premium 7,949, separate from 'Decrease in provision (83,530)'. Opening of year t.",
+  "overlap_history": "Yes, as stated in the table note, and checkable. 2488's own end-2018 cells (2018 report, GBP at Dec 2018 rates) 2011 274,825, 2012 227,723, 2013 219,423, 2014 228,961, 2015 244,546, 2016 296,244, 2017 317,778; the 2019 report's end-2018 cells 377,123, 293,319, 261,822, 288,856, 315,733, 329,541, 301,503. Columns 2011-2016 rise by 1882's history; 2017 and 2018 (1882 wrote no later year) change only by currency (factor 0.949). Additivity test with Syndicate 1882's own 2018 table (end-2018 cells 120,679, 79,712, 56,086, 75,091, 87,493, 50,352; times 0.949 for the rate change): implied 1882 portion from the 2019 report (2019 cell less 2488's 2018 cell times 0.949) is 116.3, 77.2, 53.6, 71.6, 83.7, 48.4 against 114.5, 75.6, 53.2, 71.3, 83.0, 47.8: every column within about 2%. So the u<=2016 rows are the sum of two vehicles' histories, each cohort by its own year; no cohort is reassigned.",
+  "gross_net": "Gross and net tables separate (net table follows on the same page set); the RITC's reinsurers' share (14,517) is shown only in the reinsurers' columns of note 16. No net figure in the gross rows. Liabilities by column 25,969+51,270+49,513+55,591+82,146+114,265+114,889+168,373+83,716 = 745,732, + prior financial years 218,648 = 964,380 = note 16 closing gross provision.",
+  "accounts_test": {
+   "basis": "incurred (estimate-of-ultimates table vs earned accounts)",
+   "table_implied_2019_gbp000": "u<=2017 -2,959; 2018 +165,881; 2019 first year 95,603; total 258,525",
+   "accounts": "Income statement (PDF p22): gross claims paid (352,383) and change in gross provision for claims 83,530 (decrease), so gross claims incurred 268,853; the RITC (143,759) is outside these lines",
+   "diff_pct": -3.8,
+   "control_prev_year": "2018 report table: -5,165-2,957-16,139-9,758-13,433+4,659+161,324 plus 2018 first year 106,872 = 225,403 vs accounts gross paid 273,618 less provision decrease 73,107 = 200,511: +12.4% (ultimate vs earned basis, no explicit cause on the pages)"
+  },
+  "bridge": "Yes. The RITC-inflated end-2018 diagonal is reproduced as 2488's own 2018 cells plus 1882's 2018 cells (about 2% per column), the 1882 liability transferred (143,759) equals the RITC line in note 16, and the 2019 table ties to the closing provision (964,380) and to gross claims incurred within 3.8%. M is the post-acceptance development of the combined book.",
+  "verdict": "concern_resolved",
+  "reason": "The 1882 RITC (1 January 2019, 143.8m gross provision) sits in the 2011-2016 rows as if always, which the filing states, so both diagonals carry another vehicle's history. The concern is resolved by reconstruction: the 2019 report's end-2018 cells equal 2488's own 2018 cells plus 1882's own 2018 cells within about 2%, the transfer value equals the RITC line, and the table ties to the balance sheet and to incurred within 3.8%. M = -3.0m is the development of the combined book after acceptance."
+ },
+ "3000_2016": {
+  "read_by": "text layer (PDF page 38; headings and cell labels printed one per line, mapped to columns by position and cross-checked by cumulative incurred less cumulative paid = printed provision in every column)",
+  "table": {
+   "page": 38,
+   "heading": "Gross outstanding claims provision as at 31 December 2016: 'Before the effect of reinsurance, the loss development table is: Underwriting year: All prior years, 2011, 2012, 2013, 2014, 2015, 2016, Total, GBP'000; Estimate of cumulative claims incurred; Cumulative paid claims'",
+   "basis": "gross, cumulative claims incurred (ultimate-type, underwriting-year basis) with cumulative paid by cohort; 'All prior years' column carries only the closing provision (324,217); the table 'has been restated to reflect the historical information for Syndicate 1400 following the RITC accepted as at 1 January 2016 ... also revalued to reflect the current year end rates of exchange'"
+  },
+  "cells_u_le_t_minus_2": "Cumulative claims incurred, end-2016 (latest) vs end-2015, GBP'000: 2011: 587,479 (five years later) vs 584,362 (four) = +3,117; 2012: 443,952 vs 445,510 = -1,558; 2013: 315,360 (three) vs 343,050 (two) = -27,690; 2014: 284,441 (two) vs 230,985 (one) = +53,456. (2015: 252,441 vs 103,960 = +148,481 and 2016: 142,410 are u=t-1 and t.)",
+  "M_gbp000": 27325,
+  "M_m": 27.325,
+  "R_opening_gross_claims_outstanding_gbp000": "737,922 at 1 January 2016 (p37 technical provisions note); 986,744 with the RITC accepted 248,822",
+  "M_over_R": "0.0370 on 737,922; 0.0277 on 986,744",
+  "selection_event": "'With effect from the 1 January 2016, the Syndicate accepted the 2013 year of account Reinsurance to Close from Syndicate 1400' (p4); note 18 (p37): 'RITC accepted from Syndicate 1400: gross 248,822, reinsurance 25,153, net 223,669', shown as its own line, separate from 'Movement in provision (19,130)' and 'Movement due to foreign exchange 135,650'. Effective at the opening of year t, so both table diagonals carry the 1400 history. (The 2017 flag of the batch is a different record.)",
+  "overlap_history": "Yes, as stated. The 2015 report printed (original exchange rates) 2011: 226,131, 2012: 193,364, 2013: 176,227, 2014: 219,634, 2015: 102,097 at end-2015; this report's end-2015 cells are 584,362, 445,510, 343,050, 230,985, 103,960: 2011-2013 rise by 358k, 252k, 167k (the 1400 book, shown by its original underwriting year) while 2014 and 2015 rise only by currency retranslation (+5% and +1.8%), consistent with the RITC covering 1400's 2013-and-prior years. So rows 2011-2013 carry another vehicle's history as if always; the cohorts are preserved (not merged into a single year).",
+  "gross_net": "Gross table printed separately from the net table ('After the effect of reinsurance'); the 25,153 reinsurers' share of the RITC sits only in the reinsurance column of the provisions note. No net figure in the gross rows.",
+  "accounts_test": {
+   "basis": "paid (table has cumulative paid by cohort) and incurred",
+   "paid_table_implied_2016_gbp000": "2011 +7,803 (506,472 less 498,669); 2012 +15,509 (317,331 less 301,822); 2013 +16,270 (205,604 less 189,334); 2014 +47,886 (117,427 less 69,541); 2015 +65,712 (77,356 less 11,644); 2016 22,846 = 176,026, excluding the 'All prior years' column (paid not printed)",
+   "accounts": "P&L p17: gross claims paid (264,295); change in gross provision +19,130 (a release), so gross claims incurred 245,165. Table paid 176.0m plus the unprinted all-prior-years paid of 88.3m would reach 264.3m (all-prior outstanding falls to 324.2m): consistent, not testable exactly.",
+   "incurred_note": "table-implied incurred on ultimate basis 27,325 + 148,481 + 142,410 = 318,216 vs earned 245,165: an ultimate-basis table legitimately exceeds earned incurred (unearned included); the all-prior-years column is absent",
+   "control_prev_year": "2015 report: table-implied 201.1m (2011 -12.4, 2012 -5.2, 2013 +5.0, 2014 +111.6, 2015 102.1) vs accounts incurred 204,536 + 6,831 = 211,367: -4.9%"
+  },
+  "bridge": "Yes, partial. By cohort the end-2016 table ties to the balance sheet: 81,007+126,621+109,756+167,014+175,085+119,564 + all prior years 324,217 = 1,103,264 = provision at 31 December 2016 (p37); each column's cumulative incurred less cumulative paid equals the printed provision. The RITC (248,822) is outside the P&L claims lines, so the 2016 table development is post-acceptance development; both diagonals are on end-2016 exchange rates, so M carries no retranslation.",
+  "verdict": "concern_resolved",
+  "reason": "The concern is the 1400 RITC accepted at the opening of 2016 and shown 'as if always' in the 2011-2013 columns (they are 1.5 to 2.6 times the 2015 report's cells). The filing says the table is restated for it and revalued, the cohorts stay by their original years, the RITC is a separate line outside gross claims incurred, and the table ties by cohort (incurred less paid) to the 1,103,264 closing provision. M (+27.3m) is the post-acceptance development; the earlier diagonal cannot be tied to the transfer value cell by cell."
+ },
+ "3000_2017": {
+  "read_by": "text layer (PDF page 39; cells printed one per line, mapped to columns by position, checked by cumulative incurred less cumulative paid = printed provision in each column)",
+  "table": {
+   "page": 39,
+   "heading": "Gross outstanding claims provision as at 31 December 2017: 'Before the effect of reinsurance, the loss development table is', Underwriting year: All prior years, 2011 ... 2017, Total, GBP'000; Estimate of cumulative claims incurred; Cumulative paid claims. Same wording as 2016: 'restated to reflect the historical information for Syndicate 1400 following the RITC accepted as at 1 January 2016 ... revalued to reflect the current year end rates of exchange'",
+   "basis": "gross, cumulative claims incurred on an underwriting-year basis, with cumulative paid by cohort; 'All prior years' column carries only the closing provision 294,073"
+  },
+  "cells_u_le_t_minus_2": "End-2017 (latest) vs end-2016, GBP'000: 2011: 547,942 (six years later) vs 552,146 (five) = -4,204; 2012: 420,338 (five) vs 415,093 (four) = +5,245; 2013: 285,280 (four) vs 299,481 (three) = -14,201; 2014: 255,344 (three) vs 259,935 (two) = -4,591; 2015: 243,097 (two) vs 233,446 (one) = +9,651. (2016: 298,310 vs 131,429 = +166,881 and 2017: 339,593 are u=t-1 and t.)",
+  "M_gbp000": -8100,
+  "M_m": -8.1,
+  "R_opening_gross_claims_outstanding_gbp000": 1103264,
+  "M_over_R": -0.0073,
+  "selection_event": "The RITC from Syndicate 1400 was 'accepted as at 1 January 2016' (the table note, p39; 2016 report p4: 'With effect from the 1 January 2016 the Syndicate accepted the 2013 year of account Reinsurance to Close from Syndicate 1400'). In this report the technical provisions note (PDF p38) shows 'RITC accepted from Syndicate 1400' as '-' for 2017 and 248,822 / 25,153 / 223,669 in the 2016 comparative column. So the 2017 flag is the comparative year only: the RITC is one year before the opening of year t and falls outside both 2017 diagonals (end-2016 and end-2017).",
+  "overlap_history": "The 2011-2013 columns still carry the 1400 history (restated as if always, as in the 2016 report), but identically in both diagonals. The end-2016 cells here reproduce the 2016 report's latest cells after one uniform currency factor (GBP vs USD at 31 Dec 2017 rates): 2011 587,479 -> 552,146 (0.940), 2012 443,952 -> 415,093 (0.935), 2013 315,360 -> 285,280 (0.905), 2014 284,441 -> 259,935 (0.914), 2015 252,441 -> 233,446 (0.925), 2016 142,410 -> 131,429 (0.923). No cohort reassigned or merged in the interval.",
+  "gross_net": "Gross table separate from the 'After the effect of reinsurance' table; no net figure in the gross rows. The 1400 RITC's net 223,669 appears only in the 2016 comparative net column.",
+  "accounts_test": {
+   "basis": "paid (cumulative paid printed) and incurred",
+   "paid_table_implied_2017_gbp000": "2011 +909; 2012 +5,286; 2013 +11,964; 2014 +40,023 (149,825 less 109,802); 2015 +49,497 (121,892 less 72,395); 2016 +78,286 (99,733 less 21,447); 2017 39,347 = 225,312, excluding the unprinted all-prior-years paid",
+   "accounts": "P&L p18: gross claims paid (303,159); change in gross provision (230,706) (increase), so gross claims incurred 533,865. Remaining 77.8m of paid would be on all prior years (provision 294,073 at end-2017): consistent, not exactly testable.",
+   "incurred_note": "table-implied incurred (ultimate basis) -8,100 + 166,881 + 339,593 = 498,374 vs earned 533,865: -6.6%, all-prior-years column absent, ultimate vs earned basis",
+   "control_prev_year": "2016 table: paid 176.0m + unprinted all-prior paid vs gross paid 264,295 (88.3m remaining); incurred 318.2m vs 245.2m ultimate vs earned (see 3000_2016)"
+  },
+  "bridge": "Yes. By cohort the table ties to the balance sheet: 69,953+117,876+76,130+105,519+121,205+198,577+300,246 = 989,506, + all prior years 294,073 = 1,283,579 = gross provision at 31 December 2017 (p38); the end-2016 diagonal equals the previous report's cells after one currency factor; the 2016 development of 1400's book is already behind.",
+  "verdict": "stands",
+  "reason": "The 1400 RITC is effective 1 January 2016, so in the 2017 report it appears only in the comparative column and lies outside both 2017 diagonals. The table is the same restated one as in 2016, its end-2016 cells equal the 2016 report's after a uniform currency retranslation, and it ties by cohort to the 1,283,579 closing provision. M = -8.1m."
+ },
+ "3500_2018": {
+  "read_by": "OCR text of the filed PDF (scanned filing, no text layer); figures read from OCR lines, tables are short",
+  "table": {
+   "page": 24,
+   "heading": "iv) Claims Development Tables ... Claims Outstanding (gross), Underwriting Year 2009 | 2018 | Total, GBP'000",
+   "basis": "gross; cumulative claims by development age (comparison of actual claims incurred to previous estimates); only two underwriting-year columns, 2009 and 2018; no '& prior' column. 'Reserve in respect of prior years 59,855' printed below the table, outside it"
+  },
+  "cells_u_le_t_minus_2": "Only u=2009 (u<=2016). 2009 column: ages 3..9 = 682, 653, 268, 1,333, 1,933, 1,185, 777 (GBP'000). Report year 2018 is development year 9 for 2009 (latest cell 777 = 'Nine years later'), end-2017 cell 1,185 = 'Eight years later'. Current estimate of cumulative claims 777; cumulative payments (777); liability nil. 2018 column: 'At end of reporting year' 199,935, later rows nil.",
+  "M_gbp000": -408,
+  "M_m": -0.408,
+  "R_opening_gross_claims_outstanding_gbp000": 42799,
+  "M_over_R": -0.0095,
+  "selection_event": "Two loss portfolio transfers in year t: 30 Nov 2018 (Syndicate 2987 lines, UY 2017 and prior, gross provisions +135.6m) and 21 Dec 2018 (another Lloyd's syndicate, UY 2017 and prior, +63.8m) (p5, p29). Both fall DURING 2018, between the diagonals. A 1 Jan 2019 RITC (~560m gross) is after year end (p5). The accounts book the LPTs as 'Reinsurance of new liabilities 199,935' (p30) and the development table puts the same 199,935 in the 2018 column ('At end of reporting year'); p25: 'Before the acquisition of two new portfolios in 2018 the last original underwriting year for Syndicate 3500 business was 2009 and therefore only columns for 2009 and 2018 are presented'.",
+  "overlap_history": "None found in u<=2016. The acquired UY2017-and-prior liabilities are NOT spread across earlier columns; they sit wholly in the 2018 column, so the 2009 row carries only the syndicate's own 2009 history (777 cumulative, fully paid). The 2012-and-prior RITC'd liabilities (opening gross 42,799) are not in any column: they are 'Reserve in respect of prior years' (59,855 at end 2018).",
+  "gross_net": "Gross table 2009 column 777 vs net table 2009 column nil (net table: 'Cumulative payments to date - ; Liability - '); consistent with p5 'liabilities accepted ... in 2012 and prior ... are all subject to unlimited protection under reinsurance protection agreements with RiverStone Insurance (UK)' and 'As at 31 December 2017, all of the risks in Syndicate 3500 were reinsured 100% to an affiliate'. No net figure enters the gross row. The 50% retrocession of the new LPTs is shown in the net table only (2018 net 99,851 vs gross 199,935).",
+  "accounts_test": {
+   "basis": "incurred (table has no cumulative paid by cohort for all years; incurred used)",
+   "table_implied_incurred_2018_gbp000": 199527,
+   "table_implied_working": "2018 col 199,935 + 2009 (777-1,185 = -408) = 199,527",
+   "accounts_gross_claims_incurred_2018_gbp000": 221454,
+   "accounts_page": "29 (segmental analysis: total gross claims incurred (221,454)); p30 roll-forward: opening 42,799 + new liabilities 199,935 + change in estimates 25,157 - paid 8,101 = 259,790; paid + change in provision = 225,092",
+   "difference_gbp000": "about 21,900 to 25,600, equal to the movement on 'Reserve in respect of prior years' (pre-2009 / RITC'd liabilities) which the table does not carry (p30 change in estimates 25,157 incl. FX)",
+   "control_prev_year": "2017 report not in corpus"
+  },
+  "bridge": "The table's u<=2016 cell is a closed 2009 UY with cumulative = paid = 777; it is self-consistent (liability nil), and the LPTs are fenced in the 2018 column, so the outcome M = -408 is exactly what the printed gross table gives. It cannot be tied to the bulk of R (42,799 sits in 'prior years' outside any column) but that is a coverage fact, not an overlap, net mixing or reassignment.",
+  "verdict": "stands",
+  "reason": "The LPTs fall during 2018 but are booked wholly as underwriting year 2018 (199,935 in the 2018 column, matching p30 'Reinsurance of new liabilities 199,935'), so the only u<=2016 row is the syndicate's own closed 2009 year (777 vs 1,185, M = -0.408m). No overlap, no net in the gross row. Caveat: the table covers a trivial part of R (the pre-2009 RITC liabilities are outside it), so M/R is small by construction."
+ },
+ "3500_2019": {
+  "read_by": "OCR text of the filed PDF (scanned filing); table cells read from OCR lines, internally cross-checked (current estimate less cumulative payments equals the printed liability in every column)",
+  "table": {
+   "page": 24,
+   "heading": "Claims Outstanding (Gross): Underwriting Year 2011 2012 2013 2014 2015 2016 2018 Total, GBP'000, 'Estimate of cumulative gross claims' by development age",
+   "basis": "gross, cumulative claims (paid + outstanding), by underwriting year of account; no '& prior' column; 'Reserve in respect of prior years 90,341' printed below, outside the table; the net table is printed beneath (p24)"
+  },
+  "cells_u_le_t_minus_2": "u<=2017 columns 2011-2016 (2017 excluded: 'There was no business reinsured or acquired in 2017 and this year is excluded', p23). End-2019 (latest) vs end-2018, GBP'000: 2011: 128,687 (eight years later) vs 125,463 (seven) = +3,224; 2012: 143,535 (seven) vs 141,427 (six) = +2,108; 2013: 184,160 (six) vs 188,970 (five) = -4,810; 2014: 276,286 (five) vs 274,298 (four) = +1,988; 2015: 332,849 (four) vs 318,101 (three) = +14,748; 2016: 326,280 (three) vs 317,094 (two) = +9,186.",
+  "M_gbp000": 26444,
+  "M_m": 26.444,
+  "R_opening_gross_claims_outstanding_gbp000": "259,790 as printed at 1 January 2019 (p30); with the RITC of 552,752 'Reinsurance of new liabilities' (p30) the take-on-inclusive base is 812,542",
+  "M_over_R": "0.1018 on 259,790; 0.0325 on 812,542",
+  "selection_event": "Effective 1 January 2019 (the opening of year t) Syndicate 3500 accepted the RITC of the liabilities of another Lloyd's runoff syndicate, UY 2016 and prior; gross technical provisions transferred 'approximately 560 million' (p5, p29), booked as 'Reinsurance of new liabilities 552,752' (p30). Both diagonals of the 2011-2016 columns are therefore the transferor's history: p23: 'These liabilities are shown in the below triangles in their original underwriting years. The affiliate reinsurance of these liabilities is shown in the lead diagonal only of the net triangle, reflecting 1 January 2019 inception.' Earlier LPTs (30 Nov and 21 Dec 2018) 'are shown in the 2018 year of account' (p23), so they are in the 2018 column, not in u<=2017.",
+  "overlap_history": "The 2011-2016 columns exist for the first time in this report (the 2018 report printed only 2009 and 2018 columns; 3500's last own UY was 2009). So they carry only the acquired syndicate's history 'as if always', not an overlap with 3500's own earlier history. No 2017 column. The end-2018 diagonal is a pre-acquisition estimate (transferor's), so M is the 2019 development of the acquired book, measured on the transferor's own end-2018 estimates.",
+  "gross_net": "Gross and net tables printed separately and differ as expected (e.g. 2016 first year 118,249 gross vs 106,967 net); affiliate 50% reinsurance appears only in the net lead diagonal, per p23. No net figure in the gross rows. Gross liabilities by cohort sum to the balance sheet: 11,295+17,086+34,056+61,738+91,128+131,662 (2011-2016) + 149,665 (2018) = 496,630, + prior years 90,341 = 586,971 = p30 closing gross claims outstanding.",
+  "accounts_test": {
+   "basis": "incurred",
+   "table_implied_incurred_2019_gbp000": "+24,792 for printed columns (2011-2016 +26,444; 2018 column 190,571 less 192,223 = -1,652); prior-years reserve (59,855 -> 90,341) is outside the table",
+   "accounts": "P&L p13: gross claims paid (204,711), change in gross provision (352,787): gross claims incurred 557,498 (also segmental p29 (557,498)); less 'Reinsurance of new liabilities' 552,752 = 4,746 development in year. Roll-forward p30: change in estimates (20,860) 'including foreign exchange'; 557,498 - 531,892 = 25,606 is the FX difference between P&L and provision roll-forward.",
+   "difference": "table-covered cohorts +24.8m vs accounts total development +4.7m (P&L basis): about 20m unexplained, attributable to the untabulated prior-years reserve and to FX/translation basis, but not provable from the pages",
+   "control_prev_year": "2018 report prints only 2009 and 2018 columns, so no like-for-like control for the 2011-2016 columns"
+  },
+  "bridge": "Partial. End-2019: the table's current estimate less cumulative payments equals the printed liability by cohort and the totals tie to the balance sheet (586,971). End-2018 cumulative cells cannot be tied to the 552,752 transfer cell by cell because cumulative paid at end-2018 per cohort is not printed. Back-of-envelope (end-2019 liability of the six acquired columns 346,965 plus 2019 paid on them, less +26.4m development) lands at roughly 0.5bn, consistent with the transfer value including the untabulated pre-2011 part.",
+  "verdict": "concern_resolved",
+  "reason": "The concern is a 552.8m inward RITC at the opening of 2019 shown 'as if always' in original underwriting years 2011-2016, so both diagonals are the transferor's history. The filing states the cohorts are preserved (not reassigned), the 2018 LPTs are fenced into the 2018 column, and the end-2019 cells tie to paid plus liability by cohort and to the balance sheet; M (+26.4m) is the post-acceptance development of the acquired book. The end-2018 cells and the 24.8m vs 4.7m incurred comparison are not tied exactly (prior years and FX confound), so this is the weakest of the 3500 records."
+ },
+ "3500_2021": {
+  "read_by": "text layer (the filing has a text layer; table values read as one cell per line and mapped to columns by position, cross-checked by current estimate less cumulative payments = printed liability for every column)",
+  "table": {
+   "page": 25,
+   "heading": "iv) Claims Development Tables, Claims Outstanding (Gross), Underwriting Year 2012 2013 2014 2015 2016 2017 2018 2021 Total, $'000, 'Estimate of cumulative gross claims'",
+   "basis": "gross, cumulative claims by underwriting year; USD; columns 2019 and 2020 absent; no '& prior' column; 'Reserve in respect of prior years 139,014' printed under the table, outside it. Net table printed on the next page. No explanatory paragraph on how acquired books are shown (unlike the 2019 report)"
+  },
+  "cells_u_le_t_minus_2": "End-2021 (latest) vs end-2020, $'000: 2012: 955,978 (nine years later) vs 959,698 (eight) = -3,720; 2013: 1,094,861 (eight) vs 1,109,927 (seven) = -15,066; 2014: 1,366,683 (seven) vs 1,403,816 (six) = -37,133; 2015: 1,448,892 (six) vs 1,493,048 (five) = -44,156; 2016: 2,048,622 (five) vs 2,011,577 (four) = +37,045; 2017: 1,759,449 (four) vs 1,653,011 (three) = +106,438; 2018: 833,123 (three) vs 767,445 (two) = +65,678. (2021 column: 1,078,053 first year, not in M.)",
+  "M_usd000": 109086,
+  "M_m": 109.086,
+  "R_opening_gross_claims_outstanding_usd000": 774037,
+  "M_over_R": 0.1409,
+  "selection_event": "Inward RITCs effective 1 January 2021 (opening of year t): 2018 and prior UYs of Syndicate 780 ($178.9m gross), 2018 and prior of 1897 ($78.6m), LPT of 1897's 2019 UY ($17.6m), 2017 and prior of 1200 and 2018 and prior of 4000 ($1.1bn) (p5), about $1.4bn of gross provisions touching UYs 2012-2018. Also during 2021 four LPTs ($193.9m, $345.2m, $534.6m, $19.6m = $1,093m), which the table appears to put in the new '2021' column (1,078,053). Earlier: RITC of Syndicate 2015 (2017 and prior) effective 1 Jan 2020, $236.4m (p5). p30: 'Reinsurance of new liabilities 2,425,117' on opening gross claims outstanding of 774,037.",
+  "overlap_history": "Yes. The 2012-2018 columns have been enlarged by every acquisition: in the 2019 report (GBP) the 2012 column was 80,100 first year / 143,535 latest (about $100-185m), in this report 506,448 first year / 955,978 latest. The 2017 column did not exist in the 2019 report ('no business ... in 2017'). The 2018 column's end-2018 cell (529,996) and end-2019 cell (762,365) exceed 3500's own 2018 LPT UY (about GBP 192m = roughly $250m in the 2019 report, p24 there), so the 2018 column merges 3500's own 2018 LPT with the acquired syndicates' 2018 UY histories. The end-2020 diagonal therefore carries the 2021-acquired books' pre-acquisition history 'as if always', merged by cohort with books 3500 already held.",
+  "gross_net": "Gross and net tables differ (e.g. 2012 first year 506,448 gross vs 405,911 net); the 2021 column is identical gross and net (1,078,053 both), consistent with the p5 statement that the 2021 LPTs transferred gross and net equal provisions. No net figure seen in the gross rows. Gross liabilities by cohort 77,288+100,770+154,563+213,216+399,255+313,130+169,838 = 1,428,060 (2012-2018), + 2021 column 1,048,272 = 2,476,331, + prior years 139,014 = 2,615,345 = p30 closing gross claims outstanding (ties).",
+  "accounts_test": {
+   "basis": "incurred",
+   "table_implied_2021_usd000": "2012-2018 columns +109,086; 2021 column 1,078,053 first-year; total +1,187,139 (prior-years reserve outside the table)",
+   "accounts": "p30 roll-forward: opening 774,037; reinsurance of new liabilities 2,425,117; change in estimates (60,641) incl. FX; paid (523,168); closing 2,615,345. P&L p13: gross claims paid (523,168), change in gross provision (1,876,571) = gross incurred 2,399,739; less new liabilities 2,425,117 = -25,378 development ex-FX.",
+   "difference": "Development on existing cohorts: table +109.1m against accounts -25.4m (P&L) or -60.6m (roll-forward, incl FX): a gap of 134m to 170m, which is 17% to 22% of opening gross claims outstanding (774m). Not explained by prior-years reserve (139m at end-2021 in total) or by the 2021 column (1,078,053 vs LPTs 1,093.3m, -15m).",
+   "control_prev_year": "2020 report not in corpus"
+  },
+  "bridge": "None. The table ties to the balance sheet at end-2021 only; the end-2020 cells (which include 1.4bn of books acquired on 1 Jan 2021 as if always) cannot be tied to opening provisions plus transfer value (no per-cohort paid at end-2020), no closing account for the transferors, and the incurred comparison fails by 134m to 170m.",
+  "verdict": "set_aside",
+  "reason": "Specific source evidence: about $1.4bn of RITCs at the opening of 2021 are folded into the 2012-2018 columns (the 2012 column is five to six times its size in the 2019 report) and the 2018 column merges 3500's own 2018 LPT with the acquired 2018 UY. The table's implied development on those columns (+109.1m) does not reconcile to the accounts' development (-25.4m to -60.6m), and no per-cohort paid or closing account exists to reconstruct the original-cohort gross outcome."
+ },
+ "3500_2022": {
+  "read_by": "text layer (cells read in sequence and mapped to columns by position; every column checked by current estimate less cumulative payments = printed liability)",
+  "table": {
+   "page": 24,
+   "heading": "iv) Claims Development Tables, Claims Outstanding (Gross), Underwriting Year 2013 2014 2015 2016 2017 2018 2019 2021 2022 Total, $'000, 'Estimate of cumulative gross claims'",
+   "basis": "gross, cumulative claims by underwriting year; USD; columns 2020 absent; 2012 column of the 2021 report dropped into 'Reserve in respect of prior years 160,736' (printed under the table); net table printed beneath"
+  },
+  "cells_u_le_t_minus_2": "End-2022 (latest) vs end-2021, $'000: 2013: 1,132,304 (nine years later) vs 1,169,214 (eight) = -36,910; 2014: 1,470,761 vs 1,490,652 = -19,891; 2015: 1,558,417 vs 1,629,830 = -71,413; 2016: 2,238,236 vs 2,329,978 = -91,742; 2017: 2,181,257 vs 2,224,525 = -43,268; 2018: 1,728,542 vs 1,761,919 = -33,377; 2019: 447,479 (three years later) vs 442,634 (two) = +4,845. (2021 column 922,611 vs 1,020,668 = -98,057 and 2022 column 363,424 are u=t-1 and t, not in M.)",
+  "M_usd000": -291756,
+  "M_m": -291.756,
+  "R_opening_gross_claims_outstanding_usd000": 2615345,
+  "M_over_R": -0.1116,
+  "selection_event": "Inward RITCs and LPTs effective 1 January 2022 (opening of year t): Syndicate 1897 2019 UY ($13.4m), Syndicate 2468 2019 and prior ($399.2m), 2468 2020 UY LPT ($22.6m), Syndicates 1980/2014/2001 2019 and prior ($927.1m), 2001 2020 UY LPT ($5.2m) (p4; p29-30 give $13.5m, $400.6m, $22.7m, $930.2m, $3.8m), about $1.37bn gross touching UYs up to 2019/2020; during 2022 two LPTs ($293.8m and $62-67.1m). p30: 'Reinsurance of new liabilities 1,728,476' on opening 2,615,345.",
+  "overlap_history": "Yes: the end-2021 diagonal in this table is not the one the 2021 report printed. Same cells, 2021 report (p25 there, latest) vs this report's end-2021 cell: 2013 1,094,861 -> 1,169,214; 2014 1,366,683 -> 1,490,652; 2015 1,448,892 -> 1,629,830; 2016 2,048,622 -> 2,329,978; 2017 1,759,449 -> 2,224,525; 2018 833,123 -> 1,761,919 (more than doubled); the 2021 column 1,078,053 -> 1,020,668. A new 2019 column (442,634 at end-2021) appeared. So the end-2021 diagonal here carries the 1 January 2022 acquisitions' pre-acquisition history 'as if always', merged by cohort with 3500's own earlier books. No sentence in the filing explains this layout.",
+  "gross_net": "Gross and net tables printed separately and differ. No net figure seen in the gross rows. End-2022 gross liabilities by column sum to 2,801,701 + prior years 160,736 = 2,962,437 = p30 closing gross claims outstanding 2,962,436 (ties).",
+  "accounts_test": {
+   "basis": "incurred",
+   "table_implied_2022_usd000": "2013-2019 columns -291,756; plus 2021 column -98,057 = -389,813 (2022 column 363,424 first year against new LPTs of about 356-361m)",
+   "accounts": "p30 roll-forward: opening 2,615,345; reinsurance of new liabilities 1,728,476; change in estimates (293,072) 'including foreign exchange'; paid (1,088,313); closing 2,962,436. P&L p13: gross claims paid (1,088,313), change in gross provision (514,031) = incurred 1,602,344; less new liabilities 1,728,476 = -126,132 ex-FX.",
+   "difference": "Table on all printed columns -389.8m against roll-forward -293.1m (incl FX) or P&L -126.1m (ex FX). The 2013-2019 columns alone (-291.8m) are within 0.5% of the roll-forward figure, but that figure covers every cohort including 2021 and the prior-years reserve, so the match cannot be taken as validation: the gap on the all-column basis is 96.7m (3.7% of opening R) and would have to sit in the untabulated prior-years reserve (160.7m at end 2022).",
+   "control_prev_year": "2021 report: table-implied development on existing columns +109.1m vs accounts -25.4m (P&L) / -60.6m (roll-forward): did not tie either (see 3500_2021)"
+  },
+  "bridge": "None that closes. Liabilities tie to the balance sheet at end-2022, but the end-2021 cells cannot be tied to opening provisions plus the 1.37bn transfers (no per-cohort paid at end-2021 and no transferor closing account), and the development comparison leaves 96.7m unresolved.",
+  "verdict": "set_aside",
+  "reason": "About $1.37bn of RITCs at the opening of 2022 are folded into the existing underwriting-year columns, so the end-2021 diagonal here differs from the 2021 report's (2018 column 833,123 -> 1,761,919) with no explanation in the filing. The 2013-2019 movement (-291.8m) matches the roll-forward's all-cohort change in estimates (-293.1m) only by scope coincidence: on all printed columns the table gives -389.8m, leaving 96.7m unreconciled, and there is no per-cohort paid or closing account to rebuild the original-cohort outcome."
+ },
+ "3500_2023": {
+  "read_by": "OCR text of the filed PDF (scanned; right-hand Total column partly cut off by OCR, the underwriting-year cells are complete); consistency check: current estimate less cumulative payments equals the printed liability in all ten columns",
+  "table": {
+   "page": 24,
+   "heading": "iv) Claims Development Tables, Claims Outstanding (Gross), Underwriting Year 2014 ... 2023 Total, $'000, 'Estimate of cumulative gross claims'",
+   "basis": "gross, cumulative claims by underwriting year; USD; ten columns 2014-2023; 'Reserve in respect of prior years 208,44x' under the table (last digit cut off); net table on the next page"
+  },
+  "cells_u_le_t_minus_2": "End-2023 (latest) vs end-2022, $'000: 2014: 3,006,519 (nine years later) vs 3,013,088 (eight) = -6,569; 2015: 3,367,563 vs 3,349,097 = +18,466; 2016: 4,555,953 vs 4,565,012 = -9,059; 2017: 6,170,783 vs 6,136,837 = +33,946; 2018: 5,801,775 vs 5,915,022 = -113,247; 2019: 1,652,759 vs 1,627,934 = +24,825; 2020: 908,272 vs 929,397 = -21,125; 2021: 971,663 (two years later) vs 946,566 (one) = +25,097. (2022 column 61,116 first year is u=t-1; 2023 column 188,636 first year is t.)",
+  "M_usd000": -47666,
+  "M_m": -47.666,
+  "R_opening_gross_claims_outstanding_usd000": 2962436,
+  "M_over_R": -0.0161,
+  "selection_event": "Effective 1 January 2023 (opening of year t) RITCs of 2018/2020 and prior UYs of Syndicates 2001 ($1,385.5m gross), 1200 ($430.5m, 'this replaces a previously recorded loss portfolio transfer with gross and net liabilities of $201.9 million as at 1st January 2023'), 1910 ($242.9m), 1991 ($368.1m), 6125 ($18.5m), 5151 ($583.4m), 2468 ($13.7m), plus an LPT of Syndicate 2001's 2019-2021 lines ($183.2m) (p5; scan page 30 repeats). Total $3,225.8m = 'Reinsurance of new liabilities 3,225,818' (p30) against opening gross claims outstanding of 2,962,436: the take-on exceeds the opening book.",
+  "overlap_history": "Yes, explicitly. The 1200 RITC replaces the 2022 LPT of 1200's 2018 and 2019 UYs ($293.8m, booked in 2022) with an RITC placed in original underwriting years: the cohort is reassigned through closure. The table's end-2022 diagonal is not the 2022 report's: 2014 3,013,088 vs 1,470,761 (2013-2022 report cell 8y; the 2014 cell there 1,490,652), 2018 5,915,022 vs 1,728,542 (2022 report latest), 2017 6,136,837 vs 2,181,257, 2016 4,565,012 vs 2,238,236, 2015 3,349,097 vs 1,558,417; the 2022 column's first-year cell fell from 363,424 (2022 report) to 65,516, and the 2021 column's first-year cell from 1,020,668 to 1,047,169. So 2023 acquisitions of about $3.0bn are folded as if always into columns that already held earlier acquisitions, and the earlier 2022 LPT has been moved between columns.",
+  "gross_net": "Gross and net tables printed separately (net on p25). No net figure seen in the gross rows. Table total liabilities 4,211,127 + prior years 208,44x = about 4,419,57x against p30 closing gross claims outstanding 4,401,513: an unexplained difference of about 18m (0.4%), where the 2022 table tied to the dollar.",
+  "accounts_test": {
+   "basis": "incurred",
+   "table_implied_2023_usd000": "u<=2021 columns -47,666; 2022 column 61,116 less 65,516 = -4,400; total on existing columns -52,066 (2023 column 188,636 against the LPT 183.2m: +5.4m)",
+   "accounts": "p30 roll-forward: opening 2,962,436; reinsurance of new liabilities 3,225,818; change in estimates (184,769) 'including foreign exchange'; paid (1,601,972); closing 4,401,513. The P&L page is not legible in the OCR for gross claims incurred, so the roll-forward is used.",
+   "difference": "Table -52.1m on existing columns (-46.7m with the 2023 column) against accounts -184.8m: gap of about 133m to 138m, 4.5% of opening R, and the prior-years reserve (208m in total at end 2023) is the only place it could sit.",
+   "control_prev_year": "2022 report: table -389.8m on all printed existing columns vs roll-forward -293.1m (gap 96.7m); 2021 report +109.1m vs -60.6m: none tied"
+  },
+  "bridge": "None. The end-2022 cells cannot be rebuilt from opening provisions plus transfers (per-cohort paid at end-2022 not printed; transferors' closing accounts not in the corpus), the table's own total misses the closing provision by about 18m, and the development does not reconcile.",
+  "verdict": "set_aside",
+  "reason": "The filing itself says the 1200 RITC replaces a loss portfolio transfer recorded earlier, and about $3.0bn of 1 January 2023 RITCs are folded into existing columns: the end-2022 diagonal is 2-3 times the 2022 report's for the same cells, so cohorts were reassigned through closure. The table implies -52m of development against -185m in the accounts, and nothing in the pages reconstructs the original-cohort outcome."
+ },
+ "435_2018": {
+  "read_by": "text layer (PDF page 36); each column's latest cell less cumulative payments reproduces the printed gross claims reserve",
+  "table": {
+   "page": 36,
+   "heading": "16 Insurance risk management (continued), Claims development tables: 'An analysis of the claims development - gross, Estimated of claims incurred' by underwriting year '2010 and prior, 2011 ... 2018, Total', GBP'000, 'translated into pounds sterling at the December 2018 year rates'",
+   "basis": "gross, estimated claims incurred (ultimate, underwriting-year basis) with cumulative payments; the '2010 and prior' column carries only a reserve (358,307) and no development cells; separate net table beneath"
+  },
+  "cells_u_le_t_minus_2": "End-2018 (latest) vs end-2017, GBP'000: 2011: 202,831 (after seven years) vs 194,526 (six) = +8,305; 2012: 190,002 (six) vs 190,853 (five) = -851; 2013: 135,917 (five) vs 134,745 (four) = +1,172; 2014: 136,319 (four) vs 141,942 (three) = -5,623; 2015: 138,115 (three) vs 146,787 (two) = -8,672; 2016: 246,110 (two) vs 244,992 (one) = +1,118. (2017: 537,943 vs 428,484 = +109,459 and 2018: 256,101 are u=t-1 and t.)",
+  "M_gbp000": -4551,
+  "M_m": -4.551,
+  "R_opening_gross_claims_outstanding_gbp000": 1015305,
+  "M_over_R": -0.0045,
+  "selection_event": "Inward RITC: 'A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018. This transaction added GBP 83.8m to premiums written and to claims incurred in the Technical account' (p5; note 20, PDF p37: 'added GBP 83.8m ... as at 1 January 2018 ... one-off transactions with nil impact on the result'). Effective at the opening of year t, so at the diagonal boundary; the 2017 report (PDF p38 and p5) already described it as a subsequent event ('on 1 January 2018').",
+  "overlap_history": "None found in u<=2016. The end-2017 cells of those rows reproduce the 2017 report's latest cells after a currency factor of 1.03-1.05 (the 2017 table is at December 2017 rates, this one at December 2018 rates): 2011 188,598 -> 194,526 (1.031); 2012 181,783 -> 190,853 (1.050); 2013 129,765 -> 134,745 (1.038); 2014 136,209 -> 141,942 (1.042); 2015 141,137 -> 146,787 (1.040); 2016 238,290 -> 244,992 (1.028); 2017 407,509 -> 428,484 (1.051). The acquired 2255 book is not folded into these rows: the only growth is in the cell-less '2010 and prior' column, whose reserve rose from 243,862 (2017 report) to 358,307 (+114,445, of which the RITC 83.8m).",
+  "gross_net": "Gross table (reserves total 1,215,834) and net table (892,234) separate; no net figure in the gross rows. Gross reserves by column sum to 1,215,834 = balance sheet gross claims outstanding (p14, 'Claims outstanding 1,215,834').",
+  "accounts_test": {
+   "basis": "incurred (ultimate-basis table vs earned accounts)",
+   "table_implied_2018_gbp000": "u<=2016 -4,551; 2017 +109,459; 2018 first year 256,101; total 361,009 (the 2010-and-prior column has no cells)",
+   "accounts": "P&L p16: gross claims paid (327,502) + change in gross provision (159,572) = gross claims incurred 487,074; includes the 83.8m RITC booked as claims incurred. 361.0 + 83.8 = 444.8, 8.7% (42.3m) short of 487.1, which is the incurred on the cell-less '2010 and prior' column (reserve +30.6m after the RITC, plus its payments and FX).",
+   "diff_pct": -8.7,
+   "control_prev_year": "2017 report: existing columns -2.8-7.5-8.0-4.4-8.0+116.1 plus 2017 first year 407.5 = 492.9 vs accounts gross claims paid 198,083 + provision change 315,744 = 513,827: -4.1%"
+  },
+  "bridge": "Yes for the u<=2016 rows: each cell ties by cumulative payments to the reserve printed, the reserves total the balance sheet, and the previous diagonal reproduces the 2017 report apart from currency. The 2255 RITC's liabilities are outside these rows (in the 2010-and-prior reserve and the 2018 year), and its 83.8m day-one booking explains most of the accounts-versus-table gap; the residual 42m is on the cell-less prior-years column and cannot be split.",
+  "verdict": "stands",
+  "reason": "The Syndicate 2255 RITC (1 January 2018, GBP 83.8m) falls at the opening of the year but does not enter the 2011-2016 rows: their end-2017 cells equal the 2017 report's after a uniform currency uplift, and the transferred reserve shows up only in the cell-less '2010 and prior' column. The table ties to the balance sheet by cohort. M = -4.6m (-0.45% of opening R)."
+ },
+ "6123_2019": {
+  "read_by": "OCR text of the filed PDF (scanned filing; the short tables are clean), PDF pages 35, 27, 15; 2018 report of SPA 6123 for the control",
+  "table": {
+   "page": 35,
+   "heading": "Risk management, Claims development table: 'Estimate of cumulative gross claims incurred: Underwriting year 2017 2018 2019, $000' with 'Less cumulative paid' and 'Liability for gross outstanding claims', 'Total gross outstanding claims (all years) 44,975'",
+   "basis": "gross of the SPA's own outward reinsurance (the SPA is itself a variable quota share of Syndicate 4242), cumulative incurred (notified + IBNR) by underwriting year, USD'000; only three columns; no '& prior' column; net table beneath. Single-entity report (SPA 6123 only)"
+  },
+  "cells_u_le_t_minus_2": "Only u=2017: 2017 column: end of underwriting year 14,260; one year later 51,653 (end-2018); two years later 56,568 (end-2019): M = 56,568 - 51,653 = +4,915 ($000). (2018 column 34,020 -> 41,421 = +7,401 and the 2019 column 6,249 are u=t-1 and t.)",
+  "M_usd000": 4915,
+  "M_m": 4.915,
+  "R_opening_gross_claims_outstanding_usd000": "72,755 at 1 January 2019 (note 4, PDF p27); 61,927 after the 10,828 RITC'd to 4242",
+  "M_over_R": "0.0676 on 72,755; 0.0794 on 61,927",
+  "selection_event": "S1: SPA 6123 'was established in May 2015 to underwrite a variable quota share of Syndicate 4242' and 'operates on a funds withheld basis with its host, Syndicate 4242' (PDF p3-5, p29). S3: note 4 (PDF p27) 'Balance RITC'd to 4242 (10,828) 10,222 (605)' in 2019 (comparative 2018: 'Balance RITC'd into 4242 (25)'); no effective date is printed. The 10,828 equals the 2016 column's liability in the 2018 report (10,827, '2016 to 2018'), so it is the 2016 year of account closing into the host at the opening of 2019; the 2017 year of account is 'Closed' in the capacity table (p3, 'the 2017 closed year of accounts at 31 December 2019') and 'The SPA's closed year of accounts do not feature in the above tables as they have reinsured to close into the Host' (p35), i.e. the 2017 year closes at 31 December 2019, effective after year end and outside both diagonals.",
+  "overlap_history": "None found in the 2017 row. Its end-2018 cell (51,653) is identical to the 2018 report's (2018 report PDF p36: 2017 'One year later 51,653'); the 2018 column's first-year cell 34,020 is also identical. The closed 2016 year (2,080 / 10,670 / 19,805 in the 2018 report) is simply dropped from the 2019 table, not merged into 2017. The 2017 row carries no other vehicle's history (the host's liabilities are not in the SPA's table).",
+  "gross_net": "Gross table is the SPA's own quota share before its outward protection; net table beneath (2017: 9,693 / 14,501 / 15,134). No net figure in the gross rows. Gross liabilities 22,567 + 18,295 + 4,113 = 44,975 = note 4 closing gross claims outstanding (72,755 - 16,952 - 10,828 = 44,975).",
+  "accounts_test": {
+   "basis": "incurred (table has cumulative paid only at the latest date)",
+   "table_implied_2019_usd000": "2017 +4,915; 2018 +7,401; 2019 first year 6,249; total 18,565",
+   "accounts": "Statement of profit or loss (PDF p15): gross claims paid (35,990); changes in claims outstanding gross +16,952 (release), so gross claims incurred 19,038; the RITC'd balance 10,828 is not in the P&L lines",
+   "diff_pct": -2.5,
+   "control_prev_year": "2018 report table: 2016 19,805-10,670 = 9,135; 2017 51,653-14,260 = 37,393; 2018 first year 34,020; total 80,548 vs accounts gross paid 26,634 + gross change in claims outstanding 54,167 = 80,801: -0.3%"
+  },
+  "bridge": "Yes: the table ties to the balance sheet by cohort and to gross claims incurred within 2.5% (control 0.3%), the previous diagonal reproduces the 2018 report exactly, and the RITC'd balance (10,828) reconciles to the closed 2016 column's own liability.",
+  "verdict": "stands",
+  "reason": "The SPA's recurring close into its host is a funds-withheld, year-of-account closure: the 2016 year left at the opening of 2019 and was dropped from the table, and the 2017 year closes after the year end, so neither touches the 2017 cells (14,260 / 51,653 / 56,568) that give M = +4.9m. The 2017 end-2018 cell equals the 2018 report, the table ties to the balance sheet and to gross incurred within 2.5%; no overlap or gross/net mixing."
+ }
+}

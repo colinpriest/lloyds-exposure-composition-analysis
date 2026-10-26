@@ -28,7 +28,14 @@ every record of rounds 5 to 8 (round8/rule_4b_scan.json): it also takes 2232/201
 listed until then. Review 8 also added the rule-6 clause derived_correction (1274/2016, whose corrected figure is the
 session's derivation from cells both readers quote).
 
-The register holds three buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
+Rule 8, the source-history rule (26 October 2026; the recommendation of the Codex analysis, adopted on Colin's instruction
+and applied by the Claude analysis session; found in Codex's tail investigation of 6131/2021, post hoc), was applied to the
+census population chosen by source features (round9/population.md; 81 core and 20 host-side records, each read twice by arms
+K and L, with third readings where the facts conflicted: Z9-Z13). It sets 11 records aside (the fourth bucket), moves
+3000/2016, 3500/2022 and 3500/2023 off the rule-6 list, lists 1110/2020, 1254/2023, 1686/2021, 3330/2017 and 1609/2024 under
+rule 6 and keeps 6118/2018 listed (round9/adjudication.md).
+
+The register holds four buckets, each entry with its readings (copied from the archive, with the year t filing's pages),
 its pages and quote, the facts the rule rests on and the decision:
 
   * "excluded": rule 1 or rule 4b, each entry naming its rule. Rule 1: the year t table's history differs from the
@@ -50,6 +57,13 @@ its pages and quote, the facts the rule rests on and the decision:
     filing's own roll-forward, or (clause derived_correction) the record's corrected figure is the session's derivation
     from cells both readers quote (1274/2016). The record stays; the least-certain sensitivity
     (src/check_low_confidence_sensitivity.py) reads this bucket and leaves the records out.
+  * "source_history_set_aside": rule 8. A record on which specific source evidence raises a material unresolved concern
+    about overlapping claims history, gross/net mixing or cohort reassignment through closure, and whose declared gross
+    original-cohort outcome cannot be defensibly reconstructed or validated, whatever its size or sign. Each entry names its
+    reason code (source_history_unresolved), the concerns, the facts two readings report, the census criteria that selected
+    the record and the readings (K, L; Z where the first two conflicted). The loader (run_analysis.py) gives the record no
+    figure and the tag SOURCE_HISTORY_SET_ASIDE and counts it (source_history_set_aside), one mask for estimation, donor pools,
+    tools and scoring; under outcome 'precedence_672' the register is not read.
   * "takeon_unmeasurable": rule 5b. The year's take-on (an RITC, LPT or merger effective in year t whose acquired history
     the table shows 'as if always') is not in R, the filing prints no transferred gross amount, and the readings show the
     acquired share of the base could exceed 10% of R: the movement is development on a combined book whose base cannot
@@ -103,6 +117,26 @@ INVALID = ("restated_base", "undeterminable")
 SESSION = "decision of the Claude analysis session, 23 October 2026"
 SESSION_R8 = "decision of the Claude analysis session, 24 October 2026 (after the round-8 readings)"
 
+#: round 9 (26 October 2026): the source-history census (rule 8 of the round-5 decision rules). The rule is the
+#: recommendation of the Codex analysis, adopted on Colin's instruction of 26 October 2026 and applied by the Claude
+#: analysis session. Codex found the concern in its tail investigation of 6131/2021, after the results were seen (post hoc);
+#: the census applied the rule to every record its source-feature criteria select (population.md: 81 core and 20 host-side
+#: records, chosen without outcome values). Two independent arms (K1-K8, L1-L8, every record read twice, brief_r9.md) and
+#: third readings where the facts conflicted (Z11: 6118/2018; Z12: 3330/2017 and 3330/2018; Z13: 3500/2019 and 3000/2016;
+#: round 10, brief_r10.md: Z9 and Z10 for 1609/2024).
+ROUND9 = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round9"
+READINGS9 = ROUND9 / "readings"
+POPULATION9 = ROUND9 / "population.json"
+CENSUS_READERS = (tuple("K%d" % i for i in range(1, 9)) + tuple("L%d" % i for i in range(1, 9))
+                  + ("Z9", "Z10", "Z11", "Z12", "Z13"))
+SESSION_R9 = "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)"
+CODEX_RULE_TEXT = (
+    "set aside an observation when specific source evidence raises a material unresolved concern about overlapping claims "
+    "history, gross/net mixing or cohort reassignment through closure, and the declared gross original-cohort outcome "
+    "cannot be defensibly reconstructed or validated; regardless of the outcome's size or sign; an unexpired exposure, "
+    "ordinary internal RITC, funds-withheld arrangement, unusual business, youth or SPA status is not sufficient by "
+    "itself; a calendar/triangle inequality alone is insufficient where FX or accounting scope differs.")
+
 RULE = (
     "Round 5 of the filing readings (decision rules of 23 October 2026, a decision of the Claude analysis session, "
     "results/extraction_error_rate/mature-cohort/round5/rules.md). 'excluded' (rule 1 or rule 4b; each entry names its "
@@ -149,7 +183,14 @@ RULE = (
     "of the base could exceed 10% of R (an unmeasurable take-on, as 1861/2020 and 1084/2022 are); the loader removes the "
     "entry's record at the unusable-severity step with the tag TAKEON_BASE_UNMEASURABLE and counts it "
     "(takeon_base_unmeasurable_excluded); under outcome 'precedence_672' nothing changes. A take-on the filing bounds "
-    "at or below 10% of R stays and is listed under history_restated. Every entry rests on two "
+    "at or below 10% of R stays and is listed under history_restated. 'source_history_set_aside' (rule 8, the source-history "
+    "rule of 26 October 2026, the recommendation of the Codex analysis adopted on Colin's instruction and applied by the Claude "
+    "analysis session; found during Codex's tail investigation of 6131/2021, post hoc, and applied to the census population "
+    "chosen by source features): a record leaves the PRIMARY sample when specific source evidence raises a material unresolved "
+    "concern about overlapping claims history, gross/net mixing or cohort reassignment through closure and the declared gross "
+    "original-cohort outcome cannot be defensibly reconstructed or validated, whatever its size or sign; the loader gives it no "
+    "figure and the tag SOURCE_HISTORY_SET_ASIDE and counts it (source_history_set_aside), under outcome 'precedence_672' "
+    "nothing changes. Every entry rests on two "
     "independent readings of the filing (and the tie-break readings where the first two disagreed on the facts), with "
     "the pages and quotes. Built by src/build_restated_base_excluded.py from the archived readings.")
 
@@ -415,38 +456,6 @@ HISTORY_RESTATED = {
                   "uninformative, P6, Q5); the year t incurred miss, +59.5%, is 1.6 times the control's, not three "
                   "times; and the year t paid test ties (-3.3% with the factor, P6; -2.9%, Q5). The record stays least "
                   "certain. P6 valid, Q5 restated_base"),
-    "3000_2016": (["label_disagreement"],
-                  "P4 valid, Q5 restated_base on the same facts: the 2016 table carries Syndicate 1400's history (RITC "
-                  "accepted 1 January 2016, 248.822m gross, p37), stated on p38 and retranslated; rule 5 applies and R "
-                  "already carries the take-on (data/opening_reserves_takeon_base.json). Paid -33.4% against a -30.1% "
-                  "control, the 'All prior years' column printing no paid: the basis explains it"),
-    "3500_2023": (["take_on_table_unreconciled"],
-                  "RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new "
-                  "liabilities 3,225,818'), the history carried as if always (2 to 3.6 times the 2022 report's). The "
-                  "take-on is explained and is in R (5,803.136m USD = 2,962.436 + 2,840.7, "
-                  "data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile "
-                  "with the filing's own roll-forward: its movement on the old years is -52.1m against -184.8m of change "
-                  "in estimates in note 7 (P7; Q8: neither 136.6m nor -62.3m ties). Rule 1 does not reach it (the history "
-                  "change is explained) and no rule covers an explained take-on table that fails the tie; it stays and "
-                  "joins the least-certain list"),
-    "3500_2022": (["take_on_table_unreconciled"],
-                  "added after review 8 (decision of the Claude analysis session, 23 October 2026), on the same "
-                  "all-prior-years scope as 3500/2023. RITCs of Syndicates 1897, 2468 and 1980/2014/2001 effective 1 "
-                  "January 2022 and loss portfolio transfers (p4; note 7 p30 'Reinsurance of new liabilities "
-                  "1,728,476'), the history carried as if always (the 2018 column about double the 2021 report's, Q7). "
-                  "The RITCs are in R (3,955.045m USD = 2,615.345 + 1,339.7, data/opening_reserves_takeon_base.json), so "
-                  "rule 5 changes nothing. But the table does not reconcile with note 7's change in estimates "
-                  "including foreign exchange of -293.1m (-293,072, p30) on that scope: the movement on every column "
-                  "that existed at end-2021 (2013-2019 and 2021) is -291.756m - 98.057m = -389.8m (review 8; P6's "
-                  "workings), and the whole table (those columns plus the new 2022 column, +363.424m) is -26.4m, a gap "
-                  "of 266.7m (P6; Q7 -26.389m); only the 2013-2019 columns alone (-291.8m, the adopted figure) are "
-                  "within 0.4% of it. LPT placement conflict: P6 reads the mid-2022 loss portfolio transfers of "
-                  "Syndicates 1200 (293.8m) and 1686 (67.1m) as entering the history as if always, while the ninth "
-                  "census (data/opening_reserves_takeon_base.json) places all four LPTs (also 2468's 22.6m and 2001's "
-                  "5.2m: 388.7m) in the 2022 column, outside M and outside R. Either way the acquired share outside R "
-                  "is at most 9.1% of R for the two mid-2022 LPTs (360.9m of 3,955.045m) and 9.8% with all four "
-                  "(388.7m), at or below rule 5b's 10%, so rule 5b would list the record too. Rule 1 does not reach it "
-                  "(the history change is explained). It stays and joins the least-certain list"),
     "1274_2016": (["derived_correction"],
                   "added after review 8 (decision of the Claude analysis session, 23 October 2026). Rule 4 corrects the "
                   "misprinted 2012 cell (141,355 for 178,987 in the 2015 report), but the corrected figure, "
@@ -479,6 +488,16 @@ HISTORY_RESTATED = {
     "5000_2023": (["unexplained_history_move"],
                   "the 2014 column (oldest) from two years later onward sits about 9.7-9.8m above the translated 2022 "
                   "values, unexplained (P4, Q3): 1.2% of R. The table ties (incurred +3.0%)"),
+    "1609_2024": (["orientation_outside_evidence"],
+                  "the round-5 and round-6 rule-4 correction (+13.935m USD, the 2024 table read by rows as transposed) is "
+                  "REVERSED (decision of the Claude analysis session, 26 October 2026): the round-10 tie-break readers Z9 "
+                  "and Z10 and the cohort-depth second reading read the 2024 table as labelled (the 2022 and 2024 tables "
+                  "share an orientation, the 2023 table is the mirror). Decisive: the 2021 gross ultimate loss ratio falls "
+                  "from 49.6% to 36.2% (2023 p5, 2024 p6), which only the as-labelled reading shows; the implied premium "
+                  "and the net combined ratio agree. M = -0.185m USD (UW2021 -11,123; UW2022 +10,938), the figure the "
+                  "table prints under its labels. The earlier test compared the 2024 rows with the transposed 2023 table, "
+                  "which was circular. The record stays and is listed because its orientation needed evidence outside the "
+                  "table. The earlier readings (P3, Q2, Z5, Z6) are kept; Z9 and Z10 are its census readings"),
     "6118_2018": (["unexplained_history_move", "label_disagreement"],
                   "the 2014 column's end-2017 cell is 21,267 against 101,239 in the 2017 report (about 80m, 44% of R "
                   "183.4m), unexplained in either filing (P3 gives the context of the 2014 year's closure into "
@@ -486,6 +505,44 @@ HISTORY_RESTATED = {
                   "rule 1's 10%. The paid -72.7% (Q4) is a cross-report proxy because the 2018 table prints no "
                   "end-2017 payments, only an end-2018 total rolled from the 2017 report's (P3, Q4), and that total's "
                   "scope shrank with the 2014 column (Q4). P3 valid, Q4 restated_base"),
+}
+
+#: the rule-6 listings of 3000/2016 (clause label_disagreement) and of 3500/2022 and 3500/2023 (clause
+#: take_on_table_unreconciled, review 8) before the census: all three
+#: now leave the primary under rule 8 (see SOURCE_HISTORY), and this text is kept in their entries as the earlier listing
+LISTED_BEFORE_SET_ASIDE = {
+    "3000_2016": (["label_disagreement"],
+                  "P4 valid, Q5 restated_base on the same facts: the 2016 table carries Syndicate 1400's history (RITC "
+                  "accepted 1 January 2016, 248.822m gross, p37), stated on p38 and retranslated; rule 5 applies and R "
+                  "already carries the take-on (data/opening_reserves_takeon_base.json). Paid -33.4% against a -30.1% "
+                  "control, the 'All prior years' column printing no paid: the basis explains it"),
+    "3500_2023": (["take_on_table_unreconciled"],
+                  "RITCs of seven syndicates and an LPT effective 1 January 2023 (p5, p30-31; note 7 'Reinsurance of new "
+                  "liabilities 3,225,818'), the history carried as if always (2 to 3.6 times the 2022 report's). The "
+                  "take-on is explained and is in R (5,803.136m USD = 2,962.436 + 2,840.7, "
+                  "data/opening_reserves_takeon_base.json), so rule 5 changes nothing. But the table does not reconcile "
+                  "with the filing's own roll-forward: its movement on the old years is -52.1m against -184.8m of change "
+                  "in estimates in note 7 (P7; Q8: neither 136.6m nor -62.3m ties). Rule 1 does not reach it (the history "
+                  "change is explained) and no rule covers an explained take-on table that fails the tie; it stays and "
+                  "joins the least-certain list"),
+    "3500_2022": (["take_on_table_unreconciled"],
+                  "added after review 8 (decision of the Claude analysis session, 23 October 2026), on the same "
+                  "all-prior-years scope as 3500/2023. RITCs of Syndicates 1897, 2468 and 1980/2014/2001 effective 1 "
+                  "January 2022 and loss portfolio transfers (p4; note 7 p30 'Reinsurance of new liabilities "
+                  "1,728,476'), the history carried as if always (the 2018 column about double the 2021 report's, Q7). "
+                  "The RITCs are in R (3,955.045m USD = 2,615.345 + 1,339.7, data/opening_reserves_takeon_base.json), so "
+                  "rule 5 changes nothing. But the table does not reconcile with note 7's change in estimates "
+                  "including foreign exchange of -293.1m (-293,072, p30) on that scope: the movement on every column "
+                  "that existed at end-2021 (2013-2019 and 2021) is -291.756m - 98.057m = -389.8m (review 8; P6's "
+                  "workings), and the whole table (those columns plus the new 2022 column, +363.424m) is -26.4m, a gap "
+                  "of 266.7m (P6; Q7 -26.389m); only the 2013-2019 columns alone (-291.8m, the adopted figure) are "
+                  "within 0.4% of it. LPT placement conflict: P6 reads the mid-2022 loss portfolio transfers of "
+                  "Syndicates 1200 (293.8m) and 1686 (67.1m) as entering the history as if always, while the ninth "
+                  "census (data/opening_reserves_takeon_base.json) places all four LPTs (also 2468's 22.6m and 2001's "
+                  "5.2m: 388.7m) in the 2022 column, outside M and outside R. Either way the acquired share outside R "
+                  "is at most 9.1% of R for the two mid-2022 LPTs (360.9m of 3,955.045m) and 9.8% with all four "
+                  "(388.7m), at or below rule 5b's 10%, so rule 5b would list the record too. Rule 1 does not reach it "
+                  "(the history change is explained). It stays and joins the least-certain list"),
 }
 
 #: rule 5b (decision of the Claude analysis session, 23 October 2026): the take-on, its share of R and what the readings
@@ -529,6 +586,106 @@ TAKEON_UNMEASURABLE = {
         "record leaves the primary"),
 }
 
+#: rule 8, the source-history rule (decision of the Claude analysis session, 26 October 2026): the 11 records the census
+#: set aside, each with the readers whose readings it rests on, the concerns the rule names that the readings find, and the
+#: facts both readings (or two of three) report (round9/adjudication.md). A decision rests on facts at least two readings
+#: report; 3000/2016 is set aside by K3 and the third reading Z13 (L3 found the concern resolved).
+SOURCE_HISTORY = {
+    "1084_2018": {
+        "readers": ("K2", "L2"), "concern": ["cohort_reassignment_through_closure"],
+        "facts": ("the UK Division RITC to 1274 (gross 199.7m, net nil, 1 January 2018) falls between the diagonals: the "
+                  "end-2017 cells are pre-transfer and the end-2018 cells post; incurred -20.6% against the accounts "
+                  "(control +0.1-0.2%); adding back 199.7m closes the gap; no cohort split is printed")},
+    "1416_2024": {
+        "readers": ("K4", "L4"), "concern": ["cohort_reassignment_through_closure"],
+        "facts": ("the 2021 column vanishes at the opening of 2024 while its reserve stays in R; the base is retranslated; "
+                  "incurred -14% against the accounts; no bridge")},
+    "1884_2021": {
+        "readers": ("K8", "L8"), "concern": ["overlapping_claims_history"],
+        "facts": ("a pro forma 'as if always' table for three RITC'd 2018 books (1861, 1955 and another, 1 January 2021); "
+                  "the accounts test fails by 23.0m; the 2022 and 2023 reports reprint the end-2021 diagonal about 25.7m "
+                  "higher; no t-1 table")},
+    "2008_2023": {
+        "readers": ("K8", "L8"), "concern": ["overlapping_claims_history", "cohort_reassignment_through_closure"],
+        "facts": ("the 1301 and 1492 RITCs and the QBE LPT (1 January 2023) are 'as if always'; the filing says its "
+                  "developments include reserves newly acquired, with no split; the 2014-16 columns are restated 13-33%; "
+                  "incurred -29% / +14% against the accounts; no 2022 report")},
+    "3000_2016": {
+        "readers": ("K3", "Z13", "L3"), "concern": ["overlapping_claims_history"],
+        "facts": ("the 1400 RITC is restated into 2011-2013: the end-2015 cumulative cells are 454m (49%) above the sum of "
+                  "3000's and 1400's own 2015 tables, unexplained; the end-2015 diagonal mixes rates (paid revalued, "
+                  "reserves not), putting about 75m of retranslation in M; the accounts state a favourable movement "
+                  "against M +27.3m adverse (K3 and Z13 set aside; L3 found the concern resolved)")},
+    "3500_2021": {
+        "readers": ("K3", "L3"), "concern": ["overlapping_claims_history"],
+        "facts": ("about 1.4bn of 1 January 2021 RITCs are folded into the 2012-2018 rows without a note; the functional "
+                  "currency changed the same day; the table's incurred is +109.1m against -25.4m (P&L) / -60.6m "
+                  "(note 7); no cohort bridge")},
+    "3500_2022": {
+        "readers": ("K3", "L3"), "concern": ["overlapping_claims_history"],
+        "facts": ("about 1.37bn of 1 January 2022 RITCs are in the mature rows; the end-2021 cells are 2.5bn above the 2021 "
+                  "report; the table's -389.8m against -126.1m / -293.1m")},
+    "3500_2023": {
+        "readers": ("K3", "L3"), "concern": ["overlapping_claims_history", "cohort_reassignment_through_closure"],
+        "facts": ("seven 1 January 2023 RITCs (3.04bn) are folded in; the 1200 LPT is reassigned out of the 2022 column "
+                  "('replaces a previously recorded LPT'); the end-2022 cells are 2-3 times the 2022 report's; the "
+                  "table's -52m against -185m")},
+    "6111_2017": {
+        "readers": ("K7", "L7"), "concern": ["cohort_reassignment_through_closure", "gross_net_mixing"],
+        "facts": ("the closure settlement of the 2014 year (76,855) falls between the diagonals and is settled net "
+                  "(policy p14); incurred about +20% after FX (control tied); the stated run-off 4.7m against net M about "
+                  "15m; no cohort bridge")},
+    "6111_2018": {
+        "readers": ("K7", "L7"), "concern": ["cohort_reassignment_through_closure", "gross_net_mixing"],
+        "facts": ("the same pattern for the 2015 year (83,790): incurred about +40%; the FX line is distorted; no bridge")},
+    "6131_2021": {
+        "readers": ("K8", "L8"), "concern": ["overlapping_claims_history", "gross_net_mixing"],
+        "facts": ("the table implies gross paid 10.5m against 6.5m in the accounts (+61%) and incurred 11.1m against 6.9m; "
+                  "the net excess equals the two named closing amounts; the 2018 row's gross paid equals its net paid "
+                  "(4,114) after the venture's RITC; the 2019 row's paid rises more than the year's gross paid; there "
+                  "are no closing accounts in the corpus to bridge; all earlier years pass")},
+}
+
+#: rule 6 listings from the census (decisions of the Claude analysis session, 26 October 2026): records the census readings
+#: kept in the primary but left with a residual concern that falls short of rule 8's set-aside test. clause
+#: census_residual_concern: the concern is specific but the outcome is reconstructed or validated well enough to stay;
+#: derived_correction: 3330/2017's figure is the session's roll-forward, which the corrections register carries;
+#: orientation_outside_evidence: 1609/2024's table orientation needed evidence outside the table (after its reversal).
+#: {key: (clauses, readers, facts)}; the readers are the census readers whose readings it rests on
+CENSUS_LISTED = {
+    "1110_2020": (["census_residual_concern"], ("K4", "L4"),
+                  "four take-ons are booked to u >= 2019, outside M; the table is 6.8% short of the balance sheet and its "
+                  "incurred 7-14% short, with no bridge: an inequality without a specific history concern on M's cohorts "
+                  "(L4 sets it aside, K4 finds it undeterminable; the census decision is that the readings report no "
+                  "specific overlap, gross/net mixing or reassignment on M's cohorts)"),
+    "1254_2023": (["census_residual_concern"], ("K6", "L6"),
+                  "the end-2022 diagonal of the 2023 table sits about 23m (about 41% of R, 55.6m) above the 2022 report's "
+                  "table at a like-for-like rate: the 2022 table (read by L6 from the page image, p30; K6 found none) is "
+                  "2689's estimates before the RITC of its 2017-2019 years (1 January 2022), the 2023 table's are 1254's "
+                  "own. The year's incurred ties to the accounts within 2.3% and the cohort bridge gives +8.7m for these "
+                  "years against the table's +10.5m, so the table is bridged as the taken-on book's development; the "
+                  "restated base is over 1% of R and is listed under rule 6's 1%-of-R clause"),
+    "1686_2021": (["census_residual_concern"], ("K3", "L3"),
+                  "the opening-2021 RITC of Syndicate 2007 and its SPA 6129 (903.2m gross, in R) is built into the "
+                  "2016-2018 rows as if always; the table ties to the accounts within 0.3% and the end-2020 diagonal rolls "
+                  "to opening provision plus RITC within 1.2%. The 2018 row sits 110-130m above 2007's own cells "
+                  "(possible 6129 overlap; the filing says 6129 was eliminated), worth 18.1m of M: 5-6% of R on the "
+                  "take-on-inclusive base (2,076.8m USD), over rule 6's 1% of R"),
+    "3330_2017": (["derived_correction"], ("K4", "L4", "Z12"),
+                  "the 2017 table's end-2016 cells are about 1.5m above the opening balance sheet (translation would lower "
+                  "them) and its printed M (-0.990m) has the opposite sign to the accounts' incurred (+0.559m); the "
+                  "whole reserve is in the two mature rows, so the roll-forward (14,059 + 559 - 2,270 - 647 = 11,701) "
+                  "gives M = +0.559m GBP, a derived figure no reader prints as a cohort split (L4, Z12; K4 stands on the "
+                  "printed figure); the 2016 report is not in the corpus"),
+}
+#: what the corrections register (data/mature_cohort_figures.json) carries for each census figure change
+CENSUS_FIGURES = {
+    "3330_2018": "rule 3: +1.094m GBP in place of -1.384m (the 2017 report's printed end-2017 cells as the base)",
+    "3330_2017": "derived: +0.559m GBP in place of -0.990m (the roll-forward of the opening balance sheet)",
+    "1609_2024": ("rule-4 correction REVERSED: -0.185m USD as printed in place of +13.935m (the table is as labelled; round "
+                  "10, Z9 and Z10)"),
+}
+
 #: every record of the round with its rule and outcome (the adjudication: round5/adjudication.md)
 _STANDS = "7", "stands"
 OUTCOMES = {
@@ -543,9 +700,18 @@ OUTCOMES = {
     # the merged '2016 & Prior' column both readers call unreadable is set aside)
     "4242_2022": ("3", "corrected", "data/mature_cohort_figures.json (previous_report_base)"),
     "318_2024": ("4", "corrected", "data/mature_cohort_figures.json (printed_table_error)"),
-    "1609_2024": ("4", "corrected", "data/mature_cohort_figures.json (printed_table_error)"),
+    # 1609/2024: the rule-4 correction was reversed on 26 October 2026 (round 10: Z9, Z10); the record stays at the printed
+    # figure and is listed (clause orientation_outside_evidence)
+    "1609_2024": ("4 (reversed) and 6", "correction_reversed_least_certain",
+                  "data/restated_base_excluded.json (history_restated, orientation_outside_evidence); the correction is "
+                  "removed from data/mature_cohort_figures.json"),
     **{k: ("5", "take_on_base", "data/opening_reserves_takeon_base.json (already in R)")
-       for k in ("1686_2021", "1856_2024", "1884_2021", "2488_2019", "4000_2022", "4444_2018", "4444_2023")},
+       for k in ("1856_2024", "1884_2021", "2488_2019", "4000_2022", "4444_2018", "4444_2023")},
+    # 1686/2021: rule 5 holds (R carries the take-on) and the source-history census lists it under rule 6 (26 October 2026,
+    # clause census_residual_concern: the 2018 row sits 110-130m above 2007's own cells)
+    "1686_2021": ("5 and 6", "take_on_base_and_least_certain",
+                  "data/opening_reserves_takeon_base.json (already in R) and data/restated_base_excluded.json "
+                  "(history_restated, census_residual_concern)"),
     # rule 5b (after the round-7 readings U1, U2): neither filing prints the transferred gross amount
     "1110_2022": ("5b", "take_on_unmeasurable", "data/restated_base_excluded.json (takeon_unmeasurable)"),
     "1458_2024": ("5b and 6", "take_on_bounded_least_certain",
@@ -559,12 +725,18 @@ OUTCOMES = {
 }
 #: a record two rules decide (rule 5 applied already, and rule 6 lists it: 3000/2016 for its label disagreement, 3500/2023
 #: because its explained take-on's table does not reconcile with note 7)
-OUTCOMES["3000_2016"] = ("5 and 6", "take_on_base_and_least_certain",
+OUTCOMES["3000_2016"] = ("5 and 8", "take_on_base_and_set_aside",
                          "data/opening_reserves_takeon_base.json (already in R) and data/restated_base_excluded.json "
-                         "(history_restated)")
+                         "(source_history_set_aside)")
+#: 3000/2016, 3500/2022 and 3500/2023 left the least-certain list for the excluded set on 26 October 2026: the
+#: source-history census set them aside under rule 8 (their round-5 readings stay in their entries); rule 5 still holds (R carries the take-on)
 OUTCOMES["3500_2023"] = OUTCOMES["3000_2016"]
 #: 3500/2022 joined the list after review 8 under the same clause as 3500/2023 (take_on_table_unreconciled)
-OUTCOMES["3500_2022"] = OUTCOMES["3000_2016"]
+OUTCOMES["3500_2022"] = OUTCOMES["3500_2023"]
+#: 1884/2021 (rule 5, R carries its take-on) and 1416/2024 (round 5: stands) are set aside by the census as well
+OUTCOMES["1884_2021"] = OUTCOMES["3000_2016"]
+OUTCOMES["1416_2024"] = ("7 and 8", "stands_then_set_aside",
+                         "data/restated_base_excluded.json (source_history_set_aside); round 5 had it stand")
 #: 1274/2016 (rule 4) is corrected to a figure the session derives from cells both readers quote, so it also joins the list
 #: (clause derived_correction)
 OUTCOMES["1274_2016"] = ("4 and 6", "corrected_least_certain",
@@ -755,6 +927,153 @@ def entry_for(key, reads, bucket):
     return e
 
 
+
+# ------------------------------------------------------------------------------------------------ round 9 (rule 8)
+def load_readings9():
+    """{key: {reader: entry}} from the archived round-9 readings (K1-K8, L1-L8, Z9-Z13; a key may carry a '|<task>' suffix)."""
+    out = {}
+    for rid in CENSUS_READERS:
+        with io.open(READINGS9 / ("%s.json" % rid), encoding="utf-8") as fh:
+            for k, e in json.load(fh).items():
+                out.setdefault(k.split("|")[0], {})[rid] = e
+    return out
+
+
+def pages9(key, e):
+    """The year t filing's pages a round-9 reading cites: its `pages` list where it gives one, else the table's page and
+    the pages its selection-event field cites (the readers write page numbers as 'p33' in prose; a page of another
+    report would be named with its year, and the selection-event field names the closure's own pages)."""
+    pages = set()
+    if isinstance(e.get("pages"), list):
+        pages.update(_ints(e["pages"]))
+    for f in ("table", "1_table", "item1_table"):
+        t = e.get(f)
+        if isinstance(t, dict) and isinstance(t.get("page"), int):
+            pages.add(t["page"])
+        elif isinstance(t, dict) and isinstance(t.get("page"), str):
+            pages.update(int(x) for x in re.findall(r"\d+", t["page"])[:1])
+    for f in ("selection_event", "2_selection_event", "item2_selection_event", "2_event"):
+        if f in e:
+            pages.update(_ints(e[f] if isinstance(e[f], str) else json.dumps(e[f])))
+    return sorted(pages)
+
+
+def reading9(rid, key, e):
+    """One round-9 reading as the register keeps it: the archived entry verbatim, with the reader, its source, the year t
+    filing's pages it cites and a verdict. A reading that gives no verdict field keeps verdict_as_read null and takes
+    the verdict its reason states (1254/2023's second reader: the concern is resolved at the level of M)."""
+    out = {"reader": rid, "source": "results/extraction_error_rate/mature-cohort/round9/readings/%s.json" % rid,
+           "pages": pages9(key, e), "pages_as_read": e.get("pages"), "verdict_as_read": e.get("verdict")}
+    out.update({k: v for k, v in e.items() if k not in ("key", "pages", "id")})
+    if out.get("verdict") is None:
+        text = str(e.get("reason") or "")
+        out["verdict"] = "concern_resolved" if "resolved" in text else None
+    return out
+
+
+def population9():
+    with io.open(POPULATION9, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def census_block(key, pop):
+    """The census record of one set-aside entry: the criteria that selected it and the evidence behind each, from
+    round9/population.json (chosen from source features before any outcome was seen)."""
+    sel = {x["id"]: x for x in pop["selected"]}
+    x = sel[key]
+    return {"population": "results/extraction_error_rate/mature-cohort/round9/population.json (population.md)",
+            "criteria": list(x["criteria"]), "evidence": x["evidence"],
+            "chosen_by": "source features only (no outcome value, sign or size was used); criteria S1-S6, population.md"}
+
+
+def source_history_entry(key, reads9, reads5, pop):
+    """A rule-8 entry: two readings that each set the record aside (a third reading where the first two conflicted), the
+    facts they report, the census record, the concerns, the pages and a quote. 3500/2022 and 3500/2023 carry their
+    round-5 readings and their earlier rule-6 listing as earlier_listing."""
+    spec = SOURCE_HISTORY[key]
+    rr = [reading9(rid, key, reads9[key][rid]) for rid in spec["readers"]]
+    for r in rr:
+        if not r["pages"]:
+            raise SystemExit("%s: reader %s's reading cites no page of the year t filing" % (key, r["reader"]))
+    e = {"rule": "8", "reason_code": "source_history_unresolved", "concern": list(spec["concern"]),
+         "facts": spec["facts"],
+         "pages": sorted({p for r in rr for p in r["pages"]}),
+         "quote": " || ".join("reader %s: %s" % (r["reader"], _quote_of(r)[:600]) for r in rr),
+         "verdicts": {r["reader"]: r["verdict"] for r in rr},
+         "census": census_block(key, pop),
+         "decision": ("%s: rule 8 of the round-5 decision rules, the source-history rule (the recommendation of the Codex "
+                      "analysis, adopted on Colin's instruction of 26 October 2026; applied by the Claude analysis "
+                      "session): specific source evidence raises a material unresolved concern about overlapping claims "
+                      "history, gross/net mixing or cohort reassignment through closure (%s), and the declared gross "
+                      "original-cohort outcome cannot be defensibly reconstructed or validated, so the record leaves the "
+                      "primary sample whatever the outcome's size or sign; the 672 sensitivity keeps it"
+                      % (SESSION_R9, ", ".join(spec["concern"]))),
+         "readings": rr}
+    if key in LISTED_BEFORE_SET_ASIDE:
+        clauses, facts = LISTED_BEFORE_SET_ASIDE[key]
+        e["earlier_listing"] = {"rule": "6", "clauses": list(clauses), "facts": facts,
+                                "decision": ("%s: the record was listed under rule 6 until the census; it now leaves the "
+                                             "primary under rule 8, and rule 5 still holds (its take-on is in R)" % SESSION),
+                                "round5_readings": [reading(rid, key, x) for rid, x in sorted(reads5.get(key, []))
+                                                    if rid in READERS]}
+    return e
+
+
+def census_listed_entry(key, reads9):
+    """A history_restated entry the census adds (rule 6, a clause from the census), built from its round-9 readings."""
+    clauses, readers, facts = CENSUS_LISTED[key]
+    rr = [reading9(rid, key, reads9[key][rid]) for rid in readers]
+    for r in rr:
+        if not r["pages"]:
+            raise SystemExit("%s: reader %s's reading cites no page of the year t filing" % (key, r["reader"]))
+    return {"clauses": list(clauses), "facts": facts, "pages": sorted({p for r in rr for p in r["pages"]}),
+            "quote": " || ".join("reader %s: %s" % (r["reader"], _quote_of(r)[:600]) for r in rr),
+            "verdicts": {r["reader"]: r["verdict"] for r in rr},
+            "decision": ("%s: rule 6 of the round-5 decision rules (%s), found by the source-history census (rule 8): the "
+                         "readings keep the record in the primary sample but leave a residual concern short of the "
+                         "set-aside test; it stays in the primary sample with its figure and joins the least-certain "
+                         "sensitivity (src/check_low_confidence_sensitivity.py)" % (SESSION_R9, ", ".join(clauses))),
+            "readings": rr}
+
+
+#: the census readers of an existing history_restated entry (their readings are kept beside the round-5 readings) and the
+#: census decision for it
+CENSUS_EXISTING = {
+    "6118_2018": (("K1", "L1", "Z11"),
+                  "census (26 October 2026): stays, listed. Z11 (third reading, K1 set aside and L1 found the concern "
+                  "resolved): the 2014 column narrowed to the 2014 year alone, unexplained in the 2018 report; M is within "
+                  "one table on one basis; the table ties to the accounts within 2.0-2.5%"),
+    "1609_2024": (("Z9", "Z10"),
+                  "census, round 10 (26 October 2026): the 2024 table is as labelled; the rule-4 correction is reversed "
+                  "and the record is listed (orientation_outside_evidence)"),
+}
+
+
+def source_history_meta(pop, set_aside, listed):
+    t = pop["totals"]
+    return {
+        "rule_text": CODEX_RULE_TEXT,
+        "rule": "rule 8 of results/extraction_error_rate/mature-cohort/round5/rules.md, dated 26 October 2026",
+        "label": ("recommendation of the Codex analysis, adopted on Colin's instruction of 26 October 2026 and applied by "
+                  "the Claude analysis session"),
+        "found": ("during Codex's tail investigation of 6131/2021, after the results were seen (post hoc); the census "
+                  "applied the rule to the population its source-feature criteria select, chosen without outcome values"),
+        "population": {"file": "results/extraction_error_rate/mature-cohort/round9/population.md (population.json)",
+                       "primary_records": pop["primary"]["records"], "primary_syndicates": pop["primary"]["syndicates"],
+                       "selected_core": t["selected_core"], "selected_core_syndicates": t["selected_core_syndicates"],
+                       "selected_host_side": t["selected_host_side"], "read_twice": t["selected_with_host_side"],
+                       "by_criterion_core": t["by_criterion_core"], "touched_out": t["touched_out"],
+                       "untouched": t["neither"]},
+        "readings": ("round 9 (brief_r9.md): two independent arms K1-K8 and L1-L8, every selected record read twice; "
+                     "third readings Z11 (6118/2018), Z12 (3330/2017, 3330/2018), Z13 (3500/2019, 3000/2016); round 10 "
+                     "(brief_r10.md) Z9 and Z10 for 1609/2024"),
+        "set_aside": sorted(set_aside, key=order_key),
+        "listed_by_census": sorted(listed, key=order_key),
+        "figure_changes": CENSUS_FIGURES,
+        "adjudication": "results/extraction_error_rate/mature-cohort/round9/adjudication.md",
+    }
+
+
 def build():
     reads = load_readings()
     keys = sorted(set(OUTCOMES), key=order_key)
@@ -772,14 +1091,27 @@ def build():
     for k in keys:
         counts[OUTCOMES[k][1]] = counts.get(OUTCOMES[k][1], 0) + 1
     pop["outcomes"] = dict(sorted(counts.items()))
+    reads9 = load_readings9()
+    pop9 = population9()
+    new_listed = [k for k in CENSUS_LISTED if k not in HISTORY_RESTATED]
     reg = {"_rule": RULE, "_population": pop,
+           "_source_history": source_history_meta(pop9, SOURCE_HISTORY, list(CENSUS_LISTED) + list(CENSUS_EXISTING)),
            "_adjudicated": {k: {"rule": OUTCOMES[k][0], "outcome": OUTCOMES[k][1], "where": OUTCOMES[k][2],
                                 "readers": [rid for rid, _ in reads[k]]} for k in keys},
-           "excluded": {}, "history_restated": {}, "takeon_unmeasurable": {}}
+           "excluded": {}, "history_restated": {}, "takeon_unmeasurable": {}, "source_history_set_aside": {}}
     for bucket, src in (("excluded", {**EXCLUDED, **EXCLUDED_4B}), ("history_restated", HISTORY_RESTATED),
                         ("takeon_unmeasurable", TAKEON_UNMEASURABLE)):
         for k in sorted(src, key=order_key):
             reg[bucket][k] = entry_for(k, reads[k], bucket)
+    for k, (readers, why) in CENSUS_EXISTING.items():
+        e = reg["history_restated"][k]
+        e["census_readings"] = [reading9(rid, k, reads9[k][rid]) for rid in readers]
+        e["census_decision"] = "%s: %s" % (SESSION_R9, why)
+    for k in new_listed:
+        reg["history_restated"][k] = census_listed_entry(k, reads9)
+    reg["history_restated"] = dict(sorted(reg["history_restated"].items(), key=lambda kv: order_key(kv[0])))
+    for k in sorted(SOURCE_HISTORY, key=order_key):
+        reg["source_history_set_aside"][k] = source_history_entry(k, reads9, reads, pop9)
     return reg
 
 

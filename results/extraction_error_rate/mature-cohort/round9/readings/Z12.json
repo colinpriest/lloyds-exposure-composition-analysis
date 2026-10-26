@@ -1,0 +1,99 @@
+{
+ "3330_2017": {
+  "read_by": "text layer (PDF text) and page image for the triangle page; Efull PDF syndicate_3330_2017.pdf (34 pages); 2014 report read for context; the 2016 report is not in the corpus, so no per-cohort end-2016 cumulative paid or end-2016 reserve is printed anywhere",
+  "currency_unit": "GBP thousands",
+  "pages": {"triangle_and_reconciliation": 29, "technical_account": 12, "balance_sheet": 14, "balance_sheet_liabilities": 15, "note1_gross_incurred": 28, "strategic_report_RITC": 6, "result_narrative": 7, "currency_table": 24, "fx_policy": 18},
+  "table": {"page": 29, "printed_page": 27, "heading": "Claims development triangulations - Gross claims development as at 31 December 2017; 'Pure Underwriting year 2011 | 2012 | Total'; 'Estimate of gross claims incurred'", "basis": "gross, ultimate-style estimate (paid + reserve), whole syndicate; two columns only, no '& prior' column; no 2016 or 2017 column. Note under the net table: 'Paid claims have been accounted for at historical exchange rates for each calendar year with the reserves at each year end retranslated using the latest reporting date exchange rate'"},
+  "cells": {
+   "2011 after 1..7 years (end 2011..end 2017)": [60526, 52349, 57842, 62834, 55610, 57463, 56449],
+   "2012 after 1..6 years (end 2012..end 2017)": [18240, 13030, 9875, 9855, 11351, 11375],
+   "less gross claims paid": {"2011": 47587, "2012": 8536},
+   "gross reserves": {"2011": 8862, "2012": 2839, "total": 11701}
+  },
+  "M_printed_u_le_2015_k": {"2011": "56,449 - 57,463 = -1,014", "2012": "11,375 - 11,351 = +24", "sum": -990, "R_opening_gross_provision_p15": 14059, "M_over_R": -0.0704},
+  "selection_event": "p6: 'On 1 January 2017, the 2017 year of account accepted the Reinsurance to Close (RITC) of the 2014 year of account which consisted of the 2007 year of account of Syndicate 1208 and the 2011 year of account of Syndicate 102.' Internal closing within the same syndicate: effective 1 Jan 2017 = opening of year t, between no diagonals. Syndicate-level accounts carry no RITC line for it (opening gross provision 14,059 at 31 Dec 16 on p14/15 and p29 is the same balance sheet before and after). The RITC of S3334 (1 Jan 2018) is expressly 'not reflected in these accounts' (p6).",
+  "overlapping_history": "The only two table rows (2011, 2012) are the S102 2011 year and the 2012 year (S1208 2007 RITC'd into the 2012 year of account, per the 2014 report p5-6), both folded into the 2014 year and then closed into the 2017 year. No third row, so the 2017 year's own new business (GWP 104 on p12/p28) has no row. No evidence of another vehicle's paid history added to a row; the latest diagonal ties exactly (56,449 = 47,587 + 8,862; 11,375 = 8,536 + 2,839; reserves total 11,701 = balance sheet p15).",
+  "gross_net": "Gross and net tables both print and differ (net 2011 end-2017 44,052 and 2012 8,948 vs gross 56,449 and 11,375); the gross table total 11,701 equals gross claims outstanding. No gross/net mixing found.",
+  "tie_end2016_cells_to_opening_reserves": {
+   "per_cohort_tie_possible": false,
+   "why_not": "The 2017 report prints end-2017 cumulative paid by cohort only; end-2016 cumulative paid by cohort and opening reserves by cohort are not printed (2016 report not in corpus), so each cohort cannot be tied separately. Only the aggregate (the two rows are the whole provision) can be tied.",
+   "aggregate": {
+    "end2016_cells_sum": 68814,
+    "cum_paid_end2017_sum": 56123,
+    "gross_claims_paid_2017_accounts_p12": 2270,
+    "cum_paid_end2016_implied": 53853,
+    "table_implied_opening_reserve": 14961,
+    "opening_balance_sheet_gross_provision": 14059,
+    "excess_vs_balance_sheet": 902,
+    "exchange_movement_on_gross_provision_2017_p29": -647,
+    "opening_provision_at_end2017_rates": 13412,
+    "excess_vs_fx_restated_opening": 1549
+   }
+  },
+  "what_translation_can_explain": "Nothing in the observed direction. The table says paid is at historical rates and reserves are restated at the latest (end-2017) rate, so the end-2016 cell should equal cum paid + opening reserve at end-2017 rates. The accounts' own exchange line moves the gross provision DOWN by 647 in 2017 (p29: 14,059, (1,711), (647), 11,701; 7,861 of the opening 14,059 is US dollar, p24). So the end-2016 cells should be about 53,853 + 13,412 = 67,265, not 68,814: the printed cells are 1,549 (2.3% of cells, 11.0% of R) higher, and FX works the wrong way to explain it. Even with no retranslation at all the expected cells are 53,853 + 14,059 = 67,912 (still 902 short of the printed 68,814). A whole-cell retranslation at the year's FX would lower, not raise, the end-2016 cells (-647/14,059 = -4.6%).",
+  "accounts_test_incurred": {
+   "implied_gross_incurred_2017_from_table": -990,
+   "accounts_gross_claims_incurred_2017": 559,
+   "accounts_source": "p12 technical account: gross claims paid (2,270), change in gross provision +1,711 => cost 559; p28 note 1: gross claims incurred (559); p29 reconciliation 14,059 -1,711 -647 = 11,701",
+   "gap": 1549,
+   "control_2016": "not available: 2016 report not in corpus. Accounts-side 2016 gross incurred 3,348 (p28), paid 3,112, provision change (236) (p12).",
+   "narrative": "p7: 'A significant proportion of the loss for the year was as a result of strengthening of the indirect claims handling reserve together with a charge to the underwriting account arising from the continued costs associated with the CCI asset' - an adverse 2017, not a 0.99m release as the table implies."
+  },
+  "roll_forward_reconstruction": {
+   "possible": true,
+   "method": "Opening gross provision 14,059 + 2017 gross incurred 559 - gross paid 2,270 + exchange (647) = 11,701 (ties to the pound). All of the 2017 gross incurred belongs to the 2011/2012 rows plus at most the 2017 year's own new business (GWP 104, earned 104), so M(u<=2015, FX-neutral) = +559 (an upper bound; at most about 0.1m of it is the 2017 year's own claims). Equivalent by cells: end-2017 cells 67,824 = (cum paid end-2016 53,853 + opening 14,059 - 647) + 559 exactly.",
+   "M_m": 0.56,
+   "M_over_R": 0.0398,
+   "base": "gross claims incurred in the 2017 technical account less nothing (FX is carried on the separate exchange line, so 559 is FX-neutral); R = 14,059"
+  },
+  "verdict": "concern_resolved",
+  "verdict_figure": "M = +0.56m (+4.0% of R=14,059). The printed -0.99m is NOT validated: its end-2016 diagonal overstates the opening gross reserves by 0.9m (no FX) to 1.5m (with FX), FX cannot explain the direction, and its implied 2017 incurred (-990) has the opposite sign to the accounts' 559 and to the report's own 'strengthening' narrative. If the rule can only accept the printed figure, set the printed -0.99m aside and use the accounts roll-forward +0.56m.",
+  "reason": "The concern is the internal closing (2014 year into 2017) and an end-2016 diagonal that does not tie to the opening balance sheet. The outcome is reconstructed from the technical account and the provision reconciliation, which tie exactly to the closing provision, giving +0.56m. The sign of the printed figure is wrong on this evidence. Residual weakness: the 2016 report is absent, so the cause of the overstated end-2016 cells (and the cohort split of 559) cannot be read.",
+  "conflict_with_other_readings": "Reading A (end-2016 cells overstated by about 1.5m, M = +0.56m) is confirmed. Reading B (difference within sterling retranslation) is refuted: the exchange line is negative (-647) and would lower the end-2016 cells."
+ },
+ "3330_2018": {
+  "read_by": "text layer and page images (pp30-31 triangles); Efull PDF syndicate_3330_2018.pdf (36 pages); 2017 report for the end-2017 comparison",
+  "currency_unit": "GBP thousands",
+  "pages": {"triangle": 30, "net_triangle": 31, "technical_account": 12, "note1_gross_incurred": 29, "strategic_report_RITC": 6, "result_narrative": 7, "currency_tables": "24, 25", "2017_report_triangle": 29},
+  "table": {"page": 30, "printed_page": 28, "heading": "Claims development triangulations - Gross claims development as at 31 December 2018; 'Pure Underwriting year 2011 | 2012 | 2018 | Total'; 'Estimate of gross claims incurred'", "basis": "gross, paid + reserve; no '& prior'; separate 2018 column holds the inward S3334 RITC book. Same footnote: paid at historical rates, reserves retranslated at the latest rate"},
+  "cells": {
+   "2011 after 1..8 years": [62882, 54217, 60179, 65409, 58422, 59652, 58573, 57009],
+   "2012 after 1..7 years": [18836, 13480, 10264, 9568, 11719, 11729, 11909],
+   "2018 after one year": 244154,
+   "less gross claims paid": {"2011": 48247, "2012": 9191, "2018": 215437},
+   "gross reserves": {"2011": 8762, "2012": 2718, "2018": 28717, "total": 40197}
+  },
+  "M_printed_u_le_2016": {"2011": "57,009 - 58,573 = -1,564", "2012": "11,909 - 11,729 = +180", "sum": -1384, "R_opening": 11701, "M_over_R": -0.1183},
+  "selection_event": "p6: 'With effect from 1 January 2018, the 2018 year of account has accepted the RITC of the 2012 - 2014 years of account of syndicate 3334'. p30 reconciliation: 'At 1 January 2018 11,701; Movement in technical account (9,621); RITC received from syndicate 3334 37,650 (reinsurers 7,222, net 30,428); Foreign exchange 467; At 31 December 2018 40,197'. Opening of year t. Touches no u<=2016 row: the 2011/2012 reserves (8,762 + 2,718 = 11,480) are about the opening 11,701, with no 37.65m step, and 28,717 sits in the 2018 column (40,197 - 11,480 = 28,717).",
+  "overlapping_history": "The 2018 column is an 'as if always' history of the 3334 book (ultimate 244,154, paid 215,437, only 62 of GWP in 2018, p12). It is a separate column, so it does not enter u<=2016 rows. The 2011/2012 rows are the same two rows as in the 2017 report. Their history cells moved between reports (below).",
+  "gross_net": "The RITC is gross 37,650 / net 30,428 and enters the gross 2018 column only. Rows 2011/2012 on the net table (p31: 45,613 -> 43,923 for 2011; 9,220 -> 9,324 for 2012) do not show a gross/net mixing. No gross/net mixing found in u<=2016 rows.",
+  "cell_by_cell_2018_table_vs_2017_report": {
+   "2011": [{"age": 1, "r2017": 60526, "r2018": 62882, "diff": 2356}, {"age": 2, "r2017": 52349, "r2018": 54217, "diff": 1868}, {"age": 3, "r2017": 57842, "r2018": 60179, "diff": 2337}, {"age": 4, "r2017": 62834, "r2018": 65409, "diff": 2575}, {"age": 5, "r2017": 55610, "r2018": 58422, "diff": 2812}, {"age": 6, "r2017": 57463, "r2018": 59652, "diff": 2189}, {"age": 7, "r2017": 56449, "r2018": 58573, "diff": 2124}],
+   "2012": [{"age": 1, "r2017": 18240, "r2018": 18836, "diff": 596}, {"age": 2, "r2017": 13030, "r2018": 13480, "diff": 450}, {"age": 3, "r2017": 9875, "r2018": 10264, "diff": 389}, {"age": 4, "r2017": 9855, "r2018": 9568, "diff": -287}, {"age": 5, "r2017": 11351, "r2018": 11719, "diff": 368}, {"age": 6, "r2017": 11375, "r2018": 11729, "diff": 354}],
+   "end_2017_cells": "2011: 56,449 (2017 report p29) vs 58,573 (2018 p30), +2,124 (+3.76%); 2012: 11,375 vs 11,729, +354 (+3.11%); total +2,478",
+   "ratios": "2011 ratios 1.036 to 1.051 at every age; 2012 1.031 to 1.039 at ages 1,2,3,5,6 and 0.971 at age 4"
+  },
+  "what_translation_can_explain": "Only about 0.45m of 2.478m on the reserves alone. The 2017 report's end-2017 cells tie to the end-2017 balance sheet (cum paid 56,123 + reserves 11,701 = 67,824). The 2018 table's end-2017 cells (58,573 + 11,729 = 70,302) less the same cum paid (paid is historical and does not change with retranslation) imply an end-2017 reserve of 14,179 = 121% of the 11,701 opening gross provision. The whole 2018 foreign-exchange line on the gross provision is +467 (p30; +4.0% of 11,701); USD is 7,350 of the 11,701 (p25). To produce +2,478 on the opening reserves would need the dollar to move 34% (2,478 / 7,350). What the uplift DOES resemble is a retranslation of the WHOLE cell (paid included) by about the year's FX effect: +3.8% on 2011's end-2017 cell vs +4.0% (467/11,701) and +3.1% to +4.0% at other ages. If so, the 2018 table's older diagonals were scaled as whole cells while its latest diagonal is paid at historical rates plus reserves at closing rates (57,009 = 48,247 + 8,762 ties exactly), i.e. two bases inside one table, and the printed M is understated by roughly FX x cumulative paid (about 2.1m). Translation therefore explains why the cells differ but does not make the printed M valid.",
+  "accounts_test_incurred": {
+   "accounts_gross_claims_incurred_2018": 2655,
+   "accounts_source": "p12: gross claims paid (12,276), change in gross provision +9,621 => 2,655; p29 note 1: gross claims incurred (2,655); p30: 11,701 - 9,621 + 37,650 + 467 = 40,197",
+   "implied_incurred_from_printed_table": "Rows 2011/2012 -1,384; the 2018 column has one cell (244,154, whole as-if-always history), so the printed table cannot give the year's incurred.",
+   "implied_from_2017_report_base": "Rows 2011/2012: closing reserves 11,480 - opening 11,701 + 2018 paid on those rows (48,247 + 9,191 - 47,587 - 8,536 = 1,315) = +1,094 = incurred + FX on those rows. This needs only two printed paid totals and the balance sheet. The printed -1,384 would need FX on those rows of +2,478 (+34% on the dollar) or negative paid, so it is not compatible with the accounts.",
+   "tie_to_total": "Rows +1,094; 3334 book (2018 column): 244,154 - (215,437 - (12,276 - 1,315)) - 37,650 = +2,028 (uses the accounts' paid to split 3334 paid, so this is an identity, not an independent test); total 3,122 = 2,655 incurred + 467 FX.",
+   "control_2017": "2017 report's table implied incurred -990 vs accounts 559 (see 3330_2017): that table itself does not tie. The 2017 report's end-2017 cells do tie to the balance sheet and paid."
+  },
+  "roll_forward_reconstruction": {
+   "possible": true,
+   "method": "Each u<=2016 row: end-2018 cell (2018 table: paid hist + reserve at 2018 rate) less the 2017 report's end-2017 cell (paid hist + reserve at 2017 rate; ties to the balance sheet 11,701). 2011: 57,009 - 56,449 = +560; 2012: 11,909 - 11,375 = +534; sum +1,094. This is a roll-forward on one consistent basis except the retranslation of the reserve, which sits in the end-2018 cell. FX-neutral: remove FX on the opening reserves (at most the 467 on the whole provision; dollar share 63%) => about +0.6m (range +0.4m to +1.1m; sign positive in every case).",
+   "M_m_cell_base": 1.09,
+   "M_over_R_cell_base": 0.0935,
+   "M_m_fx_neutral_central": 0.63,
+   "base": "2018 table end-2018 cells less the 2017 report's end-2017 cells, R = 11,701 (gross provision at 31 Dec 2017, 2018 report p30)"
+  },
+  "which_base_reconciles_with_2018_accounts": "The 2017-report base (end-2017 cells from the 2017 report: paid + reserve at end-2017 = balance sheet 11,701). The 2018 table's own end-2017 cells do not reconcile (imply 14,179 opening reserve against 11,701).",
+  "verdict": "concern_resolved",
+  "verdict_figure": "M = +1.09m (+9.3% of R=11,701) on the 2017-report base; FX-neutral about +0.6m (+5.4%), range +0.4m to +1.1m. The printed -1.38m (-11.8% of R) is not validated and has the wrong sign.",
+  "reason": "The inward 3334 RITC sits in a separate 2018 column and does not touch the u<=2016 rows, so no cohort reassignment there. The concern is that the 2018 table's end-2017 history was restated by +2,478 (+3.8%), more than the 467 FX on the whole provision and consistent only with whole-cell retranslation, which puts two bases in one table. Rolling forward from the 2017 report's end-2017 cells, which tie to the balance sheet, reconstructs M at +1.09m (FX-neutral about +0.6m), validated by the closing reserve, the paid movement on the rows and the balance sheet.",
+  "conflict_with_other_readings": "Reading A (overstated against the 2017 report by 2,478, so M = +1.09m) is confirmed on the cells; but the 2,478 includes FX of up to about 0.47m on the reserves, so the FX-neutral M is about +0.6m. Reading B (if it says translation explains it) is wrong on size and on basis: translation can explain at most 0.45m on the reserves."
+ }
+}

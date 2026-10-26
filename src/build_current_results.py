@@ -721,6 +721,10 @@ SCIENTIFIC_DETAIL_WORDS = {
     "takeon_base_unmeasurable": ("the year's take-on is not in the opening reserves, the filing prints no transferred "
                                  "gross amount and it could exceed 10% of them (the primary outcome, rule 5b of the "
                                  "round-5 decision rules, 23 October 2026)"),
+    "source_history_set_aside": ("specific source evidence raises a material unresolved concern about overlapping "
+                                 "claims history, gross/net mixing or cohort reassignment through closure, and the "
+                                 "declared outcome cannot be reconstructed or validated (the primary outcome, rule 8 of "
+                                 "the round-5 decision rules, the source-history rule, 26 October 2026)"),
     "mix_names_no_line_of_business": "the filing prints no premium amount for any non-life line of business (a "
                                      "contract form or distribution channels only; scope)",
     "life_book": "life business (scope)",

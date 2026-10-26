@@ -529,7 +529,10 @@ MATURE_COHORT_NO_FIGURE_REASONS = {
 #: that reconciles with the year's accounts (rule 3) is replaced by the corrected figure both readings give. Nothing
 #: displaced the triangle's figure, which is the adopted block's own; the entry's displaced.by names the correction, and
 #: the entry carries a `correction` object (the rule, the cause and how the figure follows from the readings' cells).
-MATURE_COHORT_CORRECTIONS = ("printed_table_error", "previous_report_base")
+#: and (26 October 2026, the source-history census) accounts_roll_forward: the year's gross claims incurred from the opening
+#: and closing gross provision, the paid and the exchange line, when the table's end-(t-1) cells do not tie to the opening
+#: balance sheet and no previous report is in the corpus (3330/2017; a DERIVED figure)
+MATURE_COHORT_CORRECTIONS = ("printed_table_error", "previous_report_base", "accounts_roll_forward")
 #: the kinds of reading a figure entry may rest on (build_mature_cohort_figures.py), at least one a reader's own. The
 #: extraction's own table read (the stored grid the estimator computed from) is supporting evidence under table_read and
 #: is never a reading: a figure rests on two agents' readings of the filing
@@ -574,8 +577,23 @@ RESTATED_BASE_TAG = "RESTATED_BASE_TABLE"
 TAKEON_UNMEASURABLE_BUCKET = "takeon_unmeasurable"
 TAKEON_UNMEASURABLE_TAG = "TAKEON_BASE_UNMEASURABLE"
 TAKEON_UNMEASURABLE_THRESHOLD_PCT = 10.0
-#: the register's three buckets: the loader applies the first and the third and validates all
-RESTATED_BUCKETS = ("excluded", "history_restated", TAKEON_UNMEASURABLE_BUCKET)
+#: Rule 8 of the round-5 decision rules, the source-history rule (26 October 2026; the recommendation of the Codex
+#: analysis, adopted on Colin's instruction and applied by the Claude analysis session), under the primary only: a record
+#: leaves the sample when specific source evidence raises a material unresolved concern about overlapping claims history,
+#: gross/net mixing or cohort reassignment through closure and the declared gross original-cohort outcome cannot be
+#: defensibly reconstructed or validated, whatever the outcome's size or sign. The register's "source_history_set_aside"
+#: bucket holds those records, each on two readings that report the facts; the loader reads it as ONE mask: the record
+#: gets no figure (pyd_gbp_m, pyd_pct and so s_raw_a are None), so every producer that selects its sample on s_raw_a
+#: (test_restated_base_excluded.py holds that gate over the source tree) drops it, and the tag SOURCE_HISTORY_TAG, which
+#: the missingness sample's tag list refuses and the ledgers count. The 672 construction does not read it.
+SOURCE_HISTORY_BUCKET = "source_history_set_aside"
+SOURCE_HISTORY_TAG = "SOURCE_HISTORY_SET_ASIDE"
+SOURCE_HISTORY_REASON_CODE = "source_history_unresolved"
+SOURCE_HISTORY_RULE = "8"
+#: the three concerns rule 8 names
+SOURCE_HISTORY_CONCERNS = ("overlapping_claims_history", "gross_net_mixing", "cohort_reassignment_through_closure")
+#: the register's four buckets: the loader applies the first, the third and the fourth, and validates all
+RESTATED_BUCKETS = ("excluded", "history_restated", TAKEON_UNMEASURABLE_BUCKET, SOURCE_HISTORY_BUCKET)
 #: the four conditions of rule 1, each with the value an excluded entry must show
 RESTATED_CONDITIONS = (("history_differs_unexplained", True), ("year_t_fails_accounts", True), ("control_ties", True),
                        ("previous_base_reconciles", False))
@@ -596,17 +614,30 @@ RESTATED_LOG_REASON = {
            "accounts, and no base gives a figure that reconciles: the primary carries no severity for it "
            "(data/restated_base_excluded.json, rule 4b of the round-5 decision rules)"),
 }
+#: the classification log's reason for a record rule 8 sets aside
+SOURCE_HISTORY_LOG_REASON = (
+    "specific source evidence raises a material unresolved concern about overlapping claims history, gross/net mixing or "
+    "cohort reassignment through closure, and the declared gross original-cohort outcome cannot be defensibly "
+    "reconstructed or validated: the primary carries no severity for it (data/restated_base_excluded.json, rule 8, the "
+    "source-history rule of 26 October 2026)")
 #: why rule 6 lists a record: an underwriting year u <= t-2 moved beyond the exchange rate, without explanation, by more
 #: than 1% of R; or the two readings disagree on the validity label but not on the facts; or (rule 5b) the filing prints
 #: no transferred gross amount for a take-on in year t but bounds it at or below the threshold share of R
 #: (take_on_base_bounded); or (rule 5 with 6) an explained take-on that is in R has a table that does not reconcile with
 #: the filing's own roll-forward (take_on_table_unreconciled); or (rule 4 with 6, after review 8) the corrected figure is
 #: derived by the session from cells both readers quote, a figure neither reader gives (derived_correction)
+#: and (26 October 2026, the source-history census) a residual concern the census readings left below the rule-8 set-aside
+#: test (census_residual_concern), or a table whose orientation needed evidence outside the table
+#: (orientation_outside_evidence, 1609/2024 after its reversal)
 RESTATED_CLAUSES = ("unexplained_history_move", "label_disagreement", "take_on_base_bounded",
-                    "take_on_table_unreconciled", "derived_correction")
+                    "take_on_table_unreconciled", "derived_correction", "census_residual_concern",
+                    "orientation_outside_evidence")
 #: the round-5 verdicts by validity class (a disagreement between the classes is a label disagreement)
 RESTATED_VALID_VERDICTS = ("valid", "screen_misread", "units_slip")
 RESTATED_INVALID_VERDICTS = ("restated_base", "undeterminable")
+#: the verdicts of the source-history census readings (round 9, rule 8): the reader sets the record aside, finds the
+#: concern resolved (the outcome reconstructed or validated), or finds the record stands
+RESTATED_CENSUS_VERDICTS = ("set_aside", "concern_resolved", "stands")
 #: an entry of the take-on registers that describes the step of the mature-cohort figure names it: such an entry
 #: applies only under the primary, to a block carrying that figure
 FIGURE_ROUTE_KEY = "figure_route"
@@ -903,6 +934,128 @@ def _evidence_gaps(entry):
     return gaps
 
 
+#: Per-cohort cells of a register figure (the cohort-depth repair, 26 October 2026). A register figure that no stored grid
+#: computes (a corrected or confirmed table) carries the cells it is the sum of, so that the depth sensitivity can take the
+#: figure on u <= t-3 from the register as it takes u <= t-2: ``cohort_cells`` = {report_year, unit ("000" or "m", the
+#: report's own), currency, table_kind, page, readings (the first and second reading, which agree), terms}. A term is
+#: {u: year or [years], previous/latest (cumulative tables: the year t table's latest cell less the previous cell),
+#: movement (a movement table: the printed latest-diagonal cell itself), or opening/incurred/paid/fx/closing (an aggregate:
+#: the accounts' roll-forward), term}. A derived term (derived true, with its basis) is the session's derivation from
+#: quoted cells. The loader checks its own register: each term follows from its cells, the terms over u <= t-2 sum to
+#: figure_m, and the cell strings are what the depth script reads. The primary never reads a cell: no figure moves.
+COHORT_CELLS_KINDS = ("cumulative", "movement", "aggregate")
+COHORT_CELLS_SCALE = {"000": 1.0e-3, "m": 1.0}
+COHORT_CELLS_TOL = 0.0015
+
+
+def cell_number(text):
+    """A printed cell as a number: '1,023' is 1023.0, '(1,023)' is -1023.0, '-408' is -408.0."""
+    t = str(text).strip()
+    neg = t.startswith("(") and t.endswith(")")
+    v = float(t.strip("()").replace(",", ""))
+    return -v if neg else v
+
+
+def cohort_cells_term_value(t, kind):
+    """The value a term's printed cells give, in the report's unit, or None for a derived term (its value is the
+    session's own)."""
+    if t.get("derived"):
+        return None
+    if kind == "cumulative":
+        return cell_number(t["latest"]) - cell_number(t["previous"])
+    if kind == "movement":
+        return cell_number(t["movement"])
+    return cell_number(t["closing"]) - cell_number(t["opening"]) + cell_number(t["paid"]) + cell_number(t["fx"])
+
+
+def cohort_cells_cutoff_terms(cc, lag):
+    """The terms of u <= report_year - lag (a term over several years counts only when all of them are)."""
+    cut = cc["report_year"] - lag
+    out = []
+    for t in cc["terms"]:
+        us = t["u"] if isinstance(t["u"], list) else [t["u"]]
+        if all(u <= cut for u in us):
+            out.append(t)
+    return out
+
+
+def cohort_cells_figure_m(cc, lag):
+    """The figure over u <= report_year - lag in millions of the report's currency, or None when no term is that old: an
+    empty set is 'no figure at that depth', never 0."""
+    terms = cohort_cells_cutoff_terms(cc, lag)
+    if not terms:
+        return None
+    return sum(t["term"] for t in terms) * COHORT_CELLS_SCALE[cc["unit"]]
+
+
+def _cohort_cells_cell_strings(cc):
+    """Every printed cell string a block's terms rest on."""
+    out = []
+    for t in cc["terms"]:
+        out += [str(t[f]) for f in ("previous", "latest", "movement", "opening", "incurred", "paid", "fx", "closing")
+                if f in t]
+    return out
+
+
+def cohort_cells_gaps(entry):
+    """What an entry's cohort_cells block lacks, [] for an entry without one (it is optional). The block: the report year,
+    the unit and currency, the table kind, the page, the first and second reading (agreeing), and terms each following from
+    its printed cells (or derived with its basis); over u <= report_year - 2 the terms sum to the entry's figure_m."""
+    cc = entry.get("cohort_cells")
+    if cc is None:
+        return []
+    if not isinstance(cc, dict):
+        return ["cohort_cells as an object"]
+    gaps = []
+    if not isinstance(cc.get("report_year"), int) or isinstance(cc.get("report_year"), bool):
+        gaps.append("cohort_cells.report_year")
+    if cc.get("unit") not in COHORT_CELLS_SCALE:
+        gaps.append("cohort_cells.unit (%s)" % ", ".join(COHORT_CELLS_SCALE))
+    if cc.get("table_kind") not in COHORT_CELLS_KINDS:
+        gaps.append("cohort_cells.table_kind (%s)" % ", ".join(COHORT_CELLS_KINDS))
+    if not isinstance(cc.get("currency"), str) or not cc["currency"].strip():
+        gaps.append("cohort_cells.currency")
+    if not isinstance(cc.get("page"), int) or isinstance(cc.get("page"), bool) or cc["page"] < 1:
+        gaps.append("cohort_cells.page")
+    rd = cc.get("readings")
+    if not isinstance(rd, list) or len(rd) < 2 or cc.get("agree") is not True:
+        gaps.append("cohort_cells.readings (a first and a second reading) with agree true")
+    terms = cc.get("terms")
+    if not isinstance(terms, list) or not terms or not all(isinstance(t, dict) for t in terms):
+        return gaps + ["cohort_cells.terms"]
+    if gaps:
+        return gaps
+    seen = []
+    for i, t in enumerate(terms):
+        us = t.get("u")
+        us = us if isinstance(us, list) else [us]
+        if not us or any(not isinstance(u, int) or isinstance(u, bool) or u > cc["report_year"] for u in us):
+            gaps.append("term %d's underwriting year(s)" % i)
+            continue
+        if set(us) & set(seen):
+            gaps.append("term %d's underwriting year(s) once" % i)
+        seen += us
+        if not _is_number(t.get("term")):
+            gaps.append("term %d's value" % i)
+            continue
+        if t.get("derived"):
+            if not isinstance(t.get("basis"), str) or not t["basis"].strip():
+                gaps.append("term %d's derivation basis" % i)
+            continue
+        try:
+            want = cohort_cells_term_value(t, cc["table_kind"])
+        except (KeyError, ValueError):
+            gaps.append("term %d's printed cells for a %s table" % (i, cc["table_kind"]))
+            continue
+        if abs(want - t["term"]) > 1e-6:
+            gaps.append("term %d equal to its cells (%s against %s)" % (i, want, t["term"]))
+    if not gaps and _is_number(entry.get("figure_m")):
+        total = cohort_cells_figure_m(cc, 2)
+        if total is None or abs(total - entry["figure_m"]) > COHORT_CELLS_TOL:
+            gaps.append("terms over u <= t-2 that sum to figure_m (%s against %s)" % (total, entry["figure_m"]))
+    return gaps
+
+
 def _confirmed_figure_gaps(entry):
     """The evidence, and the fields the loader acts on as written: pyd_cohort_scope reads
     figure_kind and pyd_basis returns basis, so a "Triangle" would read as a stated figure
@@ -952,6 +1105,7 @@ def _confirmed_figure_gaps(entry):
         gaps.append("a figure_kind of 'triangle' or 'stated'")
     if entry.get("basis") not in ("gross", "net", "unknown"):
         gaps.append("a basis of 'gross', 'net' or 'unknown'")
+    gaps += cohort_cells_gaps(entry)
     return gaps
 
 
@@ -1668,6 +1822,7 @@ def _mature_cohort_gaps(entry):
     gaps += [g for g in _evidence_gaps(dict(entry, readings=["a", "b"])) if g != "two readings"]
     reading_gaps = _mature_reading_gaps(entry.get("readings"))
     gaps += reading_gaps
+    gaps += cohort_cells_gaps(entry)
     derived = isinstance(entry.get("correction"), dict) and "derived_figure_m" in entry["correction"]
     if not reading_gaps and not derived:
         # a derived correction's readings give their own figure_m (the printed table's); _derived_correction_gaps holds
@@ -1816,14 +1971,18 @@ def _restated_reading_gaps(entry, bucket):
         if (not isinstance(pages, list) or not pages
                 or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
             gaps.append("reading %d's pages" % i)
-        if r.get("verdict") not in RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS:
-            gaps.append("reading %d's verdict (%s)" % (i, ", ".join(RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS)))
+        if r.get("verdict") not in RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS + RESTATED_CENSUS_VERDICTS:
+            gaps.append("reading %d's verdict (%s)" % (i, ", ".join(RESTATED_VALID_VERDICTS + RESTATED_INVALID_VERDICTS
+                                                                  + RESTATED_CENSUS_VERDICTS)))
     # rule 1 needs both readings to find a restated base; rule 4b rests on the facts both report, not their labels
     if bucket == "excluded" and entry.get("rule") == "1" and any(v != "restated_base" for v in verdicts):
         gaps.append("readings that each find a restated base (verdicts %s)" % verdicts)
     if bucket == "history_restated" and "label_disagreement" in (entry.get("clauses") or []):
         if not (set(verdicts) & set(RESTATED_VALID_VERDICTS) and set(verdicts) & set(RESTATED_INVALID_VERDICTS)):
             gaps.append("readings of both validity classes for the clause label_disagreement (verdicts %s)" % verdicts)
+    # rule 8 sets a record aside only on facts at least two readings report: two readings that each set it aside
+    if bucket == SOURCE_HISTORY_BUCKET and sum(1 for v in verdicts if v == "set_aside") < 2:
+        gaps.append("two readings that each set the record aside (verdicts %s)" % verdicts)
     return gaps
 
 
@@ -1874,6 +2033,28 @@ def _take_on_gaps(entry, bucket):
     return gaps
 
 
+def _source_history_gaps(entry):
+    """What a rule-8 entry (the source_history_set_aside bucket) lacks: the rule and its reason code, the facts the
+    readings report, the census record it was selected by (the criteria that selected it, chosen from source features
+    before any outcome was seen) and the concern named (overlapping claims history, gross/net mixing or cohort
+    reassignment through closure). The readings, pages and quote are checked with every bucket's."""
+    gaps = []
+    if entry.get("rule") != SOURCE_HISTORY_RULE:
+        gaps.append("rule %r" % SOURCE_HISTORY_RULE)
+    if entry.get("reason_code") != SOURCE_HISTORY_REASON_CODE:
+        gaps.append("reason_code %r" % SOURCE_HISTORY_REASON_CODE)
+    if not isinstance(entry.get("facts"), str) or not entry["facts"].strip():
+        gaps.append("the facts both readings report")
+    census = entry.get("census")
+    if not isinstance(census, dict) or not census.get("criteria") or not isinstance(census.get("criteria"), list):
+        gaps.append("the census criteria that selected the record")
+    concern = entry.get("concern")
+    if not isinstance(concern, list) or not concern or any(
+            c not in SOURCE_HISTORY_CONCERNS for c in concern):
+        gaps.append("the concern (%s)" % ", ".join(SOURCE_HISTORY_CONCERNS))
+    return gaps
+
+
 def _restated_entry_gaps(entry, bucket):
     """What a data/restated_base_excluded.json entry lacks. All buckets: the decision, the pages and a quote, and the
     readings (_restated_reading_gaps). An excluded entry: its rule (1 or 4b) and that rule's four conditions, each with
@@ -1901,6 +2082,8 @@ def _restated_entry_gaps(entry, bucket):
         if not isinstance(entry.get("facts"), str) or not entry["facts"].strip():
             gaps.append("the facts")
         gaps += _take_on_gaps(entry, bucket)
+    elif bucket == SOURCE_HISTORY_BUCKET:
+        gaps += _source_history_gaps(entry)
     else:
         clauses = entry.get("clauses")
         if not isinstance(clauses, list) or not clauses or any(c not in RESTATED_CLAUSES for c in clauses):
@@ -1937,6 +2120,12 @@ def _restated_buckets(path=None):
         if both:
             raise ValueError("%s: %s are in both %s and %s" % (path.name, ", ".join(sorted(both)), other,
                                                               TAKEON_UNMEASURABLE_BUCKET))
+    # a set-aside record is in no other bucket: it leaves the sample, so it cannot also be listed as staying
+    for other in ("excluded", "history_restated", TAKEON_UNMEASURABLE_BUCKET):
+        both = set(out[other]) & set(out[SOURCE_HISTORY_BUCKET])
+        if both:
+            raise ValueError("%s: %s are in both %s and %s" % (path.name, ", ".join(sorted(both)), other,
+                                                              SOURCE_HISTORY_BUCKET))
     return out
 
 
@@ -1954,6 +2143,14 @@ def load_takeon_unmeasurable(path=None):
     prints no transferred gross amount and the readings show the acquired share of the base could exceed
     TAKEON_UNMEASURABLE_THRESHOLD_PCT of R. ``path`` defaults to the committed register."""
     return _restated_buckets(path)[TAKEON_UNMEASURABLE_BUCKET]
+
+
+def load_source_history_set_aside(path=None):
+    """The records data/restated_base_excluded.json sets aside under rule 8, the source-history rule (26 October 2026), as
+    {key: entry}: each on two readings that report the facts, with the census criteria that selected it. The loader
+    gives them no figure and the tag SOURCE_HISTORY_TAG, one mask for estimation, donor pools, tools and scoring.
+    ``path`` defaults to the committed register."""
+    return _restated_buckets(path)[SOURCE_HISTORY_BUCKET]
 
 
 def restated_register_keys(path=None):
@@ -2589,6 +2786,11 @@ def load_and_classify(outcome=None):
         # rule 5b (23 October 2026): a gross reliable record whose take-on the filing does not print, and could exceed
         # 10% of R, leaves the primary
         counters["takeon_base_unmeasurable_excluded"] = 0
+        # rule 8, the source-history rule (26 October 2026): a gross reliable record on which specific source evidence
+        # raises a material unresolved concern about overlapping claims history, gross/net mixing or cohort
+        # reassignment through closure, and whose declared outcome cannot be reconstructed or validated, leaves the
+        # primary
+        counters["source_history_set_aside"] = 0
     classification_log = []
     basis_register = load_pyd_basis_register()
     confirmed_figures = load_pyd_confirmed_figures()
@@ -2599,6 +2801,8 @@ def load_and_classify(outcome=None):
     restated_applied = set()
     unmeasurable_register = load_takeon_unmeasurable() if mature else {}
     unmeasurable_applied = set()
+    source_history_register = load_source_history_set_aside() if mature else {}
+    source_history_applied = set()
     takeon_all = load_takeon_register()
     takeon_register = scoped_to_outcome(takeon_all, outcome)
     opening_register = load_opening_reserves_confirmed()
@@ -2921,6 +3125,18 @@ def load_and_classify(outcome=None):
             is_reliable = False
             pyd_pct = None
             unmeasurable_applied.add(basis_key)
+        # rule 8: the same step for a record the source-history census set aside. One mask: a set-aside record has no
+        # figure, so it has no severity, leaves every producer's sample at once and is counted once
+        source_history = (basis_key in source_history_register and is_reliable and not is_takeon and basis == "gross")
+        if basis_key in source_history_register and not source_history:
+            raise ValueError("data/restated_base_excluded.json: %s (%s) is no reliable gross record of the primary "
+                             "sample at the exclusion step (%s)"
+                             % (basis_key, SOURCE_HISTORY_BUCKET, "a take-on" if is_takeon else
+                                "basis %s, reliable %s" % (basis, is_reliable)))
+        if source_history:
+            is_reliable = False
+            pyd_pct = None
+            source_history_applied.add(basis_key)
         if is_reliable and is_takeon:
             is_reliable = False
             dq_tag = TAKEON_TAG
@@ -2979,6 +3195,11 @@ def load_and_classify(outcome=None):
                                                  "book whose base cannot be measured, and the primary carries no "
                                                  "severity for it (data/restated_base_excluded.json, rule 5b of the "
                                                  "round-5 decision rules)" % TAKEON_UNMEASURABLE_THRESHOLD_PCT})
+        elif source_history:
+            dq_tag = SOURCE_HISTORY_TAG
+            counters["source_history_set_aside"] += 1
+            classification_log.append({"file": fname, "status": dq_tag,
+                                       "reason": SOURCE_HISTORY_LOG_REASON})
         elif provision_movement:
             dq_tag = PROVISION_MOVEMENT_TAG
             counters["provision_movement_unusable"] += 1
@@ -3008,7 +3229,7 @@ def load_and_classify(outcome=None):
             classification_log.append({"file": fname, "status": "INCOMPLETE", "reason": "missing syndicate/year"})
             continue
         pyd_gbp_m = None if (provision_movement or unreconciled or no_mature_figure or fx_untranslated
-                             or restated or unmeasurable) else safe_float(
+                             or restated or unmeasurable or source_history) else safe_float(
             cm.get("prior_year_development_gbp_m"))
         direction = cm.get("direction", "").lower().strip() if cm.get("direction") else None
         lob_movements = cm.get("lob_movements", []) or []
@@ -3221,6 +3442,11 @@ def load_and_classify(outcome=None):
     if stale:
         raise ValueError("data/restated_base_excluded.json: %s (takeon_unmeasurable) reached no reliable gross record of "
                          "the primary sample, so the exclusion did not happen" % ", ".join(stale))
+    stale = sorted(k for k in set(source_history_register) - source_history_applied
+                   if "syndicate_%s.json" % k in in_corpus)
+    if stale:
+        raise ValueError("data/restated_base_excluded.json: %s (%s) reached no reliable gross record of the primary "
+                         "sample, so the exclusion did not happen" % (", ".join(stale), SOURCE_HISTORY_BUCKET))
     unused = sorted(set(composition_readings) - composition_readings_used)
     if unused:
         log("  %s: applies to no record whose extracted mix names no line of business now: %s"

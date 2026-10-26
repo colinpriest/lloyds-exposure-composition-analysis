@@ -201,7 +201,18 @@
    "counterparty": "3330",
    "note": "the stage-3 PC page reading of 5 October 2026: not confirmed here, because the headline already uses the retained base for this record. The gross amount is printed (p34, 'External RITC transfer (run-off years) (37,982)', effective 31 December 2017), and data/opening_reserves_confirmed.json carries the opening 78.791 = 116.773 - 37.982 (the owner's decision of 22 September 2026). A second adjustment here would double-count. Note the inconsistency with the decision of 29 September 2026 that the headline keeps R unadjusted.",
    "amount_gbp_m": 37.982,
-   "page": 34
+   "page": 34,
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K6.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L6.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "amount_m": 37.982,
+    "page": 34,
+    "facts": "both readings read p34: 'External RITC transfer (run-off years) (37,982)' gross, effective 31 December 2017 (p5, p7); it removed the 2011/2012-2014 run-off years at the opening and left the 2015-2016 rows alone",
+    "disposition": "the amount is settled by two readings; the entry stays named and not adjusted because the headline already uses the retained base for this record (data/opening_reserves_confirmed.json)"
+   }
   },
   "2007_2019": {
    "counterparty": "1686",
@@ -209,19 +220,59 @@
   },
   "33_2021": {
    "counterparty": "6104",
-   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "not_an_outbound_transfer": true,
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K5.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L5.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "facts": "both readings: 6104 is a limited-tenancy special purpose arrangement that reinsures Syndicate 33 by a funds-withheld quota share (one contract a year, p39 note 19, p60); it is a ceded reinsurer of 33 (outward, on the net table only), not an RITC counterparty, and no RITC, transfer or take-on enters Syndicate 33's gross table; the 'reinsurance to close' wording in the filing is each pure year closing into the next year of the same syndicate",
+    "disposition": "not an outbound transfer: the entry is a mislabel and adjusts nothing"
+   }
   },
   "33_2022": {
    "counterparty": "6104",
-   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "not_an_outbound_transfer": true,
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K5.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L5.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "facts": "both readings: 6104 is a limited-tenancy special purpose arrangement that reinsures Syndicate 33 by a funds-withheld quota share (one contract a year, p39 note 19, p60); it is a ceded reinsurer of 33 (outward, on the net table only), not an RITC counterparty, and no RITC, transfer or take-on enters Syndicate 33's gross table; the 'reinsurance to close' wording in the filing is each pure year closing into the next year of the same syndicate",
+    "disposition": "not an outbound transfer: the entry is a mislabel and adjusts nothing"
+   }
   },
   "33_2023": {
    "counterparty": "6104",
-   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "not_an_outbound_transfer": true,
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K5.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L5.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "facts": "both readings: 6104 is a limited-tenancy special purpose arrangement that reinsures Syndicate 33 by a funds-withheld quota share (one contract a year, p39 note 19, p60); it is a ceded reinsurer of 33 (outward, on the net table only), not an RITC counterparty, and no RITC, transfer or take-on enters Syndicate 33's gross table; the 'reinsurance to close' wording in the filing is each pure year closing into the next year of the same syndicate",
+    "disposition": "not an outbound transfer: the entry is a mislabel and adjusts nothing"
+   }
   },
   "33_2024": {
    "counterparty": "6104",
-   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read"
+   "note": "possibly the special-purpose syndicate's own reinsurance to close; not read",
+   "not_an_outbound_transfer": true,
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K5.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L5.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "facts": "both readings: 6104 is a limited-tenancy special purpose arrangement that reinsures Syndicate 33 by a funds-withheld quota share (one contract a year, p39 note 19, p60); it is a ceded reinsurer of 33 (outward, on the net table only), not an RITC counterparty, and no RITC, transfer or take-on enters Syndicate 33's gross table; the 'reinsurance to close' wording in the filing is each pure year closing into the next year of the same syndicate",
+    "disposition": "not an outbound transfer: the entry is a mislabel and adjusts nothing"
+   }
   },
   "6103_2015": {
    "counterparty": "2791",
@@ -230,7 +281,18 @@
    "page": 41,
    "opening_m": 5.119,
    "quote": "PDF p41 note 5 'Claims Outstanding', Gross £'000: 'At 1 January 2015 5,119'; 'Claims incurred in current underwriting year 654'; 'Claims paid during year (708)'; 'RITC 2012 YOA commuted into Syn 2791 (4,250)'; 'Foreign Exchange 138'; 'At 31 December 2015 953'. PDF p44: 'In accordance with the reinsurance contract with Syndicate 2791, the 2013 Year of Account will be commuted. An RITC will be effected with Syndicate 2791 and the reserves carried for the 2013 Year of Accounting (amounting to £0.1m) transferred to that syndicate in 2016.'",
-   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): a recurring commutation of the special-purpose syndicate's closing year into its host 2791, not dated 1 January, so outside the start-of-year rule, as for 2468_2016. The amount is printed and the record is in the working sample (R 5.119); on R - 4.250 = 0.869 its S would move from -0.0070 to -0.0414 (83% out)."
+   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): a recurring commutation of the special-purpose syndicate's closing year into its host 2791, not dated 1 January, so outside the start-of-year rule, as for 2468_2016. The amount is printed and the record is in the working sample (R 5.119); on R - 4.250 = 0.869 its S would move from -0.0070 to -0.0414 (83% out).",
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K7.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L7.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "amount_m": 4.25,
+    "page": 41,
+    "facts": "both readings read note 5 (p41): 'RITC 2012 YOA commuted into Syn 2791 (4,250)', 83% of the opening 5,119; the retained opening base is 869 (L7); K7 finds no day printed for the commutation, so it is not dated 1 January. Both readings find the concern resolved (the one mature cell, 2013, is untouched and ties to the by-year-of-account account)",
+    "disposition": "the amount is settled by two readings; the entry stays named and not adjusted (not confirmed as a start-of-year transfer); R as printed includes the commuted block, so M/R measures 17% of R"
+   }
   },
   "6103_2023": {
    "counterparty": "2791",
@@ -239,7 +301,18 @@
    "page": 52,
    "opening_m": 59.471,
    "quote": "PDF p52 note 5: 'At 1 January 2023 59,471'; 'Claims incurred in current underwriting year 19,657'; 'Claims paid during year by Syndicate 2791 (34,111)'; 'RITC 2020 YOA commuted into Syndicate 2791 (7,172)'; 'Foreign Exchange (2,768)'; 'At 31 December 2023 35,077'. PDF p33: 'There are no back years, due to the commutation agreement with syndicate 2791'.",
-   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): the same recurring commutation into the host 2791, not dated 1 January, so outside the start-of-year rule. The amount is printed and the record is in the working sample (R 59.471); on R - 7.172 = 52.299 its S would move from -0.0292 to -0.0332 (12% out)."
+   "note": "not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): the same recurring commutation into the host 2791, not dated 1 January, so outside the start-of-year rule. The amount is printed and the record is in the working sample (R 59.471); on R - 7.172 = 52.299 its S would move from -0.0292 to -0.0332 (12% out).",
+   "census_resolution": {
+    "readings": [
+     "results/extraction_error_rate/mature-cohort/round9/readings/K7.json",
+     "results/extraction_error_rate/mature-cohort/round9/readings/L7.json"
+    ],
+    "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census, round 9)",
+    "amount_m": 7.172,
+    "page": 52,
+    "facts": "both readings read note 5 (p52): 'RITC 2020 YOA commuted into Syndicate 2791 (7,172)', 12% of the opening 59,471. K7 alone dates it: the 2022 report (6103_2022 p56) says the 2020 year's reserves were 'transferred to that syndicate in the 2021 year of account on 1st January 2023'; L7 says only that it was commuted in 2023. Both readings find the concern resolved (K7: stands; L7: the retained opening base is validated against the 2022 report's cohort reserves)",
+    "disposition": "the amount is settled by two readings; the date rests on one reading (K7), and a census fact needs two, so the entry stays named and not adjusted. If a second reading confirms the 1 January 2023 date the entry belongs under confirmed (the sensitivity would then adjust R to 52.299); flagged, not applied"
+   }
   },
   "6123_2019": {
    "counterparty": "4242",

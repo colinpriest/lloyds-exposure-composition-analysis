@@ -1,0 +1,5072 @@
+{
+ "about": "Census of the 643-record primary for the source-history eligibility rule (recommendation of the Codex analysis, adopted on Colin's instruction). Population chosen by source characteristics only; no outcome value was read to choose it. Decision of the Claude analysis session on the criteria; the dispositions are for the two readings, not this file.",
+ "primary": {
+  "records": 643,
+  "syndicates": 118,
+  "source": "model/exposure_results.json observations with s_raw_a, opening_reserves_gbp_m and hhi present (src/adopted_model.load_sample); keys only were read"
+ },
+ "selected": [
+  {
+   "id": "33_2021",
+   "syndicate": 33,
+   "year": 2021,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 6104; possibly the special-purpose syndicate's own reinsurance to close; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "33_2022",
+   "syndicate": 33,
+   "year": 2022,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 6104; possibly the special-purpose syndicate's own reinsurance to close; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "33_2023",
+   "syndicate": 33,
+   "year": 2023,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 6104; possibly the special-purpose syndicate's own reinsurance to close; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "33_2024",
+   "syndicate": 33,
+   "year": 2024,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 6104; possibly the special-purpose syndicate's own reinsurance to close; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "435_2018",
+   "syndicate": 435,
+   "year": 2018,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2018,
+      "page": 5,
+      "evidence_report": null,
+      "evidence": "A reinsurance to close arrangement of Syndicate 2255 was carried out as at 31 December 2017; its assets and liabilities were transferred to Syndicate 435 on 1 January 2018."
+     },
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1084_2018",
+   "syndicate": 1084,
+   "year": 2018,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 1274 (gross technical provisions, RITC of the UK Division)",
+     "page": 28,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1110_2020",
+   "syndicate": 1110,
+   "year": 2020,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2020,
+      "page": 22,
+      "evidence_report": null,
+      "evidence": "Furthermore, in 2020 the Syndicate also accepted the RITC of 3330, ADC cover on 1458 and an LPT from Syndicates 45 and 386."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 22,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1200_2023",
+   "syndicate": 1200,
+   "year": 2023,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 3500 (gross claims reserves transferred)",
+     "page": 27,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1254_2023",
+   "syndicate": 1254,
+   "year": 2023,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2023,
+      "page": 41,
+      "evidence_report": null,
+      "evidence": "6) 403 (1,523) Foreign exchange 14 - 14 At 31 December 2022 595 - 595 2023 Gross Reinsurers’ share Net £000 £000 £000 At 1 January 2023 55,574 - 55,574 Inwards RITC of liabilities - - - Change in the provision for claims in the year 56,161 (32,873) 23,288 Foreign exchange (225) (1,090) (1,315) At 31"
+     },
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1301_2022",
+   "syndicate": 1301,
+   "year": 2022,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 2008; named in the previous year's filing",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1301_2023",
+   "syndicate": 1301,
+   "year": 2023,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 2008 (gross technical provisions, external RITC)",
+     "page": 71,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1416_2023",
+   "syndicate": 1416,
+   "year": 2023,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1416_2023.pdf p5, p29: 'The SPA was established in October 2021 to underwrite a variable quota share ... from Syndicate 4242 (Host Syndicate)'; funds withheld; syndicate_1416_2024.pdf p6, p48: 2022 and prior RITC'd into Host Syndicate 4242 and then to Syndicate 3500 as of 1 January 2025",
+     "spa_years": "2021-open",
+     "selected_cohorts": "u <= 2021",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "1416_2024",
+   "syndicate": 1416,
+   "year": 2024,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1416_2023.pdf p5, p29: 'The SPA was established in October 2021 to underwrite a variable quota share ... from Syndicate 4242 (Host Syndicate)'; funds withheld; syndicate_1416_2024.pdf p6, p48: 2022 and prior RITC'd into Host Syndicate 4242 and then to Syndicate 3500 as of 1 January 2025",
+     "spa_years": "2021-open",
+     "selected_cohorts": "u <= 2022",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "1458_2024",
+   "syndicate": 1458,
+   "year": 2024,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "data/restated_base_excluded.json history_restated (rule 5b and 6, take_on_base_bounded)",
+     "detail": "external RITC in year t whose transferred gross reserves the filing does not print; bounded at or below 10% of R (round-5 readings, rules.md rule 5b)",
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1492_2023",
+   "syndicate": 1492,
+   "year": 2023,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 2008 (gross claims outstanding, third party RITC balance transfer of the 2018 and prior liabilities (split RITC effective 31 December 2022))",
+     "page": 56,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1686_2021",
+   "syndicate": 1686,
+   "year": 2021,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2021,
+      "page": 7,
+      "evidence_report": null,
+      "evidence": "Reinsurance to Close With effect from 1 January 2021, the 2018 year of account of Syndicate 2007 and Syndicate 6129 closed by way of an RITC into the 2019 year of account of Syndicate 1686 thus concluding the business of both Syndicate 6129"
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      7,
+      9,
+      20,
+      21,
+      24,
+      25,
+      32
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1856_2024",
+   "syndicate": 1856,
+   "year": 2024,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_takeon']",
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      65,
+      63,
+      101,
+      27,
+      13,
+      67
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1861_2018",
+   "syndicate": 1861,
+   "year": 2018,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 2008; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1861_2019",
+   "syndicate": 1861,
+   "year": 2019,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 2008 (gross claims outstanding, RITC adjustment)",
+     "page": 42,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1884_2021",
+   "syndicate": 1884,
+   "year": 2021,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2021,
+      "page": 33,
+      "evidence_report": null,
+      "evidence": "The Syndicate accepted the RITC of the 2018 YOA of Syndicates 1861 and 1955 effective 1 January 2021."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      32,
+      33,
+      24,
+      4,
+      12,
+      16
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1884_2022",
+   "syndicate": 1884,
+   "year": 2022,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_inward']",
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 4,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1884_2023",
+   "syndicate": 1884,
+   "year": 2023,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_inward']",
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 4,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1892_2024",
+   "syndicate": 1892,
+   "year": 2024,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1892_2022.pdf p5: 'The Syndicate was established on 01 January 2022 following the transition from an SPA'; quota share with the host on a funds withheld basis, settled 'when the SPA year of account closes after three years'; syndicate_2786_2019.pdf p5, p36: 80% quota share between Syndicate 2786 and SPA 1892",
+     "spa_years": "2019-2021",
+     "selected_cohorts": "u <= 2022",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "1897_2019",
+   "syndicate": 1897,
+   "year": 2019,
+   "criteria": [
+    "S6"
+   ],
+   "evidence": [
+    {
+     "source": "filing text and round-5 reading P1",
+     "page": 33,
+     "detail": "syndicate_1897_2019.pdf p33: 'The 2016 year of account Property class of business was transferred to the 2017 year of account under an RITC agreement. At the same time the cession between Syndicate 1897 and Syndicate 6126 on the 2016 year of account was increased from 85% to 100%. The 2016 year of account for Syndicate 6126 was reinsured to close (RITC) to Syndicate 3268.' (round 5: rule 7, stands)",
+     "criterion": "S6"
+    }
+   ]
+  },
+  {
+   "id": "1910_2023",
+   "syndicate": 1910,
+   "year": 2023,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 3500 (gross technical provisions, external RITC movements)",
+     "page": 26,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1955_2021",
+   "syndicate": 1955,
+   "year": 2021,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 1884 (gross claims provisions, RITC impact)",
+     "page": 49,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1969_2021",
+   "syndicate": 1969,
+   "year": 2021,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 1994; not read",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "1971_2022",
+   "syndicate": 1971,
+   "year": 2022,
+   "criteria": [
+    "S1",
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1971_2022.pdf p48, p67: 'Until 31 December 2021 Syndicate 1971 was a SPA syndicate with Syndicate 1969 as the host on the 2021 and prior years of account'; 'a Special Purpose Arrangement with Syndicate 1969 as the host for the 2019 to 2021 years of account'",
+     "spa_years": "2019-2021",
+     "selected_cohorts": "u <= 2020",
+     "criterion": "S1"
+    },
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_inward']",
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, standing",
+     "page": 64,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1971_2023",
+   "syndicate": 1971,
+   "year": 2023,
+   "criteria": [
+    "S1",
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1971_2022.pdf p48, p67: 'Until 31 December 2021 Syndicate 1971 was a SPA syndicate with Syndicate 1969 as the host on the 2021 and prior years of account'; 'a Special Purpose Arrangement with Syndicate 1969 as the host for the 2019 to 2021 years of account'",
+     "spa_years": "2019-2021",
+     "selected_cohorts": "u <= 2021",
+     "criterion": "S1"
+    },
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_inward']",
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, standing",
+     "page": 65,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "1971_2024",
+   "syndicate": 1971,
+   "year": 2024,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_1971_2022.pdf p48, p67: 'Until 31 December 2021 Syndicate 1971 was a SPA syndicate with Syndicate 1969 as the host on the 2021 and prior years of account'; 'a Special Purpose Arrangement with Syndicate 1969 as the host for the 2019 to 2021 years of account'",
+     "spa_years": "2019-2021",
+     "selected_cohorts": "u <= 2022",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2007_2018",
+   "syndicate": 2007,
+   "year": 2018,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 2008 (gross technical provisions, effect of RITC)",
+     "page": 22,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "2008_2023",
+   "syndicate": 2008,
+   "year": 2023,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2023,
+      "page": 41,
+      "evidence_report": null,
+      "evidence": "The above movements also include the take-on balances of the RITC with Syndicate 1301 (amounting to £235.0m Gross and £158.0m Net) and LPT contract with QBE (amounting to £319.0m Gross and £159.5m Net)."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 41,
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      49,
+      50,
+      41,
+      6,
+      52,
+      40,
+      18
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "2014_2016",
+   "syndicate": 2014,
+   "year": 2016,
+   "criteria": [
+    "S5"
+   ],
+   "evidence": [
+    {
+     "source": "filing text",
+     "page": 37,
+     "detail": "syndicate_2014_2016.pdf p37: 'The Special Purpose Syndicate 6110, from which the Syndicate has its origins, signed a reinsurance to close its 2013 year of account into Syndicate 4000's 2014 year of account. An experience account reinsurance agreement was signed on this business between the Syndicate and Syndicate 4000 so that any development accrues to the 2014 year of account' (selected cohort 2014)",
+     "criterion": "S5"
+    }
+   ]
+  },
+  {
+   "id": "2014_2017",
+   "syndicate": 2014,
+   "year": 2017,
+   "criteria": [
+    "S5"
+   ],
+   "evidence": [
+    {
+     "source": "filing text",
+     "page": 34,
+     "detail": "syndicate_2014_2017.pdf p34: 'The Special Purpose Syndicate 6110, from which the Syndicate has its origins, signed a reinsurance to close its 2013 year of account into Syndicate 4000's 2014 year of account. An experience account reinsurance agreement was signed on this business between the Syndicate and Syndicate 4000 so that any development accrues to the 2014 year of account' (selected cohort 2014)",
+     "criterion": "S5"
+    }
+   ]
+  },
+  {
+   "id": "2015_2020",
+   "syndicate": 2015,
+   "year": 2020,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate None (gross technical provisions, RITC transfer)",
+     "page": 42,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "2088_2015",
+   "syndicate": 2088,
+   "year": 2015,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_2088_2015.pdf p5: 'established for the 2012 year of account as a Special Purpose Syndicate', whole account quota share of Catlin Syndicate 2003; syndicate_2088_2018.pdf p5: stand-alone at Lloyd's from the 2015 year of account",
+     "spa_years": "2012-2014",
+     "selected_cohorts": "u <= 2013",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2088_2016",
+   "syndicate": 2088,
+   "year": 2016,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_2088_2015.pdf p5: 'established for the 2012 year of account as a Special Purpose Syndicate', whole account quota share of Catlin Syndicate 2003; syndicate_2088_2018.pdf p5: stand-alone at Lloyd's from the 2015 year of account",
+     "spa_years": "2012-2014",
+     "selected_cohorts": "u <= 2014",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2088_2017",
+   "syndicate": 2088,
+   "year": 2017,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_2088_2015.pdf p5: 'established for the 2012 year of account as a Special Purpose Syndicate', whole account quota share of Catlin Syndicate 2003; syndicate_2088_2018.pdf p5: stand-alone at Lloyd's from the 2015 year of account",
+     "spa_years": "2012-2014",
+     "selected_cohorts": "u <= 2015",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2088_2018",
+   "syndicate": 2088,
+   "year": 2018,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_2088_2015.pdf p5: 'established for the 2012 year of account as a Special Purpose Syndicate', whole account quota share of Catlin Syndicate 2003; syndicate_2088_2018.pdf p5: stand-alone at Lloyd's from the 2015 year of account",
+     "spa_years": "2012-2014",
+     "selected_cohorts": "u <= 2016",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2088_2019",
+   "syndicate": 2088,
+   "year": 2019,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_2088_2015.pdf p5: 'established for the 2012 year of account as a Special Purpose Syndicate', whole account quota share of Catlin Syndicate 2003; syndicate_2088_2018.pdf p5: stand-alone at Lloyd's from the 2015 year of account",
+     "spa_years": "2012-2014",
+     "selected_cohorts": "u <= 2017",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "2468_2018",
+   "syndicate": 2468,
+   "year": 2018,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 2008 (gross technical provisions, RITC of 2015 & prior)",
+     "page": 33,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "2488_2019",
+   "syndicate": 2488,
+   "year": 2019,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2019,
+      "page": 7,
+      "evidence_report": null,
+      "evidence": "With effect from 1 January 2019, Syndicate 2488 accepted the reinsurance to close of the liabilities of Syndicate 1882."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      49,
+      7,
+      51,
+      25,
+      39,
+      9
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "2689_2022",
+   "syndicate": 2689,
+   "year": 2022,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 1254 (gross claims outstanding, External RITC of the 2019 and prior years (the roll-forward's External RITC line))",
+     "page": 35,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "3000_2016",
+   "syndicate": 3000,
+   "year": 2016,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2016,
+      "page": 10,
+      "evidence_report": null,
+      "evidence": "Annual Report and Financial Statements for the year ended 31 December 2016 • Following the acceptance of Syndicate 1400's RITC from 1 January 2016, there has been an increase in the Statement of Financial Position for financial investments and cash, gross and net claims outstanding and reinsurers' s"
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      6,
+      8,
+      10,
+      37,
+      38
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3000_2017",
+   "syndicate": 3000,
+   "year": 2017,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2017,
+      "page": 38,
+      "evidence_report": null,
+      "evidence": "aims outstanding Gross £'000 Reinsurance £'000 Net £'000 Gross £'000 Reinsurance £'000 Net £'000 At 1 January 1,103,264 154,099 949,165 737,922 103,785 634,137 RITC accepted from Syndicate 1400 - - - 248,822 25,153 223,669 Movement in provision 230,706 114,675 116,031 (19,130) 6,191 (25,321) Movemen"
+     },
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3268_2020",
+   "syndicate": 3268,
+   "year": 2020,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_takeon']",
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      38,
+      30,
+      34
+     ],
+     "criterion": "S2"
+    },
+    {
+     "source": "filing text",
+     "detail": "syndicate_3268_2020.pdf p30: claims outstanding roll-forward 'RITC from Syndicate 6126' in the gross column; p34: 'SPA 6126 YOA 2016 and 2017 which was accepted as an RITC into Syndicate 3268 on 1 January 2019 and 1 January 2020 respectively'",
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3330_2017",
+   "syndicate": 3330,
+   "year": 2017,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2017,
+      "page": 6,
+      "evidence_report": null,
+      "evidence": "On 1 January 2017, the 2017 year of account accepted the Reinsurance to Close (RITC) of the 2014 year of account which consisted of the 2007 year of account of Syndicate 1208 and the 2011 year of account of Syndicate 102."
+     },
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3330_2018",
+   "syndicate": 3330,
+   "year": 2018,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2018,
+      "page": 6,
+      "evidence_report": null,
+      "evidence": "With effect from 1 January 2018, the 2018 year of account has accepted the RITC of the 2012 – 2014 years of account of syndicate 3334, previously managed by Hamilton Underwriting Limited (HUL)."
+     },
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3334_2018",
+   "syndicate": 3334,
+   "year": 2018,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 3330; the stage-3 PC page reading of 5 October 2026: not confirmed here, because the headline already uses the retained base for this record. The gross amount is printed (p34, 'External RITC transfer (run-o",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "3500_2018",
+   "syndicate": 3500,
+   "year": 2018,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['transfer_inward']",
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (found_by_hand)",
+     "detail": "direction inward, discrete",
+     "page": 5,
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3500_2019",
+   "syndicate": 3500,
+   "year": 2019,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2019,
+      "page": 5,
+      "evidence_report": null,
+      "evidence": "On 1* January 2019, Syndicate 3500 accepted the reinsurance to close of the liabilities of another Lloyd’s syndicate, a runoff syndicate with underwriting years of 2016 and prior."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      24,
+      23,
+      30,
+      13
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3500_2021",
+   "syndicate": 3500,
+   "year": 2021,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2021,
+      "page": 5,
+      "evidence_report": null,
+      "evidence": "This transaction results in the transfer to Syndicate 3500 of gross and net technical provisions of $17.6 million and $17.3 million respectively; and • the reinsurance to close of the 2017 and prior underwriting years of account liabilities of syndicate 1200 and the reinsurance to close of the 2018 "
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 5,
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      5,
+      32,
+      16,
+      25,
+      7
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3500_2022",
+   "syndicate": 3500,
+   "year": 2022,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2022,
+      "page": 4,
+      "evidence_report": null,
+      "evidence": "This transaction resulted in the transfer to Syndicate 3500 of gross and net technical provisions of $13.4 million and $13.4 million, respectively; • the reinsurance to close of the 2019 and prior underwriting years of account liabilities of Syndicate 2468."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 4,
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      4,
+      30,
+      24,
+      15
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "3500_2023",
+   "syndicate": 3500,
+   "year": 2023,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2023,
+      "page": 30,
+      "evidence_report": null,
+      "evidence": "illion, respectively, this replaces a previously recorded loss portfolio transfer with gross and net liabilities of $201.9 million as at 1% January 2023; ° the reinsurance to close of the 2020 and prior underwriting years of account liabilities of Syndicate 1910."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 30,
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      5,
+      31,
+      24,
+      15
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "4000_2021",
+   "syndicate": 4000,
+   "year": 2021,
+   "criteria": [
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "data/outbound_transfer_retained_base.json confirmed",
+     "detail": "outbound RITC/transfer at the start of the year to Syndicate 3500 (gross claims outstanding, RITC to Syndicate 3500)",
+     "page": 37,
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "4000_2022",
+   "syndicate": 4000,
+   "year": 2022,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_inward', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2022,
+      "page": 25,
+      "evidence_report": "4000_2023",
+      "evidence": "Reinsurance to close (“RITC”) received The Syndicate accepted a reinsurance to close of Syndicate 3334 effective 1 January 2022."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "pdf_extraction/audit/portfolio_transfer_adjudication.json (records)",
+     "detail": "direction inward, discrete",
+     "page": 24,
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      5,
+      24,
+      32,
+      33,
+      37
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "4444_2018",
+   "syndicate": 4444,
+   "year": 2018,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2018,
+      "page": 7,
+      "evidence_report": "4444_2017",
+      "evidence": "At 31 December 2017, Syndicate 4444 accepted the reinsurance to close for the 2015 year of account of Syndicate 958, its final underwriting year."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      24,
+      42,
+      17,
+      36
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "4444_2023",
+   "syndicate": 4444,
+   "year": 2023,
+   "criteria": [
+    "S2"
+   ],
+   "evidence": [
+    {
+     "source": "src/assumed_business.py sources (ritc_scan.json, portfolio_transfer_adjudication.json, opening_reserves_takeon_base.json)",
+     "detail": "regime sources ['ritc_strong', 'transfer_takeon']",
+     "ritc_scan": {
+      "direction": "inward",
+      "event_year": 2023,
+      "page": 44,
+      "evidence_report": null,
+      "evidence": "On 1 January 2023 the 2021 year of account of the Syndicate accepted the RITC of the 2020 year of account of Syndicate 1861."
+     },
+     "criterion": "S2"
+    },
+    {
+     "source": "data/opening_reserves_takeon_base.json",
+     "detail": "take-on the adopted development covers, added to R",
+     "page": [
+      26,
+      5,
+      45,
+      6,
+      25,
+      39,
+      16,
+      15
+     ],
+     "criterion": "S2"
+    }
+   ]
+  },
+  {
+   "id": "5623_2023",
+   "syndicate": 5623,
+   "year": 2023,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_5623_2018.pdf p5: 'established in 2018 as a special purpose arrangement syndicate to write market facility business via a quota share from syndicate 3623'; syndicate_5623_2023.pdf p29, p32: 'syndicate 5623 was a special purpose arrangement up to 31 December 2022, it operated on a cash withheld basis ... host syndicate 3623'; 'changed from a special purpose arrangement syndicate to a full syndicate for 2023'",
+     "spa_years": "2018-2022",
+     "selected_cohorts": "u <= 2021",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "5623_2024",
+   "syndicate": 5623,
+   "year": 2024,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_5623_2018.pdf p5: 'established in 2018 as a special purpose arrangement syndicate to write market facility business via a quota share from syndicate 3623'; syndicate_5623_2023.pdf p29, p32: 'syndicate 5623 was a special purpose arrangement up to 31 December 2022, it operated on a cash withheld basis ... host syndicate 3623'; 'changed from a special purpose arrangement syndicate to a full syndicate for 2023'",
+     "spa_years": "2018-2022",
+     "selected_cohorts": "u <= 2022",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6103_2015",
+   "syndicate": 6103,
+   "year": 2015,
+   "criteria": [
+    "S1",
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6103_2015.pdf p44: 'This Syndicate is a Special Purpose Syndicate writing a single line of business'; syndicate_6103_2023.pdf p56: 'This syndicate is a Special Purpose Arrangement'; host 2791 accepts its years by RITC 'at each 36 months and 1 day' (syndicate_2791_2015.pdf p69)",
+     "spa_years": "?-open",
+     "selected_cohorts": "u <= 2013",
+     "criterion": "S1"
+    },
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 2791; not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): a recurring commutation of the special-purpose syndicate's closing year into its host 2791, not dated 1 ",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "6103_2023",
+   "syndicate": 6103,
+   "year": 2023,
+   "criteria": [
+    "S1",
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6103_2015.pdf p44: 'This Syndicate is a Special Purpose Syndicate writing a single line of business'; syndicate_6103_2023.pdf p56: 'This syndicate is a Special Purpose Arrangement'; host 2791 accepts its years by RITC 'at each 36 months and 1 day' (syndicate_2791_2015.pdf p69)",
+     "spa_years": "?-open",
+     "selected_cohorts": "u <= 2021",
+     "criterion": "S1"
+    },
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 2791; not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner): the same recurring commutation into the host 2791, not dated 1 January, so outside the start-of-year rul",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "6105_2015",
+   "syndicate": 6105,
+   "year": 2015,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6105_2015.pdf p6: 'The Syndicate is a Special Purpose Syndicate, established in 2008 to underwrite a quota share of Syndicate 4020'; funds withheld, experience account (p9)",
+     "spa_years": "2008-open",
+     "selected_cohorts": "u <= 2013",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6107_2023",
+   "syndicate": 6107,
+   "year": 2023,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6107_2023.pdf p27: 'syndicate 6107 is a special purpose syndicate'; p21: cash withheld basis on the three youngest underwriting years, host syndicates 623 and 2623",
+     "spa_years": "?-open",
+     "selected_cohorts": "u <= 2021",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6111_2015",
+   "syndicate": 6111,
+   "year": 2015,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6111_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2013",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6111_2016",
+   "syndicate": 6111,
+   "year": 2016,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6111_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2014",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6111_2017",
+   "syndicate": 6111,
+   "year": 2017,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6111_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2015",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6111_2018",
+   "syndicate": 6111,
+   "year": 2018,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6111_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2016",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6112_2015",
+   "syndicate": 6112,
+   "year": 2015,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6112_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2013",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6112_2016",
+   "syndicate": 6112,
+   "year": 2016,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6112_2016.pdf p6: 'established for the 2012 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2012-open",
+     "selected_cohorts": "u <= 2014",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6118_2018",
+   "syndicate": 6118,
+   "year": 2018,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6118_2018.pdf p20, p50: 'As the Syndicate is an SPA'; 'Barbican Syndicate 1955 ceded reinsurance to the Syndicate on a funds withheld basis'; syndicate_1955_2015.pdf p5: 11.54% of 1955's back year reserves (2008 to 2013 years of account) ceded to SPS 6118 in 2014",
+     "spa_years": "2014-open",
+     "selected_cohorts": "u <= 2016",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6119_2016",
+   "syndicate": 6119,
+   "year": 2016,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6119_2016.pdf p6: 'established for the 2014 year of account as a Special Purpose Arrangement (SPA)', whole account quota share of Syndicate 2003",
+     "spa_years": "2014-open",
+     "selected_cohorts": "u <= 2014",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6123_2019",
+   "syndicate": 6123,
+   "year": 2019,
+   "criteria": [
+    "S1",
+    "S3"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6123_2019.pdf p5, p29: SPA 6123; 'The SPA operates on a funds withheld basis with its host, Syndicate 4242'",
+     "spa_years": "2015-open",
+     "selected_cohorts": "u <= 2017",
+     "criterion": "S1"
+    },
+    {
+     "source": "data/outbound_transfer_retained_base.json named_not_adjusted",
+     "detail": "outbound RITC named, counterparty 4242; not confirmed (decision of the Claude analysis session, 5 October 2026, reported to the owner), as for 6103: the special-purpose syndicate's recurring close into its host, with no date printed (p35), ",
+     "criterion": "S3"
+    }
+   ]
+  },
+  {
+   "id": "6125_2018",
+   "syndicate": 6125,
+   "year": 2018,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6125_2018.pdf p5, p15: 'The Syndicate is a Special Purpose Arrangement', commenced 1 January 2016, quota share cessions from Syndicate 4000",
+     "spa_years": "2016-open",
+     "selected_cohorts": "u <= 2016",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6125_2019",
+   "syndicate": 6125,
+   "year": 2019,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6125_2018.pdf p5, p15: 'The Syndicate is a Special Purpose Arrangement', commenced 1 January 2016, quota share cessions from Syndicate 4000",
+     "spa_years": "2016-open",
+     "selected_cohorts": "u <= 2017",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6125_2020",
+   "syndicate": 6125,
+   "year": 2020,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6125_2018.pdf p5, p15: 'The Syndicate is a Special Purpose Arrangement', commenced 1 January 2016, quota share cessions from Syndicate 4000",
+     "spa_years": "2016-open",
+     "selected_cohorts": "u <= 2018",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6130_2018",
+   "syndicate": 6130,
+   "year": 2018,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6130_2018.pdf p5: 'established for the 2016 year of account as a Special Purpose Syndicate', quota share of Chaucer Syndicate 1084",
+     "spa_years": "2016-open",
+     "selected_cohorts": "u <= 2016",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6131_2020",
+   "syndicate": 6131,
+   "year": 2020,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6131_2021.pdf p5, p20: 'The SPA's principal activity is a whole account quota share of its host, Dale Underwriting Partners Syndicate 1729'; funds withheld; p37: 'The SPA will RITC into the 2020 YOA'",
+     "spa_years": "2018-open",
+     "selected_cohorts": "u <= 2018",
+     "criterion": "S1"
+    },
+    {
+     "source": "small-book-tail-understatement.md, 'Why the boundary is the observation'",
+     "detail": "selected cohort 2018 is the SPA's first venture; Codex reports its gross cumulative claims reconcile to paid plus closing outstanding/RITC confirmed by the separate 2018 closing account (no inherited predecessor year); to be read under the same protocol",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6131_2021",
+   "syndicate": 6131,
+   "year": 2021,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6131_2021.pdf p5, p20: 'The SPA's principal activity is a whole account quota share of its host, Dale Underwriting Partners Syndicate 1729'; funds withheld; p37: 'The SPA will RITC into the 2020 YOA'",
+     "spa_years": "2018-open",
+     "selected_cohorts": "u <= 2019",
+     "criterion": "S1"
+    },
+    {
+     "source": "small-book-tail-understatement.md, 'Recommendation on excluding Syndicate 6131' and the 6131 bridge bundle (local-research/small-book-tail-2026-10-26-6131-bridge/spa/report.md)",
+     "detail": "specific evidence: annual triangle 2019 cumulative paid reproduces old closed-2018-venture gross paid plus the outgoing 2019 net RITC premium (2019 closing accounts PDF p12, p21; 2021 annual account PDF p32); 2018 row equal on gross and net bases",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6134_2020",
+   "syndicate": 6134,
+   "year": 2020,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6134_2020.pdf p5: 'established during 2018 as a Special Purpose Arrangement to underwrite quota share reinsurances of business underwritten by Syndicate 2121 as the host syndicate'",
+     "spa_years": "2018-open",
+     "selected_cohorts": "u <= 2018",
+     "criterion": "S1"
+    }
+   ]
+  },
+  {
+   "id": "6134_2021",
+   "syndicate": 6134,
+   "year": 2021,
+   "criteria": [
+    "S1"
+   ],
+   "evidence": [
+    {
+     "source": "filing text (SPA statement)",
+     "detail": "syndicate_6134_2020.pdf p5: 'established during 2018 as a Special Purpose Arrangement to underwrite quota share reinsurances of business underwritten by Syndicate 2121 as the host syndicate'",
+     "spa_years": "2018-open",
+     "selected_cohorts": "u <= 2019",
+     "criterion": "S1"
+    }
+   ]
+  }
+ ],
+ "selected_host_side": [
+  {
+   "id": "1084_2021",
+   "syndicate": 1084,
+   "year": 2021,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1084_2020.pdf p6, p35: 'Effective 1 January 2021, the Syndicate accepted the reinsurance to close (RITC) of the liabilities of AXA Special Purpose Arrangement Syndicate 6130 for the 2018 Year of Account'; 6130 underwrote quota share reinsurance of Syndicate 1084 (syndicate_6130_2018.pdf p5); also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "1910_2024",
+   "syndicate": 1910,
+   "year": 2024,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1910_2024.pdf p40: 'Syndicate 6117 closed year 2021 RITC into Syndicate 1910 at 31 December 2023'; reading A3: Syndicate 6117 writes a whole account quota share of 1910's net business on a funds withheld basis (p41)"
+    }
+   ]
+  },
+  {
+   "id": "1955_2019",
+   "syndicate": 1955,
+   "year": 2019,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1955_2018.pdf p60: 'Effective 31 December 2018, SPA 6118 was closed into the Syndicate, with a quota share contract put in place to reinsure the risk into the 2017 Year of Account of SPA 6118'"
+    }
+   ]
+  },
+  {
+   "id": "1955_2020",
+   "syndicate": 1955,
+   "year": 2020,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1955_2019.pdf p59: 'Effective 31 December 2019, SPA 6118 was closed into the Syndicate's 2018 Year of Account'"
+    }
+   ]
+  },
+  {
+   "id": "1969_2022",
+   "syndicate": 1969,
+   "year": 2022,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1969_2022.pdf p14: 'the 2020 and prior years of account of Syndicate 6133 have been reinsured to close into the syndicate'; p58: 'This year of account has received the reinsurance to close of the SPA 6133 2020 year of account' (timing within or at the close of 2022 to be read); also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "1969_2023",
+   "syndicate": 1969,
+   "year": 2023,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1969_2022.pdf p55: 'SPA Syndicate 6133 2020 and prior years of account have reinsured to close into the syndicate' (subsequent event); syndicate_1969_2023.pdf p54; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "1969_2024",
+   "syndicate": 1969,
+   "year": 2024,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_1969_2023.pdf p54: 'At 31 December 2023, Syndicate 6133 entered into a reinsurance to close transaction with Syndicate 1969 on the 2021 year of account'; p14: 2021 and prior of 6133 and 1971 RITC'd into the syndicate; syndicate_1969_2024.pdf p119, p167"
+    }
+   ]
+  },
+  {
+   "id": "2121_2023",
+   "syndicate": 2121,
+   "year": 2023,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "reading of syndicate_6134_2023 (mature-cohort readings A4 and B1, p43): 6134's 2019 and 2020 years of account 'reinsured to close into Syndicate 2121 at 31 December 2022' and 'subsequently reassumed by Syndicate 6134 as part of the 2021 quota share agreement'"
+    }
+   ]
+  },
+  {
+   "id": "2791_2015",
+   "syndicate": 2791,
+   "year": 2015,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2015.pdf p25, p64: 'At 1 January 2015, Syndicate 2791 accepted a Reinsurance to Close Premium from Syndicate 6103 in respect of Syndicate 6103's 2012 Year of Account'; p69: RITC from 6103 'at each 36 months and 1 day'; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "2791_2017",
+   "syndicate": 2791,
+   "year": 2017,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2017.pdf p29, p72: RITC premium from Syndicate 6103's 2014 year of account accepted 1 January 2017; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "2791_2018",
+   "syndicate": 2791,
+   "year": 2018,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2018.pdf p29, p72: RITC premium from Syndicate 6103's 2015 year of account accepted 1 January 2018; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "2791_2022",
+   "syndicate": 2791,
+   "year": 2022,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2022.pdf p31, p77: RITC premium from Syndicate 6103's 2019 year of account accepted 1 January 2022; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "2791_2023",
+   "syndicate": 2791,
+   "year": 2023,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2023.pdf p31, p78: RITC premium from Syndicate 6103's 2020 year of account accepted 1 January 2023; reading Z1 (round 2): 'The 6103 RITC wording is an as if always restatement of every underwriting year'; also in the assumed-business regime: ['ritc_strong'] (src/assumed_business.py)"
+    }
+   ]
+  },
+  {
+   "id": "2791_2024",
+   "syndicate": 2791,
+   "year": 2024,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2791_2024.pdf p44: RITC premium from Syndicate 6103's 2021 year of account accepted 1 January 2024"
+    }
+   ]
+  },
+  {
+   "id": "4000_2016",
+   "syndicate": 4000,
+   "year": 2016,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_2014_2016.pdf p37-38: 'SPS 6110 traded for the 2012 and 2013 years of account, closing into 2014 year of account of the host, Pembroke Syndicate 4000' (the 2013 account closes at 31 December 2015)"
+    }
+   ]
+  },
+  {
+   "id": "4242_2018",
+   "syndicate": 4242,
+   "year": 2018,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_4242_2018.pdf p30: claims outstanding roll-forward line 'RITC accepted from SPA 6123'"
+    }
+   ]
+  },
+  {
+   "id": "4242_2019",
+   "syndicate": 4242,
+   "year": 2019,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_4242_2019.pdf p31: roll-forward line 'RITC accepted from SPA 6123'"
+    }
+   ]
+  },
+  {
+   "id": "4242_2020",
+   "syndicate": 4242,
+   "year": 2020,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_4242_2020.pdf p33: 'RITC accepted from SPA 6123' with the gross provisions column '-' (reinsurance assets and net only)"
+    }
+   ]
+  },
+  {
+   "id": "4242_2021",
+   "syndicate": 4242,
+   "year": 2021,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_4242_2021.pdf p33: 'RITC accepted from SPA 6123', gross column '-'"
+    }
+   ]
+  },
+  {
+   "id": "4242_2022",
+   "syndicate": 4242,
+   "year": 2022,
+   "criteria": [
+    "H"
+   ],
+   "evidence": [
+    {
+     "criterion": "H",
+     "source": "filing text / reading",
+     "detail": "syndicate_4242_2022.pdf p32: 'RITC accepted from SPA 6123', gross column '-'"
+    }
+   ]
+  }
+ ],
+ "touched_out": [
+  {
+   "id": "33_2015",
+   "syndicate": 33,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "33_2016",
+   "syndicate": 33,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "33_2017",
+   "syndicate": 33,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "33_2018",
+   "syndicate": 33,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "33_2019",
+   "syndicate": 33,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "33_2020",
+   "syndicate": 33,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "318_2024",
+   "syndicate": 318,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 4, corrected)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "382_2017",
+   "syndicate": 382,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "382_2020",
+   "syndicate": 382,
+   "year": 2020,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "382_2021",
+   "syndicate": 382,
+   "year": 2021,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "reading C1: the stated line is net and all-prior-years; the gross table is like for like (also T2)"
+   ]
+  },
+  {
+   "id": "382_2022",
+   "syndicate": 382,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "382_2023",
+   "syndicate": 382,
+   "year": 2023,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T3 pyd_basis_register (net)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "386_2020",
+   "syndicate": 386,
+   "year": 2020,
+   "touched_by": [
+    "T4 reading mentions gross/net",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "reading Y8: separate gross and net tables",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "386_2021",
+   "syndicate": 386,
+   "year": 2021,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2015",
+   "syndicate": 435,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2016",
+   "syndicate": 435,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2017",
+   "syndicate": 435,
+   "year": 2017,
+   "touched_by": [
+    "T7 aggregated_column_review",
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "ritc_scan.json event (p38): effective 1 January 2018, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "435_2019",
+   "syndicate": 435,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "435_2020",
+   "syndicate": 435,
+   "year": 2020,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "435_2021",
+   "syndicate": 435,
+   "year": 2021,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2022",
+   "syndicate": 435,
+   "year": 2022,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2023",
+   "syndicate": 435,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "435_2024",
+   "syndicate": 435,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "510_2015",
+   "syndicate": 510,
+   "year": 2015,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T4 reading mentions gross/net",
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "round-5 readings P3, Q4: the screen compared gross with net; a screen artefact",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2016",
+   "syndicate": 510,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2017",
+   "syndicate": 510,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 557",
+    "T7 aggregated_column_review",
+    "T8 runoff_corpus_register (NOTCOUNT)",
+    "T10 historical take-on inside a column"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate",
+    "readings A2, C2, X6: the tables 'include the historical development of Syndicate 807 which was reinsured to close into the 2012 year of account' (2012); historical, inside the 2012 column since its start"
+   ]
+  },
+  {
+   "id": "510_2018",
+   "syndicate": 510,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 557",
+    "T8 runoff_corpus_register (NOTCOUNT)",
+    "T10 historical take-on inside a column"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate",
+    "readings A2, C2, X6: the tables 'include the historical development of Syndicate 807 which was reinsured to close into the 2012 year of account' (2012); historical, inside the 2012 column since its start"
+   ]
+  },
+  {
+   "id": "510_2019",
+   "syndicate": 510,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 557",
+    "T8 runoff_corpus_register (NOTCOUNT)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "510_2020",
+   "syndicate": 510,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2021",
+   "syndicate": 510,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2022",
+   "syndicate": 510,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2023",
+   "syndicate": 510,
+   "year": 2023,
+   "touched_by": [
+    "T3 pyd_basis_register (net)",
+    "T5 host or cedant of SPA 557"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "510_2024",
+   "syndicate": 510,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 557",
+    "T9 closure after the year end"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "syndicate_510_2024.pdf p15, p97: Syndicate 557 RITC into 510 effective 1 January 2025"
+   ]
+  },
+  {
+   "id": "623_2023",
+   "syndicate": 623,
+   "year": 2023,
+   "touched_by": [
+    "T5 host or cedant of SPA 6107"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "623_2024",
+   "syndicate": 623,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6107"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "780_2016",
+   "syndicate": 780,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "readings Q5, Z7, Z8: the table is on 'a gross and net basis' by year of account; round-5 rule 6 (history re-cut, ties to the accounts)"
+   ]
+  },
+  {
+   "id": "780_2017",
+   "syndicate": 780,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "780_2018",
+   "syndicate": 780,
+   "year": 2018,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "958_2015",
+   "syndicate": 958,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review",
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1084_2015",
+   "syndicate": 1084,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6124, 6130",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1084_2016",
+   "syndicate": 1084,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6124, 6130"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1084_2017",
+   "syndicate": 1084,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6124, 6130"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1084_2019",
+   "syndicate": 1084,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6124, 6130"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1084_2020",
+   "syndicate": 1084,
+   "year": 2020,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6124, 6130",
+    "T7 aggregated_column_review",
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "ritc_scan.json event (p6): effective 1 January 2021, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "1084_2023",
+   "syndicate": 1084,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6124, 6130"
+   ],
+   "reason": [
+    "a closure in [2018, 2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1084_2024",
+   "syndicate": 1084,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6124, 6130"
+   ],
+   "reason": [
+    "a closure in [2018, 2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1110_2017",
+   "syndicate": 1110,
+   "year": 2017,
+   "touched_by": [
+    "T7 aggregated_column_review",
+    "T8 runoff_corpus_register (PART)"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1110_2023",
+   "syndicate": 1110,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "1110_2024",
+   "syndicate": 1110,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T8 runoff_corpus_register (PART)"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1176_2019",
+   "syndicate": 1176,
+   "year": 2019,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1176_2020",
+   "syndicate": 1176,
+   "year": 2020,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1176_2021",
+   "syndicate": 1176,
+   "year": 2021,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1183_2016",
+   "syndicate": 1183,
+   "year": 2016,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1183_2018",
+   "syndicate": 1183,
+   "year": 2018,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1200_2015",
+   "syndicate": 1200,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1200_2016",
+   "syndicate": 1200,
+   "year": 2016,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1200_2017",
+   "syndicate": 1200,
+   "year": 2017,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1200_2020",
+   "syndicate": 1200,
+   "year": 2020,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1200_2022",
+   "syndicate": 1200,
+   "year": 2022,
+   "touched_by": [
+    "T9 outbound named, other year"
+   ],
+   "reason": [
+    "the register's own PC reading places the transfer in the following year (1200_2023, selected as confirmed)"
+   ]
+  },
+  {
+   "id": "1200_2024",
+   "syndicate": 1200,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "1206_2017",
+   "syndicate": 1206,
+   "year": 2017,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1209_2015",
+   "syndicate": 1209,
+   "year": 2015,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1218_2016",
+   "syndicate": 1218,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "round-5 readings P1, Q2: the screen compared the year t GROSS table with the year t-1 NET table (the 2015 filing prints no gross table); a screen artefact, M uses the year t gross table only"
+   ]
+  },
+  {
+   "id": "1218_2017",
+   "syndicate": 1218,
+   "year": 2017,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1218_2018",
+   "syndicate": 1218,
+   "year": 2018,
+   "touched_by": [
+    "T3 pyd_basis_register (net)",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1225_2018",
+   "syndicate": 1225,
+   "year": 2018,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1225_2021",
+   "syndicate": 1225,
+   "year": 2021,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1225_2022",
+   "syndicate": 1225,
+   "year": 2022,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1274_2016",
+   "syndicate": 1274,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 4 and 6, corrected_least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1274_2021",
+   "syndicate": 1274,
+   "year": 2021,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1274_2022",
+   "syndicate": 1274,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1274_2023",
+   "syndicate": 1274,
+   "year": 2023,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1274_2024",
+   "syndicate": 1274,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1301_2016",
+   "syndicate": 1301,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1301_2020",
+   "syndicate": 1301,
+   "year": 2020,
+   "touched_by": [
+    "T8 runoff_corpus_register (PART)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1301_2024",
+   "syndicate": 1301,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2022, 2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "1414_2015",
+   "syndicate": 1414,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1458_2017",
+   "syndicate": 1458,
+   "year": 2017,
+   "touched_by": [
+    "T3 pyd_basis_register (net)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1458_2018",
+   "syndicate": 1458,
+   "year": 2018,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1458_2021",
+   "syndicate": 1458,
+   "year": 2021,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1458_2022",
+   "syndicate": 1458,
+   "year": 2022,
+   "touched_by": [
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "readings W1, W2: outward quota share and an earlier adverse development cover, which do not enter the gross table"
+   ]
+  },
+  {
+   "id": "1458_2023",
+   "syndicate": 1458,
+   "year": 2023,
+   "touched_by": [
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "readings A3, C1: the stated line is accident-year and basis-unstated; the triangle is gross by underwriting year"
+   ]
+  },
+  {
+   "id": "1492_2017",
+   "syndicate": 1492,
+   "year": 2017,
+   "touched_by": [
+    "T3 pyd_basis_register (net)",
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1492_2018",
+   "syndicate": 1492,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1492_2019",
+   "syndicate": 1492,
+   "year": 2019,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1492_2020",
+   "syndicate": 1492,
+   "year": 2020,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)",
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1492_2021",
+   "syndicate": 1492,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1492_2022",
+   "syndicate": 1492,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)",
+    "T9 outward split RITC at the close of year t"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "reading C2: split RITC of the 2018 and prior years into Syndicate 2008 effective 31 December 2022; the outward closure is selected at 1492/2023 (S3); the 2022 table's both diagonals precede it"
+   ]
+  },
+  {
+   "id": "1492_2024",
+   "syndicate": 1492,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 2024 (AdA SPA from the 2024 year of account)"
+   ],
+   "reason": [
+    "a closure in [2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1609_2024",
+   "syndicate": 1609,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 4, corrected)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1686_2020",
+   "syndicate": 1686,
+   "year": 2020,
+   "touched_by": [
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "ritc_scan.json event (p7): effective 1 January 2021, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "1686_2022",
+   "syndicate": 1686,
+   "year": 2022,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "a closure in [2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1686_2023",
+   "syndicate": 1686,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "1686_2024",
+   "syndicate": 1686,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "1729_2016",
+   "syndicate": 1729,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2017",
+   "syndicate": 1729,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2018",
+   "syndicate": 1729,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2019",
+   "syndicate": 1729,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2020",
+   "syndicate": 1729,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2021",
+   "syndicate": 1729,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2022",
+   "syndicate": 1729,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1729_2023",
+   "syndicate": 1729,
+   "year": 2023,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T3 pyd_basis_register (unknown)",
+    "T5 host or cedant of SPA 6131",
+    "T9 planned SPA closure"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "syndicate_1729_2022.pdf p8: 'when the 2021 YOA closes at the end of 2023, it is the intention to RITC into Syndicate 1729'; the 2023 filing records no completed closure (the 6131 host report: a statement of intention is not proof of transfer); also round-5 rule 6"
+   ]
+  },
+  {
+   "id": "1729_2024",
+   "syndicate": 1729,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6131",
+    "T9 planned SPA closure"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "as 1729/2023: no completed 6131 closure recorded in the year t filing"
+   ]
+  },
+  {
+   "id": "1840_2022",
+   "syndicate": 1840,
+   "year": 2022,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1856_2021",
+   "syndicate": 1856,
+   "year": 2021,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1856_2023",
+   "syndicate": 1856,
+   "year": 2023,
+   "touched_by": [
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "ritc_scan.json event (p48): effective 1 January 2024, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "1880_2015",
+   "syndicate": 1880,
+   "year": 2015,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "round-5 reading P2: gross/net and closing-rate retranslation; M uses the year t table only"
+   ]
+  },
+  {
+   "id": "1880_2019",
+   "syndicate": 1880,
+   "year": 2019,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1880_2020",
+   "syndicate": 1880,
+   "year": 2020,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1880_2024",
+   "syndicate": 1880,
+   "year": 2024,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1884_2018",
+   "syndicate": 1884,
+   "year": 2018,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1884_2024",
+   "syndicate": 1884,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T8 runoff_corpus_register (NOTCOUNT)",
+    "T9 transfer adjudication 'not a transfer year'"
+   ],
+   "reason": [
+    "a closure in [2021, 2022, 2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate",
+    "portfolio_transfer_adjudication.json: inward, verdict 'not a transfer year'"
+   ]
+  },
+  {
+   "id": "1897_2015",
+   "syndicate": 1897,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6126"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1897_2017",
+   "syndicate": 1897,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6126"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1897_2018",
+   "syndicate": 1897,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6126",
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1910_2015",
+   "syndicate": 1910,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6117"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1910_2016",
+   "syndicate": 1910,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6117"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1910_2017",
+   "syndicate": 1910,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6117"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1910_2018",
+   "syndicate": 1910,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T5 host or cedant of SPA 6117"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1910_2019",
+   "syndicate": 1910,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6117"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1919_2016",
+   "syndicate": 1919,
+   "year": 2016,
+   "touched_by": [
+    "T3 pyd_basis_register (net)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1945_2016",
+   "syndicate": 1945,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1945_2018",
+   "syndicate": 1945,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1945_2022",
+   "syndicate": 1945,
+   "year": 2022,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "1947_2020",
+   "syndicate": 1947,
+   "year": 2020,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1947_2022",
+   "syndicate": 1947,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1955_2015",
+   "syndicate": 1955,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6113, 6118, 6120",
+    "T7 aggregated_column_review",
+    "T9 SPA closure at the close of year t"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "syndicate_1955_2015.pdf p9, p62: 'Effective 31 December 2015, the 2013 Year of Account of SPS 6113 was closed into the 2013 Year of Account of the Syndicate; which in turn closed into the 2014 Year of Account', quota share back to SPS 6113's 2014 account; at the close of 2015 (the 2016 record, which it would open, is not in the primary)"
+   ]
+  },
+  {
+   "id": "1955_2018",
+   "syndicate": 1955,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6113, 6118, 6120",
+    "T7 aggregated_column_review",
+    "T9 SPA closure at the close of year t"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "syndicate_1955_2018.pdf p60: 'Effective 31 December 2018, SPA 6118 was closed into the Syndicate'; selected at the opening of the next year (1955/2019, H)"
+   ]
+  },
+  {
+   "id": "1955_2022",
+   "syndicate": 1955,
+   "year": 2022,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6113, 6118, 6120"
+   ],
+   "reason": [
+    "a closure in [2019, 2020, 2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1955_2023",
+   "syndicate": 1955,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 7, stands)",
+    "T4 reading mentions gross/net",
+    "T5 host or cedant of SPA 6113, 6118, 6120",
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "a closure in [2019, 2020, 2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "reading P2: 'Net RITC impact' is in the net provisions reconciliation and the gross table ties to the accounts",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "ritc_scan.json event (p53): effective 1 January 2024, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "1955_2024",
+   "syndicate": 1955,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6113, 6118, 6120"
+   ],
+   "reason": [
+    "a closure in [2019, 2020, 2021] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1967_2017",
+   "syndicate": 1967,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1967_2018",
+   "syndicate": 1967,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1967_2022",
+   "syndicate": 1967,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "1969_2015",
+   "syndicate": 1969,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1969_2016",
+   "syndicate": 1969,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1969_2017",
+   "syndicate": 1969,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1969_2018",
+   "syndicate": 1969,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1969_2019",
+   "syndicate": 1969,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1969_2020",
+   "syndicate": 1969,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6133, 1971"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "1975_2021",
+   "syndicate": 1975,
+   "year": 2021,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1975_2022",
+   "syndicate": 1975,
+   "year": 2022,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "1991_2017",
+   "syndicate": 1991,
+   "year": 2017,
+   "touched_by": [
+    "T3 pyd_basis_register (net)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "1991_2020",
+   "syndicate": 1991,
+   "year": 2020,
+   "touched_by": [
+    "T8 runoff_corpus_register (PART)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "2001_2015",
+   "syndicate": 2001,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2016",
+   "syndicate": 2001,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2017",
+   "syndicate": 2001,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T4 reading mentions gross/net",
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "reading P8: gross/net ratio of a year t-1 column; round-5 rule 6",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2018",
+   "syndicate": 2001,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2019",
+   "syndicate": 2001,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2020",
+   "syndicate": 2001,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2021",
+   "syndicate": 2001,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2023",
+   "syndicate": 2001,
+   "year": 2023,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2001_2024",
+   "syndicate": 2001,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6106"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2003_2015",
+   "syndicate": 2003,
+   "year": 2015,
+   "touched_by": [
+    "T4 reading mentions gross/net",
+    "T5 host or cedant of SPA 6111, 6112, 6119, 6121, 2088"
+   ],
+   "reason": [
+    "reading C1: stated line basis not stated; internal RITC (settled rule)",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2003_2016",
+   "syndicate": 2003,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6111, 6112, 6119, 6121, 2088",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2003_2017",
+   "syndicate": 2003,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6111, 6112, 6119, 6121, 2088"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2003_2019",
+   "syndicate": 2003,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6111, 6112, 6119, 6121, 2088"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2003_2020",
+   "syndicate": 2003,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6111, 6112, 6119, 6121, 2088",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2007_2015",
+   "syndicate": 2007,
+   "year": 2015,
+   "touched_by": [
+    "T3 pyd_basis_register (net)",
+    "T5 host or cedant of SPA 6129",
+    "T6 internal RITC ('inherited through the incoming reinsurance to close')",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "readings Z1, Z2, P4, Q3: the syndicate's own internal year-of-account RITC; the table is by pure underwriting year with no jump (ordinary internal RITC is not sufficient)",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2007_2016",
+   "syndicate": 2007,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6129",
+    "T6 internal RITC ('inherited through the incoming reinsurance to close')",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "readings Z1, Z2, P4, Q3: the syndicate's own internal year-of-account RITC; the table is by pure underwriting year with no jump (ordinary internal RITC is not sufficient)",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2007_2017",
+   "syndicate": 2007,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6129",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2014_2018",
+   "syndicate": 2014,
+   "year": 2018,
+   "touched_by": [
+    "T9 experience account not restated"
+   ],
+   "reason": [
+    "the 6110 experience account is stated in the 2016 and 2017 filings (S5 there); the 2018 filing's text yields no statement of it"
+   ]
+  },
+  {
+   "id": "2014_2019",
+   "syndicate": 2014,
+   "year": 2019,
+   "touched_by": [
+    "T8 runoff_corpus_register (PART)",
+    "T9 experience account not restated"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate",
+    "as 2014/2018"
+   ]
+  },
+  {
+   "id": "2015_2021",
+   "syndicate": 2015,
+   "year": 2021,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "2015_2022",
+   "syndicate": 2015,
+   "year": 2022,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 7, stands)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "round-5 reading P1: separate gross and net grids; the only anomaly is outside the selected cohorts"
+   ]
+  },
+  {
+   "id": "2015_2024",
+   "syndicate": 2015,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "2121_2015",
+   "syndicate": 2121,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2121_2016",
+   "syndicate": 2121,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2121_2017",
+   "syndicate": 2121,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2121_2018",
+   "syndicate": 2121,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2121_2019",
+   "syndicate": 2121,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2121_2020",
+   "syndicate": 2121,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2121_2021",
+   "syndicate": 2121,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2121_2022",
+   "syndicate": 2121,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 6134",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2121_2024",
+   "syndicate": 2121,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6134"
+   ],
+   "reason": [
+    "a closure in [2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2232_2019",
+   "syndicate": 2232,
+   "year": 2019,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "2232_2020",
+   "syndicate": 2232,
+   "year": 2020,
+   "touched_by": [
+    "T2 round-5 history register (rule 3, corrected)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "2357_2024",
+   "syndicate": 2357,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "2468_2019",
+   "syndicate": 2468,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "2468_2020",
+   "syndicate": 2468,
+   "year": 2020,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T8 runoff_corpus_register (PART)"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "2488_2016",
+   "syndicate": 2488,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "2488_2018",
+   "syndicate": 2488,
+   "year": 2018,
+   "touched_by": [
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "ritc_scan.json event (p8): effective 1 January 2019, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "2525_2018",
+   "syndicate": 2525,
+   "year": 2018,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2526_2015",
+   "syndicate": 2526,
+   "year": 2015,
+   "touched_by": [
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "reading W2: a net statement beside the gross table"
+   ]
+  },
+  {
+   "id": "2526_2016",
+   "syndicate": 2526,
+   "year": 2016,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "2623_2023",
+   "syndicate": 2623,
+   "year": 2023,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T3 pyd_basis_register (net)",
+    "T5 host or cedant of SPA 6107"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2623_2024",
+   "syndicate": 2623,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6107"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2689_2024",
+   "syndicate": 2689,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2022] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "2786_2018",
+   "syndicate": 2786,
+   "year": 2018,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2019",
+   "syndicate": 2786,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2020",
+   "syndicate": 2786,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2021",
+   "syndicate": 2786,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2022",
+   "syndicate": 2786,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2023",
+   "syndicate": 2786,
+   "year": 2023,
+   "touched_by": [
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2786_2024",
+   "syndicate": 2786,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 1892"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "2987_2023",
+   "syndicate": 2987,
+   "year": 2023,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2987_2024",
+   "syndicate": 2987,
+   "year": 2024,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "2988_2020",
+   "syndicate": 2988,
+   "year": 2020,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "2988_2023",
+   "syndicate": 2988,
+   "year": 2023,
+   "touched_by": [
+    "T3 pyd_basis_register (unknown)"
+   ],
+   "reason": [
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome"
+   ]
+  },
+  {
+   "id": "2999_2021",
+   "syndicate": 2999,
+   "year": 2021,
+   "touched_by": [
+    "T4 reading mentions gross/net",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "reading X5: separate gross and net tables",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "3000_2015",
+   "syndicate": 3000,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review",
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "ritc_scan.json event (p6): effective 1 January 2016, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "3000_2018",
+   "syndicate": 3000,
+   "year": 2018,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "3000_2019",
+   "syndicate": 3000,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "3000_2020",
+   "syndicate": 3000,
+   "year": 2020,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "3000_2021",
+   "syndicate": 3000,
+   "year": 2021,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T3 pyd_basis_register (net)",
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "reading B1: the gross/net difference is between the gross and net tables, not inside the gross table"
+   ]
+  },
+  {
+   "id": "3000_2023",
+   "syndicate": 3000,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "3000_2024",
+   "syndicate": 3000,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure"
+   ],
+   "reason": [
+    "a closure in [2016, 2017] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference"
+   ]
+  },
+  {
+   "id": "3210_2016",
+   "syndicate": 3210,
+   "year": 2016,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "3268_2021",
+   "syndicate": 3268,
+   "year": 2021,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T8 runoff_corpus_register (NOTCOUNT)"
+   ],
+   "reason": [
+    "a closure in [2020] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "3334_2019",
+   "syndicate": 3334,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "3623_2024",
+   "syndicate": 3623,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 5623"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2015",
+   "syndicate": 3624,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "3624_2016",
+   "syndicate": 3624,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2017",
+   "syndicate": 3624,
+   "year": 2017,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2018",
+   "syndicate": 3624,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2019",
+   "syndicate": 3624,
+   "year": 2019,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2020",
+   "syndicate": 3624,
+   "year": 2020,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2021",
+   "syndicate": 3624,
+   "year": 2021,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2022",
+   "syndicate": 3624,
+   "year": 2022,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2023",
+   "syndicate": 3624,
+   "year": 2023,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "3624_2024",
+   "syndicate": 3624,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6104 (same managing agent)"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2015",
+   "syndicate": 4000,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2017",
+   "syndicate": 4000,
+   "year": 2017,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "a closure in [2016] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2018",
+   "syndicate": 4000,
+   "year": 2018,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "a closure in [2016] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2019",
+   "syndicate": 4000,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "a closure in [2016] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2020",
+   "syndicate": 4000,
+   "year": 2020,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "a closure in [2016] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4000_2023",
+   "syndicate": 4000,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110",
+    "T9 outbound named, no transfer"
+   ],
+   "reason": [
+    "a closure in [2016, 2021, 2022] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "the register's own PC reading: no transfer in 2023"
+   ]
+  },
+  {
+   "id": "4000_2024",
+   "syndicate": 4000,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6125, 6110"
+   ],
+   "reason": [
+    "a closure in [2016, 2021, 2022] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4020_2016",
+   "syndicate": 4020,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6105",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4020_2018",
+   "syndicate": 4020,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T5 host or cedant of SPA 6105",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4020_2024",
+   "syndicate": 4020,
+   "year": 2024,
+   "touched_by": [
+    "T5 host or cedant of SPA 6105"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4141_2022",
+   "syndicate": 4141,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "4242_2015",
+   "syndicate": 4242,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6123, 1416"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4242_2016",
+   "syndicate": 4242,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6123, 1416"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4242_2017",
+   "syndicate": 4242,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T5 host or cedant of SPA 6123, 1416"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4242_2023",
+   "syndicate": 4242,
+   "year": 2023,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6123, 1416",
+    "T7 aggregated_column_review",
+    "T9 SPA RITC line nil"
+   ],
+   "reason": [
+    "a closure in [2018, 2019, 2020, 2021, 2022] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter",
+    "syndicate_4242_2023.pdf p32: 'RITC accepted from SPA 6123 - - -' (nil in 2023)"
+   ]
+  },
+  {
+   "id": "4444_2015",
+   "syndicate": 4444,
+   "year": 2015,
+   "touched_by": [
+    "T5 host or cedant of SPA 6115",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4444_2016",
+   "syndicate": 4444,
+   "year": 2016,
+   "touched_by": [
+    "T5 host or cedant of SPA 6115"
+   ],
+   "reason": [
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4444_2017",
+   "syndicate": 4444,
+   "year": 2017,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)",
+    "T5 host or cedant of SPA 6115",
+    "T9 inward closure effective after the year end"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient",
+    "ritc_scan.json event (p7): effective 1 January 2018, after the balance sheet date; the year t table does not carry it"
+   ]
+  },
+  {
+   "id": "4444_2019",
+   "syndicate": 4444,
+   "year": 2019,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6115"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4444_2022",
+   "syndicate": 4444,
+   "year": 2022,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T2 round-5 history register (rule 7, stands)",
+    "T5 host or cedant of SPA 6115"
+   ],
+   "reason": [
+    "a closure in [2018] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4444_2024",
+   "syndicate": 4444,
+   "year": 2024,
+   "touched_by": [
+    "T1 later year after a closure",
+    "T5 host or cedant of SPA 6115"
+   ],
+   "reason": [
+    "a closure in [2018, 2023] (selected there); the year t table's two diagonals both post-date it, and M is a within-table difference",
+    "the host's gross table holds 100% of the business it cedes to the SPA by quota share; no closure of the SPA into the host is recorded at the opening of or during year t; SPA status of a counterparty is not sufficient"
+   ]
+  },
+  {
+   "id": "4472_2015",
+   "syndicate": 4472,
+   "year": 2015,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4472_2016",
+   "syndicate": 4472,
+   "year": 2016,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4472_2018",
+   "syndicate": 4472,
+   "year": 2018,
+   "touched_by": [
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "4472_2022",
+   "syndicate": 4472,
+   "year": 2022,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T3 pyd_basis_register (net)",
+    "S4 touched: stored grid net labelled gross"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "the register adjudicates the basis of a narrative prior-year figure; the primary outcome is the printed gross triangle (superseded entry or mature-cohort register), so the net narrative is not the selected outcome",
+    "reading Q5 found the stored _rag_triangle holds the net block labelled gross; data/pyd_confirmed_figures.json (owner's decision, 13 October 2026) repaired the record to the printed gross triangle from two readings, so the selected outcome is reconstructed from the gross table"
+   ]
+  },
+  {
+   "id": "4472_2024",
+   "syndicate": 4472,
+   "year": 2024,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "5000_2018",
+   "syndicate": 5000,
+   "year": 2018,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "5000_2023",
+   "syndicate": 5000,
+   "year": 2023,
+   "touched_by": [
+    "T2 round-5 history register (rule 6, least_certain)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings"
+   ]
+  },
+  {
+   "id": "5151_2018",
+   "syndicate": 5151,
+   "year": 2018,
+   "touched_by": [
+    "T4 reading mentions gross/net"
+   ],
+   "reason": [
+    "reading C1: stated line basis not stated"
+   ]
+  },
+  {
+   "id": "5151_2020",
+   "syndicate": 5151,
+   "year": 2020,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "5678_2016",
+   "syndicate": 5678,
+   "year": 2016,
+   "touched_by": [
+    "T2 round-5 history register (rule 7, stands)",
+    "T7 aggregated_column_review"
+   ],
+   "reason": [
+    "read twice in round 5 (decision rules of 23 October 2026); the year t table ties to the year's accounts or was corrected; no closure, overlap or gross/net mechanism was found in the readings",
+    "an older-years column decided under its own rule (Appendix 2.1); not a closure, overlap or gross/net matter"
+   ]
+  },
+  {
+   "id": "5678_2019",
+   "syndicate": 5678,
+   "year": 2019,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  },
+  {
+   "id": "5820_2017",
+   "syndicate": 5820,
+   "year": 2017,
+   "touched_by": [
+    "T8 runoff_corpus_register (AFTER)"
+   ],
+   "reason": [
+    "run-off status alone is not a closure of the selected cohorts into or out of the syndicate"
+   ]
+  }
+ ],
+ "totals": {
+  "selected_core": 81,
+  "selected_core_syndicates": 48,
+  "selected_host_side": 20,
+  "selected_with_host_side": 101,
+  "by_criterion_core": {
+   "S1": 34,
+   "S2": 26,
+   "S3": 23,
+   "S5": 2,
+   "S6": 1
+  },
+  "touched_out": 254,
+  "neither": 288
+ }
+}

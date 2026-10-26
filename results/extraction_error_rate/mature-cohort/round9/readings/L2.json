@@ -1,0 +1,390 @@
+{
+ "1084_2018": {
+  "id": "1084_2018",
+  "read_by": "OCR text of the 2018 and 2017 reports (filing_pages tool), tables cross-read against the text rows",
+  "1_table": {
+   "page": 29,
+   "heading": "'20. Claims development tables', 'Pure underwriting year 2010 and prior, 2011 ... 2018, Total', 'Estimate of gross claims incurred' (GBP m); a net table follows",
+   "basis": "gross incurred by pure underwriting year (ultimate-type); '2010 and prior' column prints only its end-2018 cell (679.8)",
+   "cells": "2011: six years later (end-2017) 588.9 -> seven years later (end-2018) 548.7 = -40.2. 2012: 457.9 -> 429.4 = -28.5. 2013: 543.1 -> 478.8 = -64.3. 2014: 722.9 -> 687.2 = -35.7. 2015: 570.4 -> 554.0 = -16.4. 2016: 503.3 -> 554.4 = +51.1. (2017: 518.5 -> 786.4 = +267.9; 2018: 420.5.)",
+   "M_000": null,
+   "M_m": -134.0,
+   "M_arith": "-40.2 - 28.5 - 64.3 - 35.7 - 16.4 + 51.1 (u=2011..2016; 2010-and-prior not differenceable)",
+   "R_m": 1962.8,
+   "R_source": "p28 note 18 'Gross At 1 January 2018 ... Claims outstanding 1,962.8'",
+   "M_over_R": -0.068,
+   "combined_report": "no, Syndicate 1084 only"
+  },
+  "2_selection_event": "S3 outbound transfer, confirmed. 2018 p6 and 2017 p6/p32: 'Syndicate 1084 entered into an RITC of the part of the 2015 Year of Account which comprised the UK Division book of business with Antares Syndicate 1274 ... the UK Division closing reserves at 31 December 2017 were net nil (gross GBP199.7m) and therefore the RITC was for a nominal consideration of GBP1'; 2017 note 26 (p32): 'with effective date 1 January 2018 ... transfer to Syndicate 1274 of gross and net technical provisions of GBP199.7m and GBP nil'; 2017 p6: 'The RITC transaction is not reflected in these financial statements'; 2018 p6: 'is reflected in these financial statements'. So the transfer falls at the opening of year t, BETWEEN the end-2017 and end-2018 diagonals. It removes the UK Division's liabilities of the 2015 year of account and, through the RITC into that year, of the earlier years it reinsured: cohorts u <= 2015, all inside the u <= t-2 = 2016 set.",
+  "3_overlapping_history": "The gross end-2017 diagonal in the 2018 table is the 2017 report's diagonal re-translated (2011: 586.6 -> 588.9; 2012: 455.9 -> 457.9; 2013: 538.9 -> 543.1; 2014: 714.6 -> 722.9; 2015: 558.6 -> 554.0), so it still INCLUDES the UK Division. The end-2018 diagonal is on the post-transfer basis: total gross reserves 1,965.4 equal the balance-sheet figure after the roll-forward line 'RITC of the UK Division (199.7)' (p28). The movement of the mature cohorts therefore mixes ordinary development with the removal of a transferred book. Evidence: see the incurred test.",
+  "4_gross_net": "The transfer is gross 199.7 and reinsurance 199.7 (p28 reinsurance roll-forward 'RITC of the UK Division (199.7)'), net nil. The NET table is therefore unaffected: net mature movement 2011..2016 = -5.6 -1.0 -8.1 +4.4 +9.0 +38.0 = +36.7, and net implied incurred (about 382 with the 2010-and-prior cell moving 541.6 -> 511.7) ties to net claims incurred 385.9 (p13). The gross mature movement (-134.0) is about 171 below the net one, the size of the transfer. No net figure sits in a gross cell, but the gross rows carry a gross-only transfer.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_m": "2011 -40.2; 2012 -28.5; 2013 -64.3; 2014 -35.7; 2015 -16.4; 2016 +51.1; 2017 786.4-518.5=+267.9; 2018 420.5 => 554.4 (2010-and-prior movement not printed; its 2017 report cell 745.2 against 679.8 would be about -65)",
+   "accounts_incurred_t_m": "698.2 (p13: gross claims paid (568.9) + change in gross provision (129.3); p28 roll-forward 'Movement in provision 698.2')",
+   "diff_pct": -20.6,
+   "diff_with_2010_prior_estimate": "about 489 against 698.2 = -30%; adding back the 199.7 RITC gives about 689 against 698.2 (-1.4%)",
+   "control_t_minus_1": "2017 report p28 table: -17.7 -11.0 -37.9 -10.4 +38.1 +259.0 +496.1 = 716.2 vs 2017 gross incurred 715.2 (483.0 + 232.2, p13 of 2018 comparatives / 2017 income statement): ties within 0.2%"
+  },
+  "6_reconstruction": "Not defensibly. The roll-forward gives only the total transferred (199.7). The table does not show the cohort split of the UK Division, and the 2010-and-prior column has no prior diagonal. A corrected M would be about -134.0 + 199.7 (all in u <= 2015) plus the 2010-and-prior movement, i.e. near zero to +65 depending on the unprinted split, against the printed -134.0 (a swing of about 10% of R). No closing account or by-cohort bridge for the UK Division is printed in either report.",
+  "verdict": "set_aside",
+  "reason": "A gross-only transfer of 199.7m (10% of opening gross reserves) at 1 January 2018 sits between the two diagonals of the same table; the control year ties to within 0.2% and the net table ties, but the gross implied incurred is 144m short of the accounts by almost exactly the transfer. The cohort allocation is not printed, so the mature gross outcome cannot be reconstructed."
+ },
+ "1084_2021": {
+  "id": "1084_2021",
+  "read_by": "text layer and page images (2021 p31 and 2020 p29, both verified on the image)",
+  "1_table": {
+   "page": 31,
+   "heading": "'19. Claims outstanding': 'Pure underwriting year 2011 and prior, 2012 ... 2021, Total', 'Estimate of gross claims incurred' (USD m)",
+   "basis": "gross incurred by pure underwriting year; '2011 and prior' prints only 1,637.1 at 31 December 2021; reserves 2,896.5 total",
+   "cells": "2012: eight years later 575.5 -> nine years later 576.1 = +0.6. 2013: 634.2 -> 636.1 = +1.9. 2014: six years later 787.2 -> seven years later 724.7 = -62.5. 2015: 704.2 -> 696.7 = -7.5. 2016: 748.6 -> 733.9 = -14.7. 2017: 1,098.3 -> 1,051.7 = -46.6. 2018: 941.9 -> 903.9 = -38.0. 2019: 863.8 -> 824.4 = -39.4. (2020: 515.0 -> 864.2; 2021: 537.6.)",
+   "M_m": -206.2,
+   "M_arith": "0.6 + 1.9 - 62.5 - 7.5 - 14.7 - 46.6 - 38.0 - 39.4 (u=2012..2019; 2011-and-prior not differenceable)",
+   "R_m": 2840.1,
+   "R_source": "p29 roll-forward 'At 1 January 2021 ... claims outstanding 2,840.1' (= 2020 table total gross reserves 2,840.1)",
+   "M_over_R": -0.0726,
+   "combined_report": "no, Syndicate 1084 only"
+  },
+  "2_selection_event": "Host side of an SPA closure. 2020 report p6 and p35 note 28 (subsequent events): 'Effective 1 January 2021, the Syndicate accepted the RITC of the liabilities of AXA Special Purpose Arrangement Syndicate 6130 for the 2018 Year of Account. Syndicate 6130 ceased underwriting quota-share reinsurance of the Syndicate's specialty risks in Africa from 1 January 2019 ... only reinsured the Syndicate, as host.' RITC premium $22.5m; transfer of gross and net technical provisions including DAC of $40.4m and $22.5m; 'the Syndicate will de-recognise the $35.4m recoverable from Syndicate 6130, recognise an additional $5.0m in gross technical provisions, and recognise the assigned reinsurance recoverable asset rights from AXA Global Re of $14.5m'. Effective at the opening of year t, between the diagonals. Cohort touched: 2018 (6130's 2018 YoA; the quota share covered 1084's African specialty book). The 2021 report itself does not mention 6130.",
+  "2b_enters_host_gross": "Only marginally. 6130 reinsured 1084, so the gross claims on that book were already in 1084's gross triangle and provisions; the closure replaces a recoverable from 6130 by assigned recoveries. The only gross effect stated is the additional $5.0m of gross technical provisions (0.18% of R). The 2021 gross roll-forward (p29) shows no RITC line; 'At 1 January 2021 2,840.1' is the same as the end-2020 balance, and there is no 'as if always' restatement.",
+  "3_overlapping_history": "No cohort carries another vehicle's history. The 2021 table's end-2020 cells re-state the 2020 report's by a small uniform amount (2012: 578.6 -> 575.5; 2013: 637.5 -> 634.2; 2014: 790.8 -> 787.2; 2015: 707.2 -> 704.2; 2016: 751.2 -> 748.6; 2017: 1,102.2 -> 1,098.3; 2018: 944.8 -> 941.9; 2019: 866.0 -> 863.8), -0.3% to -0.5%: currency re-translation, and it moves every cohort alike including 2018 (so no cohort-specific 6130 add-on of $5m). Other items read: the 30 December 2020 Part VII transfer to Lloyd's Brussels with a 100% quota share back (2020 p17: 'no economic impact', no movements processed on 31 December 2020; 2021 p22 notes $62.7m reclassification between direct and reinsurance classes only) leaves gross provisions unchanged; the 2088 RITC ($136.6m gross, effective 1 January 2022, 2021 p37 note 26) falls after both diagonals.",
+  "4_gross_net": "Gross table read. Gross reserves 2,896.5 = balance-sheet gross claims outstanding (p29). No net or RITC premium figure is visible in a gross cell.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_m": "mature -206.2; 2020 864.2-515.0=349.2; 2021 537.6 => 680.6 (2011-and-prior movement not printed; end-2021 1,637.1 against 2020's 2010-and-prior 860.1 + 2011 745.1 = 1,605.2 suggests about +38, i.e. about 719)",
+   "accounts_incurred_t_m": "735.7 (p14: gross claims paid (670.6) + change in gross provision (65.1); p29 'Movement in provision 735.7')",
+   "diff_pct": -7.5,
+   "diff_with_2011_prior_estimate": "about -2.3%",
+   "control_t_minus_1": "2020: table cells (2020 report p29) -5.9 +1.1 +8.6 -36.4 +0.9 +9.9 +11.3 +16.2 +357.9 +515.7 = 879.3, plus 2010-and-prior 860.1-863.5 = -3.4 (2019 report p29) => 875.9, against gross incurred 829.5 (668.6 + 160.9, 2020 p13): +5.6%, the direction of a sterling-strengthening average-versus-closing-rate effect, opposite to 2021 (-2%)"
+  },
+  "6_reconstruction": "The mature gross outcome is validated by the table: same-table diagonals, balance-sheet tie (2,896.5), and an incurred test within about 2% once the 2011-and-prior cell is estimated; the only closure effect is a stated $5.0m (below 0.2% of R and not located in a cohort).",
+  "verdict": "stands",
+  "reason": "The SPA's RITC enters the host's gross figures only as $5.0m of additional gross provisions (0.2% of R) because 6130 reinsured 1084 and the claims were already gross on 1084's books; the table ties to the balance sheet and its history re-translates uniformly. ritc_strong and the SPA status are not sufficient alone."
+ },
+ "2014_2016": {
+  "id": "2014_2016",
+  "read_by": "text layer (syndicate_2014_2016.pdf, _2015.pdf OCR, _2017.pdf)",
+  "1_table": {
+   "page": 32,
+   "heading": "'4. Claims incurred, net of reinsurance (continued) Gross claims development', 'Pure underwriting year 2014 2015 2016 Total' (GBP 000); net table follows",
+   "basis": "gross incurred by pure underwriting year (ultimate-type), no '& prior' column (the syndicate started with the 2014 YoA)",
+   "cells": "u=2014 only (t-2): at the end of the UY 31,250; one year later (end-2015) 40,903; two years later (end-2016) 43,127. Other cohorts: 2015 41,292 -> 76,777; 2016 68,011.",
+   "M_000": 2224,
+   "M_arith": "43,127 - 40,903",
+   "R_000": 53254,
+   "R_source": "p35 note 11 technical provisions 'Balance at 1 January' gross 53,254 (= 2015 table total gross claims reserves 53,254)",
+   "M_over_R": 0.0418,
+   "combined_report": "no, Syndicate 2014 only; the file also holds the closed 2014 year-of-account accounts (p38 on)"
+  },
+  "2_selection_event": "S5: SPS 6110 'signed a reinsurance to close its 2013 year of account into Syndicate 4000's 2014 year of account. An experience account reinsurance agreement was signed on this business between the Syndicate and Syndicate 4000 so that any development accrues to the 2014 year of account of the Syndicate' (2016 p37 note 19; 2017 p34 adds 'This agreement was not renewed with effect from January 2017'). SPS 6110 traded 2012 and 2013, closing into 4000's 2014 YoA; Syndicate 2014 was formed for the 2014 YoA (2016 p38). The inward experience-account business is small: 'Inwards reinsurance premiums from Syndicate 4000 totalled GBP0.2m for the financial year (2015: GBP2.4m). As at 31 December 2016 net technical provisions in respect of this business totalled GBP1.8m (2015: GBP3.5m)' (2016 p37); 2017: 'no inwards reinsurance premiums ... net technical provisions GBP1.6m' (2017 p34). The original RITC (6110's 2013 YoA into Syndicate 4000, a different syndicate) happened before Syndicate 2014 existed; the experience account is an ordinary inwards reinsurance contract, accruing to cohort 2014. It does not fall at an opening of year t in either report; the 2014 YoA's own RITC into 2015 YoA (2016 p39, GBP20.1m, approved 23 February 2017) is an ordinary own-years RITC after the end-2016 diagonal.",
+  "3_overlapping_history": "No other vehicle's table is shown. The one cell of u<=t-2 (2014) re-translates the 2015 report's cells (2015 p29: 26,419 -> 31,250 at 12m, 33,941 -> 40,903 at 24m; ratios 1.18 and 1.21, against 1.19 for the 2015 cohort 34,737 -> 41,292): USD book, FX, no restatement beyond about 1%. The experience-account business carries development of the 6110 2013 book into the 2014 cohort, but it is a small inwards RI contract (net provisions GBP1.8m of a net 2014-cohort reserve of 20.0m); it cannot be separated in the table.",
+  "4_gross_net": "Gross and net tables print together; gross reserves total 141,815 = balance-sheet technical provision (p35 'Balance at 31 December 141,815'). Net 2014: 37,255 -> 38,924 (+1,669), a smaller adverse move than the gross +2,224 (reinsurers' share, not a net-in-gross mix).",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2014 +2,224; 2015 76,777-41,292=35,485; 2016 68,011 => 105,720",
+   "accounts_incurred_t_000": "97,644 (p16: gross claims paid (25,283) + change in gross provision (72,361); p35 'Expected cost of current year claims 97,900' less 'Change in prior year provisions (256)')",
+   "diff_pct": 8.3,
+   "control_t_minus_1": "2015 report p29 table: (33,941-26,419)+34,737 = 42,259 vs 2015 gross incurred 41,268 (8,020 + 33,248): +2.4%",
+   "note": "the table is on a pure underwriting-year (written, ultimate) basis, so it exceeds earned incurred while premium grows: 2016 gross unearned premium rose by 21,705 (p16), and 21.7m at a 50-55% loss ratio is about the 8.1m gap. Sterling also fell in 2016 (closing-rate table above average-rate accounts)."
+  },
+  "6_reconstruction": "Table total ties to the balance sheet; the year-t gap is the written-versus-earned basis in a growth year; the experience account is bounded by its own net provisions (GBP1.8m, 3.5m the year before). M is validated by the table.",
+  "verdict": "stands",
+  "reason": "The predecessor RITC and the experience account are an ordinary old-year reinsurance accruing to the 2014 cohort in a small inwards contract (GBP1.8m of provisions); the table is the syndicate's own, same-table diagonals tie to the balance sheet and the incurred gap is explained by the basis. Not sufficient for set-aside."
+ },
+ "2014_2017": {
+  "id": "2014_2017",
+  "read_by": "text layer (syndicate_2014_2017.pdf, _2016.pdf)",
+  "1_table": {
+   "page": 29,
+   "heading": "'Gross claims development', 'Pure underwriting year 2014 2015 2016 2017 Total' (GBP 000); net table follows",
+   "basis": "gross incurred by pure underwriting year (ultimate-type)",
+   "cells": "2014: end-2016 (two years later) 39,487 -> end-2017 (three years later) 38,929 = -558. 2015: one year later 71,909 -> two years later 76,491 = +4,582. (2016: 63,464 -> 112,995; 2017: 82,488.)",
+   "M_000": 4024,
+   "M_arith": "-558 + 4,582",
+   "R_000": 141815,
+   "R_source": "p32 note 'Balance at 1 January' gross 141,815",
+   "M_over_R": 0.0284,
+   "combined_report": "no, Syndicate 2014 only"
+  },
+  "2_selection_event": "S5: SPS 6110 'signed a reinsurance to close its 2013 year of account into Syndicate 4000's 2014 year of account. An experience account reinsurance agreement was signed on this business between the Syndicate and Syndicate 4000 so that any development accrues to the 2014 year of account of the Syndicate' (2016 p37 note 19; 2017 p34 adds 'This agreement was not renewed with effect from January 2017'). SPS 6110 traded 2012 and 2013, closing into 4000's 2014 YoA; Syndicate 2014 was formed for the 2014 YoA (2016 p38). The inward experience-account business is small: 'Inwards reinsurance premiums from Syndicate 4000 totalled GBP0.2m for the financial year (2015: GBP2.4m). As at 31 December 2016 net technical provisions in respect of this business totalled GBP1.8m (2015: GBP3.5m)' (2016 p37); 2017: 'no inwards reinsurance premiums ... net technical provisions GBP1.6m' (2017 p34). The original RITC (6110's 2013 YoA into Syndicate 4000, a different syndicate) happened before Syndicate 2014 existed; the experience account is an ordinary inwards reinsurance contract, accruing to cohort 2014. It does not fall at an opening of year t in either report; the 2014 YoA's own RITC into 2015 YoA (2016 p39, GBP20.1m, approved 23 February 2017) is an ordinary own-years RITC after the end-2016 diagonal.",
+  "3_overlapping_history": "None found. The end-2016 diagonal in the 2017 table re-translates the 2016 report's cells: 2014 two years later 43,127 -> 39,487 (0.916); 2015 one year later 76,777 -> 71,909 (0.937); 2016 end of UY 68,011 -> 63,464 (0.933). Cohort 2014 is about 2% lower than the 2015-2016 cohorts' ratio (0.93), roughly 0.9m on 2014 (0.6% of R); sterling rose against the dollar in 2017 and cohort mixes differ. Not an overlap and small.",
+  "4_gross_net": "Gross table read: gross reserves 205,270 = balance sheet (p32 'Balance at 31 December 205,270'). Net table printed on the same page; no net cell in a gross row.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2014 -558; 2015 +4,582; 2016 112,995-63,464=49,531; 2017 82,488 => 136,043",
+   "accounts_incurred_t_000": "141,545 (p13: gross claims paid (65,654) + change in gross provision (75,891); p32 expected cost 142,767 less prior-year (1,221))",
+   "diff_pct": -3.9,
+   "control_t_minus_1": "2016: implied 105,720 vs 97,644 (+8.3%; basis in a growth year); 2015: +2.4%",
+   "note": "sterling strengthened in 2017, so a closing-rate table sits below the average-rate accounts"
+  },
+  "6_reconstruction": "Table total ties to the balance sheet; implied incurred is within 4% of the accounts with a stated FX direction; the experience account has no premium in 2017 and net provisions of GBP1.6m (p34). M validated by the table.",
+  "verdict": "stands",
+  "reason": "Same position as 2014/2016: a small old-year experience account accruing to cohort 2014 (net provisions GBP1.6m, no new premium), a table that ties to the balance sheet and to year-t incurred within 4%, and no transfer between the diagonals."
+ },
+ "2088_2015": {
+  "id": "2088_2015",
+  "read_by": "OCR (all pages, filing_pages tool) and page image of p34 (table verified on the image)",
+  "1_table": {
+   "page": 34,
+   "heading": "'Gross claims development as at 31 December 2015', 'Pure underwriting year 2012 2013 2014 2015 Total', 'Estimate of gross claims incurred' (GBP 000); a net table follows on the same page",
+   "basis": "gross incurred by pure underwriting year (risk year), cumulative, 12-month steps, no '& prior' column",
+   "cells": "2012: 24m 32,023 | 36m (end-2014) 31,723 | 48m (end-2015) 32,369. 2013: 12m 15,586 | 24m (end-2014) 29,622 | 36m (end-2015) 29,441. 2014: 12m 15,738 | 24m 31,094. 2015: 20,004. Prior-diagonal cells are printed in the same table (like for like).",
+   "M_000": 465,
+   "M_arith": "(32,369-31,723) + (29,441-29,622) = 646 - 181",
+   "R_000": 75697,
+   "R_source": "p33 note 5 'Gross Technical Provisions ... As at 1 January 2015' claims outstanding 75,697",
+   "M_over_R": 0.0061,
+   "combined_report": "no, Syndicate 2088 only"
+  },
+  "2_selection_event": "Syndicate 2088 was established for the 2012 year of account as a Special Purpose Syndicate, a whole account quota share of Catlin/XL Catlin Syndicate 2003 on a funds-withheld basis ('The two whole account quota share contracts operate on a funds withheld basis', 2015 p5). Became stand-alone in 2015 (open-market book added) and keeps writing the WAQS. Years of account close at 36 months by ordinary RITC into the next year (accounting policy (vi), 2015 p21; closings: 2014 YoA at end 2016 (2016 report p8), 2015 YoA at end 2017 (2017 p8), 2016 YoA at end 2018 (2018 p8): all closings are of the syndicate's own years. No closure, RITC, portfolio transfer or take-on of another vehicle falls inside any of these report years; the 2019 report (p4) only announces the merger into Syndicate 1084 for the 2020 underwriting year and an RITC to Chaucer 1084 at 2021 year end. Selection is S1 (SPS status): not sufficient by itself.",
+  "3_overlapping_history": "none found. Table is by pure underwriting year, so closure by RITC does not move a cohort. OCR text gave 2013 end-2015 as 29,444 in the reserves line; the page image shows 29,441 throughout. Paid row shows only 2012 (31,723, equal to the 36-month estimate) and 2015 (43); 2013 and 2014 carry no paid, so the printed 'reserve' for those is the whole estimate.",
+  "4_gross_net": "Gross and net tables both print (net 2012 48m 29,257; net 2013 36m 26,358). Gross reserves 81,142 = net 72,378 + recoverable 8,764 (p34), and 81,142 = balance-sheet gross claims outstanding (p33). Net RITC premium does not enter a gross row.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2012 +646; 2013 -181; 2014 31,094-15,738=15,356; 2015 20,004 => 35,825",
+   "accounts_incurred_t_000": "35,238 (p35 note 7 segmental analysis, 'Gross Claims Incurred' total (35,238))",
+   "diff_pct": 1.7,
+   "control_t_minus_1": "none: the 2014 report prints no claims development table",
+   "note": "within FX (accounts at average, table at closing rates) and the ultimate (written, not earned) basis"
+  },
+  "6_reconstruction": "Table total gross reserves 81,142 equals the balance sheet; implied incurred matches the accounts within 2%; the report's own note 9 (p36) says the 2015 prior-year deviation was adverse 0.4m 'wholly in respect of reserve movements on the 2012 year of account', matching the 2012 cell +646 gross (net table 29,257-28,835=+422). The mature outcome is validated from the printed table.",
+  "verdict": "stands",
+  "reason": "SPS status only. Same-table prior diagonal, balance-sheet tie and an incurred test within 2% leave no specific evidence of overlap, net mixing or reassignment; YoA closure is ordinary internal RITC and the table is by risk year."
+ },
+ "2088_2016": {
+  "id": "2088_2016",
+  "read_by": "OCR (filing_pages tool); table p34 text checked against the printed layout",
+  "1_table": {
+   "page": 34,
+   "heading": "'Gross claims development as at 31 December 2016', 'Pure underwriting year 2012 2013 2014 2015 2016 Total' (GBP 000)",
+   "basis": "gross incurred by pure underwriting year; no '& prior' column; prior diagonals printed",
+   "cells": "2012: 48m (end-2015) 38,434 -> 60m (end-2016) 37,722 = -712. 2013: 36m (end-2015) 34,716 -> 48m 34,310 = -406. 2014: 24m 36,777 -> 36m 39,318 = +2,541. (2015: 22,659 -> 47,542; 2016: 34,425.)",
+   "M_000": 1423,
+   "M_arith": "-712 - 406 + 2,541",
+   "R_000": 81142,
+   "R_source": "p32 note 5 'As at 1 January 2016' gross claims outstanding 81,142",
+   "M_over_R": 0.0175,
+   "combined_report": "no, Syndicate 2088 only"
+  },
+  "2_selection_event": "Syndicate 2088 was established for the 2012 year of account as a Special Purpose Syndicate, a whole account quota share of Catlin/XL Catlin Syndicate 2003 on a funds-withheld basis ('The two whole account quota share contracts operate on a funds withheld basis', 2015 p5). Became stand-alone in 2015 (open-market book added) and keeps writing the WAQS. Years of account close at 36 months by ordinary RITC into the next year (accounting policy (vi), 2015 p21; closings: 2014 YoA at end 2016 (2016 report p8), 2015 YoA at end 2017 (2017 p8), 2016 YoA at end 2018 (2018 p8): all closings are of the syndicate's own years. No closure, RITC, portfolio transfer or take-on of another vehicle falls inside any of these report years; the 2019 report (p4) only announces the merger into Syndicate 1084 for the 2020 underwriting year and an RITC to Chaucer 1084 at 2021 year end. Selection is S1 (SPS status): not sufficient by itself.",
+  "3_overlapping_history": "no merged or reassigned cohort. The 2016 table re-translates the 2015 report's cells by a near-uniform factor (2012 end-2014 31,723 -> 37,629; 2012 12m 18,797 -> 22,279; 2013 12m 15,586 -> 18,464; 2014 12m 15,738 -> 18,613: ratios 1.17-1.19): a currency re-translation of the USD book, not a restatement of history. The paid row (2012 38,433; 2013 34,716) equals the earlier-diagonal estimate (funds-withheld settlement at 36 months), so gross reserves are printed as 711 and (406) for the closed years; paid is not true paid.",
+  "4_gross_net": "Gross M +1,423 (adverse). The report states a favourable 1.1m prior-year deviation (note 9, p36): that is the NET table (net 2012 34,259-36,337=-2,078; 2013 30,795-33,137=-2,342; 2014 35,716-32,441=+3,275: -1,145). Gross and net differ in sign because of reinsurers' share. In the net table the 2012 48m (36,337) and 2013 36m (33,137) cells equal the net 'paid' row and sit about 2,000 above the net cells implied by the 2015 report; the gross cells at those positions are consistent with the 2015 report after the common re-translation factor. The net anomaly does not enter the gross row.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2012 -712; 2013 -406; 2014 +2,541; 2015 47,542-22,659=24,883; 2016 34,425 => 60,731",
+   "accounts_incurred_t_000": "55,988 (p35 note 7 segmental analysis; also gross paid 36,256 + change in gross provision 19,732 on the 2017 report comparative)",
+   "diff_pct": 8.5,
+   "control_t_minus_1": "2015: implied 35,825 vs 35,238 (+1.7%)",
+   "note": "the table is all at the closing rate, the accounts at average rates (policy p22: 'translated into the functional currency using average rates of exchange'); sterling fell sharply in 2016 so a USD book printed at closing rate exceeds the accounts figure. The ultimate-basis premium (gross written 99,235 vs earned 96,955) adds a little."
+  },
+  "6_reconstruction": "Total gross reserves 116,631 equals balance-sheet gross claims outstanding (p32 roll-forward 81,142 + 19,732 + FX 15,757 = 116,631). Mature cells are internally like for like (same table both diagonals) and the history is the 2015 history re-translated; M is validated by the table and the roll-forward.",
+  "verdict": "stands",
+  "reason": "No specific overlap, reassignment or net-in-gross evidence in the gross rows; the 8.5% incurred gap is the average-versus-closing-rate translation (FX year) and the ultimate basis, and the control year ties within 2%. SPS status and internal RITC are not sufficient."
+ },
+ "2088_2017": {
+  "id": "2088_2017",
+  "read_by": "text layer and page image p34 (2017 table verified on the image)",
+  "1_table": {
+   "page": 34,
+   "heading": "'Gross claims development as at 31 December 2017', 'Pure underwriting year 2012 & Prior, 2013 ... 2017, Total' (GBP 000)",
+   "basis": "gross incurred by pure underwriting year; the '2012 & Prior' column prints ONLY the end-2017 cell (34,998), no earlier diagonal",
+   "cells": "2013: 48m (end-2016) 32,160 -> 60m (end-2017) 32,210 = +50. 2014: 36m 36,099 -> 48m 36,064 = -35. 2015: 24m 44,578 -> 36m 47,822 = +3,244. 2012 & Prior: end-2017 34,998; end-2016 NOT printed.",
+   "M_000": 3259,
+   "M_arith": "50 - 35 + 3,244 (u=2013..2015 only). The 2012-and-prior cohort cannot be differenced from this table; scaling the 2016 report's 2012 cell (37,722) by the 2013 column's re-translation ratio (32,160/34,310=0.937) gives about 35,360 at end-2016, i.e. a contribution of about -360, M about 2,900. That figure is my estimate, not a printed cell.",
+   "R_000": 116631,
+   "R_source": "2017 balance sheet / note 5: gross claims outstanding at 1 January 2017 116,631 (2018 report p34 roll-forward 'As at 1 January 2017 ... 116,631')",
+   "M_over_R": 0.028,
+   "combined_report": "no, Syndicate 2088 only"
+  },
+  "2_selection_event": "Syndicate 2088 was established for the 2012 year of account as a Special Purpose Syndicate, a whole account quota share of Catlin/XL Catlin Syndicate 2003 on a funds-withheld basis ('The two whole account quota share contracts operate on a funds withheld basis', 2015 p5). Became stand-alone in 2015 (open-market book added) and keeps writing the WAQS. Years of account close at 36 months by ordinary RITC into the next year (accounting policy (vi), 2015 p21; closings: 2014 YoA at end 2016 (2016 report p8), 2015 YoA at end 2017 (2017 p8), 2016 YoA at end 2018 (2018 p8): all closings are of the syndicate's own years. No closure, RITC, portfolio transfer or take-on of another vehicle falls inside any of these report years; the 2019 report (p4) only announces the merger into Syndicate 1084 for the 2020 underwriting year and an RITC to Chaucer 1084 at 2021 year end. Selection is S1 (SPS status): not sufficient by itself.",
+  "3_overlapping_history": "The '& Prior' label: nothing precedes 2012 for this syndicate (established for the 2012 YoA), so '2012 & Prior' is the 2012 cohort alone; it simply shows no history. Other cells re-translate the 2016 report by about 0.93-0.94 (2013 12m 18,464 -> 17,269; 2014 12m 18,613 -> 17,385; 2015 12m 22,659 -> 21,255; 2016 12m 34,425 -> 32,106): FX, not restatement.",
+  "4_gross_net": "Gross table only is read; gross reserves total 172,646 against balance-sheet claims outstanding 172,746 (p16 balance sheet; 100 apart). Paid row 2014 (36,272) exceeds the estimate (36,064), giving a negative reserve (208), a presentation quirk of the funds-withheld settlement; no net figure enters a gross cell that I can see.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2013 +50; 2014 -35; 2015 +3,244; 2016 64,296-32,106=32,190; 2017 73,345 => 108,794, plus the unprinted 2012-and-prior movement (about -360 on the estimate above) => about 108,430",
+   "accounts_incurred_t_000": "112,110 (p13: gross paid 45,971 + change in gross provision 66,139)",
+   "diff_pct": -3.0,
+   "control_t_minus_1": "2016: implied 60,731 vs 55,988 (+8.5%)",
+   "note": "sign and size match the average-versus-closing rate effect (sterling rose in 2017, so a closing-rate table prints below the average-rate accounts)"
+  },
+  "6_reconstruction": "Cells for 2013-2015 are like for like in one table and tie to the accounts; gross reserve total ties to the balance sheet. The 2012-and-prior cohort (fully paid, reserve (241)) cannot be differenced from this report alone but is a closed, near-zero-movement cohort; a bridge would use the 2016 report's 2012 cell re-translated.",
+  "verdict": "stands",
+  "reason": "No overlap, merger or net-in-gross evidence; the table ties to the balance sheet and to year t incurred within about 3%. The only gap is that the '2012 & Prior' cohort prints no prior diagonal, which is a missing cell, not a conflicting one."
+ },
+ "2088_2018": {
+  "id": "2088_2018",
+  "read_by": "text layer and page image p35",
+  "1_table": {
+   "page": 35,
+   "heading": "'Gross claims development as at 31 December 2018', 'Pure underwriting year 2013 & Prior, 2014 ... 2018, Total' (GBP 000)",
+   "basis": "gross incurred by pure underwriting year; '2013 & Prior' column prints only the end-2018 cell (70,138)",
+   "cells": "2014: 48m (end-2017) 37,930 -> 60m (end-2018) 39,452 = +1,522. 2015: 36m 49,908 -> 48m 50,905 = +997. 2016: 24m 65,652 -> 36m 73,989 = +8,337. 2013 & Prior: end-2018 70,138, earlier diagonal not printed.",
+   "M_000": 10856,
+   "M_arith": "1,522 + 997 + 8,337 (u=2014..2016 only; 2013-and-prior not differenceable). 2013&prior at end-2017 would be about 67,200 (2017 table: 34,998+32,210) re-translated by about 1.04: about 70,000, so its contribution is near zero (my estimate).",
+   "R_000": 172746,
+   "R_source": "p34 roll-forward 'As at 1 January 2018' claims outstanding: balance sheet 2017 claims outstanding 172,746 (2017 report)",
+   "M_over_R": 0.063,
+   "combined_report": "no, Syndicate 2088 only"
+  },
+  "2_selection_event": "Syndicate 2088 was established for the 2012 year of account as a Special Purpose Syndicate, a whole account quota share of Catlin/XL Catlin Syndicate 2003 on a funds-withheld basis ('The two whole account quota share contracts operate on a funds withheld basis', 2015 p5). Became stand-alone in 2015 (open-market book added) and keeps writing the WAQS. Years of account close at 36 months by ordinary RITC into the next year (accounting policy (vi), 2015 p21; closings: 2014 YoA at end 2016 (2016 report p8), 2015 YoA at end 2017 (2017 p8), 2016 YoA at end 2018 (2018 p8): all closings are of the syndicate's own years. No closure, RITC, portfolio transfer or take-on of another vehicle falls inside any of these report years; the 2019 report (p4) only announces the merger into Syndicate 1084 for the 2020 underwriting year and an RITC to Chaucer 1084 at 2021 year end. Selection is S1 (SPS status): not sufficient by itself.",
+  "3_overlapping_history": "'2013 & Prior' now combines 2012 and 2013 (the 2017 report's columns 2012&prior 34,998 and 2013 32,210 sum to 67,208; 70,138 here is about 1.044 times that, matching the re-translation of 2014 36m 36,099 -> 37,805/37,930 ratio about 1.05). Cohort 2016 24m cell 64,296 (2017 table) -> 65,652 (1.021) is lower than the 2014 and 2017 ratios (about 1.05) by about 2.7%, i.e. roughly 1.8m on 2016; not explained, but small (1% of R) and not an overlap.",
+  "4_gross_net": "Gross only read; total gross reserves 262,747 equals the balance-sheet gross claims outstanding (also the 2019 report's 2018 comparative 262,747). No gross/net mixing seen in the gross rows.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2014 +1,522; 2015 +997; 2016 +8,337; 2017 134,715-77,377=57,338; 2018 75,438 => 143,632 (plus 2013-and-prior movement, about zero)",
+   "accounts_incurred_t_000": "137,103 (p13: gross paid 57,832 + change in gross provision 79,271)",
+   "diff_pct": 4.8,
+   "control_t_minus_1": "2017: implied about 108,430 vs 112,110 (-3.0%)",
+   "note": "sterling fell in 2018, closing-rate table above average-rate accounts: sign and size consistent"
+  },
+  "6_reconstruction": "Same-table diagonals, balance-sheet tie, incurred test within 5% with the explained FX sign: M is validated for u=2014..2016. 2013-and-prior is small and not differenceable.",
+  "verdict": "stands",
+  "reason": "Nothing in the pages shows overlapping or reassigned history; the gross table ties to the balance sheet and to incurred within 5% in the direction FX predicts. SPS origin and internal RITC are not sufficient."
+ },
+ "2088_2019": {
+  "id": "2088_2019",
+  "read_by": "OCR and page image p24 (table verified on the image)",
+  "1_table": {
+   "page": 24,
+   "heading": "'15. Claims development tables': 'Estimate of gross claims incurred' by 'Pure underwriting year 2012 and prior, 2013 ... 2019, Total' (GBP 000), end of underwriting year, one year later ... seven years later",
+   "basis": "gross incurred by pure underwriting year; the 2012-and-prior column prints only 35,827 at 31 December 2019; the gross table is followed by a net table; footnote: 'converted to Pound Sterling as of 31 December 2019 ... for all years presented'",
+   "cells": "2013: five years later (end-2018) 33,255 -> six years later (end-2019) 33,205 = -50. 2014: 38,778 -> 38,489 = -289. 2015: 50,155 -> 50,383 = +228. 2016: 73,172 -> 77,920 = +4,748. 2017: 133,109 -> 140,686 = +7,577.",
+   "M_000": 12214,
+   "M_arith": "-50 - 289 + 228 + 4,748 + 7,577 (u=2013..2017; 2012-and-prior not differenceable, fully paid at 35,827)",
+   "R_000": 262747,
+   "R_source": "p12 balance sheet and p21 roll-forward 'At 1 January 2019 ... 262,747'",
+   "M_over_R": 0.0465,
+   "combined_report": "no, Syndicate 2088 only (Chaucer is the managing agent from 1 April 2019)"
+  },
+  "2_selection_event": "Syndicate 2088 was established for the 2012 year of account as a Special Purpose Syndicate, a whole account quota share of Catlin/XL Catlin Syndicate 2003 on a funds-withheld basis ('The two whole account quota share contracts operate on a funds withheld basis', 2015 p5). Became stand-alone in 2015 (open-market book added) and keeps writing the WAQS. Years of account close at 36 months by ordinary RITC into the next year (accounting policy (vi), 2015 p21; closings: 2014 YoA at end 2016 (2016 report p8), 2015 YoA at end 2017 (2017 p8), 2016 YoA at end 2018 (2018 p8): all closings are of the syndicate's own years. No closure, RITC, portfolio transfer or take-on of another vehicle falls inside any of these report years; the 2019 report (p4) only announces the merger into Syndicate 1084 for the 2020 underwriting year and an RITC to Chaucer 1084 at 2021 year end. Selection is S1 (SPS status): not sufficient by itself. In 2019 the managing agency moved to Chaucer Syndicates (novation completed 1 April 2019, p4); no change of cohorts.",
+  "3_overlapping_history": "none. 2013 at end-2018 here (33,255) vs 2018 report (2013&prior 70,138 less 2012&prior): the 2019 table's 2012&prior 35,827 + 2013 33,205 = 69,032 against 70,138 at the previous year-end: ratio 0.984, the same re-translation as 2014 (38,778/39,452=0.983) and 2015 (50,155/50,905=0.985).",
+  "4_gross_net": "Net table printed beneath (net 2013 29,749 etc.); gross reserves total 288,956 = balance sheet (p12/p21). Gross paid for 2013-2014 equals the estimate (reserve '-'). No net cell in a gross row.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "mature 12,214; 2018 146,793-74,875=71,918; 2019 45,110 => 129,242 (2012-and-prior movement not printed)",
+   "accounts_incurred_t_000": "130,796 (p11: gross claims paid (101,587) + change in provision gross (29,209))",
+   "diff_pct": -1.2,
+   "control_t_minus_1": "2018: implied 143,632 vs 137,103 (+4.8%)"
+  },
+  "6_reconstruction": "Same-table diagonals; reserves total ties to the balance sheet; incurred test within 1.2%; the history of 2013-2017 equals the 2018 report's after a uniform re-translation. M is validated for u=2013..2017.",
+  "verdict": "stands",
+  "reason": "The table ties to the accounts and the balance sheet, and its history matches the previous report except for a uniform currency re-translation. The merger into 1084 (for 2020) and the RITC to 1084 at end-2021 fall outside this report year."
+ },
+ "2468_2018": {
+  "id": "2468_2018",
+  "read_by": "text layer, page image of the 2018 roll-forward (p33) and of the 2017 table (p40)",
+  "1_table": {
+   "page": 41,
+   "heading": "'16. Risk Management (continued)': 'Gross outstanding claims provision at 31 December 2018', 'Underwriting Year 2016 2017 2018 Total' (GBP 000); net table on p42",
+   "basis": "gross cumulative incurred (notified + IBNR) by underwriting year, with a separate cumulative paid block; only the three open years are printed (2015 and prior are gone with the RITC); no '& prior' column",
+   "cells": "u=2016 (the only u <= t-2): end of UY 43,403; 12 months later (end-2017) 75,436; 24 months later (end-2018) 93,806. Other cohorts: 2017 154,623 -> 219,006; 2018 170,258.",
+   "M_000": 18370,
+   "M_arith": "93,806 - 75,436",
+   "R_000": 590161,
+   "R_source": "p33 note 10 technical provisions 'Outstanding claims At 1 January 2018' gross 590,161",
+   "M_over_R": 0.0311,
+   "combined_report": "no, Syndicate 2468 only"
+  },
+  "2_selection_event": "S3 outbound transfer, confirmed. 2018 p5: 'Neon completed the external reinsurance to close of the 2008 to 2015 years of account as at 31 December 2017'; 2017 p8: 'All liabilities for the 2015 and prior years of account (2008 to 2015 pure years of account) have been assumed by the 2018 year of account of Syndicate 2008 from 1 January 2018'. 2018 p33 roll-forward: 'RITC of 2015 & prior' gross (405,073), reinsurers' share 69,663, net (335,410). It falls at the opening of year t, between the end-2017 and end-2018 diagonals, and touches cohorts 2015 and earlier only. The 2018 table starts at 2016: neither of its diagonals contains the transferred cohorts, and the retained cohorts (2016, 2017) are untouched.",
+  "3_overlapping_history": "None. The 2017 report's end-2017 cell for 2016 (12 months later 75,447, p40 image) equals the 2018 table's end-2017 cell (75,436); the 2017 cohort's end-of-year cell rises from 147,678 to 154,623 (+4.7%, a currency re-translation or an increase at the same date; the 2016 cohort did not move, so no common factor), no cohort merged or reassigned. The 2017 table prints all cohorts including those transferred, because the RITC is booked in 2018.",
+  "4_gross_net": "Gross table read; a net table prints on p42. Gross reserves total 337,016 = balance sheet (p33 'At 31 December 2018'); no net or RITC premium figure sits in a gross cell. The RITC is gross (405,073) and reinsurers' share 69,663 (net 335,410), but it is outside the printed cohorts.",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "2016 +18,370; 2017 219,006-154,623=64,383; 2018 170,258 => 253,011",
+   "accounts_incurred_t_000": "245,740 (p33: claims incurred in current underwriting year 165,219 + in prior underwriting years 80,521; table prior-year movement 82,753 vs 80,521)",
+   "diff_pct": 3.0,
+   "control_t_minus_1": "2017 report p40 table: 2011 -12,455; 2012 -3,800; 2013 -10,558; 2014 -22,082; 2015 -4,888; 2016 +28,912; 2017 +147,678 => 122,807 (no 'Before 2011' movement printed) vs 2017 gross incurred 131,303 (153,194 - 21,891; 2017 p33): -6.5%",
+   "note": "2018 +3% is the sterling-fall direction (closing-rate table above average-rate accounts); 2017 -6.5% is the sterling-rise direction plus an unprinted 'Before 2011' movement"
+  },
+  "6_reconstruction": "M (one cohort, 2016) is read from two diagonals of the same post-transfer table and the cohort-level prior-year incurred (80,521, p33) agrees with the table's 2016+2017 movement (82,753) within 3%. The numerator is validated. Caveat for the ratio: the opening gross claims outstanding R (590,161) still includes the 405,073 that left at 1 January 2018; the retained opening reserve is 185,088, against which M is 9.9%, not 3.1%.",
+  "verdict": "stands",
+  "reason": "The outbound RITC removes cohorts 2015 and earlier, which the 2018 table does not print on either diagonal, so the 2016 movement (+18.4m) is clean and ties to the accounts within 3%. Only the denominator is affected: R is the pre-transfer 590.2m; this is a scope point for the ratio, not a concern about the mature-cohort history."
+ },
+ "6119_2016": {
+  "id": "6119_2016",
+  "read_by": "OCR and page image of p31 (table verified on the image)",
+  "1_table": {
+   "page": 31,
+   "heading": "'10 CLAIMS DEVELOPMENT TRIANGLES ... by the pure underwriting year': 'Gross claims development 2014 2015 2016 Total' (GBP 000); net table below",
+   "basis": "gross estimate of total losses by pure underwriting year at 12, 24, 36 months; no paid (funds-withheld contract, 'Paid claims' blank), so gross reserves equal the estimate",
+   "cells": "u=2014 only: 12m 5,290; 24m (end-2015) 10,455; 36m (end-2016) 11,145. Other: 2015 4,956 -> 10,297; 2016 6,222.",
+   "M_000": 690,
+   "M_arith": "11,145 - 10,455",
+   "R_000": 12884,
+   "R_source": "p30 note 9 'Gross Technical Provisions ... As at 1 January 2016 ... Claims outstanding 12,884' (= 2015 table total gross reserves 12,884)",
+   "M_over_R": 0.0536,
+   "combined_report": "no, Syndicate 6119 only"
+  },
+  "2_selection_event": "S1 SPA status only: 'Syndicate 6119 was established for the 2014 year of account as a Special Purpose Arrangement (SPA). Its principal activity is to underwrite a whole account quota share reinsurance of Syndicate 2003 and this is the only inwards contract that the Syndicate writes. This contract operates on a funds withheld basis' (p6). No closure, RITC, transfer or take-on in 2016; 'For 2017 underwriting year, Syndicate 2003 will not continue its whole account quota share purchase with the SPA' (p6), after both diagonals.",
+  "3_overlapping_history": "None. The 2016 table's cells re-translate the 2015 report's (2015 p31 OCR: 2014 12m 4,423, 24m 8,715; 2015 4,169): 5,290/4,423 = 1.196, 10,455/8,715 = 1.200, 4,956/4,169 = 1.189, uniform FX of a USD book, no restatement.",
+  "4_gross_net": "Gross table and net table both print (net 2014 9,233 -> 10,150). Gross reserves 27,664 = balance sheet gross claims outstanding (p30: 12,884 + movement 10,850 + FX 3,930 = 27,664). The reinsurance programme sits below the gross figure; no net item in a gross row. The report's note 5 says a 'favorable run-off deviation (prior accident year decrease) of GBP0.2m' (p29); that is an accident-year and net figure and differs in sign from the underwriting-year table's +690 gross (+917 net), a different cut, not a conflict in the gross table.",
+  "5_accounts_test": {
+   "type": "incurred (no paid by construction)",
+   "implied_incurred_t_000": "2014 +690; 2015 10,297-4,956=5,341; 2016 6,222 => 12,253",
+   "accounts_incurred_t_000": "10,850 (p11 'Claims incurred ... Gross amount (10,850)'; p30 'Movement in the provision 10,850'; p28 segmental analysis gross claims incurred (10,849))",
+   "diff_pct": 12.9,
+   "control_t_minus_1": "2015 report p31: (8,715-4,423)+4,169 = 8,461 vs 2015 gross incurred 8,334: +1.5%",
+   "note": "the table is at the 2016 closing rate and the accounts at the average rate; sterling fell about 10% against the dollar over 2016, which lifts a USD table by about 10% (about 11.9m) over the 10.85m, leaving about 3%"
+  },
+  "6_reconstruction": "Table total ties to the balance sheet (27,664), no paid so no paid/outstanding split to bridge; the same-table diagonals and the uniform re-translation of the 2015 report validate the 2014 cohort movement.",
+  "verdict": "stands",
+  "reason": "SPA status and a funds-withheld whole account quota share of 2003 are not by themselves sufficient; the table is the SPA's own pure-year triangle, ties to the balance sheet, the history is the previous report re-translated, and the year-t gap to the accounts is the average-versus-closing-rate difference."
+ },
+ "6134_2020": {
+  "id": "6134_2020",
+  "read_by": "text layer (syndicate_6134_2020.pdf, syndicate_6134_2019.pdf)",
+  "1_table": {
+   "page": 45,
+   "heading": "Claims development table: 'Gross and net insurance contract outstanding claims provision as at 31 December 2020' (GBP 000; cumulative claims incurred incl IBNR by underwriting year, translated at 31 Dec 2020 rate)",
+   "basis": "underwriting-year (ultimate-type) cumulative incurred, gross = net (no outward reinsurance in this syndicate's accounts: reinsurers' share '-')",
+   "cells_u_le_t_minus_2": "UY2018: end of UY 8,766; 12 months later (end-2019) 23,859; 24 months later (end-2020) 25,364. Only u=2018 qualifies (t-2=2018).",
+   "M_000": 1505,
+   "R_000": 36754,
+   "R_source": "p37 claims outstanding note, 'At 1 January' gross 36,754",
+   "M_over_R": 0.041,
+   "combined_report": "no, Syndicate 6134 only"
+  },
+  "2_selection_event": "SPA vehicle: p5 'Syndicate 6134 was established during 2018 as a Special Purpose Arrangement to underwrite quota share reinsurances of business underwritten by Syndicate 2121 as the host syndicate'. No closure, transfer or take-on in 2020. p6 'Syndicate 6134 does not participate in the underwriting of any prior year of Syndicate 2121 and no element of that syndicate's reinsurance to close is ceded to Syndicate 6134'; '2018 year of account ... left open'. Event is simply SPA status, nothing between the diagonals.",
+  "3_overlapping_history": "none found. The 2018 row is the SPA's own first underwriting year (UY2018 8,766 at end of year, rising to 25,364); no other vehicle's or year's history is shown.",
+  "4_gross_net": "Table is printed as one gross and net table; income statement p19 shows reinsurers' share '-' on claims paid and change in provision; no net RITC entering.",
+  "5_accounts_test": {
+   "type": "incurred (table has no paid by cohort; cumulative payments to date row only)",
+   "implied_incurred_t_000": "UY2018 25,364-23,859=1,505; UY2019 38,893-12,379=26,514; UY2020 42,541 (first year) => 70,560",
+   "accounts_incurred_t_000": "71,977 (p19 'Claims incurred, net of reinsurance' (71,977); gross paid 79 + change in gross provision 71,898)",
+   "diff_pct": -2.0,
+   "control_t_minus_1": "2019 report p44 table: (24,337-8,941)+12,487 = 27,883 vs 2019 accounts incurred 28,589 (-2.5%)",
+   "note": "differences are FX (table translated at closing rate; accounts at transaction rates; opening provision FX 2020 = -2,002) and the 2018 end-of-UY cell is at different rates"
+  },
+  "6_reconstruction": "Latest diagonal less cumulative payments ties to the statement of financial position: 25,364-58=25,306; 38,893-52=38,841; 42,541-38=42,503; total 106,650 (p45) = year-end gross provision p37 (106,650). The provisions roll-forward p37 shows claims incurred in prior underwriting years 28,379 against table u<=2019 movement 1,505+26,514=28,019 (FX). The mature cell M=1,505 is validated by the table's own rows and the roll-forward.",
+  "verdict": "stands",
+  "reason": "A one-cohort SPA triangle (UY2018) whose cells tie to the balance sheet and whose implied incurred matches the accounts within about 2%. The SPA's status is the only selection reason and no closure, transfer or restatement touches the 2018 row."
+ },
+ "6134_2021": {
+  "id": "6134_2021",
+  "read_by": "text layer (syndicate_6134_2021.pdf, syndicate_6134_2020.pdf)",
+  "1_table": {
+   "page": 44,
+   "heading": "Claims development table: 'Gross and net insurance contract outstanding claims provision as at 31 December 2021' (GBP 000; translated at 31 Dec 2021 rate)",
+   "basis": "underwriting-year cumulative incurred incl IBNR (ultimate-type); gross = net",
+   "cells_u_le_t_minus_2": "UY2018: 24 months later (end-2020) 25,291 -> 36 months later (end-2021) 25,190 = -101. UY2019: 12 months later (end-2020) 38,387 -> 24 months later (end-2021) 41,013 = +2,626 (UY2019 end of UY 12,264).",
+   "M_000": 2525,
+   "R_000": 106650,
+   "R_source": "p36 'At 1 January' gross claims outstanding 106,650",
+   "M_over_R": 0.0237,
+   "combined_report": "no, Syndicate 6134 only"
+  },
+  "2_selection_event": "SPA vehicle (quota share of host Syndicate 2121, established 2018); 2018 YoA left open (2020 report p6). No closure, transfer, take-on or RITC in 2021 found in the 2021 text; UY2018 and UY2019 are the SPA's own underwriting years.",
+  "3_overlapping_history": "none. Re-translation at 2021 rates moves the 2018 and 2019 end-2020 cells (25,364 -> 25,291; 38,893 -> 38,387) relative to the 2020 report: ratios 0.997 and 0.987, FX only; no cohort merged or reassigned.",
+  "4_gross_net": "Gross = net (reinsurers' share '-' in the income statement p18 and in the p36 roll-forward).",
+  "5_accounts_test": {
+   "type": "incurred",
+   "implied_incurred_t_000": "UY2018 -101; UY2019 +2,626; UY2020 100,104-42,230=57,874; UY2021 22,322 => 80,721",
+   "accounts_incurred_t_000": "81,985 (p18: gross paid 2,750 + change in gross provision 79,235)",
+   "diff_pct": -1.5,
+   "control_t_minus_1": "2020: implied 70,560 (from 2020 report p45 table) vs accounts 71,977 (-2.0%)"
+  },
+  "6_reconstruction": "Latest diagonal less cumulative payments equals the year-end provision: 25,190-2,732=22,458; 41,013-60=40,953; 100,104-49=100,055; 22,322-24=22,298; total 185,764 = p36 roll-forward 'At 31 December' 185,764. Prior-underwriting-year incurred 59,858 (p36) vs table u<=2020 movement -101+2,626+57,874=60,399 (FX). M validated by the table and roll-forward.",
+  "verdict": "stands",
+  "reason": "SPA status alone; the table is 6134's own, ties to the balance sheet and to year-t incurred within 1.5%, and carries no transferred, merged or net-basis history. The only restatement between reports is the closing-rate re-translation."
+ }
+}
