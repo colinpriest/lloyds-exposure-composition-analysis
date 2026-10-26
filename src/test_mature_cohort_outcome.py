@@ -14,9 +14,10 @@ These tests hold the register to the corpus (every displaced gross triangle is i
 its rebuild and to the readings; the loader's guard to every block; the primary to the adjudication's 653 records and
 figures; and the sensitivity to the 672.
 
-PINNED COUNTS. Several tests state a count of the committed state (117 register entries and 92 figures, the 672 and its 571
-mature-enforced records, the adjudication's 82 restored figures, the primary's 643, the 52 records that leave the 672, the 56
-records without a figure). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: five corrected
+PINNED COUNTS. Several tests state a count of the loader's state (118 register entries and 93 figures, the 672 and its 571
+mature-enforced records, the adjudication's 82 restored figures, the primary's 632, the 62 records that leave the 672, the 56
+records without a figure). The source-history census (rule 8, 26 October 2026) moved them from 117 and 92 (1609/2024's
+correction reversed; 3330/2018 and 3330/2017 added), from 643 (11 set aside) and from 52 (10 of the 11 are in the 672). The round-5 adjudication (23 October 2026) moved them from 112, 87, 649 and 46: five corrected
 figures (rules 3 and 4; 4242/2022 after review 8), one record of rule 2, two of rule 1, two of rule 4b (after the round-8
 readings of 24 October 2026, which also put 780/2016 back) and one of rule 5b (1110/2022) out of the primary. These are intended pins: each is a number the paper or the missingness ledger quotes, so a change
 to one is a change of result that the test should stop and a human should read, not a count to follow. Where a test holds
@@ -94,7 +95,10 @@ def test_every_displaced_gross_triangle_of_the_corpus_is_in_the_register_with_a_
     # printed figure stood
     assert bm.COLUMN_ONLY == ("1945_2022", "1945_2023")
     assert sorted(set(register) - set(pop)) == sorted(bm.COLUMN_ONLY + tuple(bm.CORRECTIONS))
-    assert sorted(bm.CORRECTIONS) == ["1274_2016", "1609_2024", "2232_2020", "318_2024", "4242_2022"]
+    # 1609/2024's rule-4 correction was reversed on 26 October 2026 (bm.REVERSED); 3330/2018 (rule 3) and 3330/2017 (the
+    # accounts' roll-forward, derived) are the census's corrections
+    assert sorted(bm.CORRECTIONS) == ["1274_2016", "2232_2020", "318_2024", "3330_2017", "3330_2018", "4242_2022"]
+    assert sorted(bm.REVERSED) == ["1609_2024"] and "1609_2024" not in register
     for key, entry in register.items():
         assert (entry["figure_m"] is not None) != (entry.get("reason") is not None), key
         if entry["figure_m"] is None:
@@ -131,11 +135,11 @@ def test_the_register_loads_with_its_evidence_and_counts(register):
     loaded = ra.load_mature_cohort_figures()
     assert loaded == register
     figures = [k for k, e in register.items() if e["figure_m"] is not None]
-    assert len(register) == 117 and len(figures) == 92
+    assert len(register) == 118 and len(figures) == 93
     by_status = {}
     for e in register.values():
         by_status[e["status"]] = by_status.get(e["status"], 0) + 1
-    assert by_status == {"primary": 89, "excluded_takeon_not_development": 3, "no_figure": 25}
+    assert by_status == {"primary": 90, "excluded_takeon_not_development": 3, "no_figure": 25}
 
 
 def test_the_register_equals_its_rebuild_from_the_pinned_extraction():
@@ -237,7 +241,7 @@ def test_every_figure_entry_rests_on_two_independent_agent_readings(register):
             mine = [r for r in e["readings"] if r["reader"] in second]
             assert len(first) == 1 and [r["reader"] for r in mine] == c, key
             assert mine[0]["round"] == bm.SECOND_ROUND and mine[0]["cells"] == second[c[0]][key]["cells"], key
-    assert n == 92
+    assert n == 93
 
 
 @pytest.mark.parametrize("change", ["table-read-as-reading", "same-reader-twice", "one-reading", "no-own-reading",
@@ -490,7 +494,7 @@ def test_every_entry_with_a_figure_rests_on_two_agent_readings_by_the_loaders_ow
         n += 1
         agents = [r for r in e["readings"] if r["kind"] in ra.MATURE_COHORT_READING_KINDS]
         assert len(agents) == len(e["readings"]) >= 2 and len({r["reader"] for r in agents}) == len(agents), key
-    assert n == 92
+    assert n == 93
 
 
 # --- an aggregated development-age column left out of the figure (Appendix 2.1; the author's decision of 22 October 2026)
@@ -667,8 +671,13 @@ RESTATED_EXCLUDED = {"2689_2023", "6134_2022", "2232_2017", "4747_2024"}
 UNMEASURABLE_EXCLUDED = {"1110_2022"}
 #: the figures rules 3 and 4 of the round-5 decision rules correct (data/mature_cohort_figures.json, a correction
 #: object), in GBP m: the printed table's own figure and the corrected one
-CORRECTED_GBP = {"318_2024": (-67.098, -27.99), "1274_2016": (46.610197, 18.395315), "1609_2024": (-0.147752, 11.129303),
-                 "2232_2020": (55.227, 19.331), "4242_2022": (-36.740084, -66.254037)}
+CORRECTED_GBP = {"318_2024": (-67.098, -27.99), "1274_2016": (46.610197, 18.395315),
+                 "2232_2020": (55.227, 19.331), "4242_2022": (-36.740084, -66.254037),
+                 "3330_2017": (-0.99, 0.559), "3330_2018": (-1.384, 1.094)}
+#: the eleven records rule 8, the source-history rule (26 October 2026), sets aside: they leave the primary (3000/2016 is a
+#: net-basis record in the 672 construction, so ten of them are in the 672)
+SOURCE_HISTORY_EXCLUDED = {"1084_2018", "1416_2024", "1884_2021", "2008_2023", "3000_2016", "3500_2021", "3500_2022",
+                           "3500_2023", "6111_2017", "6111_2018", "6131_2021"}
 #: the three records whose figure leaves an aggregated development-age column out (the author's decision of 22 October
 #: 2026 for 1945/2023 and 1945/2024; the Claude analysis session's of 23 October 2026 for 1945/2022)
 COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
@@ -676,15 +685,17 @@ COLUMN_FIGURES = {"1945_2024": 5.264, "1945_2023": -4.997, "1945_2022": -13.831}
 
 def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restated_base_records(loaded, decisions):
     """The adjudication's 653 (571 mature-enforced under the 672 and 82 restored figures), less the five records of the
-    exchange-rate rule, the two of rule 1, the two of rule 4b and the one of rule 5b of the round-5 decision rules: 643. The adjudication's
+    exchange-rate rule, the two of rule 1, the two of rule 4b and the one of rule 5b of the round-5 decision rules, and the
+    eleven of rule 8 (the source-history rule): 632 (the 643 before rule 8; 3000/2016 is a net-basis record in the 672 and is
+    in the 653 only through the adjudication's restored figures). The adjudication's
     figures stand,
     except the three aggregated-column records', which leave the column out, and the five the round-5 rules correct."""
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     enforced_672 = {k for k, r in s["ws"].items() if r["pyd_cohort_scope"] == ra.COHORT_ENFORCED}
     primary_decided = {k for k, r in decisions.items() if r["final_status"].startswith("primary")}
-    out = FX_EXCLUDED | RESTATED_EXCLUDED | UNMEASURABLE_EXCLUDED
+    out = FX_EXCLUDED | RESTATED_EXCLUDED | UNMEASURABLE_EXCLUDED | SOURCE_HISTORY_EXCLUDED
     assert len(enforced_672) == 571 and len(primary_decided) == 82
-    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 643
+    assert set(p["ws"]) == (enforced_672 | primary_decided) - out and len(p["ws"]) == 632
     assert out <= enforced_672 | primary_decided
     assert all(r["pyd_cohort_scope"] == ra.COHORT_ENFORCED for r in p["ws"].values())
     for k in enforced_672 - out - set(COLUMN_FIGURES) - set(CORRECTED_GBP):
@@ -703,18 +714,20 @@ def test_the_primary_is_the_adjudications_653_less_the_exchange_rate_and_restate
     # 1945/2022's '2012&Prior' column leaves the figure too (the 23 October 2026 readings): -13.840 to -13.831
     assert s["ws"]["1945_2022"]["pyd_gbp_m"] == -13.84 and p["ws"]["1945_2022"]["pyd_gbp_m"] == -13.831
     assert p["ws"]["1945_2022"]["pyd_basis_source"] == "mature-cohort-figure:register"
-    assert p["counters"]["mature_cohort_figures_applied"] == 92
+    assert p["counters"]["mature_cohort_figures_applied"] == 93
 
 
 def test_the_non_triangle_records_and_the_transactions_leave_the_primary(loaded):
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     left = set(s["ws"]) - set(p["ws"])
     tags = {k: p["status"][k]["status"] for k in left}
-    assert len(left) == 52
+    assert len(left) == 62
     # the exchange-rate rule's records that the 672 construction holds (5151/2016 is not in it)
     assert sorted(k for k, t in tags.items() if t == ra.FX_UNTRANSLATED_TAG) == sorted(FX_EXCLUDED - {"5151_2016"})
     # rule 1 of the round-5 decision rules: all four are in the 672
     assert sorted(k for k, t in tags.items() if t == ra.RESTATED_BASE_TAG) == sorted(RESTATED_EXCLUDED)
+    # rule 8: the source-history rule's eleven (3000/2016 is a net-basis record in the 672, so ten are in it)
+    assert sorted(k for k, t in tags.items() if t == ra.SOURCE_HISTORY_TAG) == sorted(SOURCE_HISTORY_EXCLUDED - {"3000_2016"})
     # rule 5b: the one unmeasurable take-on is in the 672 as well
     assert sorted(k for k, t in tags.items() if t == ra.TAKEON_UNMEASURABLE_TAG) == sorted(UNMEASURABLE_EXCLUDED)
     assert sorted(k for k, t in tags.items() if t == ra.TAKEON_TAG) == ["1084_2022", "2001_2022"]
@@ -727,14 +740,15 @@ def test_the_non_triangle_records_and_the_transactions_leave_the_primary(loaded)
     assert sorted(set(p["ws"]) - set(s["ws"])) == sorted(
         k for k in p["ws"] if p["ws"][k]["pyd_basis_source"] == "mature-cohort-figure:register"
         and s["by_key"].get(k, {}).get("data_quality_tag") != "RELIABLE")
-    assert len(set(p["ws"]) - set(s["ws"])) == 23
+    assert len(set(p["ws"]) - set(s["ws"])) == 22   # 23 before rule 8 set 3000/2016 (a net-basis record in the 672) aside
     assert p["status"]["1861_2020"]["status"] == ra.TAKEON_TAG
 
 
 def test_the_take_on_bases_apply_to_the_primary_only(loaded):
     p, s = loaded["mature_cohort"], loaded["precedence_672"]
     base = ra.load_takeon_base()
-    for key in ("1686_2021", "3000_2016", "4000_2022"):
+    # 3000/2016 was the third until the census set it aside (rule 8): the take-on is still applied before the exclusion
+    for key in ("1686_2021", "4000_2022"):
         e = base[key]
         r = p["ws"][key]
         rate = r["fx_rate_usd_per_gbp"] or 1.0
@@ -758,7 +772,9 @@ def test_the_six_transfer_records_were_read_twice_and_need_no_entry(loaded):
         assert t1[key]["pages"] and t2[key]["pages"]
         assert key not in base and key not in takeons, key
         assert key in p["ws"] and key in s["ws"], key
-        assert p["ws"][key]["pyd_gbp_m"] == s["ws"][key]["pyd_gbp_m"], key
+        if key != "3330_2018":
+            # 3330/2018's take-on question is settled (no effect), but the census corrects its figure under rule 3
+            assert p["ws"][key]["pyd_gbp_m"] == s["ws"][key]["pyd_gbp_m"], key
         assert p["ws"][key]["opening_reserves_gbp_m"] == s["ws"][key]["opening_reserves_gbp_m"], key
 
 
@@ -768,7 +784,7 @@ def test_the_new_tag_reaches_the_ledgers_unusable_severity_step(loaded, tmp_path
     _meta, subsets = ra.build_subsets(p["records"])
     ra.compute_eligibility(p["records"], subsets)
     flow = ra.build_disposition_ledger(p["log"], p["records"], str(tmp_path / "ledger.csv"))
-    assert flow["working_sample"] == 643 and flow["working_sample_equals_eligible_for_capital"] is True
+    assert flow["working_sample"] == 632 and flow["working_sample_equals_eligible_for_capital"] is True
     n = sum(1 for r in p["records"] if r["data_quality_tag"] == ra.NO_MATURE_COHORT_FIGURE_TAG)
     assert n == p["counters"]["no_mature_cohort_figure_unusable"] == 56
     assert all(r["eligible_for_capital"] is False for r in p["records"]
@@ -1017,22 +1033,28 @@ def test_the_corrections_rest_on_the_round_5_readings(register):
         assert [r["reader"] for r in e["readings"]] == list(c["readers"]), key
         assert e["correction"]["figure_as_printed_m"] == e["displaced"]["figure_m"], key
         assert e["correction"]["rule"] == c["rule"] and e["correction"]["cause"] == c["cause"], key
-        assert e["decision"].startswith("decision of the Claude analysis session, 23 October 2026"), key
+        census = key in ("3330_2017", "3330_2018")
+        assert e["decision"].startswith("decision of the Claude analysis session, %s October 2026" % (
+            "26" if census else "23")), key
         assert ra._correction_gaps(e) == [] and ra._mature_cohort_gaps(e) == [], key
         for r in e["readings"]:
-            assert r["source"] == "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % r["reader"]
+            assert r["source"] == "results/extraction_error_rate/mature-cohort/%s/readings/%s.json" % (
+                "round9" if census else "round5", r["reader"])
             # 1274/2016's figure is derived (no reader gives it): each reading keeps its own figure_m and carries the
             # derived one apart; every other correction's readings give the entry's figure
             if c.get("derived"):
-                assert abs(r["derived_figure_m"] - e["figure_m"]) <= 0.0015 and r["figure_m"] == 57.503, (key, r["reader"])
+                # each reader keeps its own (printed) figure: 1274/2016 +57.503m, 3330/2017 -0.990m
+                assert abs(r["derived_figure_m"] - e["figure_m"]) <= 0.0015 and r["figure_m"] == (
+                    57.503 if key == "1274_2016" else -0.99), (key, r["reader"])
             else:
                 assert abs(r["figure_m"] - e["figure_m"]) <= 0.0015, (key, r["reader"])
             assert r["pages"], (key, r["reader"])
-    want = {"318_2024": -27.99, "1609_2024": 13.935, "2232_2020": 19.331, "1274_2016": 22.6943, "4242_2022": -80.015}
+    want = {"318_2024": -27.99, "2232_2020": 19.331, "1274_2016": 22.6943, "4242_2022": -80.015, "3330_2018": 1.094,
+            "3330_2017": 0.559}
     assert {k: register[k]["figure_m"] for k in want} == want
-    # 1609/2024: the tie-break readers and Q2 give the figure; P3's literal reading is kept as superseded
-    assert [r["reader"] for r in register["1609_2024"]["superseded_readings"]] == ["P3"]
-    assert register["1609_2024"]["superseded_readings"][0]["figure_m"] == -0.185
+    # 1609/2024: the rule-4 correction (+13.935m; the tie-break readers Z5, Z6 and Q2, P3's literal reading superseded) was
+    # REVERSED on 26 October 2026 and is recorded apart (bm.REVERSED); the earlier readings are archived and kept
+    assert "1609_2024" not in register and bm.REVERSED["1609_2024"]["was"]["figure_m"] == 13.935
 
 
 def test_1274_2016_is_derived_from_both_readers_cells_at_the_2012_columns_own_factor(register):
@@ -1125,15 +1147,23 @@ def test_a_cell_edited_away_from_the_reading_stops_the_correction(what, old, new
 
 
 def test_readers_who_disagree_on_a_corrected_figure_stop_the_build(monkeypatch):
-    c = copy.deepcopy(bm.CORRECTIONS)
-    c["1609_2024"]["readers"]["P3"] = {"field": "m_recomputed_m", "cells": "cells_check"}
-    monkeypatch.setattr(bm, "CORRECTIONS", c)
-    with io.open(str(bm.RECORDS / "syndicate_1609_2024.json"), encoding="utf-8") as fh:
+    # 318/2024's two readers give -27.990m; one reader's figure moved off the other's stops the build (the test used
+    # 1609/2024 until its correction was reversed on 26 October 2026)
+    with io.open(str(bm.RECORDS / "syndicate_318_2024.json"), encoding="utf-8") as fh:
         data = json.load(fh)
-    entry = {"displaced": {"figure_m": -0.185}}
+    entry = {"displaced": {"figure_m": -67.098}}
+    orig = bm.correction_reading
+
+    def moved(key, rid, spec, round_name):
+        out = orig(key, rid, spec, round_name)
+        if rid == "Q4":
+            out["figure_m"] = out["figure_m"] + 1.0
+        return out
+
+    monkeypatch.setattr(bm, "correction_reading", moved)
     with pytest.raises(SystemExit, match="corrected figure"):
-        bm.correction_entry(entry, "1609_2024", data["models"]["gemini-2.5-flash"]["_rag_triangle"], 2024, -0.185, "",
-                            "gemini-2.5-flash", 51)
+        bm.correction_entry(entry, "318_2024", data["models"]["gemini-2.5-flash"]["_rag_triangle"], 2024, -67.098, "",
+                            "gemini-2.5-flash", 69)
 
 
 @pytest.mark.parametrize("change", ["no-correction", "printed-off", "no-cause", "correction-on-a-veto"])

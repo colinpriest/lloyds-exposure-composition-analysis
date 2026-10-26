@@ -305,6 +305,11 @@ NOTES = {
 ROUND5_READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round5" / "readings"
 ROUND5_ROUND = "round-5 readings of 23 October 2026 (tables whose history moved between reports)"
 ROUND6_ROUND = "round-6 tie-break readings of 23 October 2026"
+#: the round-9 readings of 26 October 2026 (the source-history census: arms K and L, the third readings Z11-Z13 and the round-10
+#: tie-breaks Z9 and Z10), archived verbatim under round9/readings/
+ROUND9_READINGS = HERE / "results" / "extraction_error_rate" / "mature-cohort" / "round9" / "readings"
+ROUND9_ROUND = "round-9 readings of 26 October 2026 (the source-history census)"
+SESSION_26_OCT = "decision of the Claude analysis session, 26 October 2026 (the source-history census)"
 CORRECTIONS = {
     "318_2024": {
         "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
@@ -315,18 +320,52 @@ CORRECTIONS = {
         "readers": {"P5": {"field": "m_recomputed_m", "cells": "m_detail"},
                     "Q4": {"field": "m_recomputed_m", "cells": "m_detail"}},
     },
-    "1609_2024": {
-        "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
-        "cause": ("the 2024 gross table's row and column labels are swapped against its body (p51): each printed row is "
-                  "one underwriting year, as the 2023 report's columns show cell for cell at 0.984-0.991; the tie-break "
-                  "readers Z5 and Z6 settle the disagreement of P3 (literal reading) and Q2"),
-        "derivation": ("u <= 2022 read by rows: 2021 57,359 - 43,731 = +13,628; 2022 107,543 - 107,236 = +307; +13.935m "
-                       "USD (Z5, Z6, Q2); read by the printed labels, -0.185m (P3, superseded)"),
-        "readers": {"Z5": {"field": "M_m_usd", "cells": "cells", "round": ROUND6_ROUND},
-                    "Z6": {"field": "recomputed_mature_figure_m", "cells": "m_cells_correct_orientation",
-                           "round": ROUND6_ROUND},
-                    "Q2": {"field": "m_recomputed_m", "cells": "m_recomputed_detail"}},
-        "superseded": {"P3": {"field": "m_recomputed_m", "cells": "m_calc"}},
+    "3330_2018": {
+        "by": "previous_report_base",
+        "rule": ("rule 3 of the round-5 decision rules (corrected to the previous report's base), applied by the "
+                 "source-history census (26 October 2026)"),
+        "cause": ("the 2018 table (p30) restates the end-2017 cells of its 2011 and 2012 columns 2,478 above the 2017 "
+                  "report's printed cells (+3.8% and +3.1%) with no explanation; the whole 2018 exchange line on the gross "
+                  "provision is 467, so translation explains at most about 0.47m, and the table on its own implies -1.384m "
+                  "against 2,655 of gross claims incurred in the accounts (p12, p29). The 2017 report's printed end-2017 "
+                  "cells tie to the end-2017 balance sheet and, as the base, reproduce the 2018 reserves of both columns "
+                  "to the pound (2011: 8,862 + 560 - 660 = 8,762; 2012: 2,839 + 534 - 655 = 2,718)"),
+        "derivation": ("u <= 2016, the 2018 table's latest cells less the 2017 report's printed end-2017 cells: 2011 "
+                       "57,009 - 56,449 = +560; 2012 11,909 - 11,375 = +534; +1,094 (GBP 000), i.e. +1.094m GBP (both "
+                       "readers, L4 and Z12); the 2018 table's own end-2017 cells give -1.384m. The 3334 take-on sits in a "
+                       "separate 2018 column and touches no u <= 2016 row"),
+        "session": SESSION_26_OCT,
+        "readers": {"L4": {"rolls": {2011: ("57,009", "56,449"), 2012: ("11,909", "11,375")}, "cells": "accounts_test",
+                           "own": (["M_reconstructed_on_previous_report_base_000"], 0.001), "dir": "round9",
+                           "round": ROUND9_ROUND},
+                    "Z12": {"rolls": {2011: ("57,009", "56,449"), 2012: ("11,909", "11,375")},
+                            "cells": "roll_forward_reconstruction", "own": (["roll_forward_reconstruction", "M_m_cell_base"], 1.0),
+                            "dir": "round9",
+                            "round": ROUND9_ROUND}},
+    },
+    "3330_2017": {
+        "by": "accounts_roll_forward", "derived": True, "derived_kind": "roll_forward",
+        "rule": ("the accounts' roll-forward (decision of the Claude analysis session, 26 October 2026, after the "
+                 "source-history census readings L4 and Z12; rule 3 cannot apply because the 2016 report is not in the "
+                 "corpus)"),
+        "cause": ("the 2017 table's (p29) end-2016 cells total 68,814, which imply an opening reserve of 14,961 against "
+                  "the 14,059 balance sheet (13,412 after the 647 exchange movement): 1,549 too high, and the exchange "
+                  "movement works the wrong way to explain it; the table's implied incurred, -990, has the opposite sign "
+                  "to the accounts' +559 (p12, p28) and to the report's own 'strengthening' narrative (p7)"),
+        "derivation": ("DERIVED by the decision of the Claude analysis session, 26 October 2026; not a cohort figure either "
+                       "reader prints. The whole gross reserve (11,701) sits in the two mature columns (2011 8,862; 2012 "
+                       "2,839) and the year's own new business is negligible (gross written premium 104), so the "
+                       "year's gross claims incurred is M: closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = "
+                       "+559 (GBP 000), i.e. +0.559m GBP, the technical account's gross claims incurred (p12, p28). Both "
+                       "readers (L4, Z12) quote every cell; each reader's own figure is kept as given (-0.990m as "
+                       "printed). No cohort split is printed (the 2016 report is not in the corpus). K4 stands on the "
+                       "printed figure"),
+        "cells_used": ["14,059", "559", "2,270", "647", "11,701"],
+        "roll_forward": {"opening": "14,059", "incurred": "559", "paid": "2,270", "fx": "647", "closing": "11,701"},
+        "readers": {"L4": {"roll_forward": True, "cells": "reconstructable", "own": (["M_recomputed_000"], 0.001),
+                           "dir": "round9", "round": ROUND9_ROUND},
+                    "Z12": {"roll_forward": True, "cells": "roll_forward_reconstruction", "dir": "round9",
+                            "own": (["M_printed_u_le_2015_k", "sum"], 0.001), "round": ROUND9_ROUND}},
     },
     "2232_2020": {
         "by": "previous_report_base", "rule": "rule 3 of the round-5 decision rules (corrected to the previous report's base)",
@@ -409,6 +448,31 @@ CORRECTIONS = {
         "readers": {"P4": {"stated": "On the 2021 report's end-2021 cells the same four columns give -80.015m",
                            "cells": "m_recomputed_note"},
                     "Q3": {"terms": "-18,289 -15,813 -20,241 -25,672 = -80,015", "cells": "m_working"}},
+    },
+}
+#: corrections REVERSED by later readings (decision of the Claude analysis session, 26 October 2026): the entry is removed from
+#: the register, the adopted figure is the extraction's own again, and the reversal is recorded here with the earlier readings
+#: kept. 1609/2024: the round-5 and round-6 rule-4 correction (+13.935m USD, the 2024 table read by rows as transposed) is
+#: withdrawn. The round-10 tie-break readers Z9 and Z10 and the cohort-depth second reading read the table as labelled;
+#: decisive is the 2021 gross ultimate loss ratio, 49.6% -> 36.2% (2023 p5, 2024 p6), which only the as-labelled reading
+#: shows (the implied premium and the net combined ratio agree). The earlier test compared the 2024 rows with the
+#: transposed 2023 table, which was circular.
+REVERSED = {
+    "1609_2024": {
+        "was": {"by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+                "figure_m": 13.935, "currency": "USD", "decision": "23 October 2026, tie-break readers Z5 and Z6 (round 6)",
+                "readings_kept": ["results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % r
+                                  for r in ("P3", "Q2", "Z5", "Z6")]},
+        "now": {"figure_m": -0.185, "currency": "USD",
+                "cells": "UW2021 54,930 - 66,053 = -11,123; UW2022 118,174 - 107,236 = +10,938 (USD 000), p51",
+                "figure_at_t_minus_3_m": -11.123},
+        "reason": ("the 2022 and 2024 tables share an orientation (as labelled) and the 2023 table is the mirror; the 2021 "
+                   "gross ultimate loss ratio falls from 49.6% to 36.2% (2023 p5, 2024 p6), which only the as-labelled "
+                   "reading shows; the implied premium and the net combined ratio agree"),
+        "decision": SESSION_26_OCT + "; the record joins the least-certain list (data/restated_base_excluded.json, "
+                                     "history_restated, clause orientation_outside_evidence)",
+        "readings": ["results/extraction_error_rate/mature-cohort/round9/readings/%s.json" % r for r in ("Z9", "Z10")]
+                    + ["results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"],
     },
 }
 #: the misprinted underwriting year of 1274/2016 and the first underwriting year of its table (the previous report's
@@ -887,16 +951,50 @@ def other_factor_range(c, text, key, rid):
 def correction_reading(key, rid, spec, round_name):
     """One reading of a CORRECTIONS record in the register's reading form, with the figure the spec reads or derives."""
     import build_restated_base_excluded as RB
-    with io.open(ROUND5_READINGS / ("%s.json" % rid), encoding="utf-8") as fh:
+    rdir, rname = (ROUND9_READINGS, "round9") if spec.get("dir") == "round9" else (ROUND5_READINGS, "round5")
+    with io.open(rdir / ("%s.json" % rid), encoding="utf-8") as fh:
         e = json.load(fh)[key]
     text = json.dumps(e, ensure_ascii=False)
     out = {"kind": "reading", "reader": rid, "round": round_name,
-           "source": "results/extraction_error_rate/mature-cohort/round5/readings/%s.json" % rid,
+           "source": "results/extraction_error_rate/mature-cohort/%s/readings/%s.json" % (rname, rid),
            "pages": RB.split_pages(key, e.get("pages"))[0], "read_by": e.get("read_by"),
            "verdict": e.get("verdict"), "reader_figure_m": None}
     own = e.get("m_recomputed_m")
     out["reader_figure_m"] = own if isinstance(own, (int, float)) else e.get(spec.get("field") or "m_recomputed_m")
-    if "field" in spec:
+    if "own" in spec:
+        # a round-9 reading keeps its figure in a field of its own (a path of keys and the scale to the report's millions)
+        v = e
+        for part in spec["own"][0]:
+            v = v[part]
+        out["reader_figure_m"] = round(float(v) * spec["own"][1], 4)
+    if "rolls" in spec:
+        # rule 3 with cells: the figure is the sum over u <= t-2 of the year t table's latest cell less the year t-1
+        # report's printed cell, each quoted by the reader (3330/2018)
+        terms = {}
+        for y, (latest, prev) in spec["rolls"].items():
+            _quoted(text, latest, key, rid, "latest cell")
+            _quoted(text, prev, key, rid, "previous report's cell")
+            terms[y] = _n(latest) - _n(prev)
+        out["figure_m"] = round(sum(terms.values()) / 1000.0, 4)
+        out["terms_k"] = {str(y): t for y, t in terms.items()}
+        out["figure_from"] = ("the sum of the cells the reader quotes (the year t table's latest cell less the year t-1 "
+                              "report's printed cell): %s" % json.dumps(out["terms_k"]))
+    elif "roll_forward" in spec:
+        # a DERIVED correction (3330/2017): the year's gross claims incurred from the opening gross provision, the paid
+        # and the exchange line, every cell quoted by the reader; figure_m stays the reader's own (printed) figure
+        rf = CORRECTIONS[key]["roll_forward"]
+        quoted = [_quoted(text, cell, key, rid, "roll-forward") for cell in CORRECTIONS[key]["cells_used"]]
+        incurred = _n(rf["closing"]) - _n(rf["opening"]) + _n(rf["paid"]) + _n(rf["fx"])
+        if incurred != _n(rf["incurred"]):
+            raise SystemExit("%s: the roll-forward gives %s, not the incurred %s" % (key, incurred, rf["incurred"]))
+        out["figure_m"] = out["reader_figure_m"]
+        out["derived_figure_m"] = round(incurred / 1000.0, 4)
+        out["cells_quoted"] = quoted
+        out["derived_parts"] = {k: _n(v) for k, v in rf.items()}
+        out["figure_from"] = ("the reader's own figure as printed (%s); the corrected figure is DERIVED by the build from "
+                              "the cells the reader quotes, closing - opening + paid + exchange = gross claims incurred: "
+                              "%s" % (out["reader_figure_m"], json.dumps(out["derived_parts"])))
+    elif "field" in spec:
         out["figure_m"] = _num(e[spec["field"]])
         out["figure_from"] = "the reader's own figure (%s)" % spec["field"]
     elif "stated" in spec:
@@ -955,7 +1053,14 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
     entry.update({"figure_m": figure, "figure_gbp_m": gbp, "figure_kind": "triangle"})
     entry["correction"] = {"rule": c["rule"], "cause": c["cause"], "derivation": c["derivation"],
                            "figure_as_printed_m": figure_printed}
-    if derived:
+    if derived and c.get("derived_kind") == "roll_forward":
+        entry["correction"].update({
+            "derived_figure_m": figure, "derived_by": SESSION_26_OCT, "method": "roll_forward",
+            "cells_used": list(c["cells_used"]), "roll_forward": dict(c["roll_forward"]),
+            "method_basis": ("closing gross provision - opening gross provision + gross claims paid + exchange movement = "
+                             "the year's gross claims incurred, which is M because the whole gross reserve sits in the "
+                             "mature columns (GBP 000: 11,701 - 14,059 + 2,270 + 647 = 559)")})
+    elif derived:
         lows = [r["derived_parts"]["range_other_factors_m"] for r in reads]
         if any(x != lows[0] for x in lows):
             raise SystemExit("%s: the readers' ranges of other factors differ: %s" % (key, lows))
@@ -972,6 +1077,8 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
             "figure_before_review_8_m": 23.5435,
             "figure_before_review_8_basis": "the 2008 column's factor 209,137 / 213,518 = 0.97948"})
     entry["readings"] = reads
+    # the per-cohort cells the figure is the sum of (cohort-depth repair, 26 October 2026)
+    entry["cohort_cells"] = cohort_cells_block(key)
     if c.get("superseded"):
         entry["superseded_readings"] = [correction_reading(key, rid, spec, ROUND5_ROUND)
                                         for rid, spec in c["superseded"].items()]
@@ -984,6 +1091,15 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
     entry["pages"] = sorted({p for r in reads for p in r["pages"]})
     entry["quote"] = " | ".join("reader %s, p%s: %s" % (r["reader"], r["table"]["page"], r["cells"]) for r in reads)
     entry["status"] = "primary"
+    if derived and c.get("derived_kind") == "roll_forward":
+        entry["decision"] = ("%s, applying %s: %s; the register carries the corrected figure DERIVED from the cells both "
+                             "readers (%s) quote, by the accounts' roll-forward (a figure no reader prints as a cohort "
+                             "split), in place of the printed table's own (%s); primary, and listed with the "
+                             "least-certain records (data/restated_base_excluded.json, history_restated, clause "
+                             "derived_correction); under the %s" % (SESSION_26_OCT, c["rule"], c["cause"],
+                                                                     ", ".join(r["reader"] for r in reads),
+                                                                     figure_printed, OWNER))
+        return entry
     if derived:
         entry["decision"] = ("decision of the Claude analysis session, 23 October 2026 (after review 8), applying %s: "
                              "%s; the register carries the corrected figure DERIVED from the cells both readers (%s) "
@@ -993,10 +1109,11 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
                              "the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads), figure_printed,
                                          OWNER))
         return entry
-    entry["decision"] = ("decision of the Claude analysis session, 23 October 2026, applying %s: %s; the register carries "
+    entry["decision"] = ("%s, applying %s: %s; the register carries "
                          "the corrected figure the readings give (%s) in place of the printed table's own (%s); "
-                         "primary; under the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads),
-                                                    figure_printed, OWNER))
+                         "primary; under the %s" % (c.get("session", "decision of the Claude analysis session, 23 October "
+                                                                       "2026"), c["rule"], c["cause"],
+                                                    ", ".join(r["reader"] for r in reads), figure_printed, OWNER))
     return entry
 
 
@@ -1039,6 +1156,154 @@ def independent_reading_gaps(entry):
             gaps.append("reading %s's figure %s against the entry's %s" % (r.get("reader"), r.get("figure_m"),
                                                                            entry["figure_m"]))
     return gaps
+
+
+
+# ------------------------------------------------------------------------------------- per-cohort cells (cohort depth)
+#: The cohort-depth repair (decision of the Claude analysis session, 26 October 2026). The 19 records whose primary figure no
+#: stored grid computes (a register figure: corrected or confirmed) left the depth sensitivity as "figure not reproduced
+#: from a stored grid". 18 are recoverable from printed cells; each register figure carries the cells it is the sum of
+#: (cohort_cells), read twice independently (round9/depth/audit.md, first reading; round9/depth/second_reading.md, second
+#: reading; they agree on every cell). The census's two new figures (3330/2018, 3330/2017) carry theirs from readings L4 and
+#: Z12. 1609/2024's reversal puts it back on its stored grid (as labelled), so it needs none. The cells of the corrected
+#: figures (CORRECTIONS) are written into data/mature_cohort_figures.json by --write; those of the confirmed figures
+#: into data/pyd_confirmed_figures.json by --write-confirmed. Entry: (unit, currency, kind, page, previous_report_page,
+#: terms, note); a cumulative term is (u, previous, latest), a movement term (u, movement).
+DEPTH_AUDIT = "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+DEPTH_SECOND = "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+DEPTH_DECISION = ("decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the "
+                  "printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure")
+DEPTH_CELLS = {
+    # confirmed figures (data/pyd_confirmed_figures.json)
+    "1274_2022": ("000", "USD", "cumulative", 36, None, [
+        (2013, "180,742", "179,555"), (2014, "231,152", "228,328"), (2015, "234,187", "238,958"),
+        (2016, "504,727", "494,736"), (2017, "484,033", "485,745"), (2018, "416,498", "446,405"),
+        (2019, "372,154", "377,617"), (2020, "279,086", "260,195")],
+        "the gross table (the RAG grid is the net table of the next page)"),
+    "1609_2023": ("000", "USD", "cumulative", 41, None, [(2021, "57,866", "66,700")],
+                  "the table is printed transposed: read by rows UY2021 is 16,028, 57,866, 66,700; no underwriting year "
+                  "up to 2020 exists (inception 2021), so there is no figure on u <= t-3"),
+    "1991_2018": ("000", "GBP", "cumulative", 30, None, [
+        (2013, "25,912", "28,621"), (2014, "42,715", "44,725"), (2015, "60,761", "60,127"), (2016, "39,226", "77,816")],
+        "the 'After six years' row's extra cells (16,410, 17,235, 8,583, 16) are not staircase cells and are not used"),
+    "3334_2018": ("000", "GBP", "cumulative", 47, None, [(2015, "2,038", "2,024"), (2016, "44,893", "50,016")],
+                  "single-cohort at t-3 (2015 only); the 2011-2014 run-off years left by external RITC and are not in the "
+                  "table"),
+    "3500_2018": ("000", "GBP", "cumulative", 24, None, [(2009, "1,185", "777")],
+                  "single-cohort: the 2009 column is the only year up to t-2, so the figure at t-3 equals the figure at t-2"),
+    "4444_2022": ("000", "GBP", "cumulative", 27, None, [
+        (2013, "486,013", "484,641"), (2014, "568,628", "567,990"), (2015, "734,058", "741,648"),
+        (2016, "861,281", "868,960"), (2017, "1,089,417", "1,099,025"), (2018, "899,889", "916,705"),
+        (2019, "683,114", "652,818"), (2020, "587,818", "613,331")], "the '2012 & prior' column prints one cell: no step"),
+    "4472_2022": ("m", "GBP", "cumulative", 53, None, [
+        (2013, "765.5", "763.5"), (2014, "919.5", "893.2"), (2015, "941.6", "947.1"), (2016, "1,097.0", "1,100.3"),
+        (2017, "1,533.2", "1,547.9"), (2018, "1,385.1", "1,448.5"), (2019, "918.0", "957.0"), (2020, "705.9", "730.6")],
+        "the first (gross) of two tables"),
+    "4472_2023": ("m", "GBP", "cumulative", 53, None, [
+        (2014, "854.3", "862.4"), (2015, "902.4", "891.8"), (2016, "1,046.1", "1,071.9"), (2017, "1,466.8", "1,501.2"),
+        (2018, "1,372.6", "1,391.4"), (2019, "908.9", "890.3"), (2020, "696.3", "711.6"), (2021, "946.9", "1,184.9")],
+        "the first (gross) of two tables; 2021's step is 238.0 of the 311.2"),
+    "382_2015": ("000", "GBP", "movement", 46, None, [
+        (2005, "(72)"), (2006, "(256)"), (2007, "(30)"), (2008, "546"), (2009, "2,524"), (2010, "486"), (2011, "2,988"),
+        (2012, "(2,537)"), (2013, "(1,023)")], "a movement table: the printed latest-diagonal cell is the year's step"),
+    "382_2016": ("000", "GBP", "movement", 46, None, [
+        (2006, "(1,583)"), (2007, "(1,683)"), (2008, "(1,843)"), (2009, "(1,993)"), (2010, "592"), (2011, "(2,547)"),
+        (2012, "215"), (2013, "(12,436)"), (2014, "6,950")], "a movement table"),
+    "382_2017": ("000", "GBP", "movement", 47, None, [
+        (2007, "528"), (2008, "(1,259)"), (2009, "374"), (2010, "296"), (2011, "1,300"), (2012, "(320)"),
+        (2013, "(3,940)"), (2014, "12,698"), (2015, "(2,276)")], "a movement table"),
+    "382_2018": ("000", "GBP", "movement", 46, None, [
+        (2008, "(296)"), (2009, "178"), (2010, "690"), (2011, "1,705"), (2012, "1,903"), (2013, "7,251"),
+        (2014, "5,418"), (2015, "3,451"), (2016, "4,688")], "a movement table"),
+    "382_2019": ("000", "GBP", "movement", 46, None, [
+        (2009, "394"), (2010, "187"), (2011, "1,190"), (2012, "929"), (2013, "1,083"), (2014, "(9,443)"),
+        (2015, "(1,725)"), (2016, "(2,172)"), (2017, "22,106")], "a movement table"),
+    "382_2020": ("000", "GBP", "movement", 47, None, [
+        (2010, "193"), (2011, "(1,885)"), (2012, "3,607"), (2013, "385"), (2014, "6,694"), (2015, "(2,466)"),
+        (2016, "5,259"), (2017, "7,166"), (2018, "10,667")], "a movement table"),
+    # corrected figures (CORRECTIONS, data/mature_cohort_figures.json)
+    "318_2024": ("000", "GBP", "cumulative", 69, None, [
+        (2015, "76,533", "76,033"), (2016, "149,610", "148,503"), (2017, "267,819", "265,595"),
+        (2018, "145,148", "142,194"), (2019, "107,483", "105,208"), (2020, "140,095", "136,462"),
+        (2021, "111,992", "106,508"), (2022, "137,010", "127,197")],
+        "the table is printed transposed: each printed row is one underwriting year (rows read)"),
+    "2232_2020": ("000", "GBP", "cumulative", 49, 47, [
+        (2013, "57,184", "56,258"), (2014, "84,610", "85,063"), (2015, "151,959", "158,133"),
+        (2016, "151,417", "145,208"), (2017, "228,813", "232,763"), (2018, "165,562", "181,451")],
+        "rule 3: the previous cell is the 2019 report's printed cell (page 47 of that report)"),
+    "4242_2022": ("000", "USD", "cumulative", 44, 46, [
+        (2017, "349,613", "331,324"), (2018, "249,006", "233,193"), (2019, "207,954", "187,713"),
+        (2020, "310,094", "284,422")],
+        "rule 3: the previous cell is the 2021 report's printed cell (page 46 of that report); the merged '2016 & Prior' "
+        "column is out at t-2 and stays out at t-3"),
+    "3330_2018": ("000", "GBP", "cumulative", 30, 29, [(2011, "56,449", "57,009"), (2012, "11,375", "11,909")],
+                  "rule 3: the previous cell is the 2017 report's printed end-2017 cell (page 29 of that report); both "
+                  "columns are older than t-3, so the figure at t-3 equals the figure at t-2"),
+}
+#: 1274/2016 (rule 4, DERIVED): the misprinted 2012 cell is replaced by the previous report's cell at the 2012 column's own
+#: exchange factor (CORRECTIONS["1274_2016"]); the other six terms are the cells' differences
+DEPTH_CELLS["1274_2016"] = ("000", "USD", "cumulative", 41, None, [
+    (2008, "209,137", "208,456"), (2009, "165,410", "165,974"), (2010, "206,415", "208,906"),
+    (2011, "174,535", "178,142"), "DERIVED2012", (2013, "183,933", "180,767"), (2014, "192,589", "203,214")],
+    "the 2012 term is DERIVED (the register's derivation): the misprinted 141,355 is replaced by 178,987 x 129,350 / "
+    "131,423 = 176,163.7, giving 185,418 - 176,163.7 = +9,254.3; the other defensible factors give a range at t-2 of "
+    "+21.8m to +25.7m and at t-3 of 11.18m to 15.03m USD")
+DEPTH_2012_BASIS = ("DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8): the 2015 "
+                    "report's 2012 cell 178,987 at the 2012 column's own exchange factor f = 129,350 / 131,423 = 0.98423, "
+                    "i.e. 176,163.7 in place of the misprinted 141,355; term = 185,418 - 176,163.7")
+#: 3330/2017 (the accounts' roll-forward, DERIVED): one aggregate term for the two mature columns (2011 and 2012), which hold
+#: the whole gross reserve; no cohort split is printed (the 2016 report is not in the corpus)
+DEPTH_3330_2017 = {"u": [2011, 2012], "opening": "14,059", "incurred": "559", "paid": "2,270", "fx": "647",
+                   "closing": "11,701", "term": 559.0, "derived": True,
+                   "basis": ("closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = +559 (the technical account's "
+                             "gross claims incurred): the whole gross reserve sits in the 2011 and 2012 columns, so "
+                             "this is their step; no cohort split is printed")}
+
+
+def cohort_cells_block(key):
+    """The cohort_cells block of a register entry from DEPTH_CELLS (or the 3330/2017 aggregate), as the loader's
+    cohort_cells_gaps reads it."""
+    import run_analysis as ra
+    year = int(key.split("_")[1])
+    if key == "3330_2017":
+        unit, cur, kind, page, prev_page, note = "000", "GBP", "aggregate", 29, None, (
+            "the accounts' roll-forward; no 2016 report in the corpus, so no cohort split")
+        terms = [dict(DEPTH_3330_2017)]
+        readers = [{"reader": "L4", "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json"},
+                   {"reader": "Z12", "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json"}]
+    else:
+        unit, cur, kind, page, prev_page, raw, note = DEPTH_CELLS[key]
+        terms = []
+        for t in raw:
+            if t == "DERIVED2012":
+                terms.append({"u": 2012, "previous": "178,987", "latest": "185,418", "term": 9254.3, "derived": True,
+                              "basis": DEPTH_2012_BASIS})
+            elif kind == "cumulative":
+                u, prev, lat = t
+                terms.append({"u": u, "previous": prev, "latest": lat,
+                              "term": round(ra.cell_number(lat) - ra.cell_number(prev), 6)})
+            else:
+                u, mv = t
+                terms.append({"u": u, "movement": mv, "term": ra.cell_number(mv)})
+        if key in ("3330_2018",):
+            readers = [{"reader": "L4", "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json"},
+                       {"reader": "Z12", "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json"}]
+        else:
+            readers = [{"reader": "cohort-depth audit, first reading (26 October 2026)", "source": DEPTH_AUDIT},
+                       {"reader": "cohort-depth second reading by the verifier (26 October 2026)",
+                        "source": DEPTH_SECOND}]
+    return {"report_year": year, "unit": unit, "currency": cur, "table_kind": kind, "page": page,
+            "previous_report_page": prev_page, "terms": terms, "readings": readers, "agree": True, "note": note,
+            "decision": DEPTH_DECISION}
+
+
+def confirmed_with_cells(register_text):
+    """The text of data/pyd_confirmed_figures.json with each recoverable entry's cohort_cells block set from DEPTH_CELLS."""
+    reg = json.loads(register_text)
+    for key in DEPTH_CELLS:
+        if key in reg:
+            reg[key]["cohort_cells"] = cohort_cells_block(key)
+    return json.dumps(reg, indent=1, ensure_ascii=False) + "\n"
 
 
 def load_csv(path):
@@ -1197,7 +1462,7 @@ def build():
     for key in CORRECTIONS:
         with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
             blocks[key] = gross_blocks(json.load(fh), CORRECTIONS[key]["by"])
-    reg = {"_purpose": PURPOSE}
+    reg = {"_purpose": PURPOSE, "_reversed_corrections": REVERSED}
     for key in sorted(blocks, key=lambda k: (int(k.split("_")[0]), int(k.split("_")[1]))):
         with io.open(RECORDS / ("syndicate_%s.json" % key), encoding="utf-8") as fh:
             data = json.load(fh)
@@ -1236,7 +1501,9 @@ PURPOSE = (
     "own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a "
     "precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure "
     "is the triangle's own with the column in it (1945/2022 and 1945/2023). An entry with a correction object (rules 3 "
-    "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 1609/2024, 2232/2020 and 4242/2022) "
+    "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 2232/2020 and 4242/2022; and, from 26 "
+    "October 2026, the source-history census's 3330/2018 (rule 3) and 3330/2017 (the accounts' roll-forward, DERIVED); "
+    "1609/2024's rule-4 correction was REVERSED on 26 October 2026 and is recorded under _reversed_corrections) "
     "replaces the printed table's own figure, the adopted one, with the corrected figure its readings give (archived "
     "in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a "
     "misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and "
@@ -1250,7 +1517,17 @@ def dumps(reg):
     return json.dumps(reg, indent=1, ensure_ascii=False) + "\n"
 
 
+CONFIRMED = HERE / "data" / "pyd_confirmed_figures.json"
+
+
 def main(argv):
+    if "--write-confirmed" in argv:
+        with io.open(CONFIRMED, encoding="utf-8", newline="") as fh:
+            old = fh.read()
+        with io.open(CONFIRMED, "w", encoding="utf-8", newline="") as fh:
+            fh.write(confirmed_with_cells(old))
+        print("wrote the cohort_cells of data/pyd_confirmed_figures.json")
+        return 0
     reg = build()
     text = dumps(reg)
     if "--write" in argv:
@@ -1262,6 +1539,11 @@ def main(argv):
         committed = fh.read()
     if committed != text:
         print("data/mature_cohort_figures.json differs from its rebuild: run with --write and read the diff")
+        return 1
+    with io.open(CONFIRMED, encoding="utf-8", newline="") as fh:
+        conf = fh.read()
+    if conf != confirmed_with_cells(conf):
+        print("data/pyd_confirmed_figures.json's cohort_cells differ from DEPTH_CELLS: run with --write-confirmed")
         return 1
     print("data/mature_cohort_figures.json equals its rebuild (%d entries)" % (len(reg) - 1))
     return 0

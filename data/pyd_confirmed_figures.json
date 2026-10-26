@@ -13,7 +13,78 @@
    "first sample, first reading: error; the stored grid is misaligned by one column, so the adopted +435.491m includes the 2021 year's first development and drops 2013; the printed triangle gives +34.9m",
    "first sample, second reading (editor): error; filing figure +34.9m from the printed gross triangle, OCR digits settled by the printed row totals"
   ],
-  "source": "extraction error-rate study, first sample (results/extraction_error_rate/)"
+  "source": "extraction error-rate study, first sample (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2022,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 27,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2013,
+     "previous": "486,013",
+     "latest": "484,641",
+     "term": -1372.0
+    },
+    {
+     "u": 2014,
+     "previous": "568,628",
+     "latest": "567,990",
+     "term": -638.0
+    },
+    {
+     "u": 2015,
+     "previous": "734,058",
+     "latest": "741,648",
+     "term": 7590.0
+    },
+    {
+     "u": 2016,
+     "previous": "861,281",
+     "latest": "868,960",
+     "term": 7679.0
+    },
+    {
+     "u": 2017,
+     "previous": "1,089,417",
+     "latest": "1,099,025",
+     "term": 9608.0
+    },
+    {
+     "u": 2018,
+     "previous": "899,889",
+     "latest": "916,705",
+     "term": 16816.0
+    },
+    {
+     "u": 2019,
+     "previous": "683,114",
+     "latest": "652,818",
+     "term": -30296.0
+    },
+    {
+     "u": 2020,
+     "previous": "587,818",
+     "latest": "613,331",
+     "term": 25513.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the '2012 & prior' column prints one cell: no step",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "2008_2019": {
   "figure_m": 14.053,
@@ -48,7 +119,75 @@
    "third sample, first reading (after repairs, batch-8): error, sign; The rows after 'At end of first year' are annual movements, not cumulative estimates. Each column's first-year estimate plus its movements equals 'Current estimate of ultimate claims' (e.g. 2013: 145,858 + 8,992 - 1,023 = 153,827), so a year's 2015 development is its latest movement. UW years <= 2013: -72 - 256 - 30 + 546 + 2,524 + 486 + 2,988 - 2,537 - 1,023 = +2,626 GBP000 = +2.626m (strengthening). Adopted -15.848: opposite sign, and the difference of 18.474 exceeds the ...",
    "third sample, second reading (editor, 2026-09-13 22:36): error, sign; Triangle route, so rule 1: the right table, the right basis, the cells read correctly. The printed gross table is incremental: every column's first-year estimate plus its movements equals its current estimate (2005: 91,417 less the movements gives 71,107). Each row's count of cells fixes its years, so the 2015 development for underwriting years up to t-2 = 2013 is the latest-diagonal movements: -72 -256 -30 +546 +2,524 +486 +2,988 -2,537 -1,023 = +2,626 GBP000 = +2.626m. The ..."
   ],
-  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2015,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 46,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2005,
+     "movement": "(72)",
+     "term": -72.0
+    },
+    {
+     "u": 2006,
+     "movement": "(256)",
+     "term": -256.0
+    },
+    {
+     "u": 2007,
+     "movement": "(30)",
+     "term": -30.0
+    },
+    {
+     "u": 2008,
+     "movement": "546",
+     "term": 546.0
+    },
+    {
+     "u": 2009,
+     "movement": "2,524",
+     "term": 2524.0
+    },
+    {
+     "u": 2010,
+     "movement": "486",
+     "term": 486.0
+    },
+    {
+     "u": 2011,
+     "movement": "2,988",
+     "term": 2988.0
+    },
+    {
+     "u": 2012,
+     "movement": "(2,537)",
+     "term": -2537.0
+    },
+    {
+     "u": 2013,
+     "movement": "(1,023)",
+     "term": -1023.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table: the printed latest-diagonal cell is the year's step",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "382_2016": {
   "figure_m": -14.328,
@@ -66,7 +205,75 @@
    "third sample, first reading (after repairs, batch-8): error, magnitude; Movement rows are incremental: each column's first-year estimate plus its movements equals current estimate of ultimate claims (e.g. 2014: 172,763 + 213 + 6,950 = 179,926). UW years <= 2014: -1,583 - 1,683 - 1,843 - 1,993 + 592 - 2,547 + 215 - 12,436 + 6,950 = -14,328 GBP000 = -14.328m (release). Adopted -50.211; difference 35.883 > tolerance max(0.5, 0.05x50.211=2.511) = 2.511. Same sign, so this is a magnitude error.",
    "third sample, second reading (editor, 2026-09-13 22:37): error, magnitude; Triangle route (source page 47, the net table), so rule 1: the right table, the right basis, the cells read correctly. The gross table on p46 is incremental; each row's count of cells fixes its years (2009's four-year cell is printed '-'). The 2016 development for underwriting years up to t-2 = 2014 is the latest-diagonal movements: -1,583 -1,683 -1,843 -1,993 +592 -2,547 +215 -12,436 +6,950 = -14,328 GBP000 = -14.328m. The route's -50.211m differences consecutive movement ..."
   ],
-  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2016,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 46,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2006,
+     "movement": "(1,583)",
+     "term": -1583.0
+    },
+    {
+     "u": 2007,
+     "movement": "(1,683)",
+     "term": -1683.0
+    },
+    {
+     "u": 2008,
+     "movement": "(1,843)",
+     "term": -1843.0
+    },
+    {
+     "u": 2009,
+     "movement": "(1,993)",
+     "term": -1993.0
+    },
+    {
+     "u": 2010,
+     "movement": "592",
+     "term": 592.0
+    },
+    {
+     "u": 2011,
+     "movement": "(2,547)",
+     "term": -2547.0
+    },
+    {
+     "u": 2012,
+     "movement": "215",
+     "term": 215.0
+    },
+    {
+     "u": 2013,
+     "movement": "(12,436)",
+     "term": -12436.0
+    },
+    {
+     "u": 2014,
+     "movement": "6,950",
+     "term": 6950.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "382_2018": {
   "figure_m": 24.988,
@@ -85,7 +292,75 @@
    "third sample, first reading (after repairs, batch-8): error, magnitude; Movement rows are incremental: each column's first-year estimate plus its movements equals current estimate of ultimate claims (e.g. 2016: 181,113 + 18,989 + 4,688 = 204,790). The last number on each movement row is the row Total (e.g. One year later total 149,317), not a column. UW years <= 2016: -296 + 178 + 690 + 1,705 + 1,903 + 7,251 + 5,418 + 3,451 + 4,688 = +24,988 GBP000 = +24.988m (strengthening). Adopted +13.51; difference 11.478 > tolerance max(0.5, ...",
    "third sample, second reading (editor, 2026-09-13 22:37): error, magnitude; Stated-sourced (empty route; cohort disclosed). The filing states no gross prior-year movement: note 5's (2,381) is measured against net payments and provisions. Each movement row ends with its own Total, which the row's cells sum to (two years later: -3,159), so the cells' years are fixed. The gross table's 2018 development for underwriting years up to 2016 is -296 +178 +690 +1,705 +1,903 +7,251 +5,418 +3,451 +4,688 = +24,988 GBP000 = +24.988m. The adopted +13.51m, a model ..."
   ],
-  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2018,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 46,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2008,
+     "movement": "(296)",
+     "term": -296.0
+    },
+    {
+     "u": 2009,
+     "movement": "178",
+     "term": 178.0
+    },
+    {
+     "u": 2010,
+     "movement": "690",
+     "term": 690.0
+    },
+    {
+     "u": 2011,
+     "movement": "1,705",
+     "term": 1705.0
+    },
+    {
+     "u": 2012,
+     "movement": "1,903",
+     "term": 1903.0
+    },
+    {
+     "u": 2013,
+     "movement": "7,251",
+     "term": 7251.0
+    },
+    {
+     "u": 2014,
+     "movement": "5,418",
+     "term": 5418.0
+    },
+    {
+     "u": 2015,
+     "movement": "3,451",
+     "term": 3451.0
+    },
+    {
+     "u": 2016,
+     "movement": "4,688",
+     "term": 4688.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "382_2019": {
   "figure_m": 12.549,
@@ -103,7 +378,75 @@
    "third sample, first reading (after repairs, batch-9): error, scope-cumulative; The p46 table is incremental: each row after the first is that development year's movement, and each column sums to the printed current estimate (2017: 232,580+10,348+22,106 = 265,034; 2009: 134,661+11,624-6,237-594-2,213-1,565+7,100-6,378+371+178+394 = 137,341). The change in the cumulative gross estimate during 2019 is therefore the latest-diagonal cell. UW 2009-2017: 394+187+1,190+929+1,083-9,443-1,725-2,172+22,106 = 12,549 thousand = +12.549m. The adopted figure equals ...",
    "third sample, second reading (editor, 2026-09-13 22:36): error, scope-cumulative; Stated-sourced (empty route; cohort disclosed). The filing states no gross prior-year movement: note 5's (5,509) is measured against net payments and provisions. The gross table is incremental (each column sums to its current estimate; 2009 checks to 137,341), so the 2019 development for underwriting years up to 2017 is the latest-diagonal movements: +394 +187 +1,190 +929 +1,083 -9,443 -1,725 -2,172 +22,106 = +12,549 GBP000 = +12.549m. The adopted +173.514m is exactly the ..."
   ],
-  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)"
+  "source": "extraction error-rate study, third sample, repaired under the eighth amendment (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2019,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 46,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2009,
+     "movement": "394",
+     "term": 394.0
+    },
+    {
+     "u": 2010,
+     "movement": "187",
+     "term": 187.0
+    },
+    {
+     "u": 2011,
+     "movement": "1,190",
+     "term": 1190.0
+    },
+    {
+     "u": 2012,
+     "movement": "929",
+     "term": 929.0
+    },
+    {
+     "u": 2013,
+     "movement": "1,083",
+     "term": 1083.0
+    },
+    {
+     "u": 2014,
+     "movement": "(9,443)",
+     "term": -9443.0
+    },
+    {
+     "u": 2015,
+     "movement": "(1,725)",
+     "term": -1725.0
+    },
+    {
+     "u": 2016,
+     "movement": "(2,172)",
+     "term": -2172.0
+    },
+    {
+     "u": 2017,
+     "movement": "22,106",
+     "term": 22106.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "2010_2018": {
   "figure_m": -15.755,
@@ -225,7 +568,75 @@
    "eighth census, second reading (editor, 2026-09-14 08:59): error, magnitude; Census parts movement and net_table. The p47 gross table is a movement table: each row's cells sum to its printed total (two years later: -10,986) and each column sums to its current estimate (2007: 112,099 - 12,857 - 3,105 - 7,088 + 529 - 953 + 379 - 79 + 5,007 - 6,888 + 528 = 87,572). Each row's count of cells fixes its years. Triangle route, rule 1 over underwriting years up to 2015: the latest-diagonal movements are 2007 +528, 2008 -1,259, 2009 +374, 2010 +296, 2011 ..."
   ],
   "source": "extraction error-rate study, eighth census, repaired under the ninth amendment (results/extraction_error_rate/)",
-  "decision": "ninth amendment, point 1: both readings also find the net table the route read (p48); the readings agree on the gross table's figure, which the eighth amendment's point 5 repairs, so the record keeps a gross basis"
+  "decision": "ninth amendment, point 1: both readings also find the net table the route read (p48); the readings agree on the gross table's figure, which the eighth amendment's point 5 repairs, so the record keeps a gross basis",
+  "cohort_cells": {
+   "report_year": 2017,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 47,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2007,
+     "movement": "528",
+     "term": 528.0
+    },
+    {
+     "u": 2008,
+     "movement": "(1,259)",
+     "term": -1259.0
+    },
+    {
+     "u": 2009,
+     "movement": "374",
+     "term": 374.0
+    },
+    {
+     "u": 2010,
+     "movement": "296",
+     "term": 296.0
+    },
+    {
+     "u": 2011,
+     "movement": "1,300",
+     "term": 1300.0
+    },
+    {
+     "u": 2012,
+     "movement": "(320)",
+     "term": -320.0
+    },
+    {
+     "u": 2013,
+     "movement": "(3,940)",
+     "term": -3940.0
+    },
+    {
+     "u": 2014,
+     "movement": "12,698",
+     "term": 12698.0
+    },
+    {
+     "u": 2015,
+     "movement": "(2,276)",
+     "term": -2276.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "5678_2015": {
   "figure_m": -8.135,
@@ -298,7 +709,42 @@
    "R221 found in passing, reader A (2026-09-21, reading ended 17:15): error. The adopted -37.982 is the outward external RITC of the run-off reserves (3334/2017 p47: 7,340 + 4,889 + 12,759 + 12,994 = 37,982), not development. Gross triangle over u <= 2016: 2015 2,024 - 2,038 = -14; 2016 50,016 - 44,893 = +5,123; total +5,109 = +5.109m. The triangle reconciles to the balance sheet (142,036 against 142,035). Confidence 0.9 on the error, 0.8 on +5.109 (the 2017 report's end-2017 cell for 2016 would give +4.452).",
    "R221 found in passing, reader B (2026-09-21): error. The adopted figure is an outward transfer of liabilities, with the wrong sign. Mature years -14 + 5,123 = +5,109; read cumulatively the triangle reconciles (199,565 - 57,529 = 142,036 against 142,035); the printed 'Outstanding Reserves' column is mis-added. 'Claims incurred in prior underwriting years 55,671' includes year t-1's +51,029 and is not a development figure."
   ],
-  "source": "R221 (frozen review of 21 September 2026), records found in passing, repaired under the tenth amendment (results/extraction_error_rate/)"
+  "source": "R221 (frozen review of 21 September 2026), records found in passing, repaired under the tenth amendment (results/extraction_error_rate/)",
+  "cohort_cells": {
+   "report_year": 2018,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 47,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2015,
+     "previous": "2,038",
+     "latest": "2,024",
+     "term": -14.0
+    },
+    {
+     "u": 2016,
+     "previous": "44,893",
+     "latest": "50,016",
+     "term": 5123.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "single-cohort at t-3 (2015 only); the 2011-2014 run-off years left by external RITC and are not in the table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "1206_2014": {
   "figure_m": 23.342,
@@ -365,7 +811,36 @@
    "R221 implementation note 9, reader E (2026-09-22, second reading): error. The extraction transcribed every cell exactly, but the 2023 table is printed transposed: the 2022 and 2024 tables and the 2021 year's loss ratios show each printed row is one underwriting year. M = 66,700 - 57,866 = +8.834m (the 2024 table gives +8.757m at end-2024 rates); |11.657 - 8.834| = 2.823m > 0.583m. R 88.843m correct. Confidence about 95% on the transposition, 90% on +8.834m."
   ],
   "decision": "the error-rate protocol's eighth amendment, point 5 (implementation note 9, point 4): both readings find an error and give the same figure",
-  "source": "R221, the error-rate protocol's eleventh amendment: found in passing by its readings (results/extraction_error_rate/tenth-census/entrants/)"
+  "source": "R221, the error-rate protocol's eleventh amendment: found in passing by its readings (results/extraction_error_rate/tenth-census/entrants/)",
+  "cohort_cells": {
+   "report_year": 2023,
+   "unit": "000",
+   "currency": "USD",
+   "table_kind": "cumulative",
+   "page": 41,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2021,
+     "previous": "57,866",
+     "latest": "66,700",
+     "term": 8834.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the table is printed transposed: read by rows UY2021 is 16,028, 57,866, 66,700; no underwriting year up to 2020 exists (inception 2021), so there is no figure on u <= t-3",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "2999_2022": {
   "figure_m": 370.5,
@@ -393,7 +868,54 @@
    "stage-2 PC review, 3 October 2026, first reading: +42.675 on a faithful transcription, read through the stage-2 reader",
    "stage-2 PC final review, 3 October 2026, second reading: +2,709 +2,010 -634 +38,590 = +42,675; gpt-5-mini's stored 42.676 agrees"
   ],
-  "source": "stage 2 of the fix cycle for the review of 2 October 2026 (E audit/redecision_pending.json)"
+  "source": "stage 2 of the fix cycle for the review of 2 October 2026 (E audit/redecision_pending.json)",
+  "cohort_cells": {
+   "report_year": 2018,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 30,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2013,
+     "previous": "25,912",
+     "latest": "28,621",
+     "term": 2709.0
+    },
+    {
+     "u": 2014,
+     "previous": "42,715",
+     "latest": "44,725",
+     "term": 2010.0
+    },
+    {
+     "u": 2015,
+     "previous": "60,761",
+     "latest": "60,127",
+     "term": -634.0
+    },
+    {
+     "u": 2016,
+     "previous": "39,226",
+     "latest": "77,816",
+     "term": 38590.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the 'After six years' row's extra cells (16,410, 17,235, 8,583, 16) are not staircase cells and are not used",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "6112_2016": {
   "figure_m": 0.893,
@@ -442,7 +964,36 @@
    "stage-2 PC final review, 3 October 2026, second reading: 777 - 1,185 = -408; the 25.157 line mixes foreign exchange with the portfolio taken on, and is fully ceded"
   ],
   "decision": "owner's decision, 4 October 2026: register the triangle's -0.408; a thin reading of one cohort; the record stays in the transfer regime",
-  "source": "stage 2 of the fix cycle for the review of 2 October 2026 (E audit/redecision_pending.json)"
+  "source": "stage 2 of the fix cycle for the review of 2 October 2026 (E audit/redecision_pending.json)",
+  "cohort_cells": {
+   "report_year": 2018,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 24,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2009,
+     "previous": "1,185",
+     "latest": "777",
+     "term": -408.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "single-cohort: the 2009 column is the only year up to t-2, so the figure at t-3 equals the figure at t-2",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "2121_2019": {
   "figure_m": 57.034,
@@ -473,7 +1024,75 @@
    "stage-2 PC final review, 3 October 2026, second reading: +29,620, 6.1% of 482.119m"
   ],
   "decision": "owner's decision, 4 October 2026: registered as 382/2015 to 2019 are, from the same table form; the record was excluded on the models' net +7.269",
-  "source": "stage 2 of the fix cycle for the review of 2 October 2026"
+  "source": "stage 2 of the fix cycle for the review of 2 October 2026",
+  "cohort_cells": {
+   "report_year": 2020,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "movement",
+   "page": 47,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2010,
+     "movement": "193",
+     "term": 193.0
+    },
+    {
+     "u": 2011,
+     "movement": "(1,885)",
+     "term": -1885.0
+    },
+    {
+     "u": 2012,
+     "movement": "3,607",
+     "term": 3607.0
+    },
+    {
+     "u": 2013,
+     "movement": "385",
+     "term": 385.0
+    },
+    {
+     "u": 2014,
+     "movement": "6,694",
+     "term": 6694.0
+    },
+    {
+     "u": 2015,
+     "movement": "(2,466)",
+     "term": -2466.0
+    },
+    {
+     "u": 2016,
+     "movement": "5,259",
+     "term": 5259.0
+    },
+    {
+     "u": 2017,
+     "movement": "7,166",
+     "term": 7166.0
+    },
+    {
+     "u": 2018,
+     "movement": "10,667",
+     "term": 10667.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "a movement table",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "2010_2014": {
   "figure_m": null,
@@ -507,7 +1126,78 @@
    "repair reading B (13 October 2026): error, basis-net; p36 gross +8.960, every column's latest less paid equal to its printed reserve; readers A and B wrote beside a shared scratch file and may have seen each other's verdict, so they are not fully independent of each other (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-B.json)"
   ],
   "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle by draw four's rule (a net table read as gross is replaced by the filing's gross table); the triangle-table census (fourteenth amendment) put the record in class B",
-  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)"
+  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)",
+  "cohort_cells": {
+   "report_year": 2022,
+   "unit": "000",
+   "currency": "USD",
+   "table_kind": "cumulative",
+   "page": 36,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2013,
+     "previous": "180,742",
+     "latest": "179,555",
+     "term": -1187.0
+    },
+    {
+     "u": 2014,
+     "previous": "231,152",
+     "latest": "228,328",
+     "term": -2824.0
+    },
+    {
+     "u": 2015,
+     "previous": "234,187",
+     "latest": "238,958",
+     "term": 4771.0
+    },
+    {
+     "u": 2016,
+     "previous": "504,727",
+     "latest": "494,736",
+     "term": -9991.0
+    },
+    {
+     "u": 2017,
+     "previous": "484,033",
+     "latest": "485,745",
+     "term": 1712.0
+    },
+    {
+     "u": 2018,
+     "previous": "416,498",
+     "latest": "446,405",
+     "term": 29907.0
+    },
+    {
+     "u": 2019,
+     "previous": "372,154",
+     "latest": "377,617",
+     "term": 5463.0
+    },
+    {
+     "u": 2020,
+     "previous": "279,086",
+     "latest": "260,195",
+     "term": -18891.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the gross table (the RAG grid is the net table of the next page)",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "1274_2023": {
   "figure_m": 87.073,
@@ -540,7 +1230,78 @@
    "draw four, blind second reading: error, basis-net; gross table +122.3, each latest estimate less paid equal to its printed balance to pay (results/extraction_error_rate/fourth-sample/readings/second-readings.json)"
   ],
   "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle, one of draw four's two confirmed errors; the record's data/pyd_basis_register.json entry (the net narrative figure, superseded since 13 September 2026) is not read for it, because pyd_basis reads a confirmed figure's basis first",
-  "source": "extraction error-rate study, draw four (thirteenth amendment; results/extraction_error_rate/fourth-sample/)"
+  "source": "extraction error-rate study, draw four (thirteenth amendment; results/extraction_error_rate/fourth-sample/)",
+  "cohort_cells": {
+   "report_year": 2022,
+   "unit": "m",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 53,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2013,
+     "previous": "765.5",
+     "latest": "763.5",
+     "term": -2.0
+    },
+    {
+     "u": 2014,
+     "previous": "919.5",
+     "latest": "893.2",
+     "term": -26.3
+    },
+    {
+     "u": 2015,
+     "previous": "941.6",
+     "latest": "947.1",
+     "term": 5.5
+    },
+    {
+     "u": 2016,
+     "previous": "1,097.0",
+     "latest": "1,100.3",
+     "term": 3.3
+    },
+    {
+     "u": 2017,
+     "previous": "1,533.2",
+     "latest": "1,547.9",
+     "term": 14.7
+    },
+    {
+     "u": 2018,
+     "previous": "1,385.1",
+     "latest": "1,448.5",
+     "term": 63.4
+    },
+    {
+     "u": 2019,
+     "previous": "918.0",
+     "latest": "957.0",
+     "term": 39.0
+    },
+    {
+     "u": 2020,
+     "previous": "705.9",
+     "latest": "730.6",
+     "term": 24.7
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the first (gross) of two tables",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "4472_2023": {
   "figure_m": 311.2,
@@ -557,7 +1318,78 @@
    "repair reading B (13 October 2026): error, basis-net; gross +311.2, each latest estimate less paid equal to its printed balance to pay; readers A and B wrote beside a shared scratch file and may have seen each other's verdict, so they are not fully independent of each other (results/extraction_error_rate/triangle-table-scan/repair-readings/repair-reader-B.json)"
   ],
   "decision": "owner's decision, 13 October 2026: repaired to the printed gross triangle by draw four's rule, the same page layout as 4472/2022; the triangle-table census (fourteenth amendment) put the record in class B",
-  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)"
+  "source": "triangle-table census of 13 October 2026, class B (results/extraction_error_rate/triangle-table-scan/)",
+  "cohort_cells": {
+   "report_year": 2023,
+   "unit": "m",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 53,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2014,
+     "previous": "854.3",
+     "latest": "862.4",
+     "term": 8.1
+    },
+    {
+     "u": 2015,
+     "previous": "902.4",
+     "latest": "891.8",
+     "term": -10.6
+    },
+    {
+     "u": 2016,
+     "previous": "1,046.1",
+     "latest": "1,071.9",
+     "term": 25.8
+    },
+    {
+     "u": 2017,
+     "previous": "1,466.8",
+     "latest": "1,501.2",
+     "term": 34.4
+    },
+    {
+     "u": 2018,
+     "previous": "1,372.6",
+     "latest": "1,391.4",
+     "term": 18.8
+    },
+    {
+     "u": 2019,
+     "previous": "908.9",
+     "latest": "890.3",
+     "term": -18.6
+    },
+    {
+     "u": 2020,
+     "previous": "696.3",
+     "latest": "711.6",
+     "term": 15.3
+    },
+    {
+     "u": 2021,
+     "previous": "946.9",
+     "latest": "1,184.9",
+     "term": 238.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the first (gross) of two tables; 2021's step is 238.0 of the 311.2",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  }
  },
  "1218_2015": {
   "figure_m": -0.46,

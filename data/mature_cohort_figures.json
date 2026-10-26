@@ -1,5 +1,35 @@
 {
- "_purpose": "Mature-cohort figures of the primary outcome (the owner's decision, 22 October 2026, option c): the gross prior-year movement over underwriting years u <= t-2 of Equation (1), for every record of the corpus whose stored gross RAG triangle a sign-only precedence rule displaced (the provisions sign-disagreement override, route rag_provisions, or the model-agreement veto, a '[RAG|CODE] PYD NOT APPLIED' note). Built by src/build_mature_cohort_figures.py, which recomputes each figure from the record's stored grid by the extraction's own estimator at the pinned commit and assembles the evidence from results/extraction_error_rate/mature-cohort/ and the error-rate study. figure_m is in millions of the report's own currency (figure_gbp_m at the loader's H.10 rate, for reference). Under ANALYSIS_CONFIG['outcome'] 'mature_cohort' (the primary) run_analysis.py (apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, writes route 'mature_cohort_triangle' (gross, mature-enforced), and refuses an entry unless every model block of the record shows the displaced gross triangle; under 'precedence_672' the register is not applied. An entry with a figure carries at least two independent agent readings of the filing, each with its reader, pages and cells: the readings of 22 October 2026 and the second readings of the records that round read once (kind 'reading'), and earlier readings of the error-rate study that recomputed the same printed triangle (kind 'error_rate_study'). The extraction's own table read of the printed page (the stored grid the estimator computed from) is kept under table_read as supporting evidence; it is not a reading. notes records a flag a reader raised and the existing rule that decides it. An entry without a figure states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes (an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the three records of syndicate 1945: 2023 and 2024 on the author's decision of 22 October 2026, 2022 on the decision of the Claude analysis session of 23 October 2026) leaves the stored grid's aggregated development-age column out of the figure (Appendix 2.1): its figure is the estimator's on the grid without the column and its column readers' (F1 and F2 for 2023 and 2024, archived in fx-translation/readings/; X4, Y5, Z1 and Z2 for 2022, archived in round2/readings/), figure_with_column_m is the grid's own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure is the triangle's own with the column in it (1945/2022 and 1945/2023). An entry with a correction object (rules 3 and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 1609/2024, 2232/2020 and 4242/2022) replaces the printed table's own figure, the adopted one, with the corrected figure its readings give (archived in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and 4242/2022). 1274/2016's corrected figure is DERIVED (correction.derived_figure_m, decision of the Claude analysis session of 23 October 2026 after review 8), not given by either reader: each reading keeps its own figure_m and carries derived_figure_m and the cells it quotes (cells_quoted), and the entry is allowed only while both readers quote every cell in correction.cells_used and the derivation is recorded (independent_reading_gaps).",
+ "_purpose": "Mature-cohort figures of the primary outcome (the owner's decision, 22 October 2026, option c): the gross prior-year movement over underwriting years u <= t-2 of Equation (1), for every record of the corpus whose stored gross RAG triangle a sign-only precedence rule displaced (the provisions sign-disagreement override, route rag_provisions, or the model-agreement veto, a '[RAG|CODE] PYD NOT APPLIED' note). Built by src/build_mature_cohort_figures.py, which recomputes each figure from the record's stored grid by the extraction's own estimator at the pinned commit and assembles the evidence from results/extraction_error_rate/mature-cohort/ and the error-rate study. figure_m is in millions of the report's own currency (figure_gbp_m at the loader's H.10 rate, for reference). Under ANALYSIS_CONFIG['outcome'] 'mature_cohort' (the primary) run_analysis.py (apply_mature_cohort_figure) adopts figure_m before the basis and cohort decisions and before the FX conversion, writes route 'mature_cohort_triangle' (gross, mature-enforced), and refuses an entry unless every model block of the record shows the displaced gross triangle; under 'precedence_672' the register is not applied. An entry with a figure carries at least two independent agent readings of the filing, each with its reader, pages and cells: the readings of 22 October 2026 and the second readings of the records that round read once (kind 'reading'), and earlier readings of the error-rate study that recomputed the same printed triangle (kind 'error_rate_study'). The extraction's own table read of the printed page (the stored grid the estimator computed from) is kept under table_read as supporting evidence; it is not a reading. notes records a flag a reader raised and the existing rule that decides it. An entry without a figure states its reason (confirmed_figure_register, no_mature_cohort, triangle_figure_stands, outside_working_sample_not_read, aggregated_column_not_like_for_like), and the loader adopts nothing for it. status 'excluded_takeon_not_development' marks a figure whose record data/takeon_not_development.json excludes (an entry there with figure_route 'mature_cohort_triangle'). An entry with an aggregated_column object (the three records of syndicate 1945: 2023 and 2024 on the author's decision of 22 October 2026, 2022 on the decision of the Claude analysis session of 23 October 2026) leaves the stored grid's aggregated development-age column out of the figure (Appendix 2.1): its figure is the estimator's on the grid without the column and its column readers' (F1 and F2 for 2023 and 2024, archived in fx-translation/readings/; X4, Y5, Z1 and Z2 for 2022, archived in round2/readings/), figure_with_column_m is the grid's own, and the earlier readings of that figure are kept under superseded_readings. Its displaced.by is a precedence rule where one displaced the triangle (1945/2024), and 'aggregated_column' where the adopted figure is the triangle's own with the column in it (1945/2022 and 1945/2023). An entry with a correction object (rules 3 and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 2232/2020 and 4242/2022; and, from 26 October 2026, the source-history census's 3330/2018 (rule 3) and 3330/2017 (the accounts' roll-forward, DERIVED); 1609/2024's rule-4 correction was REVERSED on 26 October 2026 and is recorded under _reversed_corrections) replaces the printed table's own figure, the adopted one, with the corrected figure its readings give (archived in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and 4242/2022). 1274/2016's corrected figure is DERIVED (correction.derived_figure_m, decision of the Claude analysis session of 23 October 2026 after review 8), not given by either reader: each reading keeps its own figure_m and carries derived_figure_m and the cells it quotes (cells_quoted), and the entry is allowed only while both readers quote every cell in correction.cells_used and the derivation is recorded (independent_reading_gaps).",
+ "_reversed_corrections": {
+  "1609_2024": {
+   "was": {
+    "by": "printed_table_error",
+    "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
+    "figure_m": 13.935,
+    "currency": "USD",
+    "decision": "23 October 2026, tie-break readers Z5 and Z6 (round 6)",
+    "readings_kept": [
+     "results/extraction_error_rate/mature-cohort/round5/readings/P3.json",
+     "results/extraction_error_rate/mature-cohort/round5/readings/Q2.json",
+     "results/extraction_error_rate/mature-cohort/round5/readings/Z5.json",
+     "results/extraction_error_rate/mature-cohort/round5/readings/Z6.json"
+    ]
+   },
+   "now": {
+    "figure_m": -0.185,
+    "currency": "USD",
+    "cells": "UW2021 54,930 - 66,053 = -11,123; UW2022 118,174 - 107,236 = +10,938 (USD 000), p51",
+    "figure_at_t_minus_3_m": -11.123
+   },
+   "reason": "the 2022 and 2024 tables share an orientation (as labelled) and the 2023 table is the mirror; the 2021 gross ultimate loss ratio falls from 49.6% to 36.2% (2023 p5, 2024 p6), which only the as-labelled reading shows; the implied premium and the net combined ratio agree",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census); the record joins the least-certain list (data/restated_base_excluded.json, history_restated, clause orientation_outside_evidence)",
+   "readings": [
+    "results/extraction_error_rate/mature-cohort/round9/readings/Z9.json",
+    "results/extraction_error_rate/mature-cohort/round9/readings/Z10.json",
+    "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+   ]
+  }
+ },
  "318_2024": {
   "figure_m": -27.99,
   "figure_gbp_m": -27.99,
@@ -120,6 +150,77 @@
     "note": "Both tables are right in units (2024 £000, 2023 £m), so there is no units slip. The apparent rebase (ratios 0.42-2.41) is the screen following the printed labels on a grid whose rows are underwriting years. Read correctly the 2024 history equals the 2023 report's within a uniform +1.2% (stated closing-rate translation), the reserve total ties to the balance sheet (204,176), and the implied earned incurred is 4.4% above the accounts' 77.5m (within 5%). So M = -28.0m is the figure the filing supports; check that the extraction does not take columns as years for this filing. Read from the converted PDF only; the original HTML could not confirm the cell order."
    }
   ],
+  "cohort_cells": {
+   "report_year": 2024,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 69,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2015,
+     "previous": "76,533",
+     "latest": "76,033",
+     "term": -500.0
+    },
+    {
+     "u": 2016,
+     "previous": "149,610",
+     "latest": "148,503",
+     "term": -1107.0
+    },
+    {
+     "u": 2017,
+     "previous": "267,819",
+     "latest": "265,595",
+     "term": -2224.0
+    },
+    {
+     "u": 2018,
+     "previous": "145,148",
+     "latest": "142,194",
+     "term": -2954.0
+    },
+    {
+     "u": 2019,
+     "previous": "107,483",
+     "latest": "105,208",
+     "term": -2275.0
+    },
+    {
+     "u": 2020,
+     "previous": "140,095",
+     "latest": "136,462",
+     "term": -3633.0
+    },
+    {
+     "u": 2021,
+     "previous": "111,992",
+     "latest": "106,508",
+     "term": -5484.0
+    },
+    {
+     "u": 2022,
+     "previous": "137,010",
+     "latest": "127,197",
+     "term": -9813.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the table is printed transposed: each printed row is one underwriting year (rows read)",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
   "table_read": {
    "kind": "extraction_table_read",
    "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
@@ -2937,6 +3038,73 @@
     "note": "Valid as a table: the paid roll ties to the accounts (-1.9%; control year -1.0%) and the 2-3% change of history is the stated end-of-year re-translation of every cell. But the table carries one evident misprint (2012 at three years: 141,355) that makes M about 38m too high; the other seven years give M = +13.4m. So the printed-cell M (+57.5m, USD) should not be used as it stands; the likely true M is about +20m (sensitivity above, not printed in the t table). Check the 2012 cell on the page image if the figure is to be corrected."
    }
   ],
+  "cohort_cells": {
+   "report_year": 2016,
+   "unit": "000",
+   "currency": "USD",
+   "table_kind": "cumulative",
+   "page": 41,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": 2008,
+     "previous": "209,137",
+     "latest": "208,456",
+     "term": -681.0
+    },
+    {
+     "u": 2009,
+     "previous": "165,410",
+     "latest": "165,974",
+     "term": 564.0
+    },
+    {
+     "u": 2010,
+     "previous": "206,415",
+     "latest": "208,906",
+     "term": 2491.0
+    },
+    {
+     "u": 2011,
+     "previous": "174,535",
+     "latest": "178,142",
+     "term": 3607.0
+    },
+    {
+     "u": 2012,
+     "previous": "178,987",
+     "latest": "185,418",
+     "term": 9254.3,
+     "derived": true,
+     "basis": "DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8): the 2015 report's 2012 cell 178,987 at the 2012 column's own exchange factor f = 129,350 / 131,423 = 0.98423, i.e. 176,163.7 in place of the misprinted 141,355; term = 185,418 - 176,163.7"
+    },
+    {
+     "u": 2013,
+     "previous": "183,933",
+     "latest": "180,767",
+     "term": -3166.0
+    },
+    {
+     "u": 2014,
+     "previous": "192,589",
+     "latest": "203,214",
+     "term": 10625.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "the 2012 term is DERIVED (the register's derivation): the misprinted 141,355 is replaced by 178,987 x 129,350 / 131,423 = 176,163.7, giving 185,418 - 176,163.7 = +9,254.3; the other defensible factors give a range at t-2 of +21.8m to +25.7m and at t-3 of 11.18m to 15.03m USD",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
   "table_read": {
    "kind": "extraction_table_read",
    "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
@@ -3979,193 +4147,6 @@
   ],
   "status": "primary",
   "decision": "decision of the Claude analysis session, 22 October 2026 (results/extraction_error_rate/mature-cohort/decisions.csv, adjudication.md): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
- },
- "1609_2024": {
-  "figure_m": 13.935,
-  "figure_gbp_m": 11.129303,
-  "report_currency": "USD",
-  "figure_kind": "triangle",
-  "basis": "gross",
-  "displaced": {
-   "by": "printed_table_error",
-   "veto_gate": null,
-   "route": "rag_triangle",
-   "figure_m": -0.185,
-   "adopted_model": "gemini-2.5-flash",
-   "blocks": {
-    "gemini-2.5-flash": [
-     "printed_table_error"
-    ],
-    "gpt-5-mini": [
-     "printed_table_error"
-    ]
-   },
-   "status_under_precedence_672": "RELIABLE",
-   "route_label": "triangle (rag_triangle)"
-  },
-  "triangle": {
-   "printed_page": null,
-   "stored_source_page": 51,
-   "model": "gemini-2.5-flash",
-   "type": "gross",
-   "units": "thousands",
-   "entity": 1609,
-   "underwriting_years": [
-    2021,
-    2022,
-    2023,
-    2024
-   ],
-   "mature_years": [
-    2021,
-    2022
-   ]
-  },
-  "recomputation": {
-   "estimator": "test_gemini.compute_pyd_from_triangle at the pinned extraction commit (record_tests.extraction_pin), parsed from the extraction checkout",
-   "figure_m": -0.185,
-   "figure_gbp_m": -0.147752,
-   "refusal": null
-  },
-  "reconciliation": {
-   "census_class_deterministic": null,
-   "co_g_m": null,
-   "co_n_m": null,
-   "table_latest_diagonal_m": null,
-   "shape_check": null,
-   "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv (the census's own script on the stored grid), and each reading's reconciliation below"
-  },
-  "correction": {
-   "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
-   "cause": "the 2024 gross table's row and column labels are swapped against its body (p51): each printed row is one underwriting year, as the 2023 report's columns show cell for cell at 0.984-0.991; the tie-break readers Z5 and Z6 settle the disagreement of P3 (literal reading) and Q2",
-   "derivation": "u <= 2022 read by rows: 2021 57,359 - 43,731 = +13,628; 2022 107,543 - 107,236 = +307; +13.935m USD (Z5, Z6, Q2); read by the printed labels, -0.185m (P3, superseded)",
-   "figure_as_printed_m": -0.185
-  },
-  "readings": [
-   {
-    "kind": "reading",
-    "reader": "Z5",
-    "round": "round-6 tie-break readings of 23 October 2026",
-    "source": "results/extraction_error_rate/mature-cohort/round5/readings/Z5.json",
-    "pages": [
-     14,
-     20,
-     22,
-     23,
-     37,
-     51
-    ],
-    "read_by": "text layer and page images (2024 p51, 2023 p41); accounts from text layer p20, p22-23, p37; p14 for the re-presentation wording",
-    "verdict": "valid",
-    "reader_figure_m": 13.935,
-    "figure_m": 13.935,
-    "figure_from": "the reader's own figure (M_m_usd)",
-    "cells": "Rows = UW years (the reading that overlays 2023): UW2021 end-2023 43,731 -> end-2024 57,359 = +13,628; UW2022 end-2023 107,236 -> end-2024 107,543 = +307; sum u<=2022 = +13,935 (USD 13.935m). Literal (columns = UW years): UW2021 column 15,865 / 57,296 / 66,053 / 54,930: 66,053 -> 54,930 = -11,123; UW2022 column 32,368 / 107,236 / 118,174: 107,236 -> 118,174 = +10,938; sum = -185 (USD -0.185m). Rest of the swapped reading: UW2023 66,053 -> 118,174 = +52,121; UW2024 new 54,930; total change of latest diagonal = 120,986 either way.",
-    "table": {
-     "page": 14,
-     "basis": "gross"
-    },
-    "note": "Verdict valid with M = +13.935m USD (gross, u<=2022), read as rows = UW years. The literal -0.185m is not supported. Both readings give the same latest diagonal, reserves total and incurred test, so the accounts do not decide; the 2023 report and the p14 no-restatement sentence do."
-   },
-   {
-    "kind": "reading",
-    "reader": "Z6",
-    "round": "round-6 tie-break readings of 23 October 2026",
-    "source": "results/extraction_error_rate/mature-cohort/round5/readings/Z6.json",
-    "pages": [
-     6,
-     14,
-     20,
-     22,
-     36,
-     37,
-     51
-    ],
-    "read_by": "text layer and page image (2024 p51 rendered; 2023 p41 text layer)",
-    "verdict": "screen_misread",
-    "reader_figure_m": 13.935,
-    "figure_m": 13.935,
-    "figure_from": "the reader's own figure (recomputed_mature_figure_m)",
-    "cells": "u=2021: end-2023 (age 2) 43,731 -> latest (age 3) 57,359 = +13,628; u=2022: end-2023 (age 1) 107,236 -> latest (age 2) 107,543 = +307; sum u<=2022 = +13,935 ($'000) = +13.935m USD. (u=2023 is t-1, excluded: 66,053 -> 118,174 = +52,121.)",
-    "table": {
-     "page": 6,
-     "basis": "gross"
-    },
-    "note": "The decisive evidence is the cell-by-cell overlay with the 2023 report, whose orientation is correct (columns = UW years, rows = ages; its by-year outstanding ties: 44,451-7,525=36,926, 108,475-9,650=98,825, 66,700-41=66,659). Reserve, paid and incurred totals are the same under either orientation, so they show the table is valid but do not fix the orientation. The uniform ~1% shift fits the stated consistent-rate retranslation. The wording 'pure underwriting year' and 'represented' says nothing of a reallocation."
-   },
-   {
-    "kind": "reading",
-    "reader": "Q2",
-    "round": "round-5 readings of 23 October 2026 (tables whose history moved between reports)",
-    "source": "results/extraction_error_rate/mature-cohort/round5/readings/Q2.json",
-    "pages": [
-     20,
-     37,
-     51
-    ],
-    "read_by": "text layer and page image (2024 filing is converted from HTML; image checked for the table layout)",
-    "verdict": "screen_misread",
-    "reader_figure_m": 13.935,
-    "figure_m": 13.935,
-    "figure_from": "the reader's own figure (m_recomputed_m)",
-    "cells": "u<=2022 from the 2024 table. Swapped reading (supported by the 2023 filing): 2021 57,359-43,731 = +13,628; 2022 107,543-107,236 = +307; M = +13,935 = +13.935m USD. Literal (as-labelled) reading used by the screen: 2021 54,930-66,053 = -11,123; 2022 118,174-107,236 = +10,938; M = -185 = -0.185m USD. The stated prior-year line, 'Change in estimates of prior year provisions (15,263)' (p37, gross), is a different scope (calendar year, all prior years). Analysis figure not given in batch (source triangle-route:gross).",
-    "table": {
-     "page": 20,
-     "basis": "gross, pure underwriting year, $'000, at balance-sheet-date rates"
-    },
-    "note": "Both filings' totals tie (closing reserves, paid 49,801 vs 50,124, incurred -1.2%), but the individual cells do not: the 2024 table's labels and layout are inconsistent with the 2023 table, and only the row-as-underwriting-year reading reproduces the prior filing cell for cell. The screen's 'rebase' (ratios 1.49 / 0.99 / 0.66) comes from reading the labelled columns. M for 1609/2024 is +13.9m USD on the supported reading, against -0.2m on the literal one; an author who needs the 2021-2022 terms should use +13.9m and note the labelling defect. Total prior-year (u<=2023) movement is +66.1m (swapped) or +63.6m (literal), both an adverse UY-basis figure against a stated calendar-year release of 15.3m, a scope difference."
-   }
-  ],
-  "superseded_readings": [
-   {
-    "kind": "reading",
-    "reader": "P3",
-    "round": "round-5 readings of 23 October 2026 (tables whose history moved between reports)",
-    "source": "results/extraction_error_rate/mature-cohort/round5/readings/P3.json",
-    "pages": [
-     14,
-     20,
-     22,
-     23,
-     51
-    ],
-    "read_by": "page images of both table pages; text layer for the accounts",
-    "verdict": "valid",
-    "reader_figure_m": -0.185,
-    "figure_m": -0.185,
-    "figure_from": "the reader's own figure (m_recomputed_m)",
-    "cells": "{\"t_table\": \"2024 report p51 (printed 48), 'Estimate of ultimate gross claims', 'Pure underwriting year' 2021..2024, $'000. 2021: 15,865 / 57,296 / 66,053 / 54,930 (end of first UY, one, two, three years later); 2022: 32,368 / 107,236 / 118,174; 2023: 43,731 / 107,543; 2024: 57,359. Totals by row 149,323 / 272,075 / 184,227 / 54,930. 'Less gross claims paid' 11,286 / 48,102 / 3,698 / 3,931 = 67,017; 'Gross claims reserves 270,989'. End-2023 cells (screen cells_t): 2021 66,053; 2022 107,236; 2023 43,731. Confirmed.\", \"prev_table\": \"2023 report p41 (printed 38), 'Gross Claims development table', 'Underwriting year' 2021..2023, $'000, 'Estimate of cumulative gross claims incurred': 2021: 16,028 / 32,794 / 44,451; 2022: 57,866 / 108,475; 2023: 66,700. 'Less cumulative gross paid' (7,525) (9,650) (41); 'Total gross outstanding claims (all years) 202,410'. Screen's cells_prev confirmed (2021 44,451; 2022 108,475; 2023 66,700).\", \"comparison\": \"UY 2021 at end 2023: 66,053 (2024 table) vs 44,451 (2023 report), x1.486; UY 2022: 107,236 vs 108,475 (x0.989); UY 2023: 43,731 vs 66,700 (x0.656). Total of the three end-2023 cells: 217,020 (2024 table) vs 219,626 (2023 report), -1.2%. The history was reallocated between underwriting years, not rescaled. Earlier cells also differ (2021 one year later 57,296 vs 32,794; 2022 end of first UY 32,368 vs 57,866).\"}",
-    "table": {
-     "page": 14,
-     "basis": "Gross, USD, ultimate estimates incl. IBNR, 'pure underwriting year' (2024) vs 'underwriting year' (2023); translated at balance-sheet-date rate; reserves tie to the balance sheet in both years."
-    },
-    "note": "The 2024 table ties to the 2024 accounts on both tests (paid -0.6% cross-report, incurred -1.2%, reserve = balance sheet 270,989), and the 2023 table likewise (incurred +0.6%, reserve = 202,410). The end-2023 estimates were reallocated between underwriting years (total -1.2%), the table was retitled 'Pure underwriting year' and the notes 'represented'; M read from the 2024 table alone is -0.185m, whereas cross-report cells would give +20.2m. M is measurable from the 2024 table but depends on which allocation of years is right: that sensitivity (about 20m on a mature-cohort sum for 2 mature years) is worth flagging to the analysis. This is not the 2689-type base (totals tie to the accounts in both years). If a hard call is needed, the pure-UY table is the one that carries the later balance-sheet reconciliation."
-   }
-  ],
-  "table_read": {
-   "kind": "extraction_table_read",
-   "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
-   "source": "pdf_extraction/ (the record file)",
-   "pages": [
-    51
-   ],
-   "verdict": "the grid the table backend transcribed from the printed page; the printed table's own figure, which the correction replaces",
-   "figure_m": -0.185,
-   "cells": "2021: 54930.0 (3yr later) - 66053.0 (2yr later) = -11123.000; 2022: 118174.0 (2yr later) - 107236.0 (1yr later) = +10938.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = -0.185m (2 UW years)"
-  },
-  "pages": [
-   6,
-   14,
-   20,
-   22,
-   23,
-   36,
-   37,
-   51
-  ],
-  "quote": "reader Z5, p14: Rows = UW years (the reading that overlays 2023): UW2021 end-2023 43,731 -> end-2024 57,359 = +13,628; UW2022 end-2023 107,236 -> end-2024 107,543 = +307; sum u<=2022 = +13,935 (USD 13.935m). Literal (columns = UW years): UW2021 column 15,865 / 57,296 / 66,053 / 54,930: 66,053 -> 54,930 = -11,123; UW2022 column 32,368 / 107,236 / 118,174: 107,236 -> 118,174 = +10,938; sum = -185 (USD -0.185m). Rest of the swapped reading: UW2023 66,053 -> 118,174 = +52,121; UW2024 new 54,930; total change of latest diagonal = 120,986 either way. | reader Z6, p6: u=2021: end-2023 (age 2) 43,731 -> latest (age 3) 57,359 = +13,628; u=2022: end-2023 (age 1) 107,236 -> latest (age 2) 107,543 = +307; sum u<=2022 = +13,935 ($'000) = +13.935m USD. (u=2023 is t-1, excluded: 66,053 -> 118,174 = +52,121.) | reader Q2, p20: u<=2022 from the 2024 table. Swapped reading (supported by the 2023 filing): 2021 57,359-43,731 = +13,628; 2022 107,543-107,236 = +307; M = +13,935 = +13.935m USD. Literal (as-labelled) reading used by the screen: 2021 54,930-66,053 = -11,123; 2022 118,174-107,236 = +10,938; M = -185 = -0.185m USD. The stated prior-year line, 'Change in estimates of prior year provisions (15,263)' (p37, gross), is a different scope (calendar year, all prior years). Analysis figure not given in batch (source triangle-route:gross).",
-  "status": "primary",
-  "decision": "decision of the Claude analysis session, 23 October 2026, applying rule 4 of the round-5 decision rules (known-cause correction): the 2024 gross table's row and column labels are swapped against its body (p51): each printed row is one underwriting year, as the 2023 report's columns show cell for cell at 0.984-0.991; the tie-break readers Z5 and Z6 settle the disagreement of P3 (literal reading) and Q2; the register carries the corrected figure the readings give (Z5, Z6, Q2) in place of the printed table's own (-0.185); primary; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
  },
  "1686_2021": {
   "figure_m": 105.521,
@@ -9185,6 +9166,65 @@
     "note": "The 2020 table's end-2019 diagonal is lower than the one the syndicate printed a year earlier (-4.9% in total, -9.4% for UY 2018, -11% for UY 2019) with no stated reason, and the table taken on its own implies gross incurred of 190.0m against 144.9m in the accounts (+31%), where the 2019 table ties within 3.3%. Measuring the year against the 2019 report's printed cells reproduces the accounts within 0.3% (paid proxy -1.7%), so the movement for u<=2018 that agrees with the accounts is about +19.3m, not +55.2m; the filing does not itself print a gross prior-year movement (p7 and p28 give only net favourable development 4,828k). M from the table is not measurable (suspect by about 36m, 9% of opening gross reserves 396.5m = 391,880 + 4,653 per 2019 p47)."
    }
   ],
+  "cohort_cells": {
+   "report_year": 2020,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 49,
+   "previous_report_page": 47,
+   "terms": [
+    {
+     "u": 2013,
+     "previous": "57,184",
+     "latest": "56,258",
+     "term": -926.0
+    },
+    {
+     "u": 2014,
+     "previous": "84,610",
+     "latest": "85,063",
+     "term": 453.0
+    },
+    {
+     "u": 2015,
+     "previous": "151,959",
+     "latest": "158,133",
+     "term": 6174.0
+    },
+    {
+     "u": 2016,
+     "previous": "151,417",
+     "latest": "145,208",
+     "term": -6209.0
+    },
+    {
+     "u": 2017,
+     "previous": "228,813",
+     "latest": "232,763",
+     "term": 3950.0
+    },
+    {
+     "u": 2018,
+     "previous": "165,562",
+     "latest": "181,451",
+     "term": 15889.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "rule 3: the previous cell is the 2019 report's printed cell (page 47 of that report)",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
   "table_read": {
    "kind": "extraction_table_read",
    "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
@@ -11303,6 +11343,406 @@
   "status": "primary",
   "decision": "decision of the Claude analysis session, 22 October 2026 (results/extraction_error_rate/mature-cohort/decisions.csv, adjudication.md): primary; a valid mature-cohort figure: the printed gross table's own development over u <= t-2; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
  },
+ "3330_2017": {
+  "figure_m": 0.559,
+  "figure_gbp_m": 0.559,
+  "report_currency": "GBP",
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "displaced": {
+   "by": "accounts_roll_forward",
+   "veto_gate": null,
+   "route": "rag_triangle",
+   "figure_m": -0.99,
+   "adopted_model": "gemini-2.5-flash",
+   "blocks": {
+    "gemini-2.5-flash": [
+     "accounts_roll_forward"
+    ],
+    "gpt-5-mini": [
+     "accounts_roll_forward"
+    ]
+   },
+   "status_under_precedence_672": "RELIABLE",
+   "route_label": "triangle (rag_triangle)"
+  },
+  "triangle": {
+   "printed_page": null,
+   "stored_source_page": 29,
+   "model": "gemini-2.5-flash",
+   "type": "gross",
+   "units": "thousands",
+   "entity": 3330,
+   "underwriting_years": [
+    2011,
+    2012
+   ],
+   "mature_years": [
+    2011,
+    2012
+   ]
+  },
+  "recomputation": {
+   "estimator": "test_gemini.compute_pyd_from_triangle at the pinned extraction commit (record_tests.extraction_pin), parsed from the extraction checkout",
+   "figure_m": -0.99,
+   "figure_gbp_m": -0.99,
+   "refusal": null
+  },
+  "reconciliation": {
+   "census_class_deterministic": null,
+   "co_g_m": null,
+   "co_n_m": null,
+   "table_latest_diagonal_m": null,
+   "shape_check": null,
+   "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv (the census's own script on the stored grid), and each reading's reconciliation below"
+  },
+  "correction": {
+   "rule": "the accounts' roll-forward (decision of the Claude analysis session, 26 October 2026, after the source-history census readings L4 and Z12; rule 3 cannot apply because the 2016 report is not in the corpus)",
+   "cause": "the 2017 table's (p29) end-2016 cells total 68,814, which imply an opening reserve of 14,961 against the 14,059 balance sheet (13,412 after the 647 exchange movement): 1,549 too high, and the exchange movement works the wrong way to explain it; the table's implied incurred, -990, has the opposite sign to the accounts' +559 (p12, p28) and to the report's own 'strengthening' narrative (p7)",
+   "derivation": "DERIVED by the decision of the Claude analysis session, 26 October 2026; not a cohort figure either reader prints. The whole gross reserve (11,701) sits in the two mature columns (2011 8,862; 2012 2,839) and the year's own new business is negligible (gross written premium 104), so the year's gross claims incurred is M: closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = +559 (GBP 000), i.e. +0.559m GBP, the technical account's gross claims incurred (p12, p28). Both readers (L4, Z12) quote every cell; each reader's own figure is kept as given (-0.990m as printed). No cohort split is printed (the 2016 report is not in the corpus). K4 stands on the printed figure",
+   "figure_as_printed_m": -0.99,
+   "derived_figure_m": 0.559,
+   "derived_by": "decision of the Claude analysis session, 26 October 2026 (the source-history census)",
+   "method": "roll_forward",
+   "cells_used": [
+    "14,059",
+    "559",
+    "2,270",
+    "647",
+    "11,701"
+   ],
+   "roll_forward": {
+    "opening": "14,059",
+    "incurred": "559",
+    "paid": "2,270",
+    "fx": "647",
+    "closing": "11,701"
+   },
+   "method_basis": "closing gross provision - opening gross provision + gross claims paid + exchange movement = the year's gross claims incurred, which is M because the whole gross reserve sits in the mature columns (GBP 000: 11,701 - 14,059 + 2,270 + 647 = 559)"
+  },
+  "readings": [
+   {
+    "kind": "reading",
+    "reader": "L4",
+    "round": "round-9 readings of 26 October 2026 (the source-history census)",
+    "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json",
+    "pages": [
+     6,
+     12,
+     14,
+     29
+    ],
+    "read_by": "text layer (p6, p12, p14, p29); filings 3330_2018 and 3330_2014 read for context; the 2015 and 2016 reports are not in the corpus",
+    "verdict": "concern_resolved",
+    "reader_figure_m": -0.99,
+    "figure_m": -0.99,
+    "derived_figure_m": 0.559,
+    "cells_quoted": [
+     "14,059",
+     "559",
+     "2,270",
+     "647",
+     "11,701"
+    ],
+    "derived_parts": {
+     "opening": 14059.0,
+     "incurred": 559.0,
+     "paid": 2270.0,
+     "fx": 647.0,
+     "closing": 11701.0
+    },
+    "figure_from": "the reader's own figure as printed (-0.99); the corrected figure is DERIVED by the build from the cells the reader quotes, closing - opening + paid + exchange = gross claims incurred: {\"opening\": 14059.0, \"incurred\": 559.0, \"paid\": 2270.0, \"fx\": 647.0, \"closing\": 11701.0}",
+    "cells": "Yes, by the roll-forward: every reserve sits in the two mature columns and the year's new business is negligible, so M is the year's gross claims incurred: 14,059 + 559 - 2,270 paid - 647 exchange = 11,701 (exact). Reconstructed M = +559 (+4.0% of R), against the printed table's -990 (-7.0%): opposite sign. A cohort split of the 559 is not available without the 2016 report.",
+    "table": {
+     "page": 6,
+     "basis": "gross"
+    },
+    "note": null
+   },
+   {
+    "kind": "reading",
+    "reader": "Z12",
+    "round": "round-9 readings of 26 October 2026 (the source-history census)",
+    "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json",
+    "pages": [
+     6,
+     7,
+     12,
+     14,
+     15,
+     18,
+     24,
+     28,
+     29
+    ],
+    "read_by": "text layer (PDF text) and page image for the triangle page; Efull PDF syndicate_3330_2017.pdf (34 pages); 2014 report read for context; the 2016 report is not in the corpus, so no per-cohort end-2016 cumulative paid or end-2016 reserve is printed anywhere",
+    "verdict": "concern_resolved",
+    "reader_figure_m": -0.99,
+    "figure_m": -0.99,
+    "derived_figure_m": 0.559,
+    "cells_quoted": [
+     "14,059",
+     "559",
+     "2,270",
+     "647",
+     "11,701"
+    ],
+    "derived_parts": {
+     "opening": 14059.0,
+     "incurred": 559.0,
+     "paid": 2270.0,
+     "fx": 647.0,
+     "closing": 11701.0
+    },
+    "figure_from": "the reader's own figure as printed (-0.99); the corrected figure is DERIVED by the build from the cells the reader quotes, closing - opening + paid + exchange = gross claims incurred: {\"opening\": 14059.0, \"incurred\": 559.0, \"paid\": 2270.0, \"fx\": 647.0, \"closing\": 11701.0}",
+    "cells": "{\"possible\": true, \"method\": \"Opening gross provision 14,059 + 2017 gross incurred 559 - gross paid 2,270 + exchange (647) = 11,701 (ties to the pound). All of the 2017 gross incurred belongs to the 2011/2012 rows plus at most the 2017 year's own new business (GWP 104, earned 104), so M(u<=2015, FX-neutral) = +559 (an upper bound; at most about 0.1m of it is the 2017 year's own claims). Equivalent by cells: end-2017 cells 67,824 = (cum paid end-2016 53,853 + opening 14,059 - 647) + 559 exactly.\", \"M_m\": 0.56, \"M_over_R\": 0.0398, \"base\": \"gross claims incurred in the 2017 technical account less nothing (FX is carried on the separate exchange line, so 559 is FX-neutral); R = 14,059\"}",
+    "table": {
+     "page": 6,
+     "basis": "gross"
+    },
+    "note": null
+   }
+  ],
+  "cohort_cells": {
+   "report_year": 2017,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "aggregate",
+   "page": 29,
+   "previous_report_page": null,
+   "terms": [
+    {
+     "u": [
+      2011,
+      2012
+     ],
+     "opening": "14,059",
+     "incurred": "559",
+     "paid": "2,270",
+     "fx": "647",
+     "closing": "11,701",
+     "term": 559.0,
+     "derived": true,
+     "basis": "closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = +559 (the technical account's gross claims incurred): the whole gross reserve sits in the 2011 and 2012 columns, so this is their step; no cohort split is printed"
+    }
+   ],
+   "readings": [
+    {
+     "reader": "L4",
+     "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json"
+    },
+    {
+     "reader": "Z12",
+     "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json"
+    }
+   ],
+   "agree": true,
+   "note": "the accounts' roll-forward; no 2016 report in the corpus, so no cohort split",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
+  "table_read": {
+   "kind": "extraction_table_read",
+   "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
+   "source": "pdf_extraction/ (the record file)",
+   "pages": [
+    29
+   ],
+   "verdict": "the grid the table backend transcribed from the printed page; the printed table's own figure, which the correction replaces",
+   "figure_m": -0.99,
+   "cells": "2011: 56449.0 (6yr later) - 57463.0 (5yr later) = -1014.000; 2012: 11375.0 (5yr later) - 11351.0 (4yr later) = +24.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = -0.990m (2 UW years)"
+  },
+  "pages": [
+   6,
+   7,
+   12,
+   14,
+   15,
+   18,
+   24,
+   28,
+   29
+  ],
+  "quote": "reader L4, p6: Yes, by the roll-forward: every reserve sits in the two mature columns and the year's new business is negligible, so M is the year's gross claims incurred: 14,059 + 559 - 2,270 paid - 647 exchange = 11,701 (exact). Reconstructed M = +559 (+4.0% of R), against the printed table's -990 (-7.0%): opposite sign. A cohort split of the 559 is not available without the 2016 report. | reader Z12, p6: {\"possible\": true, \"method\": \"Opening gross provision 14,059 + 2017 gross incurred 559 - gross paid 2,270 + exchange (647) = 11,701 (ties to the pound). All of the 2017 gross incurred belongs to the 2011/2012 rows plus at most the 2017 year's own new business (GWP 104, earned 104), so M(u<=2015, FX-neutral) = +559 (an upper bound; at most about 0.1m of it is the 2017 year's own claims). Equivalent by cells: end-2017 cells 67,824 = (cum paid end-2016 53,853 + opening 14,059 - 647) + 559 exactly.\", \"M_m\": 0.56, \"M_over_R\": 0.0398, \"base\": \"gross claims incurred in the 2017 technical account less nothing (FX is carried on the separate exchange line, so 559 is FX-neutral); R = 14,059\"}",
+  "status": "primary",
+  "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census), applying the accounts' roll-forward (decision of the Claude analysis session, 26 October 2026, after the source-history census readings L4 and Z12; rule 3 cannot apply because the 2016 report is not in the corpus): the 2017 table's (p29) end-2016 cells total 68,814, which imply an opening reserve of 14,961 against the 14,059 balance sheet (13,412 after the 647 exchange movement): 1,549 too high, and the exchange movement works the wrong way to explain it; the table's implied incurred, -990, has the opposite sign to the accounts' +559 (p12, p28) and to the report's own 'strengthening' narrative (p7); the register carries the corrected figure DERIVED from the cells both readers (L4, Z12) quote, by the accounts' roll-forward (a figure no reader prints as a cohort split), in place of the printed table's own (-0.99); primary, and listed with the least-certain records (data/restated_base_excluded.json, history_restated, clause derived_correction); under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
+ },
+ "3330_2018": {
+  "figure_m": 1.094,
+  "figure_gbp_m": 1.094,
+  "report_currency": "GBP",
+  "figure_kind": "triangle",
+  "basis": "gross",
+  "displaced": {
+   "by": "previous_report_base",
+   "veto_gate": null,
+   "route": "rag_triangle",
+   "figure_m": -1.384,
+   "adopted_model": "gemini-2.5-flash",
+   "blocks": {
+    "gemini-2.5-flash": [
+     "previous_report_base"
+    ],
+    "gpt-5-mini": [
+     "previous_report_base"
+    ]
+   },
+   "status_under_precedence_672": "RELIABLE",
+   "route_label": "triangle (rag_triangle)"
+  },
+  "triangle": {
+   "printed_page": null,
+   "stored_source_page": 30,
+   "model": "gemini-2.5-flash",
+   "type": "gross",
+   "units": "thousands",
+   "entity": 3330,
+   "underwriting_years": [
+    2011,
+    2012,
+    2018
+   ],
+   "mature_years": [
+    2011,
+    2012
+   ]
+  },
+  "recomputation": {
+   "estimator": "test_gemini.compute_pyd_from_triangle at the pinned extraction commit (record_tests.extraction_pin), parsed from the extraction checkout",
+   "figure_m": -1.384,
+   "figure_gbp_m": -1.384,
+   "refusal": null
+  },
+  "reconciliation": {
+   "census_class_deterministic": null,
+   "co_g_m": null,
+   "co_n_m": null,
+   "table_latest_diagonal_m": null,
+   "shape_check": null,
+   "source": "results/extraction_error_rate/mature-cohort/design_per_record.csv (the census's own script on the stored grid), and each reading's reconciliation below"
+  },
+  "correction": {
+   "rule": "rule 3 of the round-5 decision rules (corrected to the previous report's base), applied by the source-history census (26 October 2026)",
+   "cause": "the 2018 table (p30) restates the end-2017 cells of its 2011 and 2012 columns 2,478 above the 2017 report's printed cells (+3.8% and +3.1%) with no explanation; the whole 2018 exchange line on the gross provision is 467, so translation explains at most about 0.47m, and the table on its own implies -1.384m against 2,655 of gross claims incurred in the accounts (p12, p29). The 2017 report's printed end-2017 cells tie to the end-2017 balance sheet and, as the base, reproduce the 2018 reserves of both columns to the pound (2011: 8,862 + 560 - 660 = 8,762; 2012: 2,839 + 534 - 655 = 2,718)",
+   "derivation": "u <= 2016, the 2018 table's latest cells less the 2017 report's printed end-2017 cells: 2011 57,009 - 56,449 = +560; 2012 11,909 - 11,375 = +534; +1,094 (GBP 000), i.e. +1.094m GBP (both readers, L4 and Z12); the 2018 table's own end-2017 cells give -1.384m. The 3334 take-on sits in a separate 2018 column and touches no u <= 2016 row",
+   "figure_as_printed_m": -1.384
+  },
+  "readings": [
+   {
+    "kind": "reading",
+    "reader": "L4",
+    "round": "round-9 readings of 26 October 2026 (the source-history census)",
+    "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json",
+    "pages": [
+     6,
+     12,
+     17,
+     30
+    ],
+    "read_by": "text layer (p6, p12, p17, p30); previous table from 3330_2017 p29",
+    "verdict": "concern_resolved",
+    "reader_figure_m": 1.094,
+    "figure_m": 1.094,
+    "terms_k": {
+     "2011": 560.0,
+     "2012": 534.0
+    },
+    "figure_from": "the sum of the cells the reader quotes (the year t table's latest cell less the year t-1 report's printed cell): {\"2011\": 560.0, \"2012\": 534.0}",
+    "cells": "{\"table_implied_incurred_2011_2012_000\": -1384, \"accounts_gross_incurred_000\": 2655, \"accounts_quote\": \"p12: claims paid gross (12,276); change in the provision for claims gross 9,621 -> incurred 2,655 (RITC 37,650 is not in the technical account)\", \"whole_book_test\": \"not possible from the table: the 2018 column's end-2017 value is not printed (it is lifetime as-if-always: 244,154 incurred vs 215,437 paid).\", \"cohort_bridge\": \"Using the 2017 report's printed cells as the base: 2011 reserve 8,862 + (57,009-56,449 = +560) - paid (48,247-47,587 = 660) = 8,762 = the printed 2018 reserve (exact); 2012 reserve 2,839 + (11,909-11,375 = +534) - paid (9,191-8,536 = 655) = 2,718 = printed (exact). On the 2018 table's own restated base the same bridge misses by 2,124 and 354.\", \"control_2017\": \"table-implied -990 vs accounts +559 in 2017 (fails by 1,549; see 3330_2017)\"}",
+    "table": {
+     "page": 6,
+     "basis": "gross"
+    },
+    "note": null
+   },
+   {
+    "kind": "reading",
+    "reader": "Z12",
+    "round": "round-9 readings of 26 October 2026 (the source-history census)",
+    "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json",
+    "pages": [
+     6,
+     7,
+     12,
+     29,
+     30,
+     31
+    ],
+    "read_by": "text layer and page images (pp30-31 triangles); Efull PDF syndicate_3330_2018.pdf (36 pages); 2017 report for the end-2017 comparison",
+    "verdict": "concern_resolved",
+    "reader_figure_m": 1.09,
+    "figure_m": 1.094,
+    "terms_k": {
+     "2011": 560.0,
+     "2012": 534.0
+    },
+    "figure_from": "the sum of the cells the reader quotes (the year t table's latest cell less the year t-1 report's printed cell): {\"2011\": 560.0, \"2012\": 534.0}",
+    "cells": "{\"possible\": true, \"method\": \"Each u<=2016 row: end-2018 cell (2018 table: paid hist + reserve at 2018 rate) less the 2017 report's end-2017 cell (paid hist + reserve at 2017 rate; ties to the balance sheet 11,701). 2011: 57,009 - 56,449 = +560; 2012: 11,909 - 11,375 = +534; sum +1,094. This is a roll-forward on one consistent basis except the retranslation of the reserve, which sits in the end-2018 cell. FX-neutral: remove FX on the opening reserves (at most the 467 on the whole provision; dollar share 63%) => about +0.6m (range +0.4m to +1.1m; sign positive in every case).\", \"M_m_cell_base\": 1.09, \"M_over_R_cell_base\": 0.0935, \"M_m_fx_neutral_central\": 0.63, \"base\": \"2018 table end-2018 cells less the 2017 report's end-2017 cells, R = 11,701 (gross provision at 31 Dec 2017, 2018 report p30)\"}",
+    "table": {
+     "page": 6,
+     "basis": "gross"
+    },
+    "note": null
+   }
+  ],
+  "cohort_cells": {
+   "report_year": 2018,
+   "unit": "000",
+   "currency": "GBP",
+   "table_kind": "cumulative",
+   "page": 30,
+   "previous_report_page": 29,
+   "terms": [
+    {
+     "u": 2011,
+     "previous": "56,449",
+     "latest": "57,009",
+     "term": 560.0
+    },
+    {
+     "u": 2012,
+     "previous": "11,375",
+     "latest": "11,909",
+     "term": 534.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "L4",
+     "source": "results/extraction_error_rate/mature-cohort/round9/readings/L4.json"
+    },
+    {
+     "reader": "Z12",
+     "source": "results/extraction_error_rate/mature-cohort/round9/readings/Z12.json"
+    }
+   ],
+   "agree": true,
+   "note": "rule 3: the previous cell is the 2017 report's printed end-2017 cell (page 29 of that report); both columns are older than t-3, so the figure at t-3 equals the figure at t-2",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
+  "table_read": {
+   "kind": "extraction_table_read",
+   "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
+   "source": "pdf_extraction/ (the record file)",
+   "pages": [
+    30
+   ],
+   "verdict": "the grid the table backend transcribed from the printed page; the printed table's own figure, which the correction replaces",
+   "figure_m": -1.384,
+   "cells": "2011: 57009.0 (7yr later) - 58573.0 (6yr later) = -1564.000; 2012: 11909.0 (6yr later) - 11729.0 (5yr later) = +180.000; (converted from thousands to millions); Structure score: 1.00; Total PYD = -1.384m (2 UW years)"
+  },
+  "pages": [
+   6,
+   7,
+   12,
+   17,
+   29,
+   30,
+   31
+  ],
+  "quote": "reader L4, p6: {\"table_implied_incurred_2011_2012_000\": -1384, \"accounts_gross_incurred_000\": 2655, \"accounts_quote\": \"p12: claims paid gross (12,276); change in the provision for claims gross 9,621 -> incurred 2,655 (RITC 37,650 is not in the technical account)\", \"whole_book_test\": \"not possible from the table: the 2018 column's end-2017 value is not printed (it is lifetime as-if-always: 244,154 incurred vs 215,437 paid).\", \"cohort_bridge\": \"Using the 2017 report's printed cells as the base: 2011 reserve 8,862 + (57,009-56,449 = +560) - paid (48,247-47,587 = 660) = 8,762 = the printed 2018 reserve (exact); 2012 reserve 2,839 + (11,909-11,375 = +534) - paid (9,191-8,536 = 655) = 2,718 = printed (exact). On the 2018 table's own restated base the same bridge misses by 2,124 and 354.\", \"control_2017\": \"table-implied -990 vs accounts +559 in 2017 (fails by 1,549; see 3330_2017)\"} | reader Z12, p6: {\"possible\": true, \"method\": \"Each u<=2016 row: end-2018 cell (2018 table: paid hist + reserve at 2018 rate) less the 2017 report's end-2017 cell (paid hist + reserve at 2017 rate; ties to the balance sheet 11,701). 2011: 57,009 - 56,449 = +560; 2012: 11,909 - 11,375 = +534; sum +1,094. This is a roll-forward on one consistent basis except the retranslation of the reserve, which sits in the end-2018 cell. FX-neutral: remove FX on the opening reserves (at most the 467 on the whole provision; dollar share 63%) => about +0.6m (range +0.4m to +1.1m; sign positive in every case).\", \"M_m_cell_base\": 1.09, \"M_over_R_cell_base\": 0.0935, \"M_m_fx_neutral_central\": 0.63, \"base\": \"2018 table end-2018 cells less the 2017 report's end-2017 cells, R = 11,701 (gross provision at 31 Dec 2017, 2018 report p30)\"}",
+  "status": "primary",
+  "decision": "decision of the Claude analysis session, 26 October 2026 (the source-history census), applying rule 3 of the round-5 decision rules (corrected to the previous report's base), applied by the source-history census (26 October 2026): the 2018 table (p30) restates the end-2017 cells of its 2011 and 2012 columns 2,478 above the 2017 report's printed cells (+3.8% and +3.1%) with no explanation; the whole 2018 exchange line on the gross provision is 467, so translation explains at most about 0.47m, and the table on its own implies -1.384m against 2,655 of gross claims incurred in the accounts (p12, p29). The 2017 report's printed end-2017 cells tie to the end-2017 balance sheet and, as the base, reproduce the 2018 reserves of both columns to the pound (2011: 8,862 + 560 - 660 = 8,762; 2012: 2,839 + 534 - 655 = 2,718); the register carries the corrected figure the readings give (L4, Z12) in place of the printed table's own (-1.384); primary; under the owner's decision, 22 October 2026 (option c): the primary outcome is the mature-cohort movement of Equation (1), and a valid mature-cohort triangle figure is never replaced merely because a broader movement has the other sign"
+ },
  "3456_2024": {
   "figure_m": 0.784,
   "figure_gbp_m": 0.626148,
@@ -13163,6 +13603,53 @@
     "note": "The 2022 table's end-2021 diagonal for UYs 2019-2021 (mostly UY 2020) is 35.9m below the 2021 report and the 2021 balance sheet, with no stated reason, and no retranslation is involved (USD report). Taken from the 2022 table the year's gross incurred is 115.1m against 78.3m in the accounts (+47%, not an ultimate/earned difference of that size), and cross-table paid is -19.6% (-5.5% excluding the merged prior column); against the 2021 printed diagonal the table gives 79.3m (+1.2%). The 2021 control ties (-1.1%). So M from the 2022 table (-44.4m) is not measurable from the table; the movement against the 2021-printed base would be -80.0m for u<=2020, but the 2022 filing does not print that, and the merged '2016 & Prior' column cannot be compared. The analysis figure was not supplied."
    }
   ],
+  "cohort_cells": {
+   "report_year": 2022,
+   "unit": "000",
+   "currency": "USD",
+   "table_kind": "cumulative",
+   "page": 44,
+   "previous_report_page": 46,
+   "terms": [
+    {
+     "u": 2017,
+     "previous": "349,613",
+     "latest": "331,324",
+     "term": -18289.0
+    },
+    {
+     "u": 2018,
+     "previous": "249,006",
+     "latest": "233,193",
+     "term": -15813.0
+    },
+    {
+     "u": 2019,
+     "previous": "207,954",
+     "latest": "187,713",
+     "term": -20241.0
+    },
+    {
+     "u": 2020,
+     "previous": "310,094",
+     "latest": "284,422",
+     "term": -25672.0
+    }
+   ],
+   "readings": [
+    {
+     "reader": "cohort-depth audit, first reading (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/audit.md"
+    },
+    {
+     "reader": "cohort-depth second reading by the verifier (26 October 2026)",
+     "source": "results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"
+    }
+   ],
+   "agree": true,
+   "note": "rule 3: the previous cell is the 2021 report's printed cell (page 46 of that report); the merged '2016 & Prior' column is out at t-2 and stays out at t-3",
+   "decision": "decision of the Claude analysis session, 26 October 2026 (cohort-depth repair): the cells are the printed cells two independent readings quote; the terms over u <= t-2 sum to the register's figure"
+  },
   "table_read": {
    "kind": "extraction_table_read",
    "reader": "the extraction's table read: the stored grid models.gemini-2.5-flash._rag_triangle, recomputed by compute_pyd_from_triangle at the pinned commit",
