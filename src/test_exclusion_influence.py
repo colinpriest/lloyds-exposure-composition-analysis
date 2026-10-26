@@ -375,6 +375,10 @@ def test_the_fits_train_on_the_base_maps_other_folds(run):
             assert rec["fits"][name]["fold_%d" % f]["n_held_out"] == int((folds == f).sum())
         assert rec["fits"][name]["full"]["n_train"] == int(masks[name].sum())
     assert rec["fold_map"]["syndicate_to_fold"] == {str(s): f for s, f in sorted(fmap.items())}
+    fm = rec["fold_map"]
+    assert fm["file_sha256"] == OV.fold_map_sha256() and "sha256" not in fm
+    assert len(fm["fold_digest_k10"]) == 64 and "restriction of the map to the base" in fm["fold_digest_k10_is"]
+    assert fm["fold_digest_k10"] != fm["file_sha256"]
     assert "never" in rec["fold_map"]["rule"] or "no fold is redealt" in rec["fold_map"]["rule"]
 
 
@@ -649,6 +653,45 @@ def test_the_cutpoint_donor_is_the_atom_at_the_var_not_the_tail_beyond_it():
     assert v["centre_reserve_fraction"] == float(adj[order[1]])
 
 
+def test_the_vignette_replicates_are_vignette_uncertaintys_statistic_under_the_bayesian_bootstrap_weights():
+    """Each replicate is the WEIGHTED inverse-CDF VaR of the transferred pool, under the by-syndicate Bayesian-bootstrap
+    weights (row mass w_s / sum_t(n_t w_t)) and one joint posterior draw, on vignette_uncertainty's stream. The test is
+    on a fixed pool where the weighted and the equal-weight VaR differ, so a replicate computed without the weights
+    (weights=None) is not the statistic."""
+    import vignette_uncertainty as VU
+    rng0 = np.random.default_rng(31)
+    n = 250
+    counts = np.tile([3, 4, 5, 6, 7], 10)                      # unequal exposures: the exposure step matters
+    syn = np.repeat(np.arange(4001, 4051), counts)
+    yr = np.concatenate([np.arange(2018, 2018 + c) for c in counts])
+    p = {"S": rng0.standard_t(4, n) * 0.05, "R": rng0.uniform(30.0, 1500.0, n), "H": rng0.uniform(0.15, 0.6, n),
+         "syn": syn, "yr": yr, "ritc": np.zeros(n),
+         "key": np.array(["%s_%s" % (s, y) for s, y in zip(syn, yr)])}
+    full = stub_result(("primary", "full", p["S"], p["R"], p["H"], p["yr"], p["syn"], p["ritc"], np.ones(n, bool)))
+    b, seed = 30, 5
+    _v, reps = EI.vignette1_block(p, full, CFG, TARGET, b=b, seed=seed)
+    S, R, H, _s, _y, ritc, _k = EI.shipped_precision(p)
+    draws = TO.params(EI.operator_draws_of(full), TO.HEADLINE)
+    rng = np.random.default_rng(seed)
+    draw = VU.build_resampler(syn, yr, "bayes")
+    want, unweighted = [], []
+    for _ in range(b):
+        idx, w = draw(rng)
+        th = VU.posterior_draw(draws, rng, len(draws["k"]))
+        pool = VU.transfer(S[idx], R[idx], H[idx], TARGET, th, CFG, ritc[idx])
+        want.append(VU.var_q(pool, 0.995, w))
+        unweighted.append(VU.var_q(pool, 0.995))
+    assert np.array_equal(reps, np.array(want))
+    # the fixture has power: the weights matter for the statistic
+    assert not np.array_equal(np.array(want), np.array(unweighted))
+    # row mass: one weight per syndicate, shared by its rows, summing to one over the rows
+    idx, w = VU.build_resampler(syn, yr, "bayes")(np.random.default_rng(1))
+    assert w.sum() == pytest.approx(1.0) and np.allclose(w[syn == 4001], w[syn == 4001][0])
+    # exposure-weighted, not equal-cluster: a syndicate's total mass is proportional to its row count times its weight
+    eq = VU.build_resampler(syn, yr, "equal_cluster")(np.random.default_rng(1))[1]
+    assert not np.allclose(w, eq)
+
+
 def test_the_vignette_interval_is_deterministic_in_its_seed():
     fr = frame()
     p = EI.population_arrays(fr, EI.population_masks(fr)["primary"], EI.fold_map(fr))
@@ -697,28 +740,28 @@ def test_the_primary_must_be_the_stored_working_sample():
         EI.check_base_is_the_stored_sample(fr, records())        # the file still holds the set-aside records
 
 
-def test_the_primary_pool_is_compared_with_the_shipped_tool_to_its_rounding_and_a_stale_tool_is_recorded(capsys):
+def test_the_primary_pool_is_compared_with_the_vignette_pool_to_its_rounding_and_a_difference_is_recorded(capsys):
     fr = frame()
     p = EI.population_arrays(fr, EI.population_masks(fr)["primary"], EI.fold_map(fr))
     S, R, H, syn, yr, ritc, keys = EI.shipped_precision(p)
     ship = (S.copy(), R.copy(), H.copy(), syn.copy(), yr.copy())
-    out = EI.check_shipped_pool(p, ship)
-    assert out["equal"] is True and (out["n_shipped"], out["n_primary"]) == (91, 91)
-    assert out["keys_only_in_the_shipped_tool"] == out["keys_only_in_the_primary"] == out["values_that_differ"] == []
+    out = EI.check_vignette_pool(p, ship)
+    assert out["equal"] is True and (out["n_vignette_pool"], out["n_primary"]) == (91, 91)
+    assert out["keys_only_in_the_vignette_pool"] == out["keys_only_in_the_primary"] == out["values_that_differ"] == []
     assert "WARNING" not in capsys.readouterr().out
     # a value that differs at the tool's rounding is recorded, not rounded away and not fatal
     S2 = S.copy()
     S2[3] += 1e-7
-    out = EI.check_shipped_pool(p, (S2, R, H, syn, yr))
+    out = EI.check_vignette_pool(p, (S2, R, H, syn, yr))
     assert out["equal"] is False and out["values_that_differ"] == [str(keys[3])]
-    # a tool still holding another pool (the first pass after a change of sample): extra and missing keys are named
-    out = EI.check_shipped_pool(p, (S[:-2], R[:-2], H[:-2], syn[:-2], yr[:-2]))
+    # a pool still holding another sample: extra and missing keys are named
+    out = EI.check_vignette_pool(p, (S[:-2], R[:-2], H[:-2], syn[:-2], yr[:-2]))
     assert out["equal"] is False and out["keys_only_in_the_primary"] == sorted(str(k) for k in keys[-2:])
     extra = (np.append(S, 0.1), np.append(R, 99.0), np.append(H, 0.3), np.append(syn, 9999), np.append(yr, 2020))
-    out = EI.check_shipped_pool(p, extra)
-    assert out["equal"] is False and out["keys_only_in_the_shipped_tool"] == ["9999_2020"]
+    out = EI.check_vignette_pool(p, extra)
+    assert out["equal"] is False and out["keys_only_in_the_vignette_pool"] == ["9999_2020"]
     text = capsys.readouterr().out
-    assert "WARNING" in text and "distortion_tool.html" in text and "rerun run_analysis.py" in text
+    assert "WARNING" in text and "loader step" in text
 
 
 def test_a_primary_refit_that_is_not_the_published_headline_stops_the_run():
@@ -814,3 +857,57 @@ def test_the_primary_backtest_and_the_influence_records_primary_row_agree_on_the
     for f in bt["honest"]["fits"]:
         ours = inf["fits"]["primary"]["fold_%d" % f["fold"]]
         assert (f["n_train"], f["n_held_out"]) == (ours["n_train"], ours["n_held_out"]), f["fold"]
+
+
+def _stored_influence_and_vignette_records():
+    paths = [os.path.join(HERE, "results", n) for n in ("check_exclusion_influence_results.json",
+                                                         "vignette_uncertainty_results.json")]
+    if not os.path.exists(paths[0]):
+        pytest.skip("results/check_exclusion_influence_results.json not present in this checkout")
+    out = []
+    for path in paths:
+        with io.open(path, encoding="utf-8") as fh:
+            out.append(json.load(fh))
+    return out
+
+
+def test_the_stored_primary_vignette_interval_is_vignette_uncertaintys_to_the_tolerance():
+    """After the regeneration: the primary's Vignette 1 centre and interval (a refit on the primary, the same bootstrap
+    stream) equal vignette_uncertainty's committed headline figures to EI.V1_CONTROL_TOL."""
+    inf, vu = _stored_influence_and_vignette_records()
+    v = inf["vignette_1"]["primary"]
+    ci = vu["vignette1"]["adjusted"]["var995"]
+    centre = vu["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
+    assert abs(v["centre_reserve_fraction"] - centre) <= EI.V1_CONTROL_TOL
+    assert abs(v["conditional_interval_95"][0] - ci["lo"]) <= EI.V1_CONTROL_TOL
+    assert abs(v["conditional_interval_95"][1] - ci["hi"]) <= EI.V1_CONTROL_TOL
+    c = inf["controls"]["primary_vignette1_vs_vignette_uncertainty"]
+    assert abs(c["centre_difference"]) <= EI.V1_CONTROL_TOL and all(abs(x) <= EI.V1_CONTROL_TOL for x in c["interval_difference"])
+
+
+def test_the_stored_record_says_the_vignette_pool_is_the_primary_and_the_headline_controls_hold():
+    """After the regeneration the pool the vignette steps use is the primary, so the control is True with nothing differing, and the primary's full refit is the published headline fit."""
+    inf, _vu = _stored_influence_and_vignette_records()
+    c = inf["controls"]
+    ship = c["primary_pool_equals_the_vignette_pool"]
+    assert ship["equal"] is True, ship["reading"]
+    assert ship["keys_only_in_the_vignette_pool"] == ship["keys_only_in_the_primary"] == ship["values_that_differ"] == []
+    assert c["primary_full_fit_vs_the_published_headline"]["consistent"] is True
+    assert c["primary_equals_model_exposure_results"]["figures_equal"] is True
+    assert c["fixed_bands_reproduced_by_the_base_quartiles"]
+
+
+def test_the_record_says_what_the_included_data_comparison_and_the_common_targets_are(run):
+    rec, fr = run["record"], run["frame"]
+    inc = rec["populations"]["included_data_643"]
+    assert "not the earlier 643-record sample" in inc["composition"] and "pre-census figures" in inc["composition"]
+    assert inc["census_corrected_records_at_census_figures"] == ["1609_2024", "3330_2017", "3330_2018"]
+    assert "composition" not in rec["populations"]["primary"]
+    ex = rec["common_target_comparison"]["targets"]["excludes"]
+    assert ex["rule_8_set_aside_rows"] == sorted(SET_ASIDE) and ex["n_syndicate_1991_targets"] == 4
+    assert "effect on the forecasts of other targets only" in ex["reading"] and "own misses are in no common target" in ex["reading"]
+    # and it is true of the targets: none is a set-aside row, none is Syndicate 1991's
+    ids = rec["common_target_comparison"]["targets"]["record_ids"]
+    assert not set(ids) & set(SET_ASIDE) and not [k for k in ids if k.startswith("1991_")]
+    doc = EI.__doc__
+    assert "OTHER targets only" in doc and "not the earlier 643-record sample" in doc.replace("NOT", "not")

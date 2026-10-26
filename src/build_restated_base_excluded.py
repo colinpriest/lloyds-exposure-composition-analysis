@@ -819,8 +819,13 @@ def reading(rid, key, e):
     return out
 
 
+#: the fields of a reading that carry its own words, in the order the quote takes them: the round-5 and round-8 readers'
+#: explanation (or search note), then the round-9 readers' reason and the text they quote from the filing
+QUOTE_FIELDS = ("explanation", "explanation_search", "note", "reason", "selection_event", "cells")
+
+
 def _quote_of(r):
-    for f in ("explanation", "explanation_search", "note"):
+    for f in QUOTE_FIELDS:
         v = r.get(f)
         if v:
             return v if isinstance(v, str) else json.dumps(v, ensure_ascii=False)

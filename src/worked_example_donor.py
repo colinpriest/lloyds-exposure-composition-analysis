@@ -24,6 +24,7 @@ from pathlib import Path
 import numpy as np
 from scipy import stats as _sps
 
+import donor_pool
 import transfer_operator
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -31,9 +32,9 @@ TARGET = (500.0, 0.17)          # Vignette 1: R_q, H_q
 
 
 def load_pool():
-    html = (SCRIPT_DIR / "distortion_tool.html").read_text(encoding="utf-8")
-    donors = json.loads(re.search(r"const EMBEDDED_DATA = (\{.*?\});\s*\n", html, re.S).group(1))["donors"]
-    return donors
+    """The donor pool, from model/exposure_results.json through donor_pool.py (not out of the shipped tool, which is
+    rewritten at the end of a pass)."""
+    return donor_pool.from_exposure_results(SCRIPT_DIR / "model" / "exposure_results.json")
 
 
 def load_params(mode=transfer_operator.HEADLINE):

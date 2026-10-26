@@ -29,7 +29,6 @@ passes.
 Writes paper_pack/fig_uncertainty_sources.{png,pdf} and make_uncertainty_figure_results.json.
 Usage:  python src/make_uncertainty_figure.py
 """
-import hashlib
 import io
 import json
 import sys
@@ -95,8 +94,12 @@ def load_sources(results_dir=RESULTS):
 
 
 def sha256_of(path):
+    """SHA-256 of a result record in reproduce.py's canonical form (the volatile keys, runtime_seconds among them,
+    removed): the hash --verify compares, so a second pass on the same inputs records the same one."""
+    sys.path.insert(0, str(SD))
+    import reproduce
     with open(str(path), "rb") as fh:
-        return hashlib.sha256(fh.read()).hexdigest()
+        return reproduce.canonical_json_sha256(fh.read())
 
 
 def reserve_size(src):

@@ -100,6 +100,15 @@ def load_fold_map(path=None):
     return {int(s): int(p) for s, p in d["position"].items()}
 
 
+def fold_map_sha256(path=None):
+    """SHA-256 of the frozen map's canonical JSON content (keys sorted, no whitespace), so the same map hashes the same
+    whatever the line endings it was checked out with. Records that use the map carry it."""
+    import hashlib
+    with io.open(str(path or FOLD_MAP), encoding="utf-8") as _fh:
+        d = json.load(_fh)
+    return hashlib.sha256(json.dumps(d, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
 def fold_assignment(syn, k=K, fold_map=None):
     """The fold of each observation: the frozen map's position of its syndicate, mod k, so that a whole syndicate's years
     are held out together and no syndicate moves when another leaves the sample. A syndicate that is not in the map is

@@ -30,6 +30,7 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt; impor
 
 import pyd_basis_rule
 import assumed_business
+import donor_pool
 import pool_quantile
 import transfer_operator
 
@@ -329,7 +330,7 @@ def hash_file_contents(paths):
 
 #: the modules of src/ this script imports: their code decides what a run computes, so the code hash covers them
 #: (the review of 2 October 2026, A-5); src/test_run_id_inputs.py holds the list to the script's imports
-IMPORTED_MODULES = (pyd_basis_rule, assumed_business, pool_quantile, transfer_operator)
+IMPORTED_MODULES = (pyd_basis_rule, assumed_business, pool_quantile, transfer_operator, donor_pool)
 
 
 def hash_script():
@@ -912,6 +913,14 @@ def _is_number(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
+def quote_text(quote):
+    """The words of a register entry's quote that are not its labels: the quote of a restated-base or set-aside entry is
+    "reader K2: <words> || reader L2: <words>", and a quote that is only the labels ("reader K2:  || reader L2: ") quotes
+    nothing. Returns the text left when the reader labels and the separators are removed, stripped."""
+    text = re.sub(r"\breader\s+[\w.-]+\s*:", " ", quote)
+    return text.replace("||", " ").strip()
+
+
 def _evidence_gaps(entry):
     """What a register entry lacks of the evidence the error-rate study recorded for it.
 
@@ -929,7 +938,7 @@ def _evidence_gaps(entry):
             or any(not isinstance(p, int) or isinstance(p, bool) or p < 1 for p in pages)):
         gaps.append("the pages read")
     quote = entry.get("quote")
-    if not isinstance(quote, str) or not quote.strip():
+    if not isinstance(quote, str) or not quote_text(quote):
         gaps.append("a quote")
     return gaps
 
@@ -9750,18 +9759,21 @@ def generate_distortion_tool(records, run_id):
 
     donors = []
     for r in pool:
+        # the donor fields every producer reads are built by donor_pool.donor_fields, the one definition of the pool (the
+        # vignette steps build their pool from model/exposure_results.json with the same function)
+        base = donor_pool.donor_fields(r, ritc_occ)
         donors.append({
-            "syndicate": r["syndicate"],
-            "year": r["year"],
-            "opening_reserves_gbp_m": round(r["opening_reserves_gbp_m"], 2),
-            "s_raw_a": round(r["s_raw_a"], 8),
-            "hhi": round(r.get("hhi", 0), 6),
+            "syndicate": base["syndicate"],
+            "year": base["year"],
+            "opening_reserves_gbp_m": base["opening_reserves_gbp_m"],
+            "s_raw_a": base["s_raw_a"],
+            "hhi": base["hhi"],
             "weights": [round(w, 6) for w in r["weights"]],
             "lob_severity": [round(s, 6) for s in r["lob_severity"]],
             "direction": r.get("direction"),
             "pyd_gbp_m": round(r.get("pyd_gbp_m", 0) or 0, 2),
             "data_quality_tag": r.get("data_quality_tag"),
-            "ritc": 1 if f"{r['syndicate']}_{r['year']}" in ritc_occ else 0,
+            "ritc": base["ritc"],
         })
 
     def _pooling(m):

@@ -281,3 +281,26 @@ def test_the_events_of_one_syndicate_are_not_independent_firms(fixture):
     band = out["versions"]["honest_plug_in"]["pool_rules"]["leave_out"]["own_quartiles"]["0.99"]["band_1"]
     assert band["exceedances"] > band["n_event_syndicates"] >= 1
     assert "repeated outcomes" in out["note"]
+
+
+# ----------------------------------------------------------------------------- the input record's recorded hash
+def test_the_recorded_hash_is_of_the_canonical_content_and_ignores_a_volatile_field(fixture, tmp_path, monkeypatch):
+    """runtime_seconds changes on every pass; a byte hash of the backtest record would differ between two passes on the same
+    inputs. The recorded hash is of the content with the volatile keys removed (reproduce.VOLATILE)."""
+    import json as _json
+    rec = copy.deepcopy(fixture["rec"])
+    rec["runtime_seconds"] = {"total": 100.0}
+    path = tmp_path / "check_operator_backtest_results.json"
+    path.write_text(_json.dumps(rec), encoding="utf-8")
+    monkeypatch.setattr(SB, "BACKTEST", path)
+    first = run(fixture)["inputs"]["backtest_record_sha256"]
+    rec["runtime_seconds"] = {"total": 987.6, "workers": 3}
+    path.write_text(_json.dumps(rec, indent=1) + "\n", encoding="utf-8")        # other bytes, same content
+    assert run(fixture)["inputs"]["backtest_record_sha256"] == first
+    rec["n"] = rec["n"] + 0                                                      # same content again
+    assert run(fixture)["inputs"]["backtest_record_sha256"] == first
+    # a change of content is a change of hash
+    rec["honest"]["fits"][0]["params"]["k"]["mean"] += 1e-9
+    path.write_text(_json.dumps(rec), encoding="utf-8")
+    assert run(fixture)["inputs"]["backtest_record_sha256"] != first
+    assert "canonical" in run(fixture)["inputs"]["backtest_record_sha256_is"]

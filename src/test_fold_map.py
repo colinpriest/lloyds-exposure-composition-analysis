@@ -140,3 +140,19 @@ def test_every_producer_that_cross_validates_by_syndicate_calls_fold_assignment(
 def test_the_backtest_and_the_cross_validations_share_one_helper():
     import check_operator_backtest as BT
     assert BT.fold_assignment is OV.fold_assignment
+
+
+def test_the_maps_content_hash_is_pinned_and_independent_of_line_endings(tmp_path):
+    """Records that use the map carry its hash; editing the map changes it, a CRLF checkout does not."""
+    assert OV.fold_map_sha256() == "edba98037d80db65622e150c46aa5c47b98a66264bab0c7d8d1bcf5e81b825dd"
+    with open(os.path.join(HERE, "data", "fold_map.json"), "rb") as fh:
+        raw = fh.read()
+    crlf = tmp_path / "fold_map_crlf.json"
+    crlf.write_bytes(raw.replace(b"\n", b"\r\n"))
+    assert OV.fold_map_sha256(crlf) == OV.fold_map_sha256()
+    d = json.loads(raw.decode("utf-8"))
+    first = sorted(d["position"])[0]
+    d["position"][first] += 1
+    edited = tmp_path / "fold_map_edited.json"
+    edited.write_text(json.dumps(d), encoding="utf-8")
+    assert OV.fold_map_sha256(edited) != OV.fold_map_sha256()

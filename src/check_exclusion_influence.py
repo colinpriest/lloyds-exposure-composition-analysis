@@ -39,6 +39,11 @@ shared by its rows and normalised over the rows, row mass w_s / sum_t(n_t w_t)) 
 replicate, at vignette_uncertainty.py's seed and B. The interval is conditional on the data, the model and the
 dependence treatment; it is not a total uncertainty and not a paired posterior comparison between populations.
 
+The common targets are the rows present in every population. They exclude the rule-8 set-aside rows (which are in the
+included-data comparison only) and every Syndicate 1991 target (which is in the primary and the comparison, not in the
+third population). So the without-1991 contrast measures Syndicate 1991's effect on the forecasts of OTHER targets only; its
+own misses are in no common target, and its removal from scoring is not part of the contrast.
+
 The common-target comparison: the targets present in every population, with each forecast origin keeping its own fit and
 donors. For each origin the smallest-band misses and mean pinball; for each pair of origins the PAIRED per-row
 differences (event indicator and pinball loss, new minus old), taken row by row BEFORE any weighting, then averaged under
@@ -65,6 +70,7 @@ import arviz as az
 import pymc as pm
 
 import check_cohort_scope as CS
+import oos_validation as OV
 import check_operator_backtest as BT
 import check_small_book_diagnosis as SB
 import refit_vignettes as RV
@@ -83,6 +89,8 @@ RULES = SB.RULES
 K_FOLDS = BT.K_HONEST
 FIXED_BAND_EDGES = SB.FIXED_BAND_EDGES
 EXCLUDED_SYNDICATE = 1991
+#: the three records the census corrected: in the included-data comparison they keep their census figures
+CENSUS_CORRECTED = ("1609_2024", "3330_2017", "3330_2018")
 POPULATIONS = ("primary", "included_data_643", "primary_without_1991")
 POPULATION_LABELS = {
     "primary": "the revised primary: the loader's working sample, without the census's rule-8 set-aside records",
@@ -102,6 +110,9 @@ V1_ALPHA = 0.995
 #: vignette_uncertainty.py's seed and B (its module reads them from sys.argv at import, so they are not imported: this
 #: script's own first argument is the worker count). src/test_exclusion_influence.py holds them equal to its record's.
 V1_SEED, V1_B = 20240704, 4000
+#: how closely the primary's Vignette 1 centre and interval ends must equal vignette_uncertainty.py's committed ones (reserve
+#: fraction): the same data, model, seed and stream, so equal to the sampler's reproducibility (src/test_exclusion_influence.py)
+V1_CONTROL_TOL = 1.0e-6
 DEFAULT_WORKERS = BT.DEFAULT_WORKERS
 GROUPS = ("all", "fixed_band_1")
 CI = (2.5, 97.5)
@@ -476,7 +487,12 @@ def fit_summary(f):
 
 def population_summary(name, p, edges):
     own = SB.own_edges(p["R"])
-    return {"label": POPULATION_LABELS[name], "n": int(len(p["S"])), "n_syndicates": int(len(set(p["syn"].tolist()))),
+    extra = ({"composition": ("the primary plus the rule-8 set-aside rows at their pre-census figures; the three records the "
+                              "census corrected (%s) are at their census figures, so this is not the earlier 643-record "
+                              "sample" % ", ".join(CENSUS_CORRECTED)),
+              "census_corrected_records_at_census_figures": list(CENSUS_CORRECTED)}
+             if name == "included_data_643" else {})
+    return {**extra, "label": POPULATION_LABELS[name], "n": int(len(p["S"])), "n_syndicates": int(len(set(p["syn"].tolist()))),
             "n_assumed_business": int(np.asarray(p["ritc"], bool).sum()),
             "n_syndicate_1991_records": int((p["syn"] == EXCLUDED_SYNDICATE).sum()),
             "fixed_band_counts": [int((SB.band_of(p["R"], edges) == j).sum()) for j in range(1, SB.N_BANDS + 1)],
@@ -488,7 +504,7 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
             stored_records=None, shipped=None, vignette_record=None, headline_check=False, b=V1_B, reps=BT.BB_REPS):
     """The record and the arrays stored beside it. `fitter(task)` stands in for converging_task (a test's, which must
     be picklable where workers > 1). `expected_base` (records, syndicates) is checked against the base; `stored_records`
-    (model/exposure_results.json's working sample), `shipped` (the shipped tool's pool) and `vignette_record` are
+    (model/exposure_results.json's working sample), `shipped` (the vignette steps' pool) and `vignette_record` are
     controls, each skipped where None."""
     t0 = time.time()
     n_base, n_syn = len(frame["S"]), len(set(frame["syn"].tolist()))
@@ -506,7 +522,7 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
         if not np.array_equal(p["fold"], base_fold):
             raise SystemExit("population %s's folds are not the base map restricted" % name)
     if shipped is not None:
-        controls["primary_pool_equals_the_shipped_tool"] = check_shipped_pool(pops["primary"], shipped)
+        controls["primary_pool_equals_the_vignette_pool"] = check_vignette_pool(pops["primary"], shipped)
 
     tasks = fit_tasks(pops)
     t_fit = time.time()
@@ -519,6 +535,13 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
     thr = {name: population_thresholds(pops[name], fits[name], cfg) for name in pops}
     backtest = {name: score_population(pops[name], thr[name], edges) for name in pops}
     common = common_target_comparison(pops, thr, edges, reps=reps)
+    n_1991 = int((frame["syn"] == EXCLUDED_SYNDICATE).sum())
+    common["targets"]["excludes"] = {
+        "rule_8_set_aside_rows": sorted(frame["set_aside"]), "n_syndicate_1991_targets": n_1991,
+        "reading": ("the common targets exclude the %d rule-8 set-aside rows (in the included-data comparison only) and "
+                    "all %d Syndicate %d targets (not in the third population), so the without-1991 contrast measures "
+                    "Syndicate %d's effect on the forecasts of other targets only; its own misses are in no common "
+                    "target" % (len(frame["set_aside"]), n_1991, EXCLUDED_SYNDICATE, EXCLUDED_SYNDICATE))}
     v1, v1_reps = {}, {}
     for name in pops:
         v1[name], v1_reps[name] = vignette1_block(pops[name], fits[name]["full"], cfg, target, b=b)
@@ -564,7 +587,11 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
                               "the map restricted to its own syndicates, so no fold is redealt" % n_syn),
                      "source_file": "data/fold_map.json",
                      "k": K_FOLDS, "syndicate_to_fold": {str(s): f for s, f in sorted(fmap.items())},
-                     "sha256": hashlib.sha256(json.dumps(sorted(fmap.items())).encode()).hexdigest()},
+                     "file_sha256": OV.fold_map_sha256(),
+                     "fold_digest_k10": hashlib.sha256(json.dumps(sorted(fmap.items())).encode()).hexdigest(),
+                     "fold_digest_k10_is": ("SHA-256 of this base's sorted (syndicate, fold) pairs at k = 10, the "
+                                            "restriction of the map to the base; file_sha256 is the map file's own "
+                                            "canonical content")},
         "fixed_bands": {"edges_gbp_m": [float(e) for e in edges],
                         "reading": ("the cutoffs of the earlier 643-record sample, held fixed; reproduced by the "
                                     "included-data base's own quartiles"), "rule": "np.searchsorted(edges, R, side='right') + 1"},
@@ -598,27 +625,26 @@ def compute(frame, cfg, target, fitter=None, workers=DEFAULT_WORKERS, edges=FIXE
     return record, arrays
 
 
-def check_shipped_pool(p, shipped):
-    """Whether the primary's donors at the shipped tool's precision are the shipped tool's pool, key for key and value
-    for value, RECORDED and not enforced: the tool is rebuilt by run_analysis.py at the end of a pass, so on the first pass
-    after a change of sample it still holds the earlier pool, and the Vignette 1 figures here do not read it (they are
-    built from each population's own records). The record says so, and the figures the paper prints from the tool and
-    from vignette_uncertainty.py are on the primary only when this is true."""
-    S, R, H, synd, year = shipped
+def check_vignette_pool(p, pool):
+    """Whether the primary's donors at the shipped tool's precision are the pool the vignette steps use (vignette_uncertainty
+    .load_pool: donor_pool.py from model/exposure_results.json), key for key and value for value, RECORDED and not
+    enforced. They are the same donors by construction; a difference means model/exposure_results.json is not the sample
+    this record was built from. The Vignette 1 figures here are built from each population's own records."""
+    S, R, H, synd, year = pool
     skeys = ["%s_%s" % (s, y) for s, y in zip(synd.tolist(), year.tolist())]
     mS, mR, mH, _syn, _yr, _ritc, mkeys = shipped_precision(p)
     theirs = {k: (float(s), float(r), float(h)) for k, s, r, h in zip(skeys, S, R, H)}
     mine = {k: (float(s), float(r), float(h)) for k, s, r, h in zip(mkeys.tolist(), mS, mR, mH)}
-    only_tool = sorted(set(theirs) - set(mine))
+    only_pool = sorted(set(theirs) - set(mine))
     only_primary = sorted(set(mine) - set(theirs))
     differ = sorted(k for k in set(theirs) & set(mine) if theirs[k] != mine[k])
-    equal = not (only_tool or only_primary or differ)
-    out = {"n_shipped": len(skeys), "n_primary": len(mkeys), "equal": bool(equal),
-           "keys_only_in_the_shipped_tool": only_tool, "keys_only_in_the_primary": only_primary,
+    equal = not (only_pool or only_primary or differ)
+    out = {"n_vignette_pool": len(skeys), "n_primary": len(mkeys), "equal": bool(equal),
+           "keys_only_in_the_vignette_pool": only_pool, "keys_only_in_the_primary": only_primary,
            "values_that_differ": differ,
-           "reading": ("the shipped tool's pool is the primary's, to the tool's rounding" if equal else
-                       "the shipped tool (distortion_tool.html) is not rebuilt on the primary: rerun run_analysis.py and "
-                       "the steps that read the tool before the paper quotes their Vignette 1 figures")}
+           "reading": ("the pool the vignette steps use is the primary's, to the shipped tool's rounding" if equal else
+                       "the pool the vignette steps use (model/exposure_results.json through donor_pool.py) is not this "
+                       "primary: rerun the loader step before the paper quotes their Vignette 1 figures")}
     if not equal:
         print("WARNING: %s" % out["reading"])
     return out

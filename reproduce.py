@@ -56,8 +56,10 @@ SRC = os.path.join(HERE, "src")
 REQUIRED = ("numpy", "scipy", "matplotlib", "openpyxl", "pymc", "arviz",
             "pytensor", "numba")
 SUPPORTED_PYTHON = "3.12.6"
+# The committed inputs a clean checkout must hold. distortion_tool.html is not one: run_analysis.py rewrites it at the end of
+# a pass, and no step reads it (the vignette steps build their donor pool from model/exposure_results.json with donor_pool.py).
 INPUTS = ("model/exposure_results.json", "pdf_extraction/ritc_scan.json",
-          "distortion_tool.html", "vignettes/vignette-2/target_transition.json")
+          "vignettes/vignette-2/target_transition.json")
 
 # (script, stage, rough minutes). The calibration must precede the checks: several read
 # model/dispersion_calibration_ritc.json as the published posterior to compare against.

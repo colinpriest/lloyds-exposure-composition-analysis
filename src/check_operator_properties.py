@@ -43,6 +43,7 @@ from pool_quantile import var_q
 from adopted_model import SD, REFERENCE_SIZE, RITC_SCAN
 from dispersion_mle import deritc_z, sigma
 import assumed_business
+import donor_pool
 import transfer_operator
 
 OUT = SD / "results" / "check_operator_properties_results.json"
@@ -56,16 +57,14 @@ def load_vignette_pool():
     sample; the count is recorded in the result as n).
 
     The sensitivity below is about the stresses the paper reports, and those are
-    computed on the donor pool in distortion_tool.html -- the same pool
-    vignette_uncertainty.py loads, so the pool is read from there. It is the
+    computed on the donor pool vignette_uncertainty.py loads (donor_pool.py, from
+    model/exposure_results.json), so the pool is read the same way. It is the
     calibration sample too: the same syndicate-years as adopted_model.load_sample
     (src/test_operator_pool.py holds the two key sets equal). An earlier calibration
     sample carried one syndicate-year the pool did not (2015/2014); that difference
     is gone (the review of 2 October 2026, A-11).
     """
-    html = (SD / "distortion_tool.html").read_text(encoding="utf-8")
-    m = re.search(r"const EMBEDDED_DATA = (\{.*?\});\s*\n", html, re.S)
-    donors = json.loads(m.group(1))["donors"]
+    donors = donor_pool.from_exposure_results(SD / "model" / "exposure_results.json")
     S = np.array([d["s_raw_a"] for d in donors], float)
     R = np.array([d["opening_reserves_gbp_m"] for d in donors], float)
     H = np.array([d["hhi"] for d in donors], float)
@@ -98,7 +97,7 @@ def properties(mode, S, R, H, syn, ritc, mp_fitted):
     mp = transfer_operator.params(mp_fitted, mode)
     res = {**transfer_operator.stamp(mode), "gamma_in_force": float(mp["gamma"]),
            "n": int(len(S)), "n_ritc": int(ritc.sum()), "target": list(TARGET),
-           "pool": ("the capital-eligible donors from distortion_tool.html, as "
+           "pool": ("the capital-eligible donors from model/exposure_results.json (donor_pool.py), as "
                     "used by the vignettes and vignette_uncertainty.py"),
            "evaluated_at": ("posterior-mean operator parameters and posterior-mean "
                             "syndicate intercepts; parameter uncertainty is NOT "

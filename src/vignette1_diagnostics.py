@@ -9,7 +9,7 @@ C5 TVaR99 and TVaR97.5 raw vs transferred. TVaR here is the manuscript's tail co
 C6 GPD/EVT cross-check across thresholds {q90,q92.5,q95} for raw / de-RITC / clean-only pools
 
 De-RITC operator at posterior mean; C2 intervals propagate posterior draws. Donor pool =
-distortion_tool.html embedded pool (n_donors in the result). Every block is computed under the
+the donor pool of donor_pool.py, from model/exposure_results.json (n_donors in the result). Every block is computed under the
 paper's headline size-only operator (the headline fit, gamma fixed at 0 in the likelihood, at its
 posterior mean and in every draw; transfer_operator.py), at the top level, and under the
 concentration overlay (the gamma-free fit), the labelled sensitivity, under `overlay_sensitivity`.

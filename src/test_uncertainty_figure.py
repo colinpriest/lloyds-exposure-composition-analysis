@@ -38,6 +38,8 @@ import make_uncertainty_figure as UF  # noqa: E402
 import paper_figure_style as PFS  # noqa: E402
 
 RESULTS = os.path.join(HERE, "results")
+VOLATILE = ("runtime_seconds", "analysis_timestamp", "retrieved_utc", "execution_timestamp_utc", "git_commit_or_hash",
+            "analysis_commit", "tree_dirty_src_model_results")
 ORDER = ["parameter_and_donor_weights", "measurement_definition", "influential_donors", "model_alternatives"]
 ROWS = {"parameter_and_donor_weights": ["headline"],
         "measurement_definition": ["construction_672", "depth_t_minus_3", "earned_basis", "older_years_bucket",
@@ -223,8 +225,18 @@ def test_every_source_file_is_declared_in_the_record(values):
     assert set(values["inputs"]) == set(UF.SOURCES)
     for k, v in values["inputs"].items():
         assert v["file"] == "results/" + UF.SOURCES[k]
+        # the canonical content: the file with the volatile keys removed and keys sorted (reproduce.py's own definition,
+        # retyped here from run_analysis's description so the test does not rest on the helper alone)
         with open(os.path.join(RESULTS, UF.SOURCES[k]), "rb") as fh:
-            assert v["sha256"] == hashlib.sha256(fh.read()).hexdigest()
+            obj = json.loads(fh.read().decode("utf-8"))
+
+        def strip(x):
+            if isinstance(x, dict):
+                return {a: strip(b) for a, b in x.items() if a not in VOLATILE}
+            return [strip(i) for i in x] if isinstance(x, list) else x
+
+        canon = json.dumps(strip(obj), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        assert v["sha256"] == hashlib.sha256(canon).hexdigest()
 
 
 def test_the_stamp_is_the_headline_operators(values):
@@ -316,3 +328,28 @@ def test_the_declared_outputs_are_the_manifests():
         "paper_pack/fig_uncertainty_sources.pdf", "paper_pack/fig_uncertainty_sources.png",
         "results/make_uncertainty_figure_results.json")
     assert UF.OUT_PNG.name == "fig_uncertainty_sources.png" and UF.OUT_PDF.name == "fig_uncertainty_sources.pdf"
+
+
+def test_the_recorded_input_hashes_ignore_a_volatile_field_and_see_a_change_of_content(tmp_path, monkeypatch):
+    """The sources carry runtime_seconds, which differs on every pass: the hashes are of the canonical content."""
+    import shutil
+    for fname in UF.SOURCES.values():
+        shutil.copy(os.path.join(RESULTS, fname), tmp_path / fname)
+    monkeypatch.setattr(UF, "RESULTS", tmp_path)
+    first = UF.compute(UF.load_sources(tmp_path))["inputs"]
+    path = tmp_path / UF.SOURCES["backtest"]
+    d = json.loads(path.read_text(encoding="utf-8"))
+    d["runtime_seconds"] = {"total": 12345.6, "fold_fits_wall": 1.0, "workers": 7}
+    path.write_text(json.dumps(d, indent=2) + "\n", encoding="utf-8")
+    assert UF.compute(UF.load_sources(tmp_path))["inputs"] == first
+    d["n"] = d["n"] + 1
+    path.write_text(json.dumps(d), encoding="utf-8")
+    second = UF.compute(UF.load_sources(tmp_path))["inputs"]
+    assert second["backtest"]["sha256"] != first["backtest"]["sha256"]
+    assert all(second[k] == first[k] for k in first if k != "backtest")
+
+
+def test_the_volatile_keys_this_test_strips_are_reproduces():
+    sys.path.insert(0, HERE)
+    import reproduce
+    assert tuple(reproduce.VOLATILE) == VOLATILE

@@ -1223,10 +1223,49 @@ NOT_SAMPLE_LOADERS = {"run_analysis.py", "record_tests.py", "skip_budget.py", "b
                       "build_working_sample.py", "check_small_book_diagnosis.py", "check_exclusion_influence.py"}
 
 
+#: what makes a loader select on the figure the mask blanks: s_raw_a present, the working-sample predicate that requires it
+#: (check_cohort_scope.in_working_sample), the donor predicate donor_pool.is_donor (which requires it, and which
+#: src/test_donor_pool.py holds equal to the working sample), or the tag list that includes the rule-8 tag
+SELECTION = re.compile(r"s_raw_a[\"']\]?\)? is not None|in_working_sample\(|is_donor\(|SOURCE_HISTORY_TAG|SOURCE_HISTORY_SET_ASIDE")
+
+
+def unfiltered_loaders(src):
+    """The names of the functions (and "<module>" for code outside any function) of a source that read
+    d["observations"] without a selection in their OWN body: found per loader, so a selection in another function of the
+    module does not cover an unfiltered one."""
+    import ast
+    tree = ast.parse(src)
+    reads = re.compile(r"\[[\"']observations[\"']\]")
+    bad = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            seg = ast.get_source_segment(src, node) or ""
+            if reads.search(seg) and not SELECTION.search(seg):
+                bad.append(node.name)
+    top = "\n".join(ast.get_source_segment(src, n) or "" for n in tree.body
+                    if not isinstance(n, (ast.FunctionDef, ast.ClassDef)))
+    if reads.search(top) and not SELECTION.search(top):
+        bad.append("<module>")
+    return bad
+
+
+def test_the_loader_gate_is_per_loader_not_per_module():
+    ok = 'def load():\n    return [o for o in d["observations"] if o.get("s_raw_a") is not None]\n'
+    assert unfiltered_loaders(ok) == []
+    # a selection elsewhere in the module does not cover an unfiltered loader
+    two = ok + 'def other():\n    return [o for o in d["observations"]]\n'
+    assert unfiltered_loaders(two) == ["other"]
+    assert unfiltered_loaders('x = [o for o in d["observations"]]\n') == ["<module>"]
+    tagged = 'def load():\n    return [o for o in d["observations"] if o["tag"] != SOURCE_HISTORY_TAG]\n'
+    assert unfiltered_loaders(tagged) == []
+    assert unfiltered_loaders('def load():\n    return [o for o in other_name(d["observations"])]\n') == ["load"]
+
+
 def test_every_producer_selects_its_sample_on_the_figure_the_mask_blanks():
     """A gate that generalises (not a list of the producers a reviewer named): every source module that opens
-    exposure_results.json and is not one of the ledgers or documents selects its observations on s_raw_a being present, the
-    field the loader blanks for every record it sets aside, or on the data-quality tag list that includes the rule-8 tag."""
+    exposure_results.json and is not one of the ledgers or documents selects its observations, in the function that reads
+    them, on s_raw_a being present (the field the loader blanks for every record it sets aside), on the working-sample
+    predicate that requires it, or on the data-quality tag list that includes the rule-8 tag."""
     import glob
     bad = []
     for path in sorted(glob.glob(os.path.join(HERE, "src", "*.py"))):
@@ -1239,9 +1278,11 @@ def test_every_producer_selects_its_sample_on_the_figure_the_mask_blanks():
                  and ("open(" in ln or "RESULTS =" in ln or '/ "model"' in ln)]
         if not opens:
             continue
-        if not re.search(r"s_raw_a[\"']\]?\)? is not None", src):
+        for loader in unfiltered_loaders(src):
+            bad.append("%s:%s" % (name, loader))
+        if not re.search(r"s_raw_a[\"']\]?\)? is not None|in_working_sample\(|donor_pool\.from_exposure_results\(", src):
             bad.append(name)
-    assert bad == [], "producers that do not select on s_raw_a: %s" % bad
+    assert bad == [], "producers whose loader does not select on s_raw_a: %s" % bad
     with io.open(os.path.join(HERE, "src", "check_missingness_sensitivity.py"), encoding="utf-8") as fh:
         assert '"%s"' % ra.SOURCE_HISTORY_TAG in fh.read()
     with io.open(os.path.join(HERE, "src", "missingness_check.py"), encoding="utf-8") as fh:
@@ -1458,3 +1499,37 @@ def test_the_least_certain_list_is_derived_from_the_register_and_follows_the_cen
     assert "1%-of-R" in reg["history_restated"]["1254_2023"]["facts"] or "over 1%" in reg["history_restated"]["1254_2023"]["facts"]
     assert "over rule 6's 1% of R" in reg["history_restated"]["1686_2021"]["facts"]
     assert SS.order_key("1110_2020") < SS.order_key("1254_2023")
+
+
+# ---------------------------------------------------------------------------------- the quote is a quote, not labels
+def test_the_quote_falls_back_from_the_round_5_fields_to_the_round_9_readers_own_words():
+    import build_restated_base_excluded as B
+    assert B._quote_of({"explanation": "E", "reason": "R"}) == "E"
+    assert B._quote_of({"note": "N", "reason": "R"}) == "N"
+    assert B._quote_of({"reason": "R", "cells": "C"}) == "R"
+    assert B._quote_of({"selection_event": "S", "cells": "C"}) == "S"
+    assert B._quote_of({"cells": "C"}) == "C"
+    assert B._quote_of({"verdict": "set_aside"}) == ""
+    assert B.QUOTE_FIELDS[-3:] == ("reason", "selection_event", "cells")
+
+
+def test_a_quote_that_is_only_reader_labels_is_no_quote():
+    assert ra.quote_text("reader K2:  || reader L2: ") == ""
+    assert ra.quote_text("reader K2: ||  reader L2.b:   ") == ""
+    assert ra.quote_text("reader K2: the gross table falls || reader L2: ") == "the gross table falls"
+    entry = {"readings": ["a", "b"], "pages": [3]}
+    assert ra._evidence_gaps({**entry, "quote": "reader K2:  || reader L2: "}) == ["a quote"]
+    assert ra._evidence_gaps({**entry, "quote": ""}) == ["a quote"]
+    assert ra._evidence_gaps({**entry, "quote": "reader K2: the 2011 cells || reader L2: x"}) == []
+
+
+def test_every_committed_entry_of_the_register_quotes_words():
+    with io.open(os.path.join(HERE, "data", "restated_base_excluded.json"), encoding="utf-8") as fh:
+        d = json.load(fh)
+    n = 0
+    for bucket in ("excluded", "history_restated", "takeon_unmeasurable", "source_history_set_aside"):
+        for key, e in d[bucket].items():
+            if "quote" in e:
+                n += 1
+                assert len(ra.quote_text(e["quote"])) >= 40, (bucket, key, e["quote"][:60])
+    assert n >= 40

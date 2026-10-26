@@ -50,7 +50,8 @@ sensitivities, with the parameters held at their posterior mean, and are labelle
 such in the output; mixing posterior draws into them would make them neither.
 
 Sources (all build artifacts of the main pipeline):
-  - donor pool (market capital-analysis donors)          <- distortion_tool.html
+  - donor pool (market capital-analysis donors)          <- model/exposure_results.json, through donor_pool.py
+                                                           (which also builds the shipped tool's donor fields)
   - posterior draws of (k, gamma, sd_undiv, sd_div, nu_clean, nu_ritc) <- dispersion_posterior_draws_ritc.npz
     (the headline, gamma = 0 in the likelihood) and, for the overlay, the gamma-free fit's draws
     (transfer_operator.SOURCE)
@@ -73,6 +74,7 @@ import json, re, sys
 from pathlib import Path
 import numpy as np
 import assumed_business
+import donor_pool
 import pool_quantile
 import transfer_operator
 
@@ -134,9 +136,10 @@ QUANTILE_METHOD = pool_quantile.NUMPY_METHOD   # the inverse CDF, point and repl
 
 # ----------------------------------------------------------------------------- loading
 def load_pool():
-    html = (SCRIPT_DIR / "distortion_tool.html").read_text(encoding="utf-8")
-    m = re.search(r"const EMBEDDED_DATA = (\{.*?\});\s*\n", html, re.S)
-    donors = json.loads(m.group(1))["donors"]
+    """The donor pool (S, R, H, synd, year) from the loader's own output, model/exposure_results.json, by donor_pool (the
+    function that also builds the shipped tool's donor fields), at the tool's precision. It is not read out of the
+    shipped tool, which run_analysis.py rewrites at the end of a pass: a pass would then use the previous pass's pool."""
+    donors = donor_pool.from_exposure_results(SCRIPT_DIR / "model" / "exposure_results.json")
     S = np.array([d["s_raw_a"] for d in donors], float)
     R = np.array([d["opening_reserves_gbp_m"] for d in donors], float)
     H = np.array([d["hhi"] for d in donors], float)

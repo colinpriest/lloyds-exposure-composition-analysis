@@ -31,7 +31,6 @@ opening reserves, in order) or if its size quartiles are not the primary's own.
 Writes check_small_book_diagnosis_results.json.
 Usage:  python src/check_small_book_diagnosis.py
 """
-import hashlib
 import io
 import json
 import sys
@@ -114,9 +113,14 @@ def grouping_table(flags_by_level, bands, syn, yr, levels=LEVELS):
     return {level_key(a): band_table(flags_by_level[a], bands, syn, yr, a) for a in levels}
 
 
-def sha256_file(path):
+def canonical_sha256(path):
+    """SHA-256 of a JSON record in reproduce.py's canonical form (the keys reproduce.VOLATILE names removed, keys sorted):
+    the hash --verify compares. A record's runtime_seconds changes on every pass, so a byte hash would differ between two
+    passes on the same inputs; the content hash does not."""
+    sys.path.insert(0, str(SD))
+    import reproduce
     with open(str(path), "rb") as fh:
-        return hashlib.sha256(fh.read()).hexdigest()
+        return reproduce.canonical_json_sha256(fh.read())
 
 
 # ------------------------------------------------------------------------ the record against the loader's sample
@@ -251,13 +255,17 @@ def compute(rec, S, R, H, yr, syn, ritc, cfg, fixed_edges=FIXED_BAND_EDGES, leve
         cross["this_primary"]["own_quartile_1"] == CODEX_642_PROTOTYPE["own_quartile_1"]
         and cross["this_primary"]["fixed_band_1"] == CODEX_642_PROTOTYPE["fixed_band_1"])
 
-    ex = json.load(io.open(str(EXPOSURE), encoding="utf-8")) if EXPOSURE.exists() else {}
+    ex = {}
+    if EXPOSURE.exists():
+        with io.open(str(EXPOSURE), encoding="utf-8") as fh:
+            ex = json.load(fh)
     return {
         **stamp(HEADLINE),
         "question": ("Where does the operator's held-out adverse tail fail by size of book, on the primary: at 99 and "
                      "99.5%, by the primary's own quartiles and by the fixed bands of the earlier 643-record sample?"),
         "inputs": {"backtest_record": "results/check_operator_backtest_results.json",
-                   "backtest_record_sha256": sha256_file(BACKTEST) if BACKTEST.exists() else None,
+                   "backtest_record_sha256": canonical_sha256(BACKTEST) if BACKTEST.exists() else None,
+                   "backtest_record_sha256_is": "the canonical JSON content (volatile fields such as runtime_seconds removed)",
                    "loader_run_id_without_calibration": ex.get("analysis_run_id_without_calibration"),
                    "n_working_sample": int(len(S)), "n_syndicates": int(len(set(syn.tolist()))),
                    "n_assumed_business": int(np.asarray(ritc, bool).sum()),
