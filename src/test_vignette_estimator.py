@@ -422,15 +422,19 @@ class TestVignette2ScaleDirectionAndConditionalQuantileSign:
     def test_the_magnitude_range_matches_the_manuscript(self, sign):
         """The headline's range moves with the gamma = 0 fit; the manuscript restates it."""
         r = sign["scale_ratio_new_over_old"]
-        # Section 5.2 quotes this range. Read from the manuscript rather than typed:
+        # The paper quotes this range (Section 5.2 until the redesign of 26 October 2026 moved Vignette 2's
+        # arithmetic to the supplement). Read from the paper's record, main text and supplement, rather than typed:
         # a lock retyped at each refit checks nothing (round 55).
         if not os.path.exists(MANUSCRIPT):
             pytest.skip("no manuscript at %s: set %s to the paper repository, or this "
                         "cross-repository check does not run" % (MANUSCRIPT, PAPER_ENV))
-        with io.open(MANUSCRIPT, encoding="utf-8") as _fh:
-            tex = _fh.read()
+        tex = ""
+        for path in (MANUSCRIPT, os.path.join(os.path.dirname(MANUSCRIPT), "supplement.tex")):
+            if os.path.exists(path):
+                with io.open(path, encoding="utf-8") as _fh:
+                    tex += _fh.read() + "\n"
         m = re.search(r"the scale ratio runs from \$([0-9.]+)\$ to \$([0-9.]+)\$", " ".join(tex.split()))
-        assert m, "Section 5.2 states the scale-ratio range in the gated form"
+        assert m, "the paper (main text or supplement) states the scale-ratio range in the gated form"
         assert abs(float(m.group(1)) - r["min"]) < 0.005, (m.group(1), r["min"])
         assert abs(float(m.group(2)) - r["max"]) < 0.005, (m.group(2), r["max"])
         assert r["min"] > 1.0, "every draw raises the scale"
