@@ -64,9 +64,9 @@ scale shift — a structural simplification worth about 0.2% of the vignette str
 not an established zero; see
 [docs/current-results.md](docs/current-results.md)).
 
-Headline fit (n=643 gross-basis syndicate-years, 10 reporting years, single-currency GBP
-data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.60`, `gamma = 0` (fixed in the likelihood),
-`sigma_undiv ≈ 0.031`, `nu_clean ≈ 4.07`, `nu_ritc ≈ 6.26`, `P(nu_ritc < nu_clean) = 0.31`.
+Headline fit (n=632 gross-basis syndicate-years, 10 reporting years, single-currency GBP
+data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gamma = 0` (fixed in the likelihood),
+`sigma_undiv ≈ 0.029`, `nu_clean ≈ 3.96`, `nu_ritc ≈ 5.39`, `P(nu_ritc < nu_clean) = 0.40`.
 
 ## The transfer operator
 
@@ -263,10 +263,10 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(2917 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
+(3246 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest record described above was made on
-24 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
+26 October 2026 on a source tree with no uncommitted change; the distinction between re-runnable and
 demonstrated above remains deliberate.
 
 Four test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
