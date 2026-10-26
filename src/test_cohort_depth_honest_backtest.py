@@ -21,6 +21,7 @@ Run:  python -m pytest src/test_cohort_depth_honest_backtest.py -q
 import io
 import json
 import os
+import re
 
 import numpy as np
 import pytest
@@ -563,37 +564,22 @@ def test_the_committed_record_holds_the_two_depths_on_the_same_kept_records_and_
             assert pq[(syn, yr)] == r["primary_size_quartile"], r
 
 
-def test_the_docstring_states_the_left_out_composition_the_record_holds():
-    """The numbers in the script's docstring are the record's (so the prose cannot drift from the table)."""
-    with io.open(os.path.join(HERE, "results", "check_cohort_depth_sensitivity_results.json"), encoding="utf-8") as fh:
-        rec = json.load(fh)
-    lo = rec["left_out_by_primary_size_quartile"]
+def test_the_docstring_states_the_left_out_composition_by_pointing_to_the_record_not_by_copying_it():
+    """The script's docstring carries no count of the records left out (a count there drifts from the record at every
+    regeneration, and the cohort-depth repair of 26 October 2026 moved them): it points to the record's tables and states
+    the mechanisms. The record, once written, is internally consistent (the tests above)."""
     doc = " ".join(D.__doc__.split())
-    n = [lo["size_quartile_%d" % j]["n_left_out"] for j in (1, 2, 3, 4)]
-    np_ = lo["n_primary_in_quartile"]
-    assert "%d of its %d smallest books" % (n[0], np_[0]) in doc
-    assert "%d of %d in quartile 2, %d of %d in quartile 3 and %d of %d in quartile 4" % (
-        n[1], np_[1], n[2], np_[2], n[3], np_[3]) in doc
-    by = [lo["size_quartile_%d" % j]["by_reason"] for j in (1, 2, 3, 4)]
-    no_fig = [b["no_figure_at_t_minus_3"] for b in by]
-    no_grid = [b["figure_not_reproduced_from_a_stored_grid"] for b in by]
-    assert "%d have no figure on u <= t-3 (%d, %d, %d and %d in quartiles 1 to 4)" % (sum(no_fig), *no_fig) in doc
-    assert "%d have a figure no stored grid reproduces (%d, %d, %d and %d)" % (sum(no_grid), *no_grid) in doc
-    assert "%d records left out are not a random %d" % (rec["n_left_out"], rec["n_left_out"]) in doc
-    assert ("The primary's backtest is on %d records and this one on the %d kept" % (rec["n_primary"], rec["n_kept"])) in doc
-    assert "side-by-side table on the %d is" % rec["n_kept"] in doc
-    pe, ke = lo["edges_gbp_m"], rec["honest_backtest_t_minus_3"]["size_quartiles"]["edges_gbp_m"]
-    assert "the primary's %d/%d/%d against %d/%d/%d" % tuple(int(round(e)) for e in (*pe, *ke)) in doc
-    q1 = SS.load_json(D.BACKTEST_RECORD)["per_target"]["by_size_quartile"]["honest_plug_in"]["leave_out"]["0.99"]["size_quartile_1"]
-    by1991 = dict((int(s), n) for s, n in q1["exceedances_by_syndicate"])[1991]
-    assert "syndicate 1991 carries six of the primary's eight exceedances at 99%" in doc
-    assert (by1991, q1["exceedances"]) == (6, 8)
-    n_syn = len(lo["by_syndicate"])
-    words = {40: "Forty", 50: "Fifty"}
-    ones = ["", "-one", "-two", "-three", "-four", "-five", "-six", "-seven", "-eight", "-nine"]
-    assert "%s syndicates have a record left out" % (words[n_syn // 10 * 10] + ones[n_syn % 10]) in doc
-    assert "Syndicate 382 has six" in doc and lo["by_syndicate"]["382"]["n_left_out"] == 6
-    assert "OUTSIDE a test of that cell by construction" in doc and "not a test of the primary's quartile 1" in doc
+    for stale in (r"\d+ of its \d+ smallest books", r"\d+ of \d+ in quartile 2", r"\d+ have no figure on u <= t-3",
+                  r"\d+ have a figure no stored grid reproduces", r"\d+ records left out are not a random",
+                  r"Syndicate 382 has \w+", r"\w+-?\w* syndicates have a record left out", r"against 198/458/913",
+                  r"on the 581 kept", r"carries six of the primary's eight exceedances"):
+        assert not re.search(stale, doc), stale
+    for needle in ("left_out_by_primary_size_quartile in the record", "partition_before_repair",
+                   "OUTSIDE a test of that cell by construction", "not a test of the primary's quartile 1",
+                   "An empty set is NEVER zero", "cohort-depth repair (26 October 2026", "derived 2012 cell".replace("derived", "DERIVED")):
+        assert needle in doc, needle
+    assert "1274/2016 uses the register's DERIVED 2012 cell at both depths" in doc
+    assert "3334/2018 and 3500/2018 enter as single-cohort t-3 figures" in doc
 
 
 def test_the_committed_record_holds_the_honest_backtest_on_the_kept_records():

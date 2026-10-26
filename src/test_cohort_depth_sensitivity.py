@@ -175,6 +175,171 @@ def test_the_partition_covers_every_primary_record_once_on_the_real_corpus():
         assert abs(r["figure_t_minus_2_gbp_m"] - pr[r["record"]]["pyd_gbp_m"]) <= max(D.TOL_ABS, D.TOL_REL * abs(pr[r["record"]]["pyd_gbp_m"]))
 
 
+# ------------------------------------------------------------------ the cohort-depth repair (26 October 2026) ------
+#: the records whose primary figure is a register figure no stored grid computes: each carries its per-cohort cells
+REGISTER_CELL_RECORDS = ["1274_2016", "1274_2022", "1609_2023", "1991_2018", "2232_2020", "318_2024", "3330_2017",
+                         "3330_2018", "3334_2018", "3500_2018", "382_2015", "382_2016", "382_2017", "382_2018",
+                         "382_2019", "382_2020", "4242_2022", "4444_2022", "4472_2022", "4472_2023"]
+
+
+@pytest.fixture(scope="module")
+def cells():
+    return D.load_cell_registers()
+
+
+def _obs_from_register(key, cells):
+    """An observation whose primary figure is the register's figure at the loader's rate (fixed input: the committed
+    exposure_results.json is the previous loader pass)."""
+    c = cells[key]
+    gbp = bm.fx_gbp(key, c["figure_m"])[1]
+    syn, year = key.split("_")
+    return {"syndicate": int(syn), "year": int(year), "pyd_gbp_m": gbp, "s_raw_a": gbp / 100.0,
+            "opening_reserves_gbp_m": 100.0, "sign_flipped": False}
+
+
+def test_the_register_cells_serve_every_record_no_stored_grid_reproduces(fns, cells):
+    """Each of the 20 records whose figure is a register figure: no stored grid of its own gives it, the register's
+    cells do (their u <= t-2 sum equals the figure at the loader's rate), and the u <= t-3 figure is the cells' sum over the
+    older cohorts, read from the register, in the report's currency at the loader's rate. 1609/2023 has no cohort older
+    than t-2 (inception 2021): no figure at t-3, never 0."""
+    fn2, fn3 = fns
+    assert sorted(cells) == REGISTER_CELL_RECORDS
+    import run_analysis as ra
+    for key in REGISTER_CELL_RECORDS:
+        o = _obs_from_register(key, cells)
+        data = _data(key)
+        assert D.reproduce(key, o["pyd_gbp_m"], data, fn2) is None, "%s: a stored grid reproduces it" % key
+        row, left = D.judge(o, data, fn2, fn3, None, cells)
+        cc = cells[key]["cohort_cells"]
+        if key == "1609_2023":
+            assert row is None and left[0] == "no_figure_at_t_minus_3" and "never 0" in left[1]
+            assert ra.cohort_cells_figure_m(cc, 3) is None
+            continue
+        assert left is None, (key, left)
+        assert row["grid"] == "register:%s" % cells[key]["source"] and row["cells"]["source"] == cells[key]["source"]
+        fig3 = ra.cohort_cells_figure_m(cc, 3)
+        assert row["figure_t_minus_3_gbp_m"] == pytest.approx(bm.fx_gbp(key, fig3)[1]) and fig3 is not None
+        assert row["figure_t_minus_2_gbp_m"] == pytest.approx(o["pyd_gbp_m"], abs=D.TOL_ABS)
+        assert row["severity_t_minus_3"] == pytest.approx(row["figure_t_minus_3_gbp_m"] / 100.0)
+        # without the register's cells the same record is left out as before the repair
+        assert D.judge(o, data, fn2, fn3, None, None)[1][0] == "figure_not_reproduced_from_a_stored_grid"
+
+
+def test_a_cell_the_register_does_not_support_leaves_the_record_out_as_not_reproduced(fns, cells):
+    """Mutation check: breaking one cell (or a term) of the register makes the u <= t-2 sum differ from the primary's figure,
+    and the record is left out; the depth script trusts no cell it cannot tie to the primary."""
+    import run_analysis as ra
+    fn2, fn3 = fns
+    key = "4472_2022"
+    o = _obs_from_register(key, cells)
+    bad = copy.deepcopy(cells)
+    bad[key]["cohort_cells"]["terms"][3]["term"] += 1.0
+    bad[key]["cohort_cells"]["terms"][3]["latest"] = "1,101.3"
+    row, left = D.judge(o, _data(key), fn2, fn3, None, bad)
+    assert row is None and left[0] == "figure_not_reproduced_from_a_stored_grid"
+    assert "not the primary's" in left[1]
+    # the loader's own check of the same register refuses it before the depth script is reached
+    entry = {"figure_m": cells[key]["figure_m"], "cohort_cells": bad[key]["cohort_cells"]}
+    assert any("sum to figure_m" in g or "equal to its cells" in g for g in ra.cohort_cells_gaps(entry))
+    # a register with no cohort_cells for a record no grid reproduces leaves it out too
+    assert D.judge(o, _data(key), fn2, fn3, None, {})[1][0] == "figure_not_reproduced_from_a_stored_grid"
+
+
+def test_an_empty_set_of_years_is_no_figure_at_t_minus_3_and_never_zero(fns):
+    """5678/2016: its 2012 and 2013 columns print nothing (the syndicate began in 2014), so u <= t-3 is an empty sum that
+    the estimator turned into 0.0 ('all-zero column, PYD=0'). The guard makes it no figure; a printed zero (1796/2024's
+    14 -> 14) is an observation and stays."""
+    fn2, fn3 = fns
+    data = _data("5678_2016")
+    tri = data["models"][bm.canonical_key(data)]["_rag_triangle"]
+    assert D.at_depth("5678_2016", tri, fn3, guard=False)[0] == 0.0, "the estimator's empty sum is a zero"
+    fig, why = D.at_depth("5678_2016", tri, fn3)
+    assert fig is None and "empty sum is not a zero" in why
+    assert D.at_depth("5678_2016", tri, fn2)[0] is not None, "u <= t-2 has the 2014 column's step"
+    gbp = D.at_depth("5678_2016", tri, fn2)[0]
+    o = {"syndicate": 5678, "year": 2016, "pyd_gbp_m": gbp, "s_raw_a": gbp / 87.761, "opening_reserves_gbp_m": 87.761}
+    row, left = D.judge(o, data, fn2, fn3, None, {})
+    assert row is None and left[0] == "no_figure_at_t_minus_3"
+    row0, left0 = D.judge(o, data, fn2, fn3, None, None)
+    assert left0 is None and row0["figure_t_minus_3_gbp_m"] == 0.0, "before the repair the zero was kept"
+    d96 = _data("1796_2024")
+    tri96 = d96["models"][bm.canonical_key(d96)]["_rag_triangle"]
+    assert D.at_depth("1796_2024", tri96, fn3)[0] == 0.0, "a printed 14 -> 14 is a real zero and stays"
+    # the details of the guard: a step line is a printed step, an all-zero line is not
+    assert D.printed_steps("  2012: all-zero column (no claims activity), PYD=0") == []
+    assert len(D.printed_steps("  2013: 14.0 (3yr later) - 14.0 (2yr later) = +0.000")) == 1
+
+
+def test_1274_2016_takes_its_derived_cell_at_both_depths_and_reports_the_range(fns, cells):
+    fn2, fn3 = fns
+    key = "1274_2016"
+    o = _obs_from_register(key, cells)
+    row, left = D.judge(o, _data(key), fn2, fn3, None, cells)
+    c = row["cells"]
+    assert left is None and c["derived"] is True and c["cohorts_at_t_minus_2"] == 7 and c["cohorts_at_t_minus_3"] == 6
+    assert c["figure_t_minus_2_report_m"] == pytest.approx(22.6943) and c["figure_t_minus_3_report_m"] == pytest.approx(12.0693)
+    assert c["range_t_minus_2_report_m"] == [21.806, 25.659]
+    assert c["range_t_minus_3_report_m"] == [11.181, 15.034], "11.18m to 15.03m USD at t-3"
+    assert row["figure_t_minus_3_gbp_m"] == pytest.approx(bm.fx_gbp(key, 12.0693)[1], abs=1e-4)
+    # the derived 2012 term is u = t-4: it is in both depths' sums
+    terms = {t["u"]: t for t in cells[key]["cohort_cells"]["terms"]}
+    assert terms[2012]["derived"] is True and terms[2012]["term"] == 9254.3
+
+
+def test_3334_2018_and_3500_2018_are_single_cohort_at_t_minus_3_on_the_tables_own_base(fns, cells):
+    fn2, fn3 = fns
+    r1, l1 = D.judge(_obs_from_register("3334_2018", cells), _data("3334_2018"), fn2, fn3, None, cells)
+    r2, l2 = D.judge(_obs_from_register("3500_2018", cells), _data("3500_2018"), fn2, fn3, None, cells)
+    assert l1 is None and l2 is None
+    assert r1["cells"]["cohorts_at_t_minus_3"] == 1 and r1["cells"]["single_cohort_at_t_minus_3"] is True
+    assert r1["cells"]["figure_t_minus_3_report_m"] == pytest.approx(-0.014)
+    assert r2["cells"]["cohorts_at_t_minus_3"] == 1 and r2["cells"]["single_cohort_at_t_minus_3"] is True
+    assert r2["figure_t_minus_3_gbp_m"] == pytest.approx(r2["figure_t_minus_2_gbp_m"]), "t-3 equals t-2 for 3500/2018"
+
+
+@pytest.fixture(scope="module")
+def loader_primary():
+    """The primary on fixed inputs: the loader's own 632 working-sample records (no committed output is read)."""
+    import run_analysis as ra
+    records = ra.load_and_classify(ra.MATURE_COHORT_OUTCOME)[0]
+    return [r for r in records if r["s_raw_a"] is not None and r["opening_reserves_gbp_m"] and r["hhi"] is not None
+            and r["pyd_basis"] == "gross"]
+
+
+def test_the_partition_before_and_after_the_repair_on_the_loaders_primary(loader_primary):
+    """On the loader's 632 records: before the repair 570 are kept and 62 left out (20 whose figure no stored grid computes,
+    42 with no figure at t-3); after it 588 are kept and 44 left out, all for want of a figure at t-3 (the 42 young books
+    still, 1609/2023 whose first cohort is t-2, and 5678/2016 whose empty sum was a zero). 1609/2024 reproduces from its
+    stored grid as labelled and its u <= t-3 figure is -11.123m USD."""
+    with io.open(os.path.join(HERE, "data", "mature_cohort_figures.json"), encoding="utf-8") as fh:
+        register = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
+    rows0, left0 = D.partition(loader_primary, register, cells=None)
+    rows, left = D.partition(loader_primary, register)
+    assert len(loader_primary) == 632 == len(rows0) + len(left0) == len(rows) + len(left)
+    assert (len(rows0), len(left0)) == (570, 62) and (len(rows), len(left)) == (588, 44)
+    assert sum(1 for x in left0 if x["reason"] == "figure_not_reproduced_from_a_stored_grid") == 20
+    assert {x["reason"] for x in left} == {"no_figure_at_t_minus_3"}
+    keys = {r["record"]: r for r in rows}
+    out = {x["record"] for x in left}
+    assert {"1609_2023", "5678_2016"} <= out and set(REGISTER_CELL_RECORDS) - {"1609_2023"} <= set(keys)
+    assert sum(1 for r in rows if r["grid"].startswith("register:")) == 19
+    assert keys["1609_2024"]["grid"].endswith(":_rag_triangle")
+    import run_analysis as ra
+    assert keys["1609_2024"]["figure_t_minus_3_gbp_m"] == pytest.approx(-11.123 / ra.FX_RATES[2024]["usd_per_gbp"], abs=1e-6)
+    # the records that moved are exactly the repaired ones, plus 5678/2016 leaving
+    moved = sorted(set(keys) - {r["record"] for r in rows0})
+    assert moved == sorted(set(REGISTER_CELL_RECORDS) - {"1609_2023"}) and {r["record"] for r in rows0} - set(keys) == {"5678_2016"}
+    rep = D.repair_report(rows, left, rows0, left0)
+    assert sorted(x["record"] for x in rep) == sorted(set(REGISTER_CELL_RECORDS) | {"5678_2016"})
+    by = {x["record"]: x for x in rep}
+    assert by["5678_2016"]["before"] == "kept" and by["5678_2016"]["after"] == "no_figure_at_t_minus_3"
+    assert by["1609_2023"]["before"] == "figure_not_reproduced_from_a_stored_grid" and by["1609_2023"]["after"] == "no_figure_at_t_minus_3"
+    assert by["1274_2022"]["after"] == "kept" and by["1274_2022"]["source"].startswith("register:")
+    summ = D.partition_summary(rows0, left0)
+    assert summ["n_kept"] == 570 and summ["n_left_out"] == 62 and len(summ["left_out"]) == 62
+    assert summ["left_out_by_reason"]["figure_not_reproduced_from_a_stored_grid"] == 20 
+
+
 # ------------------------------------------------------------------ the sample and the cheap backtest ------
 def test_the_sample_at_a_depth_takes_that_depths_severity_in_the_primarys_order():
     recs = [{"syndicate": 1, "year": 2016, "s_raw_a": 0.1}, {"syndicate": 2, "year": 2016, "s_raw_a": 0.2},

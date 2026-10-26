@@ -11,12 +11,27 @@ from, by the extraction's own estimator at the pinned commit (build_mature_cohor
 extraction checkout, LLOYDS_EXTRACTION_REPO), first at its own cutoff, u <= t-2 (PYD_EXCLUDED_RECENT_UW_YEARS = 2), and
 the recomputation must reproduce the primary's figure (model/exposure_results.json, in GBP at the loader's rate) to
 the rounding of the extraction's table (an absolute 0.0015m or 0.05% of the figure) or the record is left out. The same
-estimator with the constant at 3 gives the figure on u <= t-3. A record is left out, and counted by reason, where:
+estimator with the constant at 3 gives the figure on u <= t-3.
 
-  * the primary figure is not reproduced from any stored grid of the record (a figure two readings of the filing
-    confirmed, whose printed table the extraction did not store);
+The cohort-depth repair (26 October 2026, a decision of the Claude analysis session): a primary figure that is a REGISTER
+figure no stored grid computes (a corrected or confirmed table: transposed, net, one column off, incremental, a restated
+base, a misprint, or no grid at all) carries the per-cohort cells it is the sum of (cohort_cells, in
+data/mature_cohort_figures.json and data/pyd_confirmed_figures.json; every cell read twice, round9/depth/audit.md and
+second_reading.md, and checked by run_analysis.cohort_cells_gaps). Where no stored grid reproduces the figure, the cells'
+u <= t-2 sum must equal the primary's to the same tolerance, and the u <= t-3 figure is their sum over the older cohorts, in
+the report's currency at the loader's rate. 1274/2016 uses the register's DERIVED 2012 cell at both depths and reports the
+range the other defensible factors give at each (21.8m to 25.7m at t-2, 11.18m to 15.03m at t-3, USD); 3334/2018 and
+3500/2018 enter as single-cohort t-3 figures on the table's own base. An empty set is NEVER zero: a register with no cohort
+up to t-3 (1609/2023, whose first cohort is t-2) and a stored grid whose u <= t-3 columns print no cell at all (5678/2016: the
+estimator's 'all-zero column' sum, an empty set returned as 0.0; at_depth's guard, printed_steps) both give no figure at
+t-3. A printed zero (a step from 14 to 14) is an observation and stays. partition(cells=None) is the partition before the
+repair and the record keeps it (partition_before_repair) beside the repairs (every record whose place changed). A record is
+left out, and counted by reason, where:
+
+  * the primary figure is not reproduced from any stored grid of the record or from the register's cohort_cells;
   * the loader sign-flipped the figure (the severity's sign was reversed against the model's direction);
-  * the estimator returns no figure on u <= t-3 (the grid has no underwriting year up to t-3 with a usable step);
+  * there is no figure on u <= t-3 (the grid or the register's cells have no underwriting year up to t-3 with a usable
+    step, or none that prints a cell);
   * the primary's severity is not the figure over the opening reserves (a check of the arithmetic, not a measure).
 
 The adopted model is refitted twice on the records that remain, with check_cohort_scope.fit (the headline's block,
@@ -68,18 +83,16 @@ exceedances, the targets that exceed at both depths or at one, and every target 
 comparison that isolates the depth.
 
 The comparison with the primary's own backtest (honest_backtest_t_minus_3.against_the_primarys_backtest) is NOT
-like for like. The primary's backtest is on 643 records and this one on the 581 kept, so they differ in sample, and so in
-the quartile edges (the primary's 173/425/837 against 198/458/913): "quartile 1" is a different set of books in each. The
-62 records left out are not a random 62. By the PRIMARY's size quartile they are 37 of its 161 smallest books (23%), 9 of
-160 in quartile 2, 11 of 161 in quartile 3 and 5 of 161 in quartile 4
-(left_out_by_primary_size_quartile in the record). By reason: 43 have no figure on u <= t-3 (32, 2, 8 and 1 in quartiles
-1 to 4) and 19 have a figure no stored grid reproduces (5, 7, 3 and 4). A record left out for having no figure on
-u <= t-3 is a young book whose only mature cell is u = t-2; it is OUTSIDE a test of that cell by construction, so the
-u <= t-3 backtest cannot say anything about the very books whose u = t-2 cell is in question. Syndicate 1991 has two
-records left out, 1991/2015 (no figure at t-3) and 1991/2018 (no stored grid), both in the primary's quartile 1, where
-syndicate 1991 carries six of the primary's eight exceedances at 99%. Syndicate 382 has six (2015 to 2020, no stored grid). Fifty-one
-syndicates have a record left out. The t-3 backtest is therefore not a test of the primary's quartile 1 finding; the
-side-by-side table on the 581 is.
+like for like. The primary's backtest is on every primary record and this one only on the kept records, so they differ in
+sample, and so in the quartile edges (both sets of edges are in the record): "quartile 1" is a different set of books in each.
+The records left out are not a random subset. Their counts by the PRIMARY's size quartile, by reason, and by syndicate are
+in left_out_by_primary_size_quartile in the record, and the counts before the repair are in partition_before_repair. After
+the repair every record left out has no figure on u <= t-3. A record left out for having no figure on u <= t-3 is a young
+book whose only mature cell is u = t-2 (or an older book whose filing prints no older cohort); it is OUTSIDE a test of that
+cell by construction, so the u <= t-3 backtest cannot say anything about the very books whose u = t-2 cell is in question.
+Syndicate 1991's 1991/2015 is such a book (inception 2013 = t-2); 1991/2018 now enters from its register cells, so syndicate
+1991's u = t-2 dominance is in the like-for-like table. The t-3 backtest is therefore not a test of the primary's quartile 1
+finding; the side-by-side table on the kept records is.
 
 Writes check_cohort_depth_sensitivity_results.json.
 Usage:  python src/check_cohort_depth_sensitivity.py [workers]
@@ -87,6 +100,7 @@ Usage:  python src/check_cohort_depth_sensitivity.py [workers]
 import io
 import json
 import os
+import re
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
@@ -123,6 +137,12 @@ TARGET_ACCEPT_FIRST, TARGET_ACCEPT_RETRY = 0.98, 0.995
 #: the reasons a record is left out, in the order they are decided
 REASONS = ("sign_flipped_by_the_loader", "figure_not_reproduced_from_a_stored_grid", "no_figure_at_t_minus_3",
            "severity_is_not_the_figure_over_the_opening_reserves")
+#: the two registers that carry a primary figure no stored grid computes, each entry with its per-cohort cells
+#: (cohort_cells, the cohort-depth repair of 26 October 2026)
+CELL_REGISTERS = ("data/mature_cohort_figures.json", "data/pyd_confirmed_figures.json")
+#: a line of the estimator's details that is a printed step (year, latest cell, previous cell, signed difference); an
+#: "all-zero column (no claims activity), PYD=0" line is a column with no printed cell at all
+STEP_LINE = re.compile(r"^\s+\d{4}: .+ = [+-]\d")
 
 
 # ----------------------------------------------------------------------------- the estimator at another depth
@@ -171,28 +191,114 @@ def reproduce(key, primary_gbp, data, fn, register=None):
     return None
 
 
-def at_depth(key, grid, fn):
-    """The grid's figure on u <= t-lag in GBP under `fn`, or (None, the estimator's reason)."""
+def printed_steps(details):
+    """The details lines that are a printed step. A figure with none is an EMPTY SUM, not a zero: every column in it is an
+    estimator 'all-zero column' (the grid prints no cell for it), so the set of years up to the cutoff has no observation
+    (5678/2016 at t-3, whose 2012 and 2013 columns print nothing: the syndicate began in 2014)."""
+    return [ln for ln in str(details).splitlines() if STEP_LINE.match(ln)]
+
+
+def at_depth(key, grid, fn, guard=True):
+    """The grid's figure on u <= t-lag in GBP under `fn`, or (None, the reason). With `guard` a figure none of whose years
+    has a printed step (printed_steps) is no figure: an empty u <= t-3 set is 'no figure at t-3', never 0. A printed zero
+    (a step from 14 to 14) is an observation and stays."""
     figure, details = bm.compute(fn, grid, int(key.split("_")[1]))
     if figure is None:
         return None, str(details)
+    if guard and not printed_steps(details):
+        return None, ("no printed step on the years up to the cutoff (every column is an all-zero column): an empty "
+                      "sum is not a zero")
     return bm.fx_gbp(key, figure)[1], None
 
 
-def judge(o, data, fn2, fn3, register=None):
+def load_cell_registers():
+    """{key: {"source", "cohort_cells", "figure_m", "correction"}} for every entry of the two registers that carries
+    cohort_cells."""
+    out = {}
+    for rel in CELL_REGISTERS:
+        with io.open(str(SD / rel), encoding="utf-8") as fh:
+            reg = json.load(fh)
+        for k, e in reg.items():
+            if not k.startswith("_") and isinstance(e, dict) and isinstance(e.get("cohort_cells"), dict):
+                if k in out:
+                    raise SystemExit("%s: cohort_cells in both %s and %s" % (k, out[k]["source"], rel))
+                out[k] = {"source": rel, "cohort_cells": e["cohort_cells"], "figure_m": e.get("figure_m"),
+                          "correction": e.get("correction")}
+    return out
+
+
+def from_cells(key, o, cells):
+    """(part, None) for a record whose primary figure is a register figure, from its cohort_cells: the u <= t-2 sum, in
+    GBP at the loader's rate, must equal the primary's to the tolerance (else the record stays out as not reproduced); the
+    u <= t-3 sum is the figure at t-3, or no figure when no term is that old (1609/2023). (None, (reason, detail)) when
+    the register's cells cannot serve."""
+    import run_analysis as ra
+    c = cells.get(key)
+    if c is None:
+        return None, (REASONS[1], "no stored grid of the record gives %.6fm on u <= t-2 and its register has no "
+                      "cohort_cells" % o["pyd_gbp_m"])
+    cc = c["cohort_cells"]
+    fig2 = ra.cohort_cells_figure_m(cc, PRIMARY_LAG)
+    if fig2 is None:
+        return None, (REASONS[1], "the register's cohort_cells hold no term up to t-2")
+    gbp2 = bm.fx_gbp(key, fig2)[1]
+    tol = max(TOL_ABS, TOL_REL * abs(o["pyd_gbp_m"]))
+    if abs(gbp2 - o["pyd_gbp_m"]) > tol:
+        return None, (REASONS[1], "the register's cohort_cells give %.6fm on u <= t-2, not the primary's %.6fm"
+                      % (gbp2, o["pyd_gbp_m"]))
+    fig3 = ra.cohort_cells_figure_m(cc, SENSITIVITY_LAG)
+    n3 = len(ra.cohort_cells_cutoff_terms(cc, SENSITIVITY_LAG))
+    if fig3 is None:
+        return None, (REASONS[2], "no cohort up to t-3 has a cell in the register's cohort_cells (%s): there is no figure "
+                      "at t-3, and it is never 0" % c["source"])
+    part = {"grid": "register:%s" % c["source"], "figure_t_minus_2_gbp_m": gbp2,
+            "figure_t_minus_3_gbp_m": bm.fx_gbp(key, fig3)[1],
+            "cells": {"source": c["source"], "report_currency": cc["currency"], "unit": cc["unit"],
+                      "table_kind": cc["table_kind"],
+                      "cohorts_at_t_minus_2": len(ra.cohort_cells_cutoff_terms(cc, PRIMARY_LAG)),
+                      "cohorts_at_t_minus_3": n3, "single_cohort_at_t_minus_3": n3 == 1,
+                      "figure_t_minus_2_report_m": fig2, "figure_t_minus_3_report_m": fig3}}
+    corr = c.get("correction") or {}
+    rng = corr.get("range_other_factors_m")
+    if corr.get("derived_figure_m") is not None and rng:
+        # a derived figure (1274/2016) is reported with the range the other defensible factors give at each depth: the
+        # range at t-2 less the terms that drop out at t-3
+        dropped = fig2 - fig3
+        part["cells"]["derived"] = True
+        part["cells"]["range_t_minus_2_report_m"] = list(rng)
+        part["cells"]["range_t_minus_3_report_m"] = [round(rng[0] - dropped, 3), round(rng[1] - dropped, 3)]
+    return part, None
+
+
+def judge(o, data, fn2, fn3, register=None, cells=None):
     """(row, None) for a record that stays in the sensitivity, or (None, (reason, detail)) for one that is left out.
 
-    row: the record's figure at each depth and its severities (the primary's and the depth-3 one)."""
+    row: the record's figure at each depth and its severities (the primary's and the depth-3 one).
+
+    `cells` (load_cell_registers) is the cohort-depth repair of 26 October 2026: a record whose primary figure no stored
+    grid computes (a register figure) takes its figures at both depths from the register's per-cohort cells, and a stored
+    grid's figure on an empty set of years is no figure (at_depth's guard). With `cells` None the judgement is the one
+    before the repair (a stored grid or nothing, no guard): partition(cells=None) is the partition_before_repair."""
     key = CS.key_of(o)
     if o.get("sign_flipped"):
         return None, (REASONS[0], "the loader reversed the figure's sign against the model's direction")
+    opening = o["opening_reserves_gbp_m"]
     rep = reproduce(key, o["pyd_gbp_m"], data, fn2, register)
     if rep is None:
-        return None, (REASONS[1], "no stored grid of the record gives %.6fm on u <= t-2" % o["pyd_gbp_m"])
-    fig3, why = at_depth(key, rep["grid"], fn3)
+        if cells is None:
+            return None, (REASONS[1], "no stored grid of the record gives %.6fm on u <= t-2" % o["pyd_gbp_m"])
+        part, left = from_cells(key, o, cells)
+        if left is not None:
+            return None, left
+        if abs(o["s_raw_a"] - o["pyd_gbp_m"] / opening) > SEVERITY_TOL:
+            return None, (REASONS[3], "severity %r against %r" % (o["s_raw_a"], o["pyd_gbp_m"] / opening))
+        fig3 = part["figure_t_minus_3_gbp_m"]
+        return {"record": key, "grid": part["grid"], "opening_reserves_gbp_m": opening,
+                "figure_t_minus_2_gbp_m": part["figure_t_minus_2_gbp_m"], "figure_t_minus_3_gbp_m": fig3,
+                "severity_t_minus_2": o["s_raw_a"], "severity_t_minus_3": fig3 / opening, "cells": part["cells"]}, None
+    fig3, why = at_depth(key, rep["grid"], fn3, guard=cells is not None)
     if fig3 is None:
         return None, (REASONS[2], why)
-    opening = o["opening_reserves_gbp_m"]
     if abs(o["s_raw_a"] - o["pyd_gbp_m"] / opening) > SEVERITY_TOL:
         return None, (REASONS[3], "severity %r against %r" % (o["s_raw_a"], o["pyd_gbp_m"] / opening))
     return {"record": key, "grid": "%s:%s" % (rep["model"], rep["field"]), "opening_reserves_gbp_m": opening,
@@ -205,12 +311,16 @@ def load_record(key):
         return json.load(fh)
 
 
-def partition(recs, register=None, load=load_record):
-    """The primary records split into those that stay (rows, in the primary's order) and those left out, with reasons."""
+def partition(recs, register=None, load=load_record, cells="committed"):
+    """The primary records split into those that stay (rows, in the primary's order) and those left out, with reasons.
+    `cells` is the cohort-depth repair's register cells (load_cell_registers; "committed" reads the committed registers);
+    None gives the partition before the repair (stored grids only, no empty-sum guard)."""
     fn2, fn3 = lag_estimator(PRIMARY_LAG), lag_estimator(SENSITIVITY_LAG)
+    if isinstance(cells, str):
+        cells = load_cell_registers()
     rows, out = [], []
     for o in recs:
-        row, left = judge(o, load(CS.key_of(o)), fn2, fn3, register)
+        row, left = judge(o, load(CS.key_of(o)), fn2, fn3, register, cells)
         if row is not None:
             rows.append(row)
         else:
@@ -231,6 +341,36 @@ def sample_at(recs, rows, depth):
             c = dict(o)
             c["s_raw_a"] = by_key[k]["severity_" + depth]
             out.append(c)
+    return out
+
+
+def partition_summary(rows, left):
+    """A partition as the record keeps it: the counts, the reasons and every left-out record with its reason."""
+    return {"n_kept": len(rows), "n_left_out": len(left),
+            "left_out_by_reason": {r: sum(1 for x in left if x["reason"] == r) for r in REASONS},
+            "left_out": [{"record": x["record"], "reason": x["reason"], "detail": x["detail"]} for x in left]}
+
+
+def repair_report(rows, left, rows0, left0):
+    """Every record whose place changed with the cohort-depth repair: where it stood before (kept, or the reason it was
+    left out), where it stands now, and for a record the register's cells now serve the source and the cells' check against
+    the primary. A record the repair moves out (5678/2016: an empty sum was a zero) is listed too."""
+    now = {r["record"]: ("kept", r) for r in rows}
+    now.update({x["record"]: (x["reason"], x) for x in left})
+    before = {r["record"]: ("kept", r) for r in rows0}
+    before.update({x["record"]: (x["reason"], x) for x in left0})
+    out = []
+    for k in sorted(before, key=lambda k: tuple(int(p) for p in k.split("_"))):
+        (b, bx), (a, ax) = before[k], now[k]
+        if b == a and (b != "kept" or bx["grid"] == ax["grid"]):
+            continue
+        row = {"record": k, "before": b, "after": a}
+        if a == "kept":
+            row.update({"source": ax["grid"], "figure_t_minus_2_gbp_m": ax["figure_t_minus_2_gbp_m"],
+                        "figure_t_minus_3_gbp_m": ax["figure_t_minus_3_gbp_m"], "cells": ax.get("cells")})
+        else:
+            row["detail"] = ax["detail"]
+        out.append(row)
     return out
 
 
@@ -602,6 +742,7 @@ def compute(workers=BT.DEFAULT_WORKERS, fits=None):
     with io.open(str(SD / "data" / "mature_cohort_figures.json"), encoding="utf-8") as fh:
         register = {k: v for k, v in json.load(fh).items() if not k.startswith("_")}
     rows, left = partition(recs, register)
+    rows0, left0 = partition(recs, register, cells=None)
     if not rows:
         raise SystemExit("no primary record is reproduced and has a figure on u <= t-3")
     by_reason = {r: sum(1 for x in left if x["reason"] == r) for r in REASONS}
@@ -645,6 +786,8 @@ def compute(workers=BT.DEFAULT_WORKERS, fits=None):
         "n_primary": int(len(recs)), "n_kept": int(len(rows)), "n_left_out": int(len(left)),
         "left_out_by_reason": by_reason,
         "left_out": left,
+        "partition_before_repair": partition_summary(rows0, left0),
+        "repairs": repair_report(rows, left, rows0, left0),
         "left_out_by_primary_size_quartile": left_out_by_primary_size_quartile(recs, left),
         "grids_used": {g: sum(1 for r in rows if r["grid"] == g) for g in sorted({r["grid"] for r in rows})},
         "records": rows,
