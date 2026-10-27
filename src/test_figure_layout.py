@@ -135,7 +135,20 @@ def test_the_title_names_the_headline_operator():
     """The headline pool is computed from the regenerated (gamma = 0) fit."""
     raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
     _fig, ax, _note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
-    assert "size-only operator, $\\gamma=0$" in ax.get_title()
+    assert "size-only transfer, $\\gamma=0$" in ax.get_title()
+
+
+def test_the_survivor_speaks_the_papers_vocabulary():
+    """The rewrite of 27 October 2026: the worked target is named by its size (read from the targets, GBP 500m), not as
+    'Vignette 1', and S is the measured movement, not a 'PYD ratio'."""
+    import vignette_uncertainty as VU
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    _fig, ax, _note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
+    title, xlabel = ax.get_title(), ax.get_xaxis().get_label().get_text()
+    assert title.startswith("£%.0fm target: adverse tail" % VU.load_targets()[0][0]), title
+    assert xlabel == "Measured movement $S$ (adverse side)", xlabel
+    for t in (title, xlabel, ax.get_ylabel()):
+        assert "Vignette" not in t and "PYD" not in t, t
 
 
 def _toy():

@@ -4,6 +4,8 @@
   "replicate": "S_rep = exp(s_t + beta_RITC 1[RITC]) s(R) T_nu, s(R) = sqrt(sd_undiv^2 + sd_div^2 (R/500)^{2(k-1)}), nu = nu_clean or nu_RITC, each at the draw's value",
   "year_shock": "integrated out: s_t ~ N(0, tau_s) drawn once per reporting year and posterior draw, shared by that year's records; tau_s at its recorded posterior mean (the calibration saves neither tau_s draws nor the fitted year shocks, so the check is not conditional on them)",
   "tau_s_used": 0.137,
+  "tau_s_rule": "fixed at its recorded posterior mean, 0.137 (model/dispersion_calibration_ritc.json, params.tau_s.mean): its draws are not saved, so its uncertainty is not propagated",
+  "band_definition": "the 5th to 95th percentile, across the posterior draws, of each vigintile's replicated median |S|; the line is the 50th",
   "draws": "model/dispersion_posterior_draws_ritc.npz",
   "n_draws": 6000,
   "seed": 20261027,

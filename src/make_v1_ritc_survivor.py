@@ -170,7 +170,7 @@ def place_callout(fig, ax, label, obstacles, candidates=CALLOUT_CANDIDATES):
                      "markers and legend; add one to CALLOUT_CANDIDATES")
 
 
-def build_figure(raw, transferred, sqrt_r, mode, printed=None):
+def build_figure(raw, transferred, sqrt_r, mode, printed=None, target_gbp_m=None):
     """The figure, with the annotation placed clear of everything plotted; returns (fig, ax, annotation, obstacles).
 
     `printed` holds the three VaR99.5 figures the annotation prints ({"raw", "transferred", "sqrt"}); main() passes the
@@ -205,14 +205,18 @@ def build_figure(raw, transferred, sqrt_r, mode, printed=None):
         ax.text(ax.get_xlim()[1], 1 - a, f" {txt}", va="center", ha="left", fontsize=PFS.SMALL_PT,
                 color="#6c757d")
 
-    ax.set_xlabel("Signed PYD ratio $S$ (adverse side)")
+    # the paper's vocabulary (the rewrite of 27 October 2026): S is the measured movement, and the worked target is
+    # named by its size, not as "Vignette 1"
+    ax.set_xlabel("Measured movement $S$ (adverse side)")
     ax.set_ylabel("Exceedance probability  $P(S > x)$")
     # two lines: the figure and its operator. The title ran to four lines with the RITC step's reading and the
     # markers' key (the final review of 14 October 2026, P30); the key is in the legend, the annotation gives the
     # step's two figures, and the reading belongs to the caption
-    op = ("size-only operator, $\\gamma=0$" if mode == transfer_operator.SIZE_ONLY
+    op = ("size-only transfer, $\\gamma=0$" if mode == transfer_operator.SIZE_ONLY
           else "concentration overlay, fitted $\\gamma$")
-    ax.set_title("Vignette 1 adverse tail\n(%s)" % op)
+    if target_gbp_m is None:
+        target_gbp_m = float(load_targets()[0][0])
+    ax.set_title("£%.0fm target: adverse tail\n(%s)" % (target_gbp_m, op))
     # below the axes (27 October 2026): inside them, upper right, it left no place for the callout's three lines
     legend = ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, frameon=False, handlelength=2.6,
                        columnspacing=1.2)

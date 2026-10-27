@@ -256,7 +256,12 @@ def size_ppc(S, R, yr, ritc, cal, draws_path=HEADLINE_DRAWS, seed=PPC_SEED, band
             "year_shock": "integrated out: s_t ~ N(0, tau_s) drawn once per reporting year and posterior draw, shared by "
                           "that year's records; tau_s at its recorded posterior mean (the calibration saves neither "
                           "tau_s draws nor the fitted year shocks, so the check is not conditional on them)",
-            "tau_s_used": tau, "draws": str(Path(draws_path).relative_to(SD)).replace("\\", "/")
+            "tau_s_used": tau,
+            "tau_s_rule": "fixed at its recorded posterior mean, %.3f (model/dispersion_calibration_ritc.json, "
+                          "params.tau_s.mean): its draws are not saved, so its uncertainty is not propagated" % tau,
+            "band_definition": "the %gth to %gth percentile, across the posterior draws, of each vigintile's "
+                               "replicated median |S|; the line is the 50th" % (100 * band[0], 100 * band[1]),
+            "draws": str(Path(draws_path).relative_to(SD)).replace("\\", "/")
             if Path(draws_path).is_relative_to(SD) else str(draws_path),
             "n_draws": int(nd), "seed": int(seed), "band_percentiles": [100 * band[0], 100 * band[1]],
             "n": int(len(S)), "n_ritc": int(ritc.sum()), "bins": rows,
@@ -326,7 +331,7 @@ def size_figure(S, R, H, cal, yr, ritc, ppc=None):
     n_below = int((aS < lo).sum())
     if n_below:      # a legend entry with no symbol: the count of the points under the axis (|S| = 0 among them)
         ax.plot([], [], " ", label="%d below %g not shown" % (n_below, lo))
-    ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("Severity $|S|$ (absolute PYD ratio)")
+    ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("Measured movement $|S|$ (absolute)")
     # the title describes the axes and the fitted law, not the floor: the paper holds the floor to be a structural
     # specification, not a measured feature of these points (the review of 2 October 2026, P-27)
     ax.set_title("Size$-$dispersion: vigintile medians of $|S|$,\nobserved and posterior-predictive ($k=%.2f$)"

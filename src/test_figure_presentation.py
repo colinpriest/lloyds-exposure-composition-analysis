@@ -234,6 +234,30 @@ def test_figure_2_plots_the_recorded_check_like_for_like(figures, inputs):
         assert r["band_lo"] < r["ppc_median_abs_S"] < r["band_hi"]
         assert r["observed_outside_band"] == (not r["band_lo"] <= r["observed_median_abs_S"] <= r["band_hi"])
     assert rec["n_bins_outside_band"] == sum(r["observed_outside_band"] for r in rec["bins"])
+    # the record says how the year shock's spread and the band are set (the figure does not)
+    assert rec["tau_s_used"] == cal["params"]["tau_s"]["mean"] and rec["band_percentiles"] == [5.0, 95.0]
+    assert ("posterior mean, %.3f" % cal["params"]["tau_s"]["mean"]) in rec["tau_s_rule"]
+    assert rec["band_definition"].startswith("the 5th to 95th percentile")
+
+
+#: the paper's vocabulary (the rewrite of 27 October 2026): S is "the measured movement" and the worked target is named
+#: by its size. The supplement's correlation profile (systemic_ppc.py) is outside this check: its axis reads "Within-pair
+#: PYD correlation", and its producer runs refits, so it is relabelled only with a recorded pass
+OLD_VOCABULARY = ("PYD", "Vignette", "Severity")
+
+
+@pytest.mark.parametrize("name", sorted(set(PFS.PRINTED_FRACTION) - {"systemic_correlation_profile"}))
+def test_the_figures_speak_the_papers_vocabulary(figures, name):
+    fig, axes = figures[name]
+    texts = _titles(fig, axes) + _legend_texts(axes) + [a.get_xlabel() for a in axes] + [a.get_ylabel() for a in axes]
+    assert texts
+    bad = [t for t in texts for w in OLD_VOCABULARY if w in t]
+    assert bad == [], (name, bad)
+
+
+def test_figure_2_names_the_measured_movement(figures):
+    ax = figures["fig_size_dispersion"][1][0]
+    assert ax.get_ylabel() == "Measured movement $|S|$ (absolute)", ax.get_ylabel()
 
 
 def _toy_draws(tmp_path, n=400, **over):
