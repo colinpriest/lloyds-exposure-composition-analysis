@@ -16,10 +16,12 @@ no combined interval, and the sources do not share a population, a model or an e
   model_alternatives           the concentration overlay (the gamma-free fit, exploratory), square-root scaling with no
                                floor, and the raw pool with no transfer (check_operator_backtest's vignette figures).
 
-A dot is the row's centre. A solid bar is a credible interval (the headline's estimator); a dashed bar is the
-conditional resampling interval of a refit whose own record holds no posterior interval. Both are conditional on the
-row's data, its model and the dependence treatment. A row without a bar has no interval in its record. A value beyond
-the axis is marked at the axis edge with its figures, beside its own row label. The vertical line is the headline centre.
+Every row's marker is its centre (CENTRE_DEFINITION). A solid bar with a filled circle is a credible interval (the
+headline's estimator); a dashed bar with an open circle is the conditional resampling interval of a refit whose own
+record holds no posterior interval. Both are conditional on the row's data, its model and the dependence treatment. A
+diamond with no bar is a centre whose record holds no interval. The key's handles are long enough to show the dashes
+(the edit review of 27 October 2026, item 26). A value beyond the axis is marked at the axis edge with its figures,
+beside its own row label. The vertical line is the headline centre.
 
 Before anything is drawn the headline centre read from each file is checked equal (vignette_uncertainty, the gamma = 0
 vignette record, the backtest's vignette figures, and each refit's recorded primary centre); the overlay's centre is
@@ -39,6 +41,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt                                     # noqa: E402
 from matplotlib.lines import Line2D                                 # noqa: E402
+from matplotlib.legend_handler import HandlerTuple                  # noqa: E402
 
 import paper_figure_style as PFS                                    # noqa: E402
 # a `from` import: this record is a display of other records' figures and takes the headline stamp only
@@ -90,6 +93,30 @@ BAND_LETTERS = {
 ROW_LABEL_MATH = {"u <= t-3": r"$u\leq t-3$"}
 NOT_SUMMED = ("The four sources are shown separately and are not added together: they differ in population, model and "
               "estimator, and no combined interval is computed.")
+#: what every row's centre is, so that the key can call each one a centre (the edit review of 27 October 2026, item 26)
+CENTRE_DEFINITION = ("each row's centre is the VaR at 99.5% of that row's donor pool for the GBP 500m target: for a fitted "
+                     "row, the pool transferred at its own fit's posterior means; for the square-root row, each donor "
+                     "scaled by the square root of the reserve ratio; for the raw row, the untransferred pool")
+#: the three kinds of mark (the edit review of 27 October 2026, item 26): a credible interval is a thick solid bar with a
+#: filled circle at its centre; a conditional resampling interval is a thinner bar of long dashes with an open circle; a
+#: centre with no recorded interval is a diamond. The dash is long enough to read as dashed in the key and in grey print
+LW_CREDIBLE, LW_CONDITIONAL = 2.4, 1.6
+DASH_CONDITIONAL = (0, (4.0, 2.2))
+LEGEND_HANDLE_LENGTH = 5.0
+LEGEND_LABELS = {"credible": "centre and credible interval (solid)",
+                 "conditional": "centre and conditional resampling interval (dashed)",
+                 "point": "centre only, no interval recorded (diamond)",
+                 "headline": "headline centre"}
+
+
+def centre_marker(r, col):
+    """The marker keywords for a row's centre: filled circle (credible interval), open circle (conditional resampling
+    interval) or diamond (no interval)."""
+    if r["interval"] is None:
+        return {"marker": "D", "ms": 5.0, "color": col, "mfc": col, "mec": col}
+    if r["interval_kind"] == KIND_CREDIBLE:
+        return {"marker": "o", "ms": 5.5, "color": col, "mfc": col, "mec": col}
+    return {"marker": "o", "ms": 5.5, "color": col, "mfc": "white", "mec": col, "mew": 1.4}
 
 
 def load_sources(results_dir=RESULTS):
@@ -161,7 +188,7 @@ def build_bands(src):
     f = "results/%s"
     bands = {
         "parameter_and_donor_weights": [
-            row("headline", "Headline: draws and donor weights",
+            row("headline", "Headline: size-only, primary sample",
                 vu["centres_full_pool_posterior_mean"]["V1_adj"]["v995"], (head["lo"], head["hi"]), KIND_CREDIBLE,
                 f % SOURCES["vignette_uncertainty"],
                 "centre at the posterior means on the full pool; interval from the 4,000 replicates")],
@@ -237,7 +264,11 @@ def values_record(src, bands, reserve, consistency, xlim):
         "x_axis_reserve_fraction": [float(xlim[0]), float(xlim[1])],
         "bands": out_bands,
         "reading": NOT_SUMMED,
+        "centre_definition": CENTRE_DEFINITION,
         "interval_kinds": {"credible": KIND_CREDIBLE, "conditional_resampling": KIND_CONDITIONAL},
+        "marks": {"credible": "solid bar, filled circle at the centre",
+                  "conditional_resampling": "dashed bar, open circle at the centre",
+                  "no_interval": "diamond at the centre, no bar"},
         "inputs": {k: {"file": "results/%s" % v, "sha256": sha256_of(RESULTS / v) if (RESULTS / v).exists() else None}
                    for k, v in SOURCES.items()},
     }
@@ -258,7 +289,8 @@ def band_heading(band_id):
 def build_figure(values):
     """The figure for a values record: four bands sharing the x axis, rows labelled at the left."""
     rows_per = [len(b["rows"]) for b in values["bands"]]
-    fig = plt.figure(figsize=(DRAWN_WIDTH_IN, 0.27 * (sum(rows_per) + 1) + 1.65))
+    # the key is one column of four long handles (27 October 2026), so the figure is 0.45 inch taller than before
+    fig = plt.figure(figsize=(DRAWN_WIDTH_IN, 0.27 * (sum(rows_per) + 1) + 2.1))
     gs = fig.add_gridspec(len(rows_per), 1, height_ratios=[n + 0.9 for n in rows_per], hspace=0.62)
     xlo, xhi = values["x_axis_reserve_fraction"]
     headline = values["headline_centre"]
@@ -275,8 +307,8 @@ def build_figure(values):
         for y, r in zip(ys, band["rows"]):
             if r["interval"] is not None:
                 credible = r["interval_kind"] == KIND_CREDIBLE
-                ax.hlines(y, r["interval"][0], r["interval"][1], color=col, lw=2.4 if credible else 1.6,
-                          ls="-" if credible else "--", zorder=2)
+                ax.hlines(y, r["interval"][0], r["interval"][1], color=col, lw=LW_CREDIBLE if credible else LW_CONDITIONAL,
+                          linestyles="-" if credible else DASH_CONDITIONAL, zorder=2)
             if r["off_scale"]:
                 # the row's own label (at the left) names it, so the note gives only the figures, on two lines (one
                 # line ran back across the headline line), a little above the row's centre to clear the axis
@@ -284,8 +316,7 @@ def build_figure(values):
                             xy=(xhi, y), xytext=(xhi - 0.012 * (xhi - xlo), y + 0.12), ha="right", va="center",
                             fontsize=PFS.SMALL_PT, color=col, linespacing=1.1)
                 continue
-            marker = "o" if r["interval"] is not None else "s"
-            ax.plot(r["point"], y, marker, color=col, ms=5.5, zorder=3)
+            ax.plot(r["point"], y, linestyle="none", zorder=3, **centre_marker(r, col))
         ax.axvline(headline, color="#333333", lw=0.9, ls=":", zorder=1)
         ax.set_yticks(ys)
         ax.set_yticklabels([row_label_text(r["label"]) for r in band["rows"]], fontsize=PFS.SMALL_PT)
@@ -301,18 +332,25 @@ def build_figure(values):
             sec.set_xlabel("GBP m", fontsize=PFS.SMALL_PT)
             sec.tick_params(labelsize=PFS.SMALL_PT)
     axes[-1].set_xlabel("VaR 99.5%% as a fraction of GBP %.0fm reserves" % reserve)
-    legend_items = [Line2D([], [], color="#444444", lw=2.4, marker="o", ms=5.5,
-                                            label="centre and credible interval"),
-                    Line2D([], [], color="#444444", lw=1.6, ls="--", marker="o", ms=5.5,
-                                            label="centre and conditional resampling interval"),
-                    Line2D([], [], color="#444444", lw=0, marker="s", ms=5.5,
-                                            label="point only"),
-                    Line2D([], [], color="#333333", lw=0.9, ls=":", label="headline centre")]
-    fig.legend(handles=legend_items, loc="lower center", ncol=2, frameon=False, fontsize=PFS.SMALL_PT,
-               bbox_to_anchor=(0.5, -0.005))
+    # the key (the edit review of 27 October 2026, item 26): the short handles hid the dash under the marker, so the two
+    # interval samples looked alike. Each handle is now long enough to show several dashes either side of the marker at
+    # its centre, and each kind of mark has its own marker: filled circle, open circle, diamond
+    grey = "#444444"
+    legend_items = [
+        (Line2D([], [], color=grey, lw=LW_CREDIBLE, ls="-"),
+         Line2D([], [], ls="none", **centre_marker({"interval": [0, 1], "interval_kind": KIND_CREDIBLE}, grey))),
+        (Line2D([], [], color=grey, lw=LW_CONDITIONAL, ls=DASH_CONDITIONAL),
+         Line2D([], [], ls="none", **centre_marker({"interval": [0, 1], "interval_kind": KIND_CONDITIONAL}, grey))),
+        Line2D([], [], ls="none", **centre_marker({"interval": None, "interval_kind": None}, grey)),
+        Line2D([], [], color="#333333", lw=0.9, ls=":")]
+    legend_labels = [LEGEND_LABELS["credible"], LEGEND_LABELS["conditional"], LEGEND_LABELS["point"],
+                     LEGEND_LABELS["headline"]]
+    fig.legend(handles=legend_items, labels=legend_labels, loc="lower center", ncol=1, frameon=False,
+               fontsize=PFS.SMALL_PT, bbox_to_anchor=(0.5, -0.005), handlelength=LEGEND_HANDLE_LENGTH,
+               handler_map={tuple: HandlerTuple(ndivide=1, pad=0.0)})
     # the left margin holds the longest row label, so the saved (cropped) page is no wider than the printed width and
     # the 8 pt text prints at 8 pt or more (the figure is drawn at its printed width, as paper_figure_style does)
-    fig.subplots_adjust(left=0.445, right=0.985, top=0.90, bottom=0.17)
+    fig.subplots_adjust(left=0.445, right=0.985, top=0.91, bottom=0.235)
     return fig
 
 

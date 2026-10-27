@@ -1,26 +1,34 @@
-"""Vignette-1 adverse-tail survivor function: raw vs pure-rescale vs de-RITC.
+"""Vignette-1 adverse-tail survivor function: raw vs the size-only transfer vs the square-root benchmark.
 
-Shows how the shape-aware (de-RITC) operator lightens the transferred tail relative to the
-pure rescale, by overlaying the empirical survivor function P(S > x) on the adverse side for:
+Shows the main transfer, the raw donor pool's empirical 99.5% quantile carried to the GBP 500m target by the headline
+operator, by overlaying the empirical survivor function P(S > x) on the adverse side for:
 
-  - raw            : donor severities, untransferred
-  - pure rescale   : S * sigma(target)/sigma(donor)          (RITC tails carried)
-  - de-RITC        : shape-aware operator (RITC tails re-mapped to the clean regime)
+  - raw                  : donor severities, untransferred
+  - size-only transfer   : the headline operator (gamma = 0, with the RITC rank map for the accepted-liability donors,
+                           as transfer_operator applies it), each donor's S * s(target) / s(donor)
+  - square-root benchmark: S * sqrt(R_donor / R_target), the simple scaling of check_operator_backtest.py (k = 1/2, no
+                           floor, no tail map)
 
-Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17),
-under the paper's headline size-only transfer operator (the headline fit, gamma fixed at 0 in the
-likelihood, at its posterior means: transfer_operator.py); the two-line title names it, and the
-legend keys the VaR markers.
+Evaluated at the operator posterior mean on the full donor pool (V1 target R=500, H=0.17), under the paper's headline
+size-only transfer operator (the headline fit, gamma fixed at 0 in the likelihood, at its posterior means:
+transfer_operator.py); the two-line title names it, and the legend keys the VaR markers.
 Writes paper_pack/fig_v1_ritc_survivor.{png,pdf}.
+
+The edit review of 27 October 2026 (item 25): the figure drew the pure rescale (RITC tails carried) and the rank-mapped
+pool, two curves that coincide at the cutpoint, and its one callout read "0.342 -> 0.342", the RITC map's zero effect
+there. The callout now gives the main transfer, raw -> size-only, with the square-root benchmark's figure, and the
+pure-rescale curve gave way to the square-root benchmark; the RITC map's zero effect at the cutpoint is the caption's.
+The three figures printed are read from results/check_operator_backtest_results.json (vignette_figures) and the
+script stops unless the drawn pools reproduce them exactly.
 
 The VaR99.5 annotation is placed where no plotted curve, marker or the legend crosses it, and
 the script refuses to write a figure in which it would be struck through: the published
 figure's annotation sat on the transferred curve's vertical step (review of 29 September 2026,
-M-16). place_annotation() and text_is_clear() are that check, and
-src/test_figure_layout.py runs them on the figure built from the committed inputs. The check also
-covers the annotation's leader line: it must reach its target without crossing a curve, a marker
-or the legend (the next review found the leader crossing the raw curve on its way to the de-RITC
-one), and the box must lie inside the axes.
+M-16). place_callout() and text_is_clear() are that check, and
+src/test_figure_layout.py runs them on the figure built from the committed inputs. The callout has no leader (it
+names the squares it reports; see CALLOUT_PREFERRED), and its box must lie inside the axes. place_annotation() and
+leader_is_clear(), the leader check (the next review found a leader crossing the raw curve on its way to the de-RITC
+one), stay for an annotation with a leader and are tested on toy figures.
 
 Run: python src/make_v1_ritc_survivor.py
 """
@@ -63,6 +71,13 @@ LEADER_END_PX = 8.0
 ANNOTATION_CANDIDATES = tuple(sorted(
     ((round(x, 2), round(y, 2)) for x in np.arange(0.08, 0.90, 0.03) for y in np.arange(0.05, 0.92, 0.03)),
     key=lambda p: (p[0] - PREFERRED[0]) ** 2 + (p[1] - PREFERRED[1]) ** 2))
+#: the callout of the main transfer (27 October 2026) names the three VaR99.5 squares by curve, with no leader: the
+#: size-only square sits between the raw curve above, its own steps and the benchmark's step below, and no straight
+#: leader from a box with three lines reaches it clear of them. It is placed nearest-first from the empty upper right
+#: (the legend now sits below the axes), clear of every curve, marker and the legend
+CALLOUT_PREFERRED = (0.75, 0.72)
+CALLOUT_CANDIDATES = tuple(sorted(ANNOTATION_CANDIDATES, key=lambda p: (p[0] - CALLOUT_PREFERRED[0]) ** 2
+                                  + (p[1] - CALLOUT_PREFERRED[1]) ** 2))
 
 
 def survivor(x):
@@ -143,15 +158,32 @@ def place_annotation(fig, ax, label, xy, obstacles, candidates=ANNOTATION_CANDID
                      "curves, markers and legend; add one to ANNOTATION_CANDIDATES")
 
 
-def build_figure(raw, pure, deritc, mode):
-    """The figure, with the annotation placed clear of everything plotted; returns (fig, ax, annotation)."""
+def place_callout(fig, ax, label, obstacles, candidates=CALLOUT_CANDIDATES):
+    """Put `label`, a text box with no leader, at the first candidate where nothing plotted crosses it, or refuse."""
+    for cx, cy in candidates:
+        t = ax.text(cx, cy, label, transform=ax.transAxes, ha="center", va="center", fontsize=PFS.SMALL_PT,
+                    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#999", lw=0.6), zorder=6)
+        if text_is_clear(fig, ax, t, obstacles):
+            return t
+        t.remove()
+    raise SystemExit("make_v1_ritc_survivor: no candidate place for the VaR99.5 callout is clear of the curves, "
+                     "markers and legend; add one to CALLOUT_CANDIDATES")
+
+
+def build_figure(raw, transferred, sqrt_r, mode, printed=None):
+    """The figure, with the annotation placed clear of everything plotted; returns (fig, ax, annotation, obstacles).
+
+    `printed` holds the three VaR99.5 figures the annotation prints ({"raw", "transferred", "sqrt"}); main() passes the
+    recorded ones after checking the pools reproduce them, and without it they are the pools' own."""
     series = [
         ("Raw (untransferred)", raw, "#6c757d", "-"),
-        ("Pure rescale (RITC carried)", pure, "#b2182b", "--"),
-        ("De-RITC (shape-aware)", deritc, "#1b7837", "-"),
+        ("Square-root benchmark", sqrt_r, "#2166ac", "--"),
+        ("Size-only transfer (headline)", transferred, "#1b7837", "-"),
     ]
+    if printed is None:
+        printed = {"raw": var_q(raw, 0.995), "transferred": var_q(transferred, 0.995), "sqrt": var_q(sqrt_r, 0.995)}
 
-    fig, ax = PFS.figure("fig_v1_ritc_survivor", 3.4)   # 3.7 with a four-line title
+    fig, ax = PFS.figure("fig_v1_ritc_survivor", 4.0)   # 3.4 with the legend inside the axes
     curves, marker_pts = [], []
     for label, arr, col, ls in series:
         xs, ps = survivor(arr)
@@ -181,7 +213,9 @@ def build_figure(raw, pure, deritc, mode):
     op = ("size-only operator, $\\gamma=0$" if mode == transfer_operator.SIZE_ONLY
           else "concentration overlay, fitted $\\gamma$")
     ax.set_title("Vignette 1 adverse tail\n(%s)" % op)
-    legend = ax.legend(loc="upper right", frameon=False)
+    # below the axes (27 October 2026): inside them, upper right, it left no place for the callout's three lines
+    legend = ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, frameon=False, handlelength=2.6,
+                       columnspacing=1.2)
     ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
     PFS.plain_log_ticks(ax)
     ax.grid(True, which="both", alpha=0.2)
@@ -195,42 +229,72 @@ def build_figure(raw, pure, deritc, mode):
         px, py = ax.transData.transform((mx, my))
         marker_boxes.append(Bbox([[px - 6, py - 6], [px + 6, py + 6]]))
     obstacles = curves + marker_boxes + [legend.get_window_extent(renderer)]
-    v_pure, v_der = var_q(pure, 0.995), var_q(deritc, 0.995)
-    note = place_annotation(fig, ax, f"VaR 99.5%:\n{v_pure:.3f}$\\to${v_der:.3f}",
-                            (v_der, 1 - 0.995), obstacles)
+    note = place_callout(fig, ax, annotation_text(printed), obstacles)
     return fig, ax, note, obstacles
 
 
+def annotation_text(printed):
+    """The callout: the main transfer, raw -> size-only, at the 99.5% squares, with the benchmark's figure beneath."""
+    return ("VaR 99.5%% (squares):\nraw %.3f $\\to$ size-only %.3f\nsquare-root benchmark %.3f"
+            % (printed["raw"], printed["transferred"], printed["sqrt"]))
+
+
 def pools(mode=transfer_operator.HEADLINE):
-    """(raw, pure rescale, de-RITC) Vignette 1 pools under the transfer operator `mode`."""
+    """(raw, size-only transfer, square-root benchmark, RITC flags): the Vignette 1 pools, the transfer under the
+    operator `mode` with the RITC rank map applied as transfer_operator applies it (the headline's pool)."""
     S, R, H, synd, year = load_pool()
     draws, ref, hlo, hce = load_draws(mode); cfg = (ref, hlo, hce)    # the operator's own fit
     ritc = load_ritc(synd, year)
     v1, _, _ = load_targets()
     thbar = transfer_operator.params({p: float(draws[p].mean()) for p in draws}, mode)
-    pure = transfer(S, R, H, v1, thbar, cfg, ritc=None)   # no de-RITC
-    deritc = transfer(S, R, H, v1, thbar, cfg, ritc=ritc)  # shape-aware
-    return S, pure, deritc, ritc
+    transferred = transfer(S, R, H, v1, thbar, cfg, ritc=ritc)        # the operator, rank map included
+    sqrt_r = S * np.sqrt(R / v1[0])                                    # check_operator_backtest's sqrt_R rule
+    return S, transferred, sqrt_r, ritc
+
+
+#: the record whose Vignette 1 figures the annotation prints (check_operator_backtest.py's vignette_figures)
+RECORD = SCRIPT_DIR / "results" / "check_operator_backtest_results.json"
+
+
+def recorded_figures(record=RECORD):
+    """{raw, transferred, sqrt: {v99, v995}} as results/check_operator_backtest_results.json records them."""
+    import io, json
+    with io.open(str(record), encoding="utf-8") as fh:
+        vf = json.load(fh)["vignette_figures"]
+    if vf.get("operator") != transfer_operator.HEADLINE:
+        raise SystemExit("make_v1_ritc_survivor: the record's vignette figures are not the headline operator's")
+    return {"raw": vf["raw_pool"], "transferred": vf["operator_size_only"]["V1"], "sqrt": vf["sqrt_R"]["V1"]}
+
+
+def check_against_record(raw, transferred, sqrt_r, rec, tol=1e-12):
+    """Stop unless the drawn pools' VaR99 and VaR99.5 are the record's, exactly (to rounding); returns the printed
+    VaR99.5 figures, read from the record."""
+    drawn = {"raw": raw, "transferred": transferred, "sqrt": sqrt_r}
+    off = {(k, lv): (var_q(drawn[k], a), rec[k][lv]) for k in drawn for lv, a in (("v99", 0.99), ("v995", 0.995))
+           if abs(var_q(drawn[k], a) - rec[k][lv]) > tol}
+    if off:
+        raise SystemExit("make_v1_ritc_survivor: the drawn pools do not reproduce %s: %s" % (RECORD.name, off))
+    return {k: float(rec[k]["v995"]) for k in drawn}
 
 
 def main():
     mode = transfer_operator.HEADLINE
-    raw, pure, deritc, ritc = pools(mode)
+    raw, transferred, sqrt_r, ritc = pools(mode)
+    printed = check_against_record(raw, transferred, sqrt_r, recorded_figures())
     with PFS.style():                     # drawn at its printed width with 9/8 pt text (paper_figure_style)
-        fig, ax, note, obstacles = build_figure(raw, pure, deritc, mode)
-        if not (text_is_clear(fig, ax, note, obstacles)
-                and leader_is_clear(fig, ax, note, (var_q(deritc, 0.995), 1 - 0.995), obstacles)):
-            raise SystemExit("make_v1_ritc_survivor: the VaR99.5 annotation or its leader is struck by a plotted element")
+        fig, ax, note, obstacles = build_figure(raw, transferred, sqrt_r, mode, printed)
+        if not text_is_clear(fig, ax, note, obstacles):
+            raise SystemExit("make_v1_ritc_survivor: the VaR99.5 callout is struck by a plotted element")
         out_png = SCRIPT_DIR / "paper_pack" / "fig_v1_ritc_survivor.png"
         _savefig_retry(fig, out_png, dpi=150, bbox_inches="tight")
         _savefig_retry(fig, out_png.with_suffix(".pdf"), bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
 
     print(f"operator: {mode} (gamma in force 0)")
-    print(f"raw   VaR99/99.5 = {var_q(raw,0.99):.3f} / {var_q(raw,0.995):.3f}")
-    print(f"pure  VaR99/99.5 = {var_q(pure,0.99):.3f} / {var_q(pure,0.995):.3f}")
-    print(f"deritc VaR99/99.5 = {var_q(deritc,0.99):.3f} / {var_q(deritc,0.995):.3f}")
-    print(f"n_ritc donors re-mapped = {int(ritc.sum())} of {len(raw)}")
+    print(f"raw          VaR99/99.5 = {var_q(raw,0.99):.3f} / {var_q(raw,0.995):.3f}")
+    print(f"size-only    VaR99/99.5 = {var_q(transferred,0.99):.3f} / {var_q(transferred,0.995):.3f}")
+    print(f"square-root  VaR99/99.5 = {var_q(sqrt_r,0.99):.3f} / {var_q(sqrt_r,0.995):.3f}")
+    print(f"n_ritc donors rank-mapped = {int(ritc.sum())} of {len(raw)}; figures checked against {RECORD.name}")
     print(f"Wrote {out_png} (+ .pdf)")
 
 

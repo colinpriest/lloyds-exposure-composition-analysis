@@ -275,10 +275,68 @@ def test_a_dot_is_drawn_at_each_rows_centre_except_off_scale_ones(values):
     main = [a for a in fig.axes if a.get_title(loc="left")]
     for ax, band in zip(main, values["bands"]):
         xs = sorted(round(float(ln.get_xdata()[0]), 12) for ln in ax.lines
-                    if len(ln.get_xdata()) == 1 and ln.get_marker() in ("o", "s"))
+                    if len(ln.get_xdata()) == 1 and ln.get_marker() in ("o", "D"))
         want = sorted(round(r["point"], 12) for r in band["rows"] if not r["off_scale"])
         assert xs == want
     plt.close(fig)
+
+
+def _kind(r):
+    if r["interval"] is None:
+        return "point"
+    return "credible" if r["interval_kind"] == UF.KIND_CREDIBLE else "conditional"
+
+
+def test_each_kind_of_mark_is_drawn_differently(values):
+    """The edit review of 27 October 2026, item 26: a credible interval is a solid bar with a filled circle, a
+    conditional resampling interval a dashed bar with an open circle, a centre with no interval a diamond; the three
+    differ in line style and in marker, so they read apart in grey print."""
+    fig, main = _drawn_figure(values)
+    seen = set()
+    for ax, band in zip(main, values["bands"]):
+        bars = [c for c in ax.collections if len(c.get_segments())]
+        for r in band["rows"]:
+            if r["off_scale"]:
+                continue
+            kind = _kind(r)
+            seen.add(kind)
+            (dot,) = [ln for ln in ax.lines if len(ln.get_xdata()) == 1 and ln.get_xdata()[0] == r["point"]]
+            if kind == "point":
+                assert dot.get_marker() == "D"
+                assert not [c for c in bars if c.get_segments()[0][0][0] <= r["point"] <= c.get_segments()[0][1][0]
+                            and abs(c.get_segments()[0][0][1] - dot.get_ydata()[0]) < 1e-9]
+                continue
+            (bar,) = [c for c in bars if abs(c.get_segments()[0][0][1] - dot.get_ydata()[0]) < 1e-9]
+            offset, dashes = bar.get_linestyle()[0]
+            assert dot.get_marker() == "o"
+            if kind == "credible":
+                assert dashes is None and matplotlib.colors.same_color(dot.get_markerfacecolor(), dot.get_color())
+            else:
+                assert dashes is not None and len(dashes) >= 2 and min(dashes) > 0
+                assert matplotlib.colors.same_color(dot.get_markerfacecolor(), "white")
+    assert seen == {"credible", "conditional", "point"}
+    plt.close(fig)
+
+
+def test_the_key_shows_the_three_marks_with_handles_long_enough_for_the_dashes(values):
+    """The key's samples were too short to show the dash under the marker (the 300-DPI crop of the review). Each label
+    calls the marker a centre, and the dashed sample is long enough for several dash periods."""
+    fig, _main = _drawn_figure(values)
+    (leg,) = fig.legends
+    texts = [t.get_text() for t in leg.get_texts()]
+    assert texts == [UF.LEGEND_LABELS[k] for k in ("credible", "conditional", "point", "headline")], texts
+    assert all(t.startswith("centre") for t in texts[:3]), texts
+    assert leg.handlelength >= 4.0
+    fontsize_pt = leg.prop.get_size_in_points()
+    period_pt = sum(UF.DASH_CONDITIONAL[1]) * UF.LW_CONDITIONAL
+    assert leg.handlelength * fontsize_pt >= 3 * period_pt, "fewer than three dash periods in the key's sample"
+    plt.close(fig)
+
+
+def test_the_record_defines_every_rows_centre(values):
+    assert values["centre_definition"] == UF.CENTRE_DEFINITION and "posterior means" in UF.CENTRE_DEFINITION
+    assert set(values["marks"]) == {"credible", "conditional_resampling", "no_interval"}
+    assert "size-only" in row_of(values, "headline")["label"] and "primary" in row_of(values, "headline")["label"]
 
 
 def _drawn_figure(values):

@@ -35,7 +35,7 @@
    "rows": [
     {
      "id": "headline",
-     "label": "Headline: draws and donor weights",
+     "label": "Headline: size-only, primary sample",
      "point": 0.34240782846350193,
      "interval": [
       0.23376682371558039,
@@ -223,9 +223,15 @@
   }
  ],
  "reading": "The four sources are shown separately and are not added together: they differ in population, model and estimator, and no combined interval is computed.",
+ "centre_definition": "each row's centre is the VaR at 99.5% of that row's donor pool for the GBP 500m target: for a fitted row, the pool transferred at its own fit's posterior means; for the square-root row, each donor scaled by the square root of the reserve ratio; for the raw row, the untransferred pool",
  "interval_kinds": {
   "credible": "credible interval (Bayesian bootstrap over syndicates, one joint posterior draw per replicate)",
   "conditional_resampling": "conditional resampling interval (cluster bootstrap by syndicate, one posterior draw per replicate), from a record that holds no posterior interval"
+ },
+ "marks": {
+  "credible": "solid bar, filled circle at the centre",
+  "conditional_resampling": "dashed bar, open circle at the centre",
+  "no_interval": "diamond at the centre, no bar"
  },
  "inputs": {
   "vignette_uncertainty": {

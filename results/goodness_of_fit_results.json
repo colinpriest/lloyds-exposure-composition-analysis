@@ -1,7 +1,7 @@
 {
   "n": 632,
   "groups": 10,
-  "statistic": "|z| = |S| / sigma(R, H) at the posterior-mean two-regime parameters; equal-count decile groups; Kruskal-Wallis across groups",
+  "statistic": "|z| = |S| / s(R), the base-scale residual: the base size scale at the posterior-mean two-regime parameters, with no reporting-year shock and no RITC scale term; equal-count decile groups; Kruskal-Wallis across groups",
   "size": {
     "median_abs_z_by_decile": [
       0.6939548541691307,
@@ -88,7 +88,7 @@
     "pool_median_abs_z": 0.767069620894494
   },
   "clean_tail": {
-    "residual": "z = S / sigma(R, H) at the posterior-mean parameters, records outside the RITC regime (Figure 4, panel (a), clean)",
+    "residual": "base-scale residual z = S / s(R) at the posterior-mean parameters (the base size scale only: no reporting-year shock and no RITC scale term), records outside the RITC regime (the goodness-of-fit figure, panel (a), clean); the expected count per tail is a unit Student-t reference, not the full model's expectation for these residuals",
     "n_clean": 605,
     "nu_clean": 3.9565744487254086,
     "above_3": 24,

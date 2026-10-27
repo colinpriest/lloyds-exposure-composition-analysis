@@ -962,6 +962,8 @@ OUTPUTS = {
     "make_paper_figures.py": ("paper_pack/fig_corpus_coverage.pdf", "paper_pack/fig_size_dispersion.pdf",
                               "paper_pack/fig_hhi_dispersion.pdf", "paper_pack/fig_goodness_of_fit.pdf",
                               "results/goodness_of_fit_results.json",
+                              # Figure 2's posterior-predictive medians (the edit review of 27 October 2026, item 21)
+                              "results/size_dispersion_ppc_results.json",
                               # R221: the PNG beside each PDF
                               "paper_pack/fig_corpus_coverage.png", "paper_pack/fig_goodness_of_fit.png",
                               "paper_pack/fig_hhi_dispersion.png", "paper_pack/fig_size_dispersion.png"),

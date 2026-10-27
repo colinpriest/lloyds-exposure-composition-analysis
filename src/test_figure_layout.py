@@ -43,28 +43,98 @@ def _close_figures():
 @pytest.mark.parametrize("mode", TO.MODES)
 def test_the_survivor_label_is_clear_of_every_curve_marker_and_the_legend(mode):
     """Each mode's pool is computed from its own regenerated fit."""
-    raw, pure, deritc, _ritc = SURV.pools(mode)
-    fig, ax, note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
+    raw, transferred, sqrt_r, _ritc = SURV.pools(mode)
+    fig, ax, note, obstacles = SURV.build_figure(raw, transferred, sqrt_r, mode)
     assert SURV.text_is_clear(fig, ax, note, obstacles)
     assert len(obstacles) == 3 + 6 + 1, "three curves, six VaR markers and the legend must all be obstacles"
 
 
 @pytest.mark.parametrize("mode", TO.MODES)
 def test_the_check_sees_the_placement_it_replaced(mode):
-    """The superseded label, midway between the two VaR99.5 points just below the 99.5% line, is struck.
-    Each mode's pool is computed from its own regenerated fit."""
-    raw, pure, deritc, _ritc = SURV.pools(mode)
-    fig, ax, _note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
-    v_pure, v_der = var_q(pure, 0.995), var_q(deritc, 0.995)
-    old = ax.text((v_pure + v_der) / 2, (1 - 0.995) * 0.62, "VaR$_{99.5}$: %.3f$\\to$%.3f" % (v_pure, v_der),
-                  ha="center", fontsize=8)
+    """The first superseded label, midway between the two coincident VaR99.5 points just below the 99.5% line, is
+    struck on the figure as now drawn. Each mode's pool is computed from its own regenerated fit."""
+    raw, transferred, sqrt_r, _ritc = SURV.pools(mode)
+    fig, ax, _note, obstacles = SURV.build_figure(raw, transferred, sqrt_r, mode)
+    v = var_q(transferred, 0.995)
+    old = ax.text(v, (1 - 0.995) * 0.62, "VaR$_{99.5}$: %.3f$\\to$%.3f" % (v, v), ha="center", fontsize=8)
     assert not SURV.text_is_clear(fig, ax, old, obstacles)
+
+
+# ------------------------------------------------------------------ Figure 3 (the edit review of 27 October 2026) ------
+def test_the_survivor_draws_raw_the_size_only_transfer_and_the_square_root_benchmark():
+    """Item 25: the pure-rescale curve, which coincided with the transferred one at the cutpoint, gave way to the
+    square-root benchmark; the transfer drawn is the headline's (the rank map applied), the benchmark is
+    check_operator_backtest's rule S sqrt(R_donor / R_target)."""
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    fig, ax, _note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
+    labels = [t.get_text() for t in ax.get_legend().get_texts()]
+    assert labels[:3] == ["Raw (untransferred)", "Square-root benchmark", "Size-only transfer (headline)"], labels
+    assert not [t for t in labels if "rescale" in t.lower() or "de-ritc" in t.lower()], labels
+    import vignette_uncertainty as VU
+    S, R, _H, _synd, _year = VU.load_pool()
+    assert np.array_equal(raw, S) and np.allclose(sqrt_r, S * np.sqrt(R / 500.0), rtol=0, atol=0)
+
+
+def test_the_survivor_transfer_is_the_headline_operators_pool_with_the_rank_map():
+    """The curve drawn as the size-only transfer is the headline operator's pool, the RITC rank map applied to the
+    accepted-liability donors (as check_operator_backtest's vignette figures transfer them): the clean donors' values
+    are the pure rescale's, and the RITC donors' are not. The pure rescale reproduces the record's VaR99 and VaR99.5
+    as well (the two pools coincide there), so the record check alone cannot tell them apart."""
+    import vignette_uncertainty as VU
+    raw, transferred, _sqrt_r, ritc = SURV.pools(TO.HEADLINE)
+    S, R, H, _synd, _year = VU.load_pool()
+    draws, ref, hlo, hce = VU.load_draws(TO.HEADLINE)
+    v1, _, _ = VU.load_targets()
+    th = TO.params({p: float(draws[p].mean()) for p in draws}, TO.HEADLINE)
+    pure = VU.transfer(S, R, H, v1, th, (ref, hlo, hce), ritc=None)
+    ritc = np.asarray(ritc, bool)
+    assert ritc.sum() > 0
+    assert np.array_equal(transferred[~ritc], pure[~ritc])
+    moved = transferred[ritc] != pure[ritc]
+    assert moved.sum() == int((S[ritc] != 0).sum()) > 0, "the rank map moves every nonzero RITC donor"
+
+
+def test_the_survivor_callout_gives_the_main_transfer_from_the_record():
+    """The callout reads raw -> size-only at 99.5%, with the benchmark beneath, each figure as the backtest record holds
+    it; it has no leader and is not the RITC map's 'x -> x'."""
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    rec = SURV.recorded_figures()
+    printed = SURV.check_against_record(raw, transferred, sqrt_r, rec)
+    fig, ax, note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE, printed)
+    text = note.get_text()
+    want = ("raw %.3f $\\to$ size-only %.3f" % (rec["raw"]["v995"], rec["transferred"]["v995"]),
+            "square-root benchmark %.3f" % rec["sqrt"]["v995"])
+    assert all(w in text for w in want), text
+    assert "%.3f" % rec["raw"]["v995"] != "%.3f" % rec["transferred"]["v995"], "raw and size-only must differ"
+    assert not hasattr(note, "arrow_patch"), "the callout has no leader"
+    assert [t for t in ax.texts if "VaR 99.5%" in t.get_text()] == [note], "one callout"
+
+
+def test_the_survivor_refuses_pools_that_do_not_reproduce_the_record():
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    rec = SURV.recorded_figures()
+    assert SURV.check_against_record(raw, transferred, sqrt_r, rec)["sqrt"] == rec["sqrt"]["v995"]
+    for key in ("raw", "transferred", "sqrt"):
+        bad = {k: dict(v) for k, v in rec.items()}
+        bad[key]["v995"] *= 1.001
+        with pytest.raises(SystemExit, match="do not reproduce"):
+            SURV.check_against_record(raw, transferred, sqrt_r, bad)
+
+
+def test_a_leader_from_the_former_callout_place_would_cross_a_curve():
+    """Why the callout has no leader: from the former place (PREFERRED, lower left) a leader to the size-only 99.5%
+    point crosses a curve on the figure as now drawn."""
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    fig, ax, _note, obstacles = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
+    old = ax.text(SURV.PREFERRED[0], SURV.PREFERRED[1], "VaR 99.5%", transform=ax.transAxes, ha="center",
+                  va="center")
+    assert not SURV.leader_is_clear(fig, ax, old, (var_q(transferred, 0.995), 1 - 0.995), obstacles)
 
 
 def test_the_title_names_the_headline_operator():
     """The headline pool is computed from the regenerated (gamma = 0) fit."""
-    raw, pure, deritc, _ritc = SURV.pools(TO.HEADLINE)
-    _fig, ax, _note, _obs = SURV.build_figure(raw, pure, deritc, TO.HEADLINE)
+    raw, transferred, sqrt_r, _ritc = SURV.pools(TO.HEADLINE)
+    _fig, ax, _note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
     assert "size-only operator, $\\gamma=0$" in ax.get_title()
 
 
@@ -101,13 +171,22 @@ def test_the_check_refuses_a_box_that_leaves_the_axes():
 
 
 @pytest.mark.parametrize("mode", TO.MODES)
-def test_the_survivor_leader_reaches_its_target_without_crossing_another_curve(mode):
-    raw, pure, deritc, _ritc = SURV.pools(mode)
-    fig, ax, note, obstacles = SURV.build_figure(raw, pure, deritc, mode)
-    assert SURV.leader_is_clear(fig, ax, note, (var_q(deritc, 0.995), 1 - 0.995), obstacles)
-    # and the check can fail on this figure: a box above the raw curve's step, leader down across it
-    old = ax.text(0.58, 0.60, "VaR 99.5%", transform=ax.transAxes, ha="center", va="center")
-    assert not SURV.leader_is_clear(fig, ax, old, (var_q(deritc, 0.995), 1 - 0.995), obstacles)
+def test_the_survivor_callout_lies_inside_the_axes_and_the_check_sees_one_that_is_struck(mode):
+    """The callout has no leader (27 October 2026); its box lies inside the axes clear of every curve, and the same
+    check refuses a box moved onto the curves at the 99.5% point."""
+    raw, transferred, sqrt_r, _ritc = SURV.pools(mode)
+    fig, ax, note, obstacles = SURV.build_figure(raw, transferred, sqrt_r, mode)
+    assert SURV.text_is_clear(fig, ax, note, obstacles)
+    note.set_transform(ax.transData)
+    note.set_position((var_q(transferred, 0.995), 1 - 0.995))
+    assert not SURV.text_is_clear(fig, ax, note, obstacles)
+
+
+def test_with_no_clear_place_the_callout_is_refused():
+    fig, ax, curve = _toy()
+    with pytest.raises(SystemExit, match="CALLOUT_CANDIDATES"):
+        SURV.place_callout(fig, ax, "label", curve, candidates=((0.5, 0.5), (0.3, 0.3)))
+    assert SURV.place_callout(fig, ax, "label", curve, candidates=((0.5, 0.5), (0.2, 0.8))) is not None
 
 
 def test_with_no_clear_place_the_script_refuses():
@@ -222,7 +301,7 @@ def rendered(tmp_path_factory):
     try:
         MPF.PP, MPF.SD = out, out          # fig_gof also writes results/goodness_of_fit_results.json: here
         MPF.fig_coverage(yr, corpus_by_year)
-        MPF.fig_size(S, R, H, cal)
+        MPF.fig_size(S, R, H, cal, yr, ritc)
         MPF.fig_hhi(S, R, H, cal_gf)
         MPF.fig_gof(S, R, H, ritc, cal, syn, yr)
         SURV.SCRIPT_DIR = out

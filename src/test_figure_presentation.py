@@ -53,14 +53,14 @@ def figures(inputs):
     fig, ax, _leg = MPF.coverage_figure(yr, corpus_by_year)
     out["fig_corpus_coverage"] = (fig, fig.axes)
     with PFS.style():
-        fig, ax, _leg = MPF.size_figure(S, R, H, cal)
+        fig, ax, _leg = MPF.size_figure(S, R, H, cal, yr, ritc)
         out["fig_size_dispersion"] = (fig, [ax])
         fig, ax, _leg = MPF.hhi_figure(S, R, H, cal_gf)
         out["fig_hhi_dispersion"] = (fig, [ax])
         fig, axes, _gof = MPF.gof_figure(S, R, H, ritc, cal)
         out["fig_goodness_of_fit"] = (fig, list(axes))
-        raw, pure, deritc, _r = SURV.pools(TO.HEADLINE)
-        fig, ax, _note, _obs = SURV.build_figure(raw, pure, deritc, TO.HEADLINE)
+        raw, transferred, sqrt_r, _r = SURV.pools(TO.HEADLINE)
+        fig, ax, _note, _obs = SURV.build_figure(raw, transferred, sqrt_r, TO.HEADLINE)
         out["fig_v1_ritc_survivor"] = (fig, [ax])
     # the profile's inputs come from a 500-replicate PPC; its recorded bins and the M1 draws stand in for them, as in
     # test_figure_layout.py
@@ -126,8 +126,9 @@ def test_the_point_check_sees_the_legend_it_replaced(inputs, build, which, old_l
     """The superseded placements, inside the axes: Figure 2's lower left (Matplotlib's own choice before) and Figure 3's
     upper right (the script's) both cover points of the figures as now drawn."""
     S, R, H = inputs[0], inputs[1], inputs[2]
+    extra = (inputs[3], inputs[4]) if build == "size_figure" else ()      # Figure 2's check needs the years and regime
     with PFS.style():
-        fig, ax, legend = getattr(MPF, build)(S, R, H, inputs[which])
+        fig, ax, legend = getattr(MPF, build)(S, R, H, inputs[which], *extra)
         assert MPF.points_under_legend(fig, ax, legend) == 0
         legend.remove()
         old = ax.legend(frameon=False, loc=old_loc)
@@ -189,16 +190,106 @@ def test_a_headline_figure_names_no_concentration_term(figures, inputs, name):
     assert bad == [], (name, bad)
 
 
-def test_figure_2_names_the_size_only_scale_it_plots(figures, inputs):
+def test_figure_2_labels_the_scale_curve_a_base_scale_reference(figures, inputs):
+    """The edit review of 27 October 2026, item 21: the Student-t scale is not a median of |S|; the curve stays only as a
+    reference and its legend says so, and the medians are compared with the posterior-predictive medians."""
     texts = _legend_texts(figures["fig_size_dispersion"][1])
-    assert any(r"\sigma(R)" in t and "size-only" in t for t in texts), texts
+    assert any("base scale $s(R)$" in t and "reference, not a median" in t for t in texts), texts
+    assert any(t.startswith("posterior-predictive") and "median" in t and "90% band" in t for t in texts), texts
+    assert "observed vigintile median" in texts, texts
+    assert not [t for t in texts if r"\sigma" in t], texts
 
 
 def test_figure_2_refuses_a_fit_with_a_concentration_exponent(inputs):
-    S, R, H, _yr, _ritc, _cal, cal_gf, _c = inputs
+    S, R, H, yr, ritc, _cal, cal_gf, _c = inputs
     assert cal_gf["gamma"] > 0
     with PFS.style(), pytest.raises(SystemExit, match="size-only headline"):
-        MPF.size_figure(S, R, H, cal_gf)
+        MPF.size_figure(S, R, H, cal_gf, yr, ritc)
+
+
+def _ppc_line(ax):
+    """Figure 2's posterior-predictive median line: the one solid connected line through the bins."""
+    lines = [ln for ln in ax.lines if ln.get_linestyle() == "-" and ln.get_marker() in ("None", "none", "", None)
+             and len(ln.get_xdata()) <= MPF.N_VIGINTILES]
+    assert len(lines) == 1, [ln.get_label() for ln in ax.lines]
+    return lines[0]
+
+
+def test_figure_2_plots_the_recorded_check_like_for_like(figures, inputs):
+    """The observed points are each vigintile's median |S| and the model line is the record's posterior-predictive
+    median of the same statistic for the same records, at the same bins."""
+    S, R, H, yr, ritc, cal, _gf, _c = inputs
+    with io.open(os.path.join(HERE, "results", "size_dispersion_ppc_results.json"), encoding="utf-8") as _fh:
+        rec = json.load(_fh)
+    assert rec == json.loads(json.dumps(MPF.size_ppc(S, R, yr, ritc, cal))), "the record is the script's own check"
+    b = MPF.vigintiles(R)
+    assert [r["n"] for r in rec["bins"]] == [int((b == i).sum()) for i in range(MPF.N_VIGINTILES)]
+    assert sum(r["n"] for r in rec["bins"]) == len(S) and sum(r["n_ritc"] for r in rec["bins"]) == int(ritc.sum())
+    ax = figures["fig_size_dispersion"][1][0]
+    line = _ppc_line(ax)
+    assert list(line.get_ydata()) == [r["ppc_median_abs_S"] for r in rec["bins"]]
+    obs = [ln for ln in ax.lines if ln.get_marker() == "s"]
+    assert len(obs) == 1 and list(obs[0].get_ydata()) == [float(np.median(np.abs(S)[b == i])) for i in range(20)]
+    for r in rec["bins"]:
+        assert r["band_lo"] < r["ppc_median_abs_S"] < r["band_hi"]
+        assert r["observed_outside_band"] == (not r["band_lo"] <= r["observed_median_abs_S"] <= r["band_hi"])
+    assert rec["n_bins_outside_band"] == sum(r["observed_outside_band"] for r in rec["bins"])
+
+
+def _toy_draws(tmp_path, n=400, **over):
+    p = {"k": 1.0, "sd_undiv": 0.05, "sd_div": 0.0, "nu_clean": 1e6, "nu_ritc": 1e6, "beta_ritc": 0.0, "gamma": 0.0}
+    p.update(over)
+    path = tmp_path / ("d%d.npz" % len(list(tmp_path.iterdir())))
+    np.savez(path, **{k: np.full(n, float(v)) for k, v in p.items()})
+    return path
+
+
+def test_the_check_replicates_the_median_of_abs_s_not_the_scale(tmp_path):
+    """With a normal tail, no size term and no year shock, a record's |S| is half-normal: its median is 0.6745 times the
+    scale. The check's model median must be that, not the scale itself (which is what the figure used to draw)."""
+    n = 4000
+    R = np.linspace(10.0, 4000.0, n)
+    S, yr, ritc = np.zeros(n), np.full(n, 2020), np.zeros(n, bool)
+    cal = {"gamma": 0.0, "params": {"tau_s": {"mean": 0.0}}, "sd_undiv": 0.05, "sd_div": 0.0, "k": 1.0}
+    rec = MPF.size_ppc(S, R, yr, ritc, cal, draws_path=_toy_draws(tmp_path))
+    meds = [r["ppc_median_abs_S"] for r in rec["bins"]]
+    assert np.allclose(meds, 0.05 * 0.6744897501960817, rtol=0.03), meds
+
+
+def test_the_check_carries_the_ritc_scale_and_the_year_shock(tmp_path):
+    """The RITC records' replicates carry exp(beta_RITC), and the year shock widens the band: a check that dropped
+    either would not be the adopted model's."""
+    n = 2000
+    R = np.linspace(10.0, 4000.0, n)
+    S, yr = np.zeros(n), np.repeat(np.arange(2015, 2025), n // 10)
+    ritc = np.ones(n, bool)
+    cal = {"gamma": 0.0, "params": {"tau_s": {"mean": 0.0}}, "sd_undiv": 0.05, "sd_div": 0.0, "k": 1.0}
+    base = MPF.size_ppc(S, R, yr, ritc, cal, draws_path=_toy_draws(tmp_path))
+    up = MPF.size_ppc(S, R, yr, ritc, cal, draws_path=_toy_draws(tmp_path, beta_ritc=np.log(2.0)))
+    ratio = [u["ppc_median_abs_S"] / b["ppc_median_abs_S"] for u, b in zip(up["bins"], base["bins"])]
+    assert np.allclose(ratio, 2.0, rtol=0.05), ratio
+    cal_tau = dict(cal, params={"tau_s": {"mean": 0.3}})
+    wide = MPF.size_ppc(S, R, yr, ritc, cal_tau, draws_path=_toy_draws(tmp_path))
+    w0 = np.mean([r["band_hi"] / r["band_lo"] for r in base["bins"]])
+    w1 = np.mean([r["band_hi"] / r["band_lo"] for r in wide["bins"]])
+    assert w1 > 1.5 * w0, (w0, w1)
+    assert wide["tau_s_used"] == 0.3
+
+
+def test_figure_5_says_it_plots_the_base_scale_residual(figures, inputs):
+    """The edit review of 27 October 2026, item 28: the residual divides by the base size scale s(R) only, with no year
+    shock and no RITC scale term; the axis labels and the titles say so (the Student-t line a reference), and the
+    plotted residuals are exactly S / s(R) for both regimes."""
+    S, R, H, _yr, ritc, cal, _gf, _c = inputs
+    fig, axes = figures["fig_goodness_of_fit"]
+    ax = axes[0]
+    assert "base-scale residual" in ax.get_ylabel() and "s(R)" in ax.get_ylabel(), ax.get_ylabel()
+    assert "Student-$t$ reference" in ax.get_title() and "reference" in ax.get_xlabel()
+    assert "base-scale" in fig._suptitle.get_text() and "no year or RITC scale term" in fig._suptitle.get_text()
+    s_r = np.sqrt(cal["sd_undiv"] ** 2 + cal["sd_div"] ** 2 * (R / 500.0) ** (2.0 * (cal["k"] - 1.0)))
+    pts = {ln.get_label().split(",")[0]: np.asarray(ln.get_ydata(), float) for ln in ax.lines if ln.get_marker() == "o"}
+    assert np.allclose(pts["clean"], np.sort(S[~ritc] / s_r[~ritc]), rtol=1e-12, atol=0)
+    assert np.allclose(pts["RITC"], np.sort(S[ritc] / s_r[ritc]), rtol=1e-12, atol=0)
 
 
 def test_figure_3_legend_names_the_gamma_free_fit_and_its_gamma(figures, inputs):

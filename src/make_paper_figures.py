@@ -1,11 +1,18 @@
 """Four paper figures on the working-sample RITC-regime fit (n read from the data).
 
   fig_corpus_coverage   - by-year active vs corpus vs working sample (+ coverage %)
-  fig_size_dispersion   - |S| vs opening reserves (log-log) + the headline's fitted sigma(R) curve (gamma = 0) & floor
+  fig_size_dispersion   - |S| vs opening reserves (log-log): the observed vigintile medians of |S| against the
+                          posterior-predictive medians of |S| for the same records (with a 90% band), the base scale
+                          s(R) as a labelled reference, and the floor; its record,
+                          results/size_dispersion_ppc_results.json, holds every plotted bin (the edit review of
+                          27 October 2026, item 21: a Student-t scale is not a median of |S|, so the medians are now
+                          compared with model-implied medians, like with like)
   fig_hhi_dispersion    - size-standardised |S| vs HHI + fitted concentration curve, from the gamma-free fit
                           (the headline fixes gamma at 0 in the likelihood since option B, 10 October 2026, so
                           the concentration channel is that fit's, the overlay's source; the legend says so)
-  fig_goodness_of_fit   - QQ of standardised residuals vs Student-t (clean & RITC),
+  fig_goodness_of_fit   - QQ of base-scale residuals z = S / s(R) (the base size scale only: no reporting-year
+                          shock and no RITC scale term, so the Student-t line is a reference, not the full model's
+                          conditional residual distribution) vs Student-t (clean & RITC),
                           and mean|z| by size / HHI decile (flat = no residual
                           scale pattern across deciles; not a test of tail shape); its record,
                           results/goodness_of_fit_results.json, also holds the clean residuals' tails
@@ -15,7 +22,8 @@
 Each is drawn at the width the manuscript prints it at, with 9 pt labels and 8 pt ticks and legends
 (paper_figure_style.py), so its text prints at its drawn size.
 
-Writes paper_pack/<name>.{png,pdf}. Run: python src/make_paper_figures.py
+Writes paper_pack/<name>.{png,pdf}, results/size_dispersion_ppc_results.json and results/goodness_of_fit_results.json.
+Run: python src/make_paper_figures.py
 """
 import collections, io, json
 from pathlib import Path
@@ -164,12 +172,98 @@ def fig_coverage(yr, corpus_by_year):
         save(fig, "fig_corpus_coverage")
 
 
-def fig_size(S, R, H, cal):
+def fig_size(S, R, H, cal, yr, ritc):
+    ppc = size_ppc(S, R, yr, ritc, cal)
     with PFS.style():
-        fig, ax, legend = size_figure(S, R, H, cal)
+        fig, ax, legend = size_figure(S, R, H, cal, yr, ritc, ppc=ppc)
         if points_under_legend(fig, ax, legend):
             raise SystemExit("fig_size_dispersion: the legend covers plotted points")
         save(fig, "fig_size_dispersion")
+    out = SD / "results" / "size_dispersion_ppc_results.json"
+    with io.open(out, "w", encoding="utf-8", newline="") as _fh:
+        _fh.write(json.dumps(ppc, indent=2))
+    print("wrote results/size_dispersion_ppc_results.json  observed median outside the %d%% band in %d of %d vigintiles"
+          % (round(ppc["band_percentiles"][1] - ppc["band_percentiles"][0]), ppc["n_bins_outside_band"],
+             len(ppc["bins"])))
+
+
+#: Figure 2's posterior-predictive check: the headline fit's saved posterior draws, the seed, and the band's percentiles
+HEADLINE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc.npz"
+PPC_SEED, PPC_BAND = 20261027, (0.05, 0.95)
+N_VIGINTILES = 20
+
+
+def vigintiles(R):
+    """The vigintile of each record's opening reserves (0..19), Figure 2's bins, as the figure has always drawn them."""
+    edges = np.percentile(R, np.linspace(0, 100, N_VIGINTILES + 1))
+    return np.clip(np.digitize(R, edges) - 1, 0, N_VIGINTILES - 1)
+
+
+def size_ppc(S, R, yr, ritc, cal, draws_path=HEADLINE_DRAWS, seed=PPC_SEED, band=PPC_BAND):
+    """Figure 2's model-implied medians: for each saved posterior draw of the headline fit (gamma = 0), replicate |S| for
+    every plotted record and take each vigintile's median, so the observed vigintile median is compared with the same
+    statistic of the same records under the model (the edit review of 27 October 2026, item 21).
+
+    A replicate draws S_rep = sigma_it T_nu, with nu = nu_clean or nu_RITC and
+    sigma_it = exp(s_t + beta_RITC 1[RITC]) s(R), s(R) = sqrt(sd_undiv^2 + sd_div^2 (R/500)^{2(k-1)}), each parameter at
+    the draw's value. The calibration saves neither tau_s's draws nor the fitted reporting-year shocks s_t, so the year
+    shock is integrated out as for a new set of years: one s_t ~ N(0, tau_s) per reporting year and draw, shared by that
+    year's records, with tau_s at its recorded posterior mean. This is a check of the size law with the year shocks
+    integrated out, not conditional on the ten fitted year effects (that would need a refit that saves them)."""
+    with np.load(str(draws_path)) as z:
+        dr = {key: np.asarray(z[key], float) for key in ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc",
+                                                          "beta_ritc", "gamma")}
+    if np.any(dr["gamma"] != 0) or cal["gamma"] != 0:
+        raise SystemExit("Figure 2's check is of the size-only headline (gamma = 0); these draws carry a gamma")
+    tau = float(cal["params"]["tau_s"]["mean"])
+    S, R = np.asarray(S, float), np.asarray(R, float)
+    ritc = np.asarray(ritc, bool)
+    years = np.unique(yr)
+    yidx = np.searchsorted(years, yr)
+    b = vigintiles(R)
+    bins = [i for i in range(N_VIGINTILES) if (b == i).sum() > 2]
+    rng = np.random.default_rng(seed)
+    nd = len(dr["k"])
+    logr = np.log(np.maximum(R, 1e-9) / REF)
+    reps = np.empty((nd, len(bins)))
+    for c0 in range(0, nd, 500):                            # draws in blocks: 500 x n replicates at a time
+        sl = slice(c0, min(c0 + 500, nd))
+        k, su, sdv = dr["k"][sl, None], dr["sd_undiv"][sl, None], dr["sd_div"][sl, None]
+        base = np.sqrt(su ** 2 + sdv ** 2 * np.exp(2.0 * (k - 1.0) * logr[None, :]))
+        s_t = rng.normal(0.0, tau, size=(base.shape[0], len(years)))
+        sig = np.exp(s_t[:, yidx] + dr["beta_ritc"][sl, None] * ritc[None, :]) * base
+        nu = np.where(ritc[None, :], dr["nu_ritc"][sl, None], dr["nu_clean"][sl, None])
+        a = np.abs(sig * rng.standard_t(nu))
+        for j, i in enumerate(bins):
+            reps[sl, j] = np.median(a[:, b == i], axis=1)
+    aS = np.abs(S)
+    rows = []
+    for j, i in enumerate(bins):
+        m = b == i
+        obs = float(np.median(aS[m]))
+        lo, mid, hi = (float(x) for x in np.quantile(reps[:, j], [band[0], 0.5, band[1]]))
+        rows.append({"vigintile": int(i + 1), "n": int(m.sum()), "n_ritc": int(ritc[m].sum()),
+                     "median_R_gbp_m": float(np.median(R[m])), "observed_median_abs_S": obs,
+                     "ppc_median_abs_S": mid, "band_lo": lo, "band_hi": hi,
+                     "share_replicates_at_or_above_observed": float((reps[:, j] >= obs).mean()),
+                     "observed_outside_band": bool(obs < lo or obs > hi)})
+    return {"figure": "paper_pack/fig_size_dispersion.pdf and .png",
+            "statistic": "median |S| of the records in each vigintile of opening reserves R: observed, and replicated "
+                         "under the headline fit (gamma = 0) for the same records, one replicate per saved posterior "
+                         "draw",
+            "replicate": "S_rep = exp(s_t + beta_RITC 1[RITC]) s(R) T_nu, s(R) = sqrt(sd_undiv^2 + sd_div^2 "
+                         "(R/500)^{2(k-1)}), nu = nu_clean or nu_RITC, each at the draw's value",
+            "year_shock": "integrated out: s_t ~ N(0, tau_s) drawn once per reporting year and posterior draw, shared by "
+                          "that year's records; tau_s at its recorded posterior mean (the calibration saves neither "
+                          "tau_s draws nor the fitted year shocks, so the check is not conditional on them)",
+            "tau_s_used": tau, "draws": str(Path(draws_path).relative_to(SD)).replace("\\", "/")
+            if Path(draws_path).is_relative_to(SD) else str(draws_path),
+            "n_draws": int(nd), "seed": int(seed), "band_percentiles": [100 * band[0], 100 * band[1]],
+            "n": int(len(S)), "n_ritc": int(ritc.sum()), "bins": rows,
+            "n_bins_outside_band": int(sum(r["observed_outside_band"] for r in rows)),
+            "base_scale_reference": "s(R) at the posterior means (sd_undiv %.6g, sd_div %.6g, k %.6g): a clean record "
+                                    "with a zero year shock; a Student-t scale, not a median of |S|"
+                                    % (cal["sd_undiv"], cal["sd_div"], cal["k"])}
 
 
 #: Figure 2's vertical axis starts at the decade below this quantile of the nonzero |S|. Left to autoscale it ran to
@@ -177,7 +271,7 @@ def fig_size(S, R, H, cal):
 #: 14 October 2026, P30); the points below the axis are counted in the legend
 SIZE_AXIS_QUANTILE = 0.01
 #: the drawn heights of Figures 2 and 3, in inches: 3.2 with the legend inside the axes, taller now it sits below them
-SIZE_HEIGHT_IN, HHI_HEIGHT_IN = 3.75, 3.55
+SIZE_HEIGHT_IN, HHI_HEIGHT_IN = 4.1, 3.55
 #: the legends below Figures 2 and 3's axes: where they hang, in axes fractions, and their spacing
 LEGEND_BELOW = dict(frameon=False, loc="upper center", bbox_to_anchor=(0.45, -0.17), ncol=2, handlelength=1.6,
                     columnspacing=1.2)
@@ -191,31 +285,43 @@ def size_axis_floor(aS, extra=()):
     return float(10.0 ** np.floor(np.log10(np.quantile(v, SIZE_AXIS_QUANTILE))))
 
 
-def size_figure(S, R, H, cal):
+def size_figure(S, R, H, cal, yr, ritc, ppc=None):
     """Figure 2 at its printed width (call inside PFS.style()); returns (fig, ax, legend).
 
-    It plots the headline's scale law, which since option B (10 October 2026) has gamma = 0 in the likelihood, so the
-    curve is sigma(R) and the legend says so: it read sigma(R, H-bar), a size-and-concentration law the headline does
-    not have (the final review of 14 October 2026, P30). A fit with a concentration exponent is refused."""
+    The observed vigintile medians of |S| are compared with the posterior-predictive medians of |S| for the same records
+    (size_ppc: the headline fit's draws, its RITC scale and tails, the year shock integrated out), with the 90% band:
+    like with like (the edit review of 27 October 2026, item 21). The figure drew the medians against the fitted
+    Student-t scale, which is not a median of |S| and sat above every median. That scale stays as a thin reference
+    labelled for what it is: the base scale s(R) of a clean record in a year with a zero shock. The headline has gamma = 0
+    in the likelihood (option B, 10 October 2026), so s(R) does not depend on H; a fit with a concentration exponent is
+    refused."""
     if cal["gamma"] != 0:
         raise SystemExit("fig_size_dispersion plots the size-only headline (gamma = 0); this fit has gamma = %g"
                          % cal["gamma"])
+    if ppc is None:
+        ppc = size_ppc(S, R, yr, ritc, cal)
     aS = np.abs(S)
     fig, ax = PFS.figure("fig_size_dispersion", SIZE_HEIGHT_IN)
     ax.scatter(R, aS, s=6, alpha=0.28, color="#4a7ba6", edgecolors="none", label="$|S|$, syndicate-year")
-    # vigintile bin means
-    edges = np.percentile(R, np.linspace(0, 100, 21)); b = np.clip(np.digitize(R, edges) - 1, 0, 19)
-    bx = [np.median(R[b == i]) for i in range(20) if (b == i).sum() > 2]
-    by = [np.median(aS[b == i]) for i in range(20) if (b == i).sum() > 2]
-    ax.plot(bx, by, "s", color="#1b4965", ms=4, label="vigintile median")
-    # the fitted sigma(R) (gamma = 0: H does not enter), and the floor
+    rows = ppc["bins"]
+    b = vigintiles(R)
+    bx = [float(np.median(R[b == r["vigintile"] - 1])) for r in rows]
+    by = [r["observed_median_abs_S"] for r in rows]
+    if [r["median_R_gbp_m"] for r in rows] != bx or by != [float(np.median(aS[b == r["vigintile"] - 1])) for r in rows]:
+        raise SystemExit("fig_size_dispersion: the check's bins are not these records' vigintiles")
+    pm_, plo, phi = ([r[k] for r in rows] for k in ("ppc_median_abs_S", "band_lo", "band_hi"))
+    band = ax.fill_between(bx, plo, phi, color="#e08214", alpha=0.25, lw=0, zorder=1)
+    (pline,) = ax.plot(bx, pm_, "-", color="#b35806", lw=1.6, zorder=2)
+    ax.plot(bx, by, "s", color="#1b4965", ms=4, zorder=3, label="observed vigintile median")
+    # the base scale s(R) of a clean record with a zero year shock (gamma = 0: H does not enter), a reference only
     Rgrid = np.logspace(np.log10(R.min()), np.log10(R.max()), 100)
     curve = sigma(Rgrid, 1.0, cal)
-    ax.plot(Rgrid, curve, "-", color="#b2182b", lw=2, label=r"fitted $\sigma(R)$, size-only")
-    ax.axhline(cal["sd_undiv"], ls="--", color="#333", lw=1,
+    ax.plot(Rgrid, curve, "--", color="#7f7f7f", lw=1.0, zorder=1,
+            label="base scale $s(R)$, clean:\nreference, not a median")
+    ax.axhline(cal["sd_undiv"], ls=":", color="#333", lw=1,
                label="undiversifiable floor %.3f" % cal["sd_undiv"])
     ax.set_xscale("log"); ax.set_yscale("log")
-    lo = size_axis_floor(aS, list(by) + list(curve))
+    lo = size_axis_floor(aS, list(by) + list(curve) + list(pm_) + list(plo) + list(phi))
     ax.set_ylim(lo, 1.3 * max(float(aS.max()), float(curve.max())))
     n_below = int((aS < lo).sum())
     if n_below:      # a legend entry with no symbol: the count of the points under the axis (|S| = 0 among them)
@@ -223,9 +329,15 @@ def size_figure(S, R, H, cal):
     ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("Severity $|S|$ (absolute PYD ratio)")
     # the title describes the axes and the fitted law, not the floor: the paper holds the floor to be a structural
     # specification, not a measured feature of these points (the review of 2 October 2026, P-27)
-    ax.set_title("Size$-$dispersion: $|S|$ against opening reserves\nand the fitted scale ($k=%.2f$)" % cal["k"])
-    # below the axes: with the axis cropped at 1e-4, every corner inside them covered points (points_under_legend)
-    legend = ax.legend(**LEGEND_BELOW)
+    ax.set_title("Size$-$dispersion: vigintile medians of $|S|$,\nobserved and posterior-predictive ($k=%.2f$)"
+                 % cal["k"])
+    # below the axes: with the axis cropped at 1e-4, every corner inside them covered points (points_under_legend).
+    # The posterior-predictive median and its band share one entry, placed after the observed medians
+    handles, labels = ax.get_legend_handles_labels()
+    at = labels.index("observed vigintile median") + 1
+    handles.insert(at, (band, pline))
+    labels.insert(at, "posterior-predictive\nmedian, %d%% band" % round(ppc["band_percentiles"][1] - ppc["band_percentiles"][0]))
+    legend = ax.legend(handles, labels, **LEGEND_BELOW)
     ax.grid(True, which="both", alpha=0.2)
     ax.tick_params(which="both", labelsize=PFS.SMALL_PT)
     PFS.plain_log_ticks(ax)
@@ -330,8 +442,10 @@ def clean_tail(S, R, H, ritc, syn, yr, cal, resamples=CLEAN_TAIL_RESAMPLES, seed
     for b in range(resamples):
         pick = rng.choice(keys, size=len(keys), replace=True)
         boot[b] = tail_skew_ratio(np.concatenate([groups[k] for k in pick]))
-    return {"residual": "z = S / sigma(R, H) at the posterior-mean parameters, records outside the RITC regime "
-                        "(Figure 4, panel (a), clean)",
+    return {"residual": "base-scale residual z = S / s(R) at the posterior-mean parameters (the base size scale only: "
+                        "no reporting-year shock and no RITC scale term), records outside the RITC regime (the "
+                        "goodness-of-fit figure, panel (a), clean); the expected count per tail is a unit Student-t "
+                        "reference, not the full model's expectation for these residuals",
             "n_clean": int(m.sum()), "nu_clean": float(cal["nu_clean"]),
             "above_3": int(up.sum()), "below_3": int(dn.sum()), "n_extremes": int(ext.sum()),
             "expected_per_tail": float(m.sum() * stats.t.sf(3.0, df=cal["nu_clean"])),
@@ -347,9 +461,20 @@ def clean_tail(S, R, H, ritc, syn, yr, cal, resamples=CLEAN_TAIL_RESAMPLES, seed
 
 
 def gof_figure(S, R, H, ritc, cal):
-    """Figure 4 at its printed width (call inside PFS.style()); returns (fig, axes, the record it plots)."""
+    """The goodness-of-fit figure at its printed width (call inside PFS.style()); returns (fig, axes, the record it
+    plots).
+
+    The residual is the base-scale residual z = S / s(R): s(R) = sigma(R, H, cal) at the headline's posterior means with
+    gamma = 0, the base size scale only. It carries no reporting-year shock exp(s_t) (the calibration does not save the
+    fitted shocks) and no RITC scale exp(beta_RITC). So it diagnoses what size leaves behind, with the market-year
+    variation still in it, and the Student-t line is a reference: under the full model a base-scale residual is a scale
+    mixture over the year shocks, not exactly a unit t (the edit review of 27 October 2026, item 28). The axis labels
+    and the titles say so."""
+    if cal["gamma"] != 0:
+        raise SystemExit("the goodness-of-fit figure plots the size-only headline's base scale (gamma = 0); this fit "
+                         "has gamma = %g" % cal["gamma"])
     z = S / sigma(R, H, cal)
-    fig, axes = PFS.figure("fig_goodness_of_fit", 3.3, ncols=2)
+    fig, axes = PFS.figure("fig_goodness_of_fit", 3.6, ncols=2)      # 3.3 with a one-line suptitle
     # (a) QQ vs Student-t
     ax = axes[0]
     for mask, nu, col, lab in [(~ritc, cal["nu_clean"], "#1b7837", "clean"),
@@ -358,19 +483,21 @@ def gof_figure(S, R, H, ritc, cal):
         q = stats.t.ppf((np.arange(1, n + 1) - 0.5) / n, df=nu)
         ax.plot(q, zz, "o", ms=2, alpha=0.5, color=col, label=f"{lab}, n={n}")
     lim = 8
+    # the reference line is named by the title and the horizontal axis: a third legend entry ran over 24 points
     ax.plot([-lim, lim], [-lim, lim], "k-", lw=0.8)
     ax.set_xlim(-lim, lim); ax.set_ylim(-lim, lim)
-    ax.set_xlabel("Student-$t$ quantile"); ax.set_ylabel("residual $z=S/\\sigma$")
+    ax.set_xlabel("Student-$t$ quantile (reference)"); ax.set_ylabel("base-scale residual $S/s(R)$")
     # the tail indices in the title keep the legend short enough for the empty upper-left corner at the
     # printed width (with them the legend ran over the points and the reference line)
-    ax.set_title("QQ vs Student-$t$\n($\\nu$ = %.2f clean, %.2f RITC)" % (cal["nu_clean"], cal["nu_ritc"]))
+    ax.set_title("QQ vs Student-$t$ reference\n($\\nu$ = %.2f clean, %.2f RITC)" % (cal["nu_clean"], cal["nu_ritc"]))
     ax.legend(frameon=False, loc="upper left"); ax.grid(True, alpha=0.2)
     ax.tick_params(labelsize=PFS.SMALL_PT)
     # (b) mean|z| by size and HHI decile, with the Kruskal-Wallis test the body quotes:
     # does |z| separate across the ten groups? Recorded so the p-values have a source.
     ax = axes[1]
-    gof = {"n": int(len(z)), "groups": 10, "statistic": "|z| = |S| / sigma(R, H) at the posterior-mean"
-           " two-regime parameters; equal-count decile groups; Kruskal-Wallis across groups"}
+    gof = {"n": int(len(z)), "groups": 10, "statistic": "|z| = |S| / s(R), the base-scale residual: the base size "
+           "scale at the posterior-mean two-regime parameters, with no reporting-year shock and no RITC scale term; "
+           "equal-count decile groups; Kruskal-Wallis across groups"}
     for arr, col, lab, key in [(R, "#4a7ba6", "size decile", "size"), (H, "#5a8a5a", "HHI decile", "hhi")]:
         edges = np.percentile(arr, np.linspace(0, 100, 11)); b = np.clip(np.digitize(arr, edges) - 1, 0, 9)
         groups = [np.abs(z[b == i]) for i in range(10)]
@@ -389,8 +516,9 @@ def gof_figure(S, R, H, ritc, cal):
     ax.set_ylim(0, 1.6 * max(ax.get_ylim()[1], 1e-9))
     ax.legend(frameon=False, loc="upper center", ncol=1); ax.grid(True, alpha=0.2)
     ax.tick_params(labelsize=PFS.SMALL_PT)
-    fig.suptitle(f"Goodness of fit: standardised residuals (n={len(z)})")
-    fig.tight_layout(rect=[0, 0, 1, 0.97])
+    # two lines: on one, the title widened the saved page and its text printed below 8 pt
+    fig.suptitle(f"Goodness of fit: base-scale residuals $z=S/s(R)$\n(no year or RITC scale term; n={len(z)})")
+    fig.tight_layout(rect=[0, 0, 1, 0.94])
     gof["single_line_H1"] = {"n": int((H >= 1.0 - 1e-9).sum()),
                              "mean_abs_z": float(np.abs(z[H >= 1.0 - 1e-9]).mean()) if (H >= 1.0 - 1e-9).any() else None,
                              "pool_median_abs_z": float(np.median(np.abs(z)))}
@@ -402,7 +530,7 @@ def main():
     print(f"n={len(S)}  RITC={int(ritc.sum())}  k={cal['k']:.3f} gamma={cal['gamma']:.3f} "
           f"floor={cal['sd_undiv']:.4f} nu_clean={cal['nu_clean']:.2f} nu_ritc={cal['nu_ritc']:.2f}")
     fig_coverage(yr, corpus_by_year)
-    fig_size(S, R, H, cal)
+    fig_size(S, R, H, cal, yr, ritc)
     fig_hhi(S, R, H, cal_gf)              # the concentration channel is the gamma-free fit's (option B)
     fig_gof(S, R, H, ritc, cal, syndicates(), yr)
 
