@@ -119,8 +119,9 @@ amount_GBP_m = amount_USD_m / (USD per GBP at the reporting date)
 Every numeric field with the `_gbp_m` suffix is converted (opening reserves, PYD,
 gross premiums written, premium-mix amounts, LoB movement amounts). Ratios are
 currency-invariant and are **not** touched: `pyd_pct`, LoB weights, HHI, and the
-severity `S = PYD / opening_reserves` (numerator and denominator are in the same
-report currency). The conversion therefore changes the **size** variables (reserves,
+severity `S = PYD / R` (numerator and denominator are in the same
+report currency; `R`, the field `opening_reserves_gbp_m`, is the opening gross claims outstanding,
+augmented by qualifying in-year taken-on reserves where the development figure includes their development). The conversion therefore changes the **size** variables (reserves,
 premiums) that enter the pooling law and eligibility thresholds, not the severities.
 
 A single reporting-date rate is applied to all amounts in a report, including

@@ -1,7 +1,8 @@
 """Sensitivity: the adopted model with the pooling exponent k on a wider support.
 
-Theory bounds the pooling exponent to [1/2, 1] (finite-variance independent sqrt-N pooling to comonotonic
-pooling), and the headline prior keeps k inside that bracket: k = 1/2 + 1/2 logistic(theta), theta ~ N(0, 1.5).
+The finite-variance benchmarks for the pooling exponent are k = 1/2 (independent sqrt-N pooling) and k = 1
+(comonotonic pooling). The headline prior restricts k to that bracket by its support, k = 1/2 + 1/2 logistic(theta),
+theta ~ N(0, 1.5): a modelling choice, not a universal bound, since heavier-tailed blocks can decline outside it.
 The bracket's lower end therefore cannot be tested by the headline fit: its posterior cannot put any mass below
 1/2, whatever the data say. This script refits the adopted two-regime model with k on two wider supports,
 

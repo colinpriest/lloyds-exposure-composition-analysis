@@ -40,7 +40,7 @@ $P(\gamma > 0.05) = 0.928$ against a prior mass of 0.960; 0 divergences, max $\h
 |---|---:|---:|---|
 | $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.398 | 0.500 | the data move it below its prior mass, so the RITC tail reads as the lighter; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.052 | 0.036 | posterior probability that the RITC regime lacks a finite variance; within 0.05 of its prior mass, so its size is the prior's, not a finding |
-| $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | theory bounds $k$ to $[\tfrac12,1]$ (finite-variance independent $\sqrt N$ pooling to comonotonic pooling) and the prior keeps it there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |
+| $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | the adopted prior restricts $k$ to $[\tfrac12,1]$, the finite-variance benchmarks (independent $\sqrt N$ pooling at $\tfrac12$, comonotonic pooling at $1$); that is a modelling choice, not a universal bound, because heavier-tailed (infinite-variance) blocks can decline outside the bracket. So these are not findings; the endpoints are scored by syndicate as fixed alternatives |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.636 | 0.841 | the data move it below its prior mass; fitted in the likelihood, and the transfer operator omits it, not shown to be zero |
 
 ## Pooling comparison
@@ -72,7 +72,7 @@ M3 and M4 load a **common** reporting-year factor on size. Pair-specific shared-
 
 ## Between-syndicate level differences
 
-Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.044 against $\sigma_{\text{div}}$ = 0.044 at the reference size (ratio 1.00): persistent between-syndicate level differences are real and material.
+Source: `results/check_syndicate_random_effect_results.json`. $\tau_\alpha$ = 0.044 against $\sigma_{\text{div}}$ = 0.044 at the reference size (ratio 1.00). Under the random-intercept model, the posterior puts the between-syndicate level spread at this size relative to the diversifiable scale, and on that model persistent level differences are material. That is an inference conditional on the random-intercept model, not a model-free finding.
 
 ## Missingness
 
@@ -90,7 +90,7 @@ Three sensitivities are reported instead of resting on it. Bounded inverse-proba
 These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
-- the exact value of $k$ inside its theoretical bracket $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -7.9% under the size-only headline operator, and the 100m/2,000m scale ratio from 2.19 to 2.07 under that operator (the same at every $H$: both fits have $\gamma = 0$ in the likelihood);
+- the exact value of $k$ inside the adopted prior's support $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -7.9% under the size-only headline operator, and the 100m/2,000m scale ratio from 2.19 to 2.07 under that operator (the same at every $H$: both fits have $\gamma = 0$ in the likelihood);
 - whether the size-dispersion decline continues past about GBP 1bn;
 - the within-book concentration--location slope, which is unresolved rather than zero;
 - whether the long-tail share matters for transfer: its slope is resolved in sample (posterior mean $+0.53$, 95% credible interval $[+0.21, +0.85]$), positive, but an out-of-sample gain is not established: the composition model with the share scores $+0.6$ higher by-syndicate held-out ELPD than without it, but the Bayesian-bootstrap 95% credible interval $[-11.0, +10.3]$ includes zero ($P = 0.57$ that the model with it scores the higher), so an improvement in prediction of unseen syndicates is not established; that the operator does not carry the share is a modelling choice, not a result of this comparison;

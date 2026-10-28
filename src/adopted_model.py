@@ -130,8 +130,10 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
     options are the ONLY ways a sensitivity script may depart from it, each one
     the declared dimension of a variant:
       logR/logH/yidx/n_y  the same inputs already transformed (no departure);
-      k_prior             k on its theoretical bracket [1/2, 1] ("logistic", the adopted
-                          prior), fixed at the bracket's lower end ("fixed_0.5", the
+      k_prior             k on the bracket [1/2, 1], the adopted prior's support ("logistic",
+                          the adopted prior; the bracket is a modelling choice from the
+                          finite-variance benchmarks, not a universal bound), fixed at the
+                          bracket's lower end ("fixed_0.5", the
                           sensitivity of check_k_half_sensitivity), or on a wider support
                           k = k_lo + (1 - k_lo) logistic(theta), theta ~ N(0, 1.5), with k_lo
                           0.25 or 0 ("logistic_0.25", "logistic_0": check_k_support);
@@ -155,8 +157,10 @@ def scale_block(R=None, H=None, yr=None, ritc=None, *, logR=None, logH=None,
         logR = np.log(R / REFERENCE_SIZE)
         logH = np.log(H)
 
-    # Theory bounds k to [1/2, 1], from finite-variance independent sqrt-N pooling to comonotonic pooling,
-    # and the prior keeps it there; the fixed option sits at the bracket's lower end.
+    # k = 1/2 is finite-variance independent sqrt-N pooling and k = 1 is comonotonic pooling. The adopted prior
+    # restricts k to [1/2, 1] by its support: a modelling choice based on those finite-variance benchmarks, not a
+    # universal bound (heavier-tailed, infinite-variance blocks can decline outside it). The fixed option sits at
+    # the bracket's lower end.
     if k_prior == "logistic":
         theta = pm.Normal("theta", 0.0, 1.5)
         k = pm.Deterministic("k", 0.5 + 0.5 * pm.math.sigmoid(theta))

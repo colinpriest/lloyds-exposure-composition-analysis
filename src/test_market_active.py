@@ -12,6 +12,7 @@ Run:  python -m pytest src/test_market_active.py -q
 import io
 import json
 import os
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -195,3 +196,122 @@ def test_the_provenance_note_counts_the_loaders_filings_without_a_dual_model_out
     assert "The %d filings with no usable dual-model output cannot all be labelled OCR failures" % n in fresh
     planted = fresh.replace("The %d filings with no usable" % n, "The 128 filings with no usable")
     assert bcr.provenance_clauses(planted, ex) == fresh
+
+
+# ---- coverage: the sample against the official lists is an intersection, not a ratio of unlike populations -------
+
+def _working_sample_keys():
+    """(syndicate, year) of the working sample, read from the loader's eligibility mask, not from the generator."""
+    with io.open(os.path.join(HERE, "model", "exposure_results.json"), encoding="utf-8") as _fh:
+        ex = json.load(_fh)
+    obs = ex["observations"]
+    return {(int(obs[i]["syndicate"]), int(obs[i]["year"]))
+            for i in ex["eligibility"]["eligible_for_capital"]["mask_indices"]}
+
+
+def test_sample_overlap_counts_the_intersection_and_keeps_an_off_list_record_out_of_it(tmp_path):
+    """A deliberately off-list observation (syndicate 9 in 2020) is in the sample, so it counts in `sample`, but it
+    is not on the 2020 list, so it does not count in `in_list` and is reported under `off_list`. A year with no
+    official list (2019) has no entry: its membership cannot be checked."""
+    fake = tmp_path / "lists.json"
+    fake.write_text(json.dumps({"2020": [1, 2, 3, 4], "2021": [1, 2]}), encoding="utf-8")
+    keys = {(1, 2020), (2, 2020), (9, 2020), (1, 2021), (7, 2019), (8, 2019)}
+    out = market_active.sample_overlap(keys, path=fake)
+    assert sorted(out) == [2020, 2021]
+    assert out[2020] == {"listed": 4, "sample": 3, "in_list": 2, "off_list": [9]}
+    assert out[2021] == {"listed": 2, "sample": 1, "in_list": 1, "off_list": []}
+    # without the off-list record the intersection is unchanged: it never counted
+    assert market_active.sample_overlap(keys - {(9, 2020)}, path=fake)[2020]["in_list"] == 2
+    # a sample as large as the list is not full coverage when part of it is off the list
+    big = {(1, 2021), (5, 2021)}
+    assert market_active.sample_overlap(big, path=fake)[2021] == {"listed": 2, "sample": 2, "in_list": 1,
+                                                                  "off_list": [5]}
+
+
+def test_the_working_sample_overlap_with_the_official_lists_is_computed_from_the_data():
+    keys = _working_sample_keys()
+    lists = market_active.official_lists()
+    expected = {y: {"listed": len(lists[y]),
+                    "sample": sum(1 for s, yy in keys if yy == y),
+                    "in_list": sum(1 for s, yy in keys if yy == y and s in lists[y]),
+                    "off_list": sorted(s for s, yy in keys if yy == y and s not in lists[y])}
+                for y in lists}
+    assert market_active.sample_overlap(keys) == expected
+    c = gda.compute()
+    assert c["sample_sy"] == keys and c["overlap"] == expected
+    # the fresh review of 28 October 2026 (finding 3), at this sample: 61/98, 54/92, 56/93, 67/95, 72/95, 310/473,
+    # 316 working-sample records in those years, and six records outside their year's list
+    assert [(e["in_list"], e["listed"]) for _, e in sorted(expected.items())] == [
+        (61, 98), (54, 92), (56, 93), (67, 95), (72, 95)]
+    assert sum(e["in_list"] for e in expected.values()) == 310 and sum(e["listed"] for e in expected.values()) == 473
+    assert sum(e["sample"] for e in expected.values()) == 316
+    assert sorted((s, y) for y, e in expected.items() for s in e["off_list"]) == [
+        (1110, 2020), (1110, 2023), (1110, 2024), (1884, 2022), (1884, 2023), (1884, 2024)]
+    # the old quotient divided 316 sample records by 473 listed: 66.8%, not the 65.5% the intersection gives
+    assert 100.0 * 316 / 473 > 66 and round(100.0 * 310 / 473, 1) == 65.5
+
+
+def _appendix_b5(monkeypatch=None):
+    if monkeypatch is not None:
+        monkeypatch.setattr(gda, "load_runoff_corpus_register", lambda: REGISTER)
+        monkeypatch.setattr(gda, "load_reviewed_not_runoff", lambda: REVIEWED)
+    text = gda.md(gda.compute(), gda.mine_raw())
+    return text[text.index("## B.5 Coverage"):text.index("## B.6 ")]
+
+
+def test_the_appendix_reports_the_intersection_and_no_coverage_for_years_without_a_list(monkeypatch):
+    b5 = _appendix_b5(monkeypatch)
+    lists = market_active.official_lists()
+    keys = _working_sample_keys()
+    in_list = sum(1 for s, y in keys if y in lists and s in lists[y])
+    listed = sum(len(v) for v in lists.values())
+    assert "| **%d** (2020–2024) | **%d/%d (%.1f%%)** (2020–2024 only) |" % (in_list, in_list, listed,
+                                                                         100.0 * in_list / listed) in b5
+    for y, v in lists.items():
+        n = sum(1 for s, yy in keys if yy == y and s in v)
+        assert "%d/%d (%.1f%%) |" % (n, len(v), 100.0 * n / len(v)) in b5, y
+    # 2014-2019: a published count and no list, so the row carries no share
+    for y in range(2014, 2020):
+        row = next(l for l in b5.splitlines() if l.startswith("| %d | %d |" % (y, market_active.MARKET_AR[y])))
+        assert row.endswith("| not checkable | not computed |"), row
+    # the six off-list working-sample records are named, kept and explained without asserting they stopped trading
+    for name in ("1110/2020", "1884/2022", "1110/2023", "1884/2023", "1110/2024", "1884/2024"):
+        assert name in b5.split("The per-year comparison")[0], name
+    assert "stay in the working sample" in b5 and "does not assert that the syndicate had stopped trading" in b5
+    # the pooled and the 2014-2019 ratios are called what they are
+    assert "a ratio of two different populations" in b5 and "no coverage percentage is given" in b5
+
+
+def test_the_appendix_no_longer_infers_retrieval_from_equal_totals_or_quotes_the_old_coverage(monkeypatch):
+    b5 = _appendix_b5(monkeypatch)
+    assert "Retrieval now matches the market" not in b5 and "has been closed" not in b5
+    assert "Sample coverage" not in b5 and "covers 632 of the 1045" not in b5
+    assert "Working-sample coverage is" not in b5
+    assert "Totals of similar size do not show that every listed syndicate's filing was retrieved" in b5
+    assert not re.search(r"\b60%|\b78%", b5)
+
+
+def test_the_committed_appendix_coverage_section_is_what_the_generator_writes():
+    with io.open(os.path.join(HERE, "docs", "appendix-data-audit.md"), encoding="utf-8") as _fh:
+        doc = _fh.read()
+    assert doc[doc.index("## B.5 Coverage"):doc.index("## B.6 ")] == _appendix_b5(), "the appendix is stale"
+
+
+def test_the_readme_and_provenance_note_quote_the_intersection_not_the_old_percentage():
+    lists = market_active.official_lists()
+    keys = _working_sample_keys()
+    in_list = sum(1 for s, y in keys if y in lists and s in lists[y])
+    listed = sum(len(v) for v in lists.values())
+    off = sum(1 for s, y in keys if y in lists and s not in lists[y])
+    with io.open(os.path.join(HERE, "README.md"), encoding="utf-8") as _fh:
+        readme = " ".join(_fh.read().split())
+    assert "%d of the %d listed syndicate-years, %.1f%%" % (in_list, listed, 100.0 * in_list / listed) in readme
+    assert "%s further working-sample records are not on their year's list" % {6: "six"}.get(off, off) in readme
+    assert "membership cannot be checked" in readme and "different populations" in readme
+    assert "67%" not in readme and "round-53 sample" not in readme
+    with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as _fh:
+        prov = " ".join(_fh.read().split())
+    block = prov[prov.index("<!-- coverage:start -->"):prov.index("<!-- coverage:end -->")]
+    assert "%d of the %d listed syndicate-years (%.1f %%)" % (in_list, listed, 100.0 * in_list / listed) in block
+    assert "no coverage percentage is given" in block and "is the stated denominator" in block
+    assert "66 %" not in block and "gap in the old dataset is closed" not in block

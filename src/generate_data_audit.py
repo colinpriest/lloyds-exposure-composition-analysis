@@ -262,7 +262,8 @@ def compute():
                 sample_by_year=dict(sorted(sample_by_year.items())),
                 corpus_synd=meta["unique_syndicates"], sample_synd=len(set(o["syndicate"] for o in sample)),
                 present_all=allyrs, year_dist=year_dist, n_synd=len(pres),
-                sample_sy=sample_sy, corpus_sy=corpus_sy)
+                sample_sy=sample_sy, corpus_sy=corpus_sy,
+                overlap=market_active.sample_overlap(sample_sy))
 
 
 def _names(keys):
@@ -399,7 +400,11 @@ def md(c, r):
       f"The basis is **gross of outward reinsurance**: the reserve/narrative text mentions "
       f"\"gross\" in {r['gross']} filings vs \"net\" in {r['net']}, and the standardised narratives "
       f"describe an \"opening gross claims outstanding\". (Note numbers vary by filing; the page "
-      f"reference is recorded, the note index is not.)\n")
+      f"reference is recorded, the note index is not.) The balance read from the filing is the accounting "
+      f"balance. The model's denominator $R$ is that opening gross claims outstanding, augmented by the "
+      f"qualifying in-year taken-on reserves where the development figure includes their development "
+      f"(`data/opening_reserves_takeon_base.json`); the record field `opening_reserves_gbp_m` holds $R$ as "
+      f"the model uses it.\n")
     A(f"**Claims-development figures $M$ — FRS 103 triangle.** The claims-development triangle is "
       f"captured in `_claims_triangle` for **{r['tri']} of {r['has_g']}** extracted filings. A "
       f"triangle is gross or net, and the extraction records which (`_claims_triangle.type`); "
@@ -572,35 +577,72 @@ def md(c, r):
     # B.5
     A("\n## B.5 Coverage\n")
     A(f"The working sample spans **{c['sample_synd']} syndicates / {c['sample']} syndicate-years** "
-      f"(corpus {c['corpus_synd']} / {c['corpus']}). Coverage against the active-syndicate denominator "
-      "(2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; "
-      "2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 "
-      "including run-off/RITC vehicles):\n")
-    A("| Year | Active syndicates | Corpus | Working sample | Sample coverage |\n|---|---:|---:|---:|---:|")
+      f"(corpus {c['corpus_synd']} / {c['corpus']}). The active-syndicate denominator comes from two sources of "
+      "different kinds. For 2020–2024 Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets "
+      "name every active syndicate, so membership can be checked. For 2014–2019 only the published count of active "
+      "syndicates is held (Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 "
+      "including run-off/RITC vehicles), so whether a working-sample syndicate was on the active list in those "
+      "years cannot be checked. A coverage share is therefore given only for 2020–2024, as the working-sample "
+      "syndicate-years whose syndicate is on that year's official list, over the size of the list:\n")
+    ov = c["overlap"]
+    A("| Year | Active syndicates (published count) | Corpus | Working sample | "
+      "Working sample on that year's official list | Share of the official list |\n|---|---:|---:|---:|---:|---:|")
     tot_m = tot_c = tot_s = 0
     for y in YEARS:
         m = c["market"][y]; cc = c["corpus_by_year"].get(y, 0); ss = c["sample_by_year"].get(y, 0)
         tot_m += m; tot_c += cc; tot_s += ss
-        A(f"| {y} | {m} | {cc} | {ss} | {100*ss/m:.0f}% |")
-    A(f"| **Total** | **{tot_m}** | **{tot_c}** | **{tot_s}** | **{100*tot_s/tot_m:.0f}%** |")
+        if y in ov:
+            e = ov[y]
+            A(f"| {y} | {m} | {cc} | {ss} | {e['in_list']} | {e['in_list']}/{e['listed']} "
+              f"({100 * e['in_list'] / e['listed']:.1f}%) |")
+        else:
+            A(f"| {y} | {m} | {cc} | {ss} | not checkable | not computed |")
+    ov_listed = sum(e["listed"] for e in ov.values())
+    ov_in = sum(e["in_list"] for e in ov.values())
+    ov_sample = sum(e["sample"] for e in ov.values())
+    ov_years = sorted(ov)
+    ov_pct = {y: 100 * ov[y]["in_list"] / ov[y]["listed"] for y in ov_years}
+    A(f"| **Total** | **{tot_m}** | **{tot_c}** | **{tot_s}** | **{ov_in}** (2020–2024) | "
+      f"**{ov_in}/{ov_listed} ({100 * ov_in / ov_listed:.1f}%)** (2020–2024 only) |")
 
-    covs = [100 * c["sample_by_year"].get(y, 0) / c["market"][y] for y in YEARS if c["market"].get(y)]
-    cov_all = 100 * tot_s / tot_m
-    cov_2014 = 100 * c["sample_by_year"].get(2014, 0) / c["market"][2014]
+    pre = [y for y in YEARS if y not in ov]
+    pre_sample = sum(c["sample_by_year"].get(y, 0) for y in pre)
+    pre_market = sum(c["market"][y] for y in pre)
+    off = [("%d/%d" % (s, y)) for y in ov_years for s in ov[y]["off_list"]]
+    lo_y = min(ov_years, key=lambda y: ov_pct[y]); hi_y = max(ov_years, key=lambda y: ov_pct[y])
     A("\n### Coverage by year\n")
-    A(f"The working sample covers {tot_s} of the {tot_m} active syndicate-years ({cov_all:.0f}%), "
-      f"between {min(covs):.0f}% and {max(covs):.0f}% by year; the earliest year is the weakest "
-      f"(2014: {cov_2014:.0f}%). The per-year comparison with the official active lists follows:\n")
+    A(f"For 2020–2024 the working sample holds {ov_in} of the {ov_listed} listed syndicate-years "
+      f"({100 * ov_in / ov_listed:.1f}%), between {ov_pct[lo_y]:.1f}% ({lo_y}) and {ov_pct[hi_y]:.1f}% ({hi_y}) by "
+      f"year. The working sample has {ov_sample} records in those years, so {ov_sample - ov_in} of them "
+      f"are records outside their year's official active list"
+      + (f" ({', '.join(off)})" if off else "")
+      + ". The official list is the stated denominator, so those records are reported separately and are not "
+      "counted as coverage; they are valid observations and stay in the working sample. Being off a year's list does "
+      "not assert that the syndicate had stopped trading. "
+      f"For 2014–2019 the working sample has {pre_sample} records against {pre_market} published active-syndicate "
+      "counts, and that is a ratio of two different populations (syndicate-years with a usable record, against a "
+      "count of active syndicates); no membership list exists to intersect them, so no coverage percentage is given "
+      f"for those years, nor for 2014–2024 as a whole ({tot_s} sample records against {tot_m} published counts). "
+      f"The earliest year is the weakest: the 2014 working sample has {c['sample_by_year'].get(2014, 0)} records "
+      f"against {c['market'][2014]} published active syndicates. The per-year comparison with the published counts "
+      "and the official active lists follows:\n")
     A("| Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |\n|---|---:|---:|---:|---:|---:|")
     for y in YEARS:
         A(f"| {y} | {c['market'][y]} | {r['raw_year'].get(y, 0)} | {r['empty_year'].get(y, 0)} "
           f"| {c['corpus_by_year'].get(y, 0)} | {c['sample_by_year'].get(y, 0)} |")
     raw_years = [r["raw_year"].get(y, 0) for y in YEARS]
     act_years = [c["market"][y] for y in YEARS]
-    A(f"\n- **Retrieval now matches the market** ({min(raw_years)}–{max(raw_years)} PDFs/year throughout, vs "
-      f"{min(act_years)}–{max(act_years)} active syndicates); the recent-year retrieval gap present in the earlier "
-      "dataset has been closed.")
-    A(f"- The residual shortfall to 100% combines scope, disclosure availability and extraction/output "
+    miss_txt = ""
+    if c["diff"]:
+        miss_txt = (f", and against the official lists {min(e['miss'] for e in c['diff'].values())}–"
+                    f"{max(e['miss'] for e in c['diff'].values())} listed syndicates each year have no corpus record "
+                    "(table below)")
+    A(f"\n- **Retrieved PDFs and active counts are not a membership check** "
+      f"({min(raw_years)}–{max(raw_years)} PDFs/year throughout, vs {min(act_years)}–{max(act_years)} active "
+      "syndicates). Totals of similar size do not "
+      "show that every listed syndicate's filing was retrieved: the PDFs include syndicates that are not on the list"
+      + miss_txt + ".")
+    A(f"- The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output "
       f"states. {r['neither']} of {c['total_files']} PDFs yielded no usable dual-model output "
       f"(most often in 2014, {r['empty_year'].get(2014, 0)} of {r['raw_year'].get(2014, 0)}), but that "
       f"operational count overlaps the loader stages and is not evidence that all {r['neither']} were OCR failures. "
@@ -621,9 +663,10 @@ def md(c, r):
     by_c = miss["eligible_outcome_stress"]["by_c"]
     c_max, c_min = max(by_c, key=float), min(by_c, key=float)
     f_stress, f_base = by_c[c_max], by_c[c_min]
-    A(f"- **Implication.** Working-sample coverage is {cov_all:.0f}% of active syndicate-years, "
-      f"{min(covs):.0f}-{max(covs):.0f}% by year and only {cov_2014:.0f}% in 2014; the later years do not "
-      "erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned "
+    A(f"- **Implication.** Where membership can be checked (2020–2024) the working sample holds {ov_in} of the "
+      f"{ov_listed} listed syndicate-years ({100 * ov_in / ov_listed:.1f}%), {ov_pct[lo_y]:.1f}–{ov_pct[hi_y]:.1f}% "
+      f"by year; the 2014 working sample has {c['sample_by_year'].get(2014, 0)} records and no coverage can be "
+      "measured for 2014–2019. The working sample's shortfall is size-biased toward smaller and older-scanned "
       "syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. "
        f"The supported disclosure-defined target has {miss['n_supported_target_population']} records, of which "
        f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "

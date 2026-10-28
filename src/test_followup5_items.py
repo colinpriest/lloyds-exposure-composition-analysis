@@ -41,20 +41,30 @@ def test_the_outbound_docstring_names_every_confirmed_record_outside_the_sample(
         assert key.replace("_", "/") in doc, key
 
 
-def test_the_coverage_lines_generate_the_retrieval_range_and_round_the_rates():
+def test_the_coverage_lines_generate_the_intersection_and_the_retrieval_range():
+    """The sample's share of the listed syndicate-years is an intersection with the 2020-2024 lists; a retrieval total
+    is not a membership check, and 2014-2019 (a published count, no list) carries no percentage."""
     ex = _exposure()
-    text = " ".join(bcr.coverage_lines(ex))
-    assert "~" not in text[text.index("The 2020\u20132024 retrieval"):]     # "~47 %" is the old dataset's
+    text = " ".join(" ".join(bcr.coverage_lines(ex)).split())
+    assert "~" not in text                     # "~47 %" was the old dataset's ratio of unlike populations
     got, active = bcr._retrieved_by_year(), bcr._active_by_year()
     recent = range(2020, 2025)
-    assert ("%d–%d PDFs retrieved per year in 2020–2024 vs %d–%d active syndicates"
+    assert ("%d–%d PDFs retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, and it does "
+            "not show that every listed syndicate's filing was retrieved"
             % (min(got[y] for y in recent), max(got[y] for y in recent),
                min(active[y] for y in recent), max(active[y] for y in recent))) in text
-    samp = bcr._sample_by_year(ex)
-    rates = {y: 100.0 * samp[y] / active[y] for y in samp}
-    worst = min(rates, key=rates.get)
-    mid = [r for y, r in rates.items() if y != worst]
-    assert "every other year between %d %% and %d %%" % (round(min(mid)), round(max(mid))) in text
+    keys = bcr._sample_keys(ex)
+    lists = bcr.market_active.official_lists()
+    rates = {y: (sum(1 for s, yy in keys if yy == y and s in lists[y]), len(lists[y])) for y in lists}
+    worst = min(rates, key=lambda y: rates[y][0] / rates[y][1])
+    best = max(rates, key=lambda y: rates[y][0] / rates[y][1])
+    for y in (worst, best):
+        n, d = rates[y]
+        assert "%.1f %% in %d (%d of %d)" % (100.0 * n / d, y, n, d) in text
+    n, d = sum(v[0] for v in rates.values()), sum(v[1] for v in rates.values())
+    assert "%d of the %d listed syndicate-years (%.1f %%)" % (n, d, 100.0 * n / d) in text
+    assert "membership cannot be checked and no coverage percentage is given" in text
+    assert "compare two different populations" in text
     assert sum(got.values()) == 1065
 
 

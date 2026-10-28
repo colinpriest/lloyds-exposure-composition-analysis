@@ -1,8 +1,9 @@
 """Sensitivity: the adopted model with the pooling exponent fixed at k = 1/2.
 
-Theory bounds the pooling exponent to [1/2, 1]: 1/2 is finite-variance independent sqrt-N pooling, 1 is
-comonotonic pooling with no diversification, and the headline prior keeps k inside that
-bracket (adopted_model.scale_block, k = 1/2 + 1/2 logistic(theta)). By-syndicate
+The pooling exponent k = 1/2 is the finite-variance independent sqrt-N pooling benchmark and k = 1 the
+comonotonic benchmark with no diversification. The headline prior restricts k to [1/2, 1] by its support
+(adopted_model.scale_block, k = 1/2 + 1/2 logistic(theta)): a modelling choice based on those finite-variance
+benchmarks, not a universal bound, since heavier-tailed blocks can decline outside it. By-syndicate
 cross-validation does not separate the free exponent from the bracket's lower end, so this
 script measures what that choice does to the numbers a practitioner uses. It refits the
 adopted two-regime model with k fixed at 1/2 (scale_block's k_prior="fixed_0.5", the only
