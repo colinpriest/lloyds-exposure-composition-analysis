@@ -216,8 +216,9 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   nothing is added to that register.
 - Rule 5b (a take-on whose transferred gross reserves the filing does not print; added the same day, after the round-7
   readings U1 and U2 of 1110/2022 and 1458/2024, `round5/briefs/brief_r7.md`): neither filing prints the amount. If the
-  readings show the acquired share of the base could exceed 10% of the opening gross claims outstanding R, the record
-  leaves the primary as an unmeasurable take-on; if the filing bounds it at or below 10% of R, it stays and joins the
+  readings show the acquired share of the base could exceed 10% of the opening gross claims outstanding (the accounting balance, before any take-on is added to form the
+  model's reserve base R), the record
+  leaves the primary as an unmeasurable take-on; if the filing bounds it at or below 10% of that balance, it stays and joins the
   least-certain list. 1110/2022 (the Syndicate 5678 RITC and an inward Hiscox ADC; reserves GBP 221.885m to 489.603m,
   a take-on of about GBP 221.9m less the unknown development on the opening book, about 100% of R) leaves, in the bucket
   `takeon_unmeasurable` of `data/restated_base_excluded.json`, with its own tag `TAKEON_BASE_UNMEASURABLE` and counter
@@ -266,13 +267,16 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   632 of 117 syndicates after rule 8 (11 set aside; predicted on the loader, to be confirmed by the regeneration).
 
 <!-- coverage:start -->
-Coverage is **66 % of active syndicate-years overall** (632 of 953; it was ~47 % on the
-old dataset), and it is **uneven, not flat**: the annual rate runs from **59 % in 2021 (54 of
-92)** to **78 % in 2024**, with every other year between 61 % and 78 %. The 2020–2024 retrieval
-gap in the old dataset is closed (90–95 PDFs retrieved per year in 2020–2024 vs 92–98 active syndicates),
+Where membership can be checked, 2020–2024, the working sample holds **310 of the 473 listed syndicate-years (65.5 %)**,
+counting the sample syndicate-years whose syndicate is on that year's official list. The share is **uneven, not flat**:
+**58.7 % in 2021 (54 of 92)** to **75.8 % in 2024 (72 of 95)**. The sample also holds 6 records outside their year's list (1110/2020, 1884/2022, 1110/2023, 1884/2023, 1110/2024, 1884/2024); the list
+is the stated denominator, so those records are reported separately and kept in the sample. Being off the list does not assert that the syndicate had stopped trading.
+For 2014–2019 only the published count of active syndicates is held, so membership cannot be checked and no coverage percentage is given:
+the 316 working-sample records against 572 published counts compare two different populations. The retrieval counts are no membership check either:
+90–95 PDFs retrieved per year in 2020–2024 vs 92–98 active syndicates is a similar total, and it does not show that every listed syndicate's filing was retrieved.
 <!-- coverage:end -->
 
-so the residual shortfall combines scope, disclosure availability and extraction/output states.
+The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output states.
 The 117 filings with no usable dual-model output cannot all be labelled OCR failures: the
 record-level inferential ledger keeps economic eligibility, disclosure availability and extraction
 status separate. The missingness section below reports the size selection that is present and

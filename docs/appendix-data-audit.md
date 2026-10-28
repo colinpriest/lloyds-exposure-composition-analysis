@@ -4,7 +4,7 @@
 
 ## B.1 Provenance
 
-**Reserve base $R_{i,t}$ — gross claims outstanding.** Read from the balance-sheet technical-provisions / claims-outstanding caption (`opening_reserves_gbp_m`, with a page reference `opening_reserves_page`). Across the 948 extracted filings the reserve text names the figure by the wording "gross claims" (383), "claims outstanding" (331), "provision for claims" (51), "technical provision" (40). The basis is **gross of outward reinsurance**: the reserve/narrative text mentions "gross" in 681 filings vs "net" in 456, and the standardised narratives describe an "opening gross claims outstanding". (Note numbers vary by filing; the page reference is recorded, the note index is not.)
+**Reserve base $R_{i,t}$ — gross claims outstanding.** Read from the balance-sheet technical-provisions / claims-outstanding caption (`opening_reserves_gbp_m`, with a page reference `opening_reserves_page`). Across the 948 extracted filings the reserve text names the figure by the wording "gross claims" (383), "claims outstanding" (331), "provision for claims" (51), "technical provision" (40). The basis is **gross of outward reinsurance**: the reserve/narrative text mentions "gross" in 681 filings vs "net" in 456, and the standardised narratives describe an "opening gross claims outstanding". (Note numbers vary by filing; the page reference is recorded, the note index is not.) The balance read from the filing is the accounting balance. The model's denominator $R$ is that opening gross claims outstanding, augmented by the qualifying in-year taken-on reserves where the development figure includes their development (`data/opening_reserves_takeon_base.json`); the record field `opening_reserves_gbp_m` holds $R$ as the model uses it.
 
 **Claims-development figures $M$ — FRS 103 triangle.** The claims-development triangle is captured in `_claims_triangle` for **895 of 948** extracted filings. A triangle is gross or net, and the extraction records which (`_claims_triangle.type`); the analysis assigns every development figure an explicit basis -- the triangle's own where the figure is triangle-derived (the pipeline's override record says so), and otherwise the committed adjudication register (`data/pyd_basis_register.json`) where it has an entry, otherwise a net claims triangle in the record, otherwise the extraction models' own declarations about the recorded figure (`src/pyd_basis_rule.py`: a statement that the figure is net makes it net; a quoted net amount that is not the recorded value, or a statement that the filing does not label it, makes the basis unknown), and the prompt's gross definition only for a record carrying no such evidence. That is the record's own basis provenance, not a source verification of every accepted gross figure -- and admits only gross-basis figures to the working sample (B.2).
 
@@ -128,26 +128,26 @@ Disclosed class labels are folded into 13 categories by the classifier the analy
 
 ## B.5 Coverage
 
-The working sample spans **117 syndicates / 632 syndicate-years** (corpus 133 / 902). Coverage against the active-syndicate denominator (2020–2024: Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets; 2014–2019: Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles):
+The working sample spans **117 syndicates / 632 syndicate-years** (corpus 133 / 902). The active-syndicate denominator comes from two sources of different kinds. For 2020–2024 Lloyd's official *List of active Syndicates & Managing Agent* spreadsheets name every active syndicate, so membership can be checked. For 2014–2019 only the published count of active syndicates is held (Lloyd's Annual Reports / SFCRs, with the BoE/PRA Jan-2015 register listing ~101 including run-off/RITC vehicles), so whether a working-sample syndicate was on the active list in those years cannot be checked. A coverage share is therefore given only for 2020–2024, as the working-sample syndicate-years whose syndicate is on that year's official list, over the size of the list:
 
-| Year | Active syndicates | Corpus | Working sample | Sample coverage |
-|---|---:|---:|---:|---:|
-| 2014 | 92 | 67 | 0 | 0% |
-| 2015 | 94 | 85 | 62 | 66% |
-| 2016 | 99 | 86 | 60 | 61% |
-| 2017 | 95 | 85 | 61 | 64% |
-| 2018 | 99 | 88 | 67 | 68% |
-| 2019 | 93 | 84 | 66 | 71% |
-| 2020 | 98 | 83 | 62 | 63% |
-| 2021 | 92 | 79 | 54 | 59% |
-| 2022 | 93 | 79 | 57 | 61% |
-| 2023 | 95 | 82 | 69 | 73% |
-| 2024 | 95 | 84 | 74 | 78% |
-| **Total** | **1045** | **902** | **632** | **60%** |
+| Year | Active syndicates (published count) | Corpus | Working sample | Working sample on that year's official list | Share of the official list |
+|---|---:|---:|---:|---:|---:|
+| 2014 | 92 | 67 | 0 | not checkable | not computed |
+| 2015 | 94 | 85 | 62 | not checkable | not computed |
+| 2016 | 99 | 86 | 60 | not checkable | not computed |
+| 2017 | 95 | 85 | 61 | not checkable | not computed |
+| 2018 | 99 | 88 | 67 | not checkable | not computed |
+| 2019 | 93 | 84 | 66 | not checkable | not computed |
+| 2020 | 98 | 83 | 62 | 61 | 61/98 (62.2%) |
+| 2021 | 92 | 79 | 54 | 54 | 54/92 (58.7%) |
+| 2022 | 93 | 79 | 57 | 56 | 56/93 (60.2%) |
+| 2023 | 95 | 82 | 69 | 67 | 67/95 (70.5%) |
+| 2024 | 95 | 84 | 74 | 72 | 72/95 (75.8%) |
+| **Total** | **1045** | **902** | **632** | **310** (2020–2024) | **310/473 (65.5%)** (2020–2024 only) |
 
 ### Coverage by year
 
-The working sample covers 632 of the 1045 active syndicate-years (60%), between 0% and 78% by year; the earliest year is the weakest (2014: 0%). The per-year comparison with the official active lists follows:
+For 2020–2024 the working sample holds 310 of the 473 listed syndicate-years (65.5%), between 58.7% (2021) and 75.8% (2024) by year. The working sample has 316 records in those years, so 6 of them are records outside their year's official active list (1110/2020, 1884/2022, 1110/2023, 1884/2023, 1110/2024, 1884/2024). The official list is the stated denominator, so those records are reported separately and are not counted as coverage; they are valid observations and stay in the working sample. Being off a year's list does not assert that the syndicate had stopped trading. For 2014–2019 the working sample has 316 records against 572 published active-syndicate counts, and that is a ratio of two different populations (syndicate-years with a usable record, against a count of active syndicates); no membership list exists to intersect them, so no coverage percentage is given for those years, nor for 2014–2024 as a whole (632 sample records against 1045 published counts). The earliest year is the weakest: the 2014 working sample has 0 records against 92 published active syndicates. The per-year comparison with the published counts and the official active lists follows:
 
 | Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |
 |---|---:|---:|---:|---:|---:|
@@ -163,8 +163,8 @@ The working sample covers 632 of the 1045 active syndicate-years (60%), between 
 | 2023 | 95 | 94 | 11 | 82 | 69 |
 | 2024 | 95 | 95 | 7 | 84 | 74 |
 
-- **Retrieval now matches the market** (90–107 PDFs/year throughout, vs 92–99 active syndicates); the recent-year retrieval gap present in the earlier dataset has been closed.
-- The residual shortfall to 100% combines scope, disclosure availability and extraction/output states. 117 of 1065 PDFs yielded no usable dual-model output (most often in 2014, 26 of 96), but that operational count overlaps the loader stages and is not evidence that all 117 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
+- **Retrieved PDFs and active counts are not a membership check** (90–107 PDFs/year throughout, vs 92–99 active syndicates). Totals of similar size do not show that every listed syndicate's filing was retrieved: the PDFs include syndicates that are not on the list, and against the official lists 13–16 listed syndicates each year have no corpus record (table below).
+- The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output states. 117 of 1065 PDFs yielded no usable dual-model output (most often in 2014, 26 of 96), but that operational count overlaps the loader stages and is not evidence that all 117 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
 - **Against the official active lists (2020–2024)** the corpus holds 84–86% of listed syndicates each year:
 
 | Year | Listed | We have | Missing | Missing but retrieved in other years | In corpus, not on active list |
@@ -176,7 +176,7 @@ The working sample covers 632 of the 1045 active syndicate-years (60%), between 
 | 2024 | 95 | 82 | 13 | 6 | 2 |
 
   Of the 6 corpus records whose syndicate is not on that year's list, 3 have filings that state that the syndicate is in run-off or has ceased underwriting (1110/2020, 1884/2022, 1110/2024); 2 are legacy vehicles whose filings, on the register's reading, do not state that the syndicate is in run-off (1884/2023, 1884/2024; each says "Syndicate 1884 (“the Syndicate”) underwrites Reinsurance to Close (“RITC”) and legacy reinsurance in the Lloyd’s market ..."); and 1 has a filing that the register reviewed and found not to state that the syndicate is in run-off (1110/2023). The register is `pdf_extraction/audit/runoff_corpus_register.json`.
-- **Implication.** Working-sample coverage is 60% of active syndicate-years, 0-78% by year and only 0% in 2014; the later years do not erase that early-year gap, and the shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 665 records, of which 632 enter the model and 9 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 685. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.624 to 0.675, and the eligible-outcome stress moves the conditional bracketed estimate from 0.617 at $c=1$ to 0.576 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.00 at $c=1$ to 3.41 under it (headline 3.96).
+- **Implication.** Where membership can be checked (2020–2024) the working sample holds 310 of the 473 listed syndicate-years (65.5%), 58.7–75.8% by year; the 2014 working sample has 0 records and no coverage can be measured for 2014–2019. The working sample's shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 665 records, of which 632 enter the model and 9 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 685. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.624 to 0.675, and the eligible-outcome stress moves the conditional bracketed estimate from 0.617 at $c=1$ to 0.576 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.00 at $c=1$ to 3.41 under it (headline 3.96).
 
 ## B.6 RITC and discontinuities
 

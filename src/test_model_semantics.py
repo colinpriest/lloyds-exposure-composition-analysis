@@ -421,12 +421,53 @@ def test_the_data_audit_does_not_route_readers_to_the_archive():
         assert "model write-up" not in text, rel
 
 
-def test_the_bracket_on_k_is_stated_as_theory():
-    """R214 (the owner's decision of 15 September 2026): theory bounds k to [1/2, 1] and the prior keeps it there, so
-    the unconstrained-support refit and its probabilities are retired. No current document prints them, and the
-    posterior's endpoint probabilities are stated as one by construction, not as findings."""
-    doc = _read("docs/current-results.md")
-    assert "unconstrained refit" not in doc
-    assert "theory bounds $k$ to $[\\tfrac12,1]$" in doc
+K_BRACKET_SOURCES = ("src/build_current_results.py", "src/adopted_model.py", "src/check_k_half_sensitivity.py",
+                     "src/check_k_support.py", "src/check_pooling_cv_extended.py")
+
+
+def test_the_bracket_on_k_is_the_adopted_priors_support_not_a_universal_bound():
+    """R214 (the owner's decision of 15 September 2026): the adopted prior restricts k to [1/2, 1], so the
+    unconstrained-support refit and its probabilities are retired. No current document prints them, and the
+    posterior's endpoint probabilities are stated as one by construction, not as findings.
+
+    The bracket is the finite-variance benchmarks (k = 1/2 independent pooling, k = 1 comonotone pooling) taken as the
+    prior's support: a modelling choice. Heavier-tailed (infinite-variance) blocks can decline outside it, so no
+    document may call it a universal theoretical bound (fresh review of 28 October 2026, finding 10)."""
     for rel in ("src/build_current_results.py", "reproduce.py", "src/adopted_model.py"):
         assert "check_k_unconstrained" not in _read(rel), rel
+    assert "unconstrained refit" not in _read("docs/current-results.md")
+    for rel in ("docs/current-results.md", "docs/referee-checks.md"):
+        flat = " ".join(_read(rel).split())
+        assert "the adopted prior restricts $k$ to $[\\tfrac12,1]$" in flat, rel
+        assert "modelling choice, not a universal bound" in flat, rel
+        assert not re.search(r"theory bounds \$k\$", flat), rel
+    row = next(l for l in _read("docs/current-results.md").splitlines() if l.startswith("| $P(k > \\tfrac12)$"))
+    for words in ("finite-variance benchmarks", "independent", "comonotonic", "infinite-variance"):
+        assert words in row, words
+    assert "by construction" in row
+
+
+def test_the_level_difference_claim_is_an_inference_under_the_random_intercept_model():
+    """The generator printed "persistent between-syndicate level differences are real and material" as a fact. It is
+    an inference conditional on the random-intercept model (fresh review of 28 October 2026, finding 10)."""
+    doc = " ".join(_read("docs/current-results.md").split())
+    src = re.sub(r'"\s*\n\s*"', "", _read("src/build_current_results.py"))
+    assert "are real and material" not in doc and "are real and material" not in src
+    section = doc[doc.index("## Between-syndicate level differences"):doc.index("## Missingness")]
+    assert "Under the random-intercept model" in section
+    assert "on that model persistent level differences are material" in section
+    assert "an inference conditional on the random-intercept model, not a model-free finding" in section
+    assert "on that model persistent level differences are material" in src
+
+
+def test_no_k_source_calls_the_bracket_a_theoretical_bound():
+    """The generator and the model, check and sensitivity docstrings that describe the bracket say the prior's support
+    is the finite-variance benchmarks, and none says theory bounds k."""
+    for rel in K_BRACKET_SOURCES:
+        flat = " ".join(_read(rel).split())
+        assert not re.search(r"[Tt]heory bounds (the pooling exponent|k)", flat), rel
+        if rel not in ("src/check_k_half_sensitivity.py", "src/check_k_support.py"):
+            # those two write "theoretical bracket" into the question string of their committed result files
+            assert "theoretical bracket" not in flat, rel
+    for rel in ("src/adopted_model.py", "src/check_k_half_sensitivity.py", "src/check_k_support.py"):
+        assert "not a universal bound" in " ".join(_read(rel).split()), rel

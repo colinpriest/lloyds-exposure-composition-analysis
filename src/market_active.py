@@ -37,3 +37,23 @@ def active_by_year(path=None):
 def active_total(path=None):
     """Active syndicate-years over 2014-2024."""
     return sum(active_by_year(path).values())
+
+
+def sample_overlap(keys, path=None):
+    """The sample's syndicate-years set against each official list: {year: dict} for 2020-2024 only.
+
+    `keys` is an iterable of (syndicate, year) pairs. For each year with an official list the entry holds `listed`
+    (the list's length), `sample` (the sample's records that year), `in_list` (those whose syndicate is on that year's
+    list: the true intersection), and `off_list` (the sample's syndicates that year that are not on it, sorted). The
+    sample and the list are different populations, so `sample / listed` is a ratio, not a coverage; `in_list / listed`
+    is the share of the listed syndicates the sample holds. 2014-2019 have a published count and no list, so there is
+    no entry for them: whether a sample syndicate was active in those years cannot be checked."""
+    by_year = {}
+    for s, y in keys:
+        by_year.setdefault(int(y), set()).add(int(s))
+    out = {}
+    for y, listed in sorted(official_lists(path).items()):
+        seen = by_year.get(y, set())
+        out[y] = dict(listed=len(listed), sample=len(seen), in_list=len(seen & listed),
+                      off_list=sorted(seen - listed))
+    return out

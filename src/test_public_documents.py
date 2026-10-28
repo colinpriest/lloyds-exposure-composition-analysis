@@ -805,3 +805,86 @@ def test_the_bookkeeping_block_gives_each_contrasts_clip_incidence():
         words = "%d of that contrast's %d bootstrap" % (t["n_boot_at_bound"], t["n_boot"])
         assert words in live, (name, "the generator does not print it")
         assert words in block, (name, "docs/referee-checks.md is stale")
+
+
+# ---- the fresh review of 28 October 2026 (findings 2, 6 and 10): the reserve base and the transfer, as described ----
+
+def _readme_flat():
+    return " ".join(_read("README.md").split())
+
+
+def test_the_readme_defines_the_reserve_base_with_its_take_ons_from_the_records():
+    """R is the opening gross claims outstanding augmented by qualifying in-year taken-on reserves where the
+    development figure includes their development. The count and the worked example are read from the register and the
+    working sample, not trusted from the sentence."""
+    ex = _json("model", "exposure_results.json")
+    reg = _json("data", "opening_reserves_takeon_base.json")
+    obs = ex["observations"]
+    in_sample = {"%d_%d" % (obs[i]["syndicate"], obs[i]["year"]): obs[i]
+                 for i in ex["eligibility"]["eligible_for_capital"]["mask_indices"]}
+    augmented = sorted(k for k in reg if k in in_sample)
+    words = {8: "Eight"}
+    flat = _readme_flat()
+    assert "%s primary observations are augmented" % words.get(len(augmented), len(augmented)) in flat
+    entry = reg["3500_2019"]
+    assert "3500_2019" in augmented
+    assert abs(in_sample["3500_2019"]["opening_reserves_gbp_m"] - (entry["opening_reserves_m"] + entry["takeon_m"])) < 1e-6
+    for figure in ("%.3fm" % entry["opening_reserves_m"], "%.3fm" % entry["takeon_m"],
+                   "%.3fm" % (entry["opening_reserves_m"] + entry["takeon_m"])):
+        assert "GBP " + figure in flat, figure
+    assert "severity is `S = PYD / R`" in flat and "augmented by the qualifying in-year taken-on reserves" in flat
+    assert "S = PYD / opening_reserves" not in flat
+
+
+def test_no_current_document_defines_the_severity_denominator_as_simply_the_opening_reserves():
+    for rel in ("README.md", "docs/fx-conversion.md"):
+        flat = " ".join(_read(*rel.split("/")).split())
+        assert "S = PYD / opening_reserves" not in flat, rel
+        assert "S = PYD / R" in flat, rel
+    assert "taken-on reserves" in " ".join(_read("docs", "fx-conversion.md").split())
+    audit = " ".join(_read("docs", "appendix-data-audit.md").split())
+    assert "The model's denominator $R$ is that opening gross claims outstanding, augmented by the qualifying in-year " \
+           "taken-on reserves" in audit
+    assert "augmented by the qualifying in-year taken-on reserves" in " ".join(
+        _read("src", "generate_data_audit.py").split()).replace('" f"', "")
+
+
+def test_the_readme_describes_the_transfer_as_the_code_does():
+    """The base-standardised input keeps the donor's year multiplier and RITC scale multiplier; the Student-t CDF of
+    it is a model-imposed pseudo-rank mapped through the target regime's quantile function, not in general the fitted
+    conditional percentile; the result is multiplied by the target's base scale. Checked against the operator."""
+    flat = _readme_flat()
+    for phrase in ("divides the donor's raw movement by the fitted **base** scale",
+                   "still carries the donor's realised reporting-year multiplier",
+                   "the fitted RITC scale multiplier `exp(beta_RITC)`",
+                   "Neither is divided out",
+                   "model-imposed pseudo-rank",
+                   "mapped through the target regime's quantile function",
+                   "not in general the donor's fitted conditional percentile",
+                   "but it does not remove the RITC scale multiplier",
+                   "multiplies the result by the target's base scale"):
+        assert phrase in flat, phrase
+    assert "carries the donor's realised year effect in the observed severity" not in flat
+    assert "mapping its residual" not in flat
+
+    import numpy as np
+    import scipy.stats as sps
+    import vignette_uncertainty as vu
+    th = {"k": 0.62, "gamma": 0.0, "sd_undiv": 0.03, "sd_div": 0.30, "nu_clean": 4.0, "nu_ritc": 6.0}
+    cfg = (1000.0, 0.01, 1.0)
+    S, src, tgt = np.array([0.22]), (150.0, 0.4), (900.0, 0.4)
+    base = lambda R, H: float(vu.sigma_theta(R, H, th["k"], th["gamma"], th["sd_undiv"], th["sd_div"], *cfg))
+    z = float(S[0]) / base(*src)
+    ritc_to_clean = vu.transfer(S, np.array([src[0]]), np.array([src[1]]), tgt, th, cfg, ritc=np.array([True]))
+    # (1) the input is the raw movement over the donor's BASE scale; (2) its CDF under the donor regime's index is the
+    # pseudo-rank; (3) the target regime's quantile function maps it; (4) the target's base scale multiplies it
+    expected = base(*tgt) * sps.t.ppf(sps.t.cdf(z, df=6.0), df=4.0)
+    assert abs(float(ritc_to_clean[0]) - expected) < 1e-12
+    # a clean donor into a clean target is the pure rescale
+    clean = vu.transfer(S, np.array([src[0]]), np.array([src[1]]), tgt, th, cfg, ritc=np.array([False]))
+    assert abs(float(clean[0]) - float(S[0]) * base(*tgt) / base(*src)) < 1e-12
+    # the donor's year multiplier is not divided out: the same fitted-scale movement with the multiplier applied maps
+    # from a different pseudo-rank, so the pseudo-rank is not the fitted conditional percentile exp(s_t)-scaled
+    m = 1.5
+    conditional = base(*tgt) * sps.t.ppf(sps.t.cdf(z / m, df=6.0), df=4.0)
+    assert abs(float(ritc_to_clean[0]) - conditional) > 1e-3

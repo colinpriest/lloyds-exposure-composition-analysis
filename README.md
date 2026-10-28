@@ -41,7 +41,12 @@ operator** that rescales historical reserve movements onto a user-specified targ
 
 ## The model (summary)
 
-For syndicate *i* in reporting year *t*, severity `S = PYD / opening_reserves`:
+For syndicate *i* in reporting year *t*, severity is `S = PYD / R`, where `R` is the model's reserve
+base: the opening gross claims outstanding, augmented by the qualifying in-year taken-on reserves
+when the development figure includes their development (`data/opening_reserves_takeon_base.json`).
+Eight primary observations are augmented. For 3500/2019 the opening balance is GBP 259.790m and the
+take-on GBP 552.752m, so the model's `R` is GBP 812.542m. The record field `opening_reserves_gbp_m`
+holds `R` as the model uses it, and `R` below means this base:
 
 ```
 S_it ~ Student-t(nu_it, 0, sigma_it)
@@ -52,7 +57,10 @@ nu_it    = nu_clean                      (clean years)
                                            against the clean one is not imposed)
 ```
 
-with `mu = 0` fixed, pooling exponent `k ∈ [0.5, 1]`, concentration via the effective line count
+with `mu = 0` fixed, pooling exponent `k` restricted to `[0.5, 1]` by the adopted prior's support
+(`k = 0.5` is the finite-variance independent pooling benchmark and `k = 1` the comonotone one; the
+bracket is a modelling choice based on those benchmarks, not a universal bound, because heavier-tailed
+blocks can decline outside it), concentration via the effective line count
 `n_eff = 1/H` with its exponent `gamma` fixed at 0 in the headline fit (the author's decision of
 10 October 2026; the gamma-free fit, with `gamma ~ HalfNormal(1)`, is the concentration overlay's
 source), a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
@@ -70,22 +78,30 @@ data — see [docs/fx-conversion.md](docs/fx-conversion.md)): `k ≈ 0.62`, `gam
 
 ## The transfer operator
 
-The operator applies the fitted base scale law `sigma(R,H)` and the two fitted tail
-indices of its own fit (the headline size-only operator the gamma = 0 fit's, the concentration overlay
-the gamma-free fit's); it omits the fitted RITC scale multiplier `exp(beta_RITC * 1[RITC])` (a measured
-structural simplification worth about 0.2% of the vignette stresses) and carries the donor's realised year effect in the
-observed severity rather than re-drawing it. It is **shape-aware**: a donor severity at
-`(R_s, H_s)` transfers to a target `(R_t, H_t)` by
+The operator divides the donor's raw movement by the fitted **base** scale `sigma(R_s,H_s)` of the
+donor's reserve size, and multiplies the result by the target's base scale `sigma(R_t,H_t)`. It uses
+the base scale law and the two fitted tail indices of its own fit (the headline size-only operator the
+gamma = 0 fit's, the concentration overlay the gamma-free fit's). The base-standardised input is not
+a unit-scale draw: it still carries the donor's realised reporting-year multiplier `exp(s_t)` and,
+for an RITC donor, the fitted RITC scale multiplier `exp(beta_RITC)`. Neither is divided out, and the
+operator does not re-draw the year effect or apply `exp(beta_RITC * 1[RITC])` to the target (a measured
+structural simplification worth about 0.2% of the vignette stresses). The operator is **shape-aware**:
+a donor movement at `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
 
 ```
 S_adj = sigma(R_t,H_t) * F_inv[ nu_t ]( F[ nu_s ]( S_src / sigma(R_s,H_s) ) )
 ```
 
 where `F` is the Student-t CDF. When `nu_s = nu_t` this collapses to the pure rescale
-`S_src · sigma(R_t,H_t)/sigma(R_s,H_s)`; when the donor is an RITC year and the target is clean,
-it **de-RITCs** the donor — mapping its residual from the fitted RITC tail index to the clean
-one, which thins the tail when the RITC index is the heavier and fattens it when it is the
-lighter (the fit's ordering is not a constraint). This is an
+`S_src · sigma(R_t,H_t)/sigma(R_s,H_s)`. Where the donor's and target's tail regimes differ, the
+Student-t CDF of the base-standardised input, under the donor regime's tail index, supplies a
+model-imposed pseudo-rank, and that pseudo-rank is mapped through the target regime's quantile
+function. Because the input still carries the multipliers above, the pseudo-rank is not in general
+the donor's fitted conditional percentile. When the donor is an RITC year and the target is clean,
+this **de-RITCs** the donor's tail shape — mapping the input from the fitted RITC tail index to the
+clean one, which thins the tail when the RITC index is the heavier and fattens it when it is the
+lighter (the fit's ordering is not a constraint) — but it does not remove the RITC scale multiplier.
+This is an
 upstream distributional adjustment, not a tail-fitting or capital-setting method: the
 regime step applies the two fitted Student-t indices; it does not fit a tail to the
 target or set capital.
@@ -366,8 +382,11 @@ The structured inputs are produced by a separate extraction project,
 [lloyds-reserve-stress-testing](https://github.com/colinpriest/lloyds-reserve-stress-testing).
 See [docs/data-provenance.md](docs/data-provenance.md) for what is imported and
 [docs/appendix-data-audit.md](docs/appendix-data-audit.md) for the coverage audit
-(the working sample's share of active syndicate-years is stamped in the audit; about
-67% at the round-53 sample, 2014–2024).
+(official active-syndicate lists exist only for 2020–2024. In those years 310 of the 473 listed
+syndicate-years, 65.5%, are in the working sample, and six further working-sample records are not on
+their year's list. For 2014–2019 only published counts of active syndicates are held, so membership
+cannot be checked. No coverage percentage is given for 2014–2024 as a whole, because the working
+sample and the published counts are different populations; the audit's tables carry the figures).
 
 All monetary amounts are **GBP millions**: USD-presented reports (26% of observations) are
 converted at the reporting-date Fed H.10 spot rate, with per-report currency provenance from

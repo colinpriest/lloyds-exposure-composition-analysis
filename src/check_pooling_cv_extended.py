@@ -3,8 +3,8 @@
 check_pooling_cv.py compares only M1 (free k) against M2 (k=1/2).  Two referee points
 need more:
 
-  (1) the pooling exponent: compare EXPLICIT k=1/2, free k on its theoretical bracket
-      [1/2, 1], and k=1 (comonotonic) on by-syndicate held-out prediction;
+  (1) the pooling exponent: compare EXPLICIT k=1/2, free k on the adopted prior's
+      support [1/2, 1], and k=1 (comonotonic) on by-syndicate held-out prediction;
   (2) the floor: the paper calls the undiversifiable floor "real", but the reported
       comparison held a floor in BOTH candidates.  A no-floor model must be scored
       head-to-head, and its behaviour over the OBSERVED size range displayed.

@@ -95,8 +95,8 @@ observation-level PSIS-LOO (optimistic under clustering), whereas the headline c
 includes zero ($P(\text{free }k\text{ predicts better}) = 0.70$), and M1 is ahead on the point
 estimate: the pooling **distinction is not adjudicated by predictive CV**.
 → State this. **Superseded recommendation:** the original advice here was to rest the claim on
-$P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\tfrac12,1]$ and the
-prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with
+$P(k>0.5)=1.00$. That probability is one by construction: the adopted prior restricts $k$ to
+$[\tfrac12,1]$, the finite-variance benchmarks; that is a modelling choice, not a universal bound. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with
 fixed $k=1$ establishes; it does not claim $k>\tfrac12$, and it reports what fixing $k=\tfrac12$ does
 to the transferred stresses.
 
@@ -197,8 +197,8 @@ $\psi_s=0$ = uniform-scale headline H0; $n=632$):
 | M4 (size-loaded scale) | **0.624** [0.522, 0.737] | 0.029 | **+0.09 [-0.64, 0.76]** | -0.62 [-1.72, 0.58] |
 
 - $k$ moves by 0.000 (0.624 under H0, 0.624 under M4). *(Both probabilities quoted in the original —
-  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\tfrac12,1]$
-  and the prior keeps it there.)*
+  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: the adopted prior restricts $k$ to
+  $[\tfrac12,1]$, the finite-variance benchmarks; that is a modelling choice, not a universal bound.)*
 - $\psi_s$ is **weakly identified** (HDI spans 0, $P(\psi_s>0)=0.63$), and M4 is not preferred predictively (ΔELPD -0.62, Bayesian bootstrap over syndicates 95% interval [-1.72, 0.58]): no evidence that
   large syndicates' scales co-move more.
 - The matching diagnostic (within-year mean $|z|$ in the large tercile) is already well fit by

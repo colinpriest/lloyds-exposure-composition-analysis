@@ -102,9 +102,11 @@ def posterior_rows(m0):
                 "finite variance%s |" % (p, q, "" if moved(p, q) else
                                          "; within %.2f of its prior mass, so its size is the prior's, not a finding"
                                          % PRIOR_CLOSE))
-    rows.append("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | theory bounds $k$ to $[\\tfrac12,1]$ "
-                "(finite-variance independent $\\sqrt N$ pooling to comonotonic pooling) and the prior keeps it "
-                "there, so these are not findings; the endpoints are scored by syndicate as fixed alternatives |")
+    rows.append("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | the adopted prior restricts $k$ to "
+                "$[\\tfrac12,1]$, the finite-variance benchmarks (independent $\\sqrt N$ pooling at $\\tfrac12$, "
+                "comonotonic pooling at $1$); that is a modelling choice, not a universal bound, because heavier-tailed "
+                "(infinite-variance) blocks can decline outside the bracket. So these are not findings; the endpoints "
+                "are scored by syndicate as fixed alternatives |")
     p, q = pair("beta_ritc_gt_0.1_abs")
     rows.append(r"| $P(|\beta_{\text{RITC}}| > 0.1)$ | %.3f | %.3f | %s; fitted in the likelihood, and the transfer "
                 "operator omits it, not shown to be zero |"
@@ -114,8 +116,9 @@ def posterior_rows(m0):
 
 
 def exponent_question(khalf):
-    """R214 (the owner's decision of 15 September 2026): theory bounds k to [1/2, 1] and the prior keeps it there, so
-    the open question is where k lies inside the bracket. It is written from the k = 1/2 sensitivity's record, and a
+    """R214 (the owner's decision of 15 September 2026): the adopted prior restricts k to [1/2, 1], the finite-variance
+    independent and comonotonic pooling benchmarks (a modelling choice, not a universal bound), so the open question
+    is where k lies inside the bracket. It is written from the k = 1/2 sensitivity's record, and a
     k = 1/2 fit that did not sample cleanly refuses it."""
     fit = (khalf or {}).get("k_half_fit") or {}
     pct = dig(khalf or {}, "vignettes/centre_pct_change/V1_v995")
@@ -130,7 +133,7 @@ def exponent_question(khalf):
     diag = fit.get("diagnostics") or {}
     if diag.get("divergences") != 0 or not diag.get("max_rhat", 9.0) <= 1.01:
         raise SystemExit("the k = 1/2 fit did not sample cleanly: its figures cannot be written")
-    return ("the exact value of $k$ inside its theoretical bracket $[\\tfrac12, 1]$: fixing $k = \\tfrac12$ moves "
+    return ("the exact value of $k$ inside the adopted prior's support $[\\tfrac12, 1]$: fixing $k = \\tfrac12$ moves "
             "Vignette 1's VaR$_{99.5}$ by %+.1f%% under the size-only headline operator, and the 100m/2,000m scale "
             "ratio from %.2f to %.2f under that operator (the same at every $H$: both fits have $\\gamma = 0$ in the "
             "likelihood);"
@@ -358,8 +361,11 @@ def main():
             A("")
             A("Source: `results/check_syndicate_random_effect_results.json`. "
               "$\\tau_\\alpha$ = %s against $\\sigma_{\\text{div}}$ = %s at the "
-              "reference size (ratio %s): persistent between-syndicate level "
-              "differences are real and material."
+              "reference size (ratio %s). Under the random-intercept model, the "
+              "posterior puts the between-syndicate level spread at this size "
+              "relative to the diversifiable scale, and on that model persistent "
+              "level differences are material. That is an inference conditional on "
+              "the random-intercept model, not a model-free finding."
               % (f(r.get("tau_alpha"), 3), f(r.get("sd_div_at_reference"), 3),
                  f(r.get("ratio_tau_alpha_over_sd_div"), 2)))
             A("")
@@ -651,31 +657,57 @@ def ritc_lines(ex):
     ]
 
 
+def _sample_keys(ex):
+    """(syndicate, year) of every working-sample record, the same eligible set _sample_by_year counts."""
+    obs = ex["observations"]
+    idx = set(ex["eligibility"]["eligible_for_capital"]["mask_indices"])
+    return {(int(obs[i]["syndicate"]), int(obs[i]["year"])) for i in sorted(idx)}
+
+
 def coverage_lines(ex):
-    """The overall and per-year coverage, from the sample and the market denominators."""
+    """The working sample against the official active lists (2020-2024) and against the published counts (2014-2019).
+
+    Only 2020-2024 have a list of names, so only there is a coverage share defined: the sample's syndicate-years whose
+    syndicate is on that year's list, over the list's size. The sample also holds records off the list (the list is
+    the stated denominator, so they are reported separately and are not coverage). 2014-2019 have a published count
+    and no list, so a sample count against it is a ratio of two different populations, and no percentage is printed."""
+    keys = _sample_keys(ex)
     samp = _sample_by_year(ex)
     active = _active_by_year()
-    years = sorted(samp)
-    total_active = sum(active[y] for y in years)
-    total_samp = sum(samp.values())
-    rates = {y: 100.0 * samp[y] / active[y] for y in years}
+    ov = market_active.sample_overlap(keys)
+    years = sorted(ov)
+    listed = sum(ov[y]["listed"] for y in years)
+    in_list = sum(ov[y]["in_list"] for y in years)
+    in_sample = sum(ov[y]["sample"] for y in years)
+    rates = {y: 100.0 * ov[y]["in_list"] / ov[y]["listed"] for y in years}
     worst = min(rates, key=lambda y: rates[y])
     best = max(rates, key=lambda y: rates[y])
-    mid = [rates[y] for y in years if y not in (worst,)]
-    # the recent years' retrieval against the market, generated (FOLLOWUP5 item 7: the range was typed), and the
-    # other years' rates rounded as the paper rounds them (item 7b: int() printed 2021's 57.6% as 57%)
-    recent = [y for y in years if 2020 <= y <= 2024]
+    off = ["%d/%d" % (s_, y) for y in years for s_ in ov[y]["off_list"]]
+    pre = [y for y in sorted(active) if y not in ov]
+    pre_samp = sum(samp.get(y, 0) for y in pre)
+    pre_active = sum(active[y] for y in pre)
     got = _retrieved_by_year()
     return [
-        "Coverage is **%d %% of active syndicate-years overall** (%d of %d; it was ~47 %% on the"
-        % (round(100.0 * total_samp / total_active), total_samp, total_active),
-        "old dataset), and it is **uneven, not flat**: the annual rate runs from **%d %% in %d (%d of"
-        % (round(rates[worst]), worst, samp[worst]),
-        "%d)** to **%d %% in %d**, with every other year between %d %% and %d %%. The 2020\u20132024 retrieval"
-        % (active[worst], round(rates[best]), best, round(min(mid)), round(max(mid))),
-        "gap in the old dataset is closed (%d\u2013%d PDFs retrieved per year in 2020\u20132024 vs %d\u2013%d active "
-        "syndicates)," % (min(got.get(y, 0) for y in recent), max(got.get(y, 0) for y in recent),
-                          min(active[y] for y in recent), max(active[y] for y in recent)),
+        "Where membership can be checked, 2020–2024, the working sample holds **%d of the %d listed "
+        "syndicate-years (%.1f %%)**,"
+        % (in_list, listed, 100.0 * in_list / listed),
+        "counting the sample syndicate-years whose syndicate is on that year's official list. The share is **uneven, "
+        "not flat**:",
+        "**%.1f %% in %d (%d of %d)** to **%.1f %% in %d (%d of %d)**. The sample also holds %d records outside "
+        "their year's list%s; the list"
+        % (rates[worst], worst, ov[worst]["in_list"], ov[worst]["listed"], rates[best], best,
+           ov[best]["in_list"], ov[best]["listed"], in_sample - in_list, (" (" + ", ".join(off) + ")") if off else ""),
+        "is the stated denominator, so those records are reported separately and kept in the sample. Being off the "
+        "list does not assert that the syndicate had stopped trading.",
+        "For 2014–2019 only the published count of active syndicates is held, so membership cannot be checked "
+        "and no coverage percentage is given:",
+        "the %d working-sample records against %d published counts compare two different populations. The "
+        "retrieval counts are no membership check either:"
+        % (pre_samp, pre_active),
+        "%d–%d PDFs retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, "
+        "and it does not show that every listed syndicate's filing was retrieved."
+        % (min(got.get(y, 0) for y in years), max(got.get(y, 0) for y in years),
+           min(active[y] for y in years), max(active[y] for y in years)),
     ]
 
 
@@ -1444,8 +1476,8 @@ def referee_section_3(pcv, cse):
         % (bb["P_first_better"], "M1" if d > 0 else "M2"),
         "estimate: the pooling **distinction is not adjudicated by predictive CV**.",
         "→ State this. **Superseded recommendation:** the original advice here was to rest the claim on",
-        "$P(k>0.5)=1.00$. That probability is one by construction: theory bounds $k$ to $[\\tfrac12,1]$ and the",
-        "prior keeps it there. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with",
+        "$P(k>0.5)=1.00$. That probability is one by construction: the adopted prior restricts $k$ to",
+        "$[\\tfrac12,1]$, the finite-variance benchmarks; that is a modelling choice, not a universal bound. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with",
         "fixed $k=1$ establishes; it does not claim $k>\\tfrac12$, and it reports what fixing $k=\\tfrac12$ does",
         "to the transferred stresses.",
         "",
@@ -1598,8 +1630,8 @@ def referee_section_7(het, bmc):
         "",
         "- $k$ moves by %.3f (%.3f under H0, %.3f under M4). *(Both probabilities quoted in the original —"
         % (dk, h0["k"]["mean"], m4["k"]["mean"]),
-        "  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: theory bounds $k$ to $[\\tfrac12,1]$",
-        "  and the prior keeps it there.)*",
+        "  $P(k>0.5)=1.00$ and $P(k<1)=1.00$ — are one by construction: the adopted prior restricts $k$ to",
+        "  $[\\tfrac12,1]$, the finite-variance benchmarks; that is a modelling choice, not a universal bound.)*",
         "- $\\psi_s$ is **weakly identified** (HDI spans 0, $P(\\psi_s>0)=%.2f$), and %s: no evidence that"
         % (het["posterior_prob"]["psi_s_gt_0"], pred),
         "  large syndicates' scales co-move more.",
