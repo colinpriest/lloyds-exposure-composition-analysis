@@ -166,15 +166,14 @@ def coverage_figure(yr, corpus_by_year, syn=None):
         ax2 = ax.twinx()
         lx = [years.index(y) for y in sorted(listed)]
         cov = [100 * listed[y][0] / listed[y][1] for y in sorted(listed)]
-        ax2.plot(lx, cov, "o-", color="#b2182b", lw=1.5, ms=3.5, label="Listed syndicates in the sample % (2020-24)")
-        ax2.set_ylabel("Listed syndicates in sample (%)", color="#b2182b"); ax2.set_ylim(0, 100)
+        ax2.plot(lx, cov, "o-", color="#b2182b", lw=1.5, ms=3.5, label="Listed in sample % (2020-24)")
+        ax2.set_ylabel("Listed in sample (%)", color="#b2182b"); ax2.set_ylim(0, 100)
         ax2.tick_params(axis="y", colors="#b2182b", labelsize=PFS.SMALL_PT)
         ax.set_xticks(x); ax.set_xticklabels([str(y)[2:] for y in years]); ax.set_ylabel("Syndicate-years")
         ax.set_xlabel("Reporting year (20xx)")
         ax.tick_params(labelsize=PFS.SMALL_PT)
         have = sum(v[0] for v in listed.values()); size = sum(v[1] for v in listed.values())
-        ax.set_title(f"Corpus and sample by reporting year\n(n={sum(sam)} sample, {sum(cor)} corpus; "
-                     f"2020-24: {have} of {size} listed in the sample)")
+        ax.set_title(f"Corpus and sample by reporting year\n(2020-24: {have} of {size} listed in the sample)")
         handles = ax.get_legend_handles_labels()[0] + ax2.get_legend_handles_labels()[0]
         labels = ax.get_legend_handles_labels()[1] + ax2.get_legend_handles_labels()[1]
         legend = ax.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2,
@@ -183,8 +182,8 @@ def coverage_figure(yr, corpus_by_year, syn=None):
     return fig, ax, legend
 
 
-def fig_coverage(yr, corpus_by_year):
-    fig, ax, legend = coverage_figure(yr, corpus_by_year)
+def fig_coverage(yr, corpus_by_year, syn=None):
+    fig, ax, legend = coverage_figure(yr, corpus_by_year, syn)
     if not legend_clear_of_bars(fig, ax, legend):
         raise SystemExit("fig_corpus_coverage: the legend overlaps the bars")
     with PFS.style():
@@ -553,7 +552,7 @@ def main():
     S, R, H, yr, ritc, cal, cal_gf, corpus_by_year = load()
     print(f"n={len(S)}  RITC={int(ritc.sum())}  k={cal['k']:.3f} gamma={cal['gamma']:.3f} "
           f"floor={cal['sd_undiv']:.4f} nu_clean={cal['nu_clean']:.2f} nu_ritc={cal['nu_ritc']:.2f}")
-    fig_coverage(yr, corpus_by_year)
+    fig_coverage(yr, corpus_by_year, syndicates())
     fig_size(S, R, H, cal, yr, ritc)
     fig_hhi(S, R, H, cal_gf)              # the concentration channel is the gamma-free fit's (option B)
     fig_gof(S, R, H, ritc, cal, syndicates(), yr)

@@ -313,7 +313,7 @@ def rendered(tmp_path_factory):
     keep = (MPF.PP, MPF.SD, SURV.SCRIPT_DIR)
     try:
         MPF.PP, MPF.SD = out, out          # fig_gof also writes results/goodness_of_fit_results.json: here
-        MPF.fig_coverage(yr, corpus_by_year)
+        MPF.fig_coverage(yr, corpus_by_year, syn)
         MPF.fig_size(S, R, H, cal, yr, ritc)
         MPF.fig_hhi(S, R, H, cal_gf)
         MPF.fig_gof(S, R, H, ritc, cal, syn, yr)

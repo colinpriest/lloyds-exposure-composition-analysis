@@ -39,7 +39,7 @@ PRINTED_FRACTION = {
     "fig_size_dispersion": 0.75,
     "fig_hhi_dispersion": 0.75,
     "fig_goodness_of_fit": 0.90,
-    "fig_v1_ritc_survivor": 0.85,
+    "fig_v1_ritc_survivor": 0.78,
     "fig_corpus_coverage": 0.85,
     "systemic_correlation_profile": 0.82,
 }
