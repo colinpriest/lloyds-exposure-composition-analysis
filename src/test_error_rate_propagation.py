@@ -417,33 +417,158 @@ def test_the_draw_four_population_on_the_committed_working_sample_adds_up():
 
 
 # ------------------------------------------------------------------ the frame against the primary outcome
-def test_the_figure_source_rule_reads_the_primarys_route_as_a_triangle():
+def test_the_routes_the_reconciliation_reads_are_the_loaders():
     import run_analysis as ra
     assert E.MATURE_ROUTE == ra.MATURE_COHORT_SOURCE
     with io.open(os.path.join(HERE, "src", "run_analysis.py"), encoding="utf-8") as _fh:
-        assert '"%s"' % E.MATURE_SOURCE_TAG in _fh.read()
-    assert E.study_figure_source({"route": {"source": E.MATURE_ROUTE}})[0] == "triangle"
-    # the study's own rule otherwise, its code_triangle extension included
-    assert E.study_figure_source({"route": {"source": "code_triangle"}})[0] == "triangle"
-    assert E.study_figure_source({"route": {"source": "rag_provisions"}})[0] == "stated"
-    assert E.study_figure_source({"route": {"source": "confirmed_figure", "figure_kind": "triangle"}})[0] == "triangle"
+        src = _fh.read()
+    assert '"%s"' % E.MATURE_SOURCE_TAG in src
+    assert E.CONFIRMED_SOURCE_TAG.split(":")[0] in src
 
 
-def test_the_clarified_verdict_on_the_primary_is_the_studys_rule():
-    """On every first reading of draw four, with the brief's route a triangle's: clarified_on_primary gives the study's
-    own clarified verdict (score_error_rate_fourth.clarified, the code_triangle route being the triangle it names)."""
-    fourth = E._archive_module("score_error_rate_fourth")
-    rows = E.first_readings(E.FIRST_READINGS["draw_four"])
-    assert len(rows) == 100
-    for stem, first in rows.items():
-        if first.get("adopted_figure_m") is None:
-            continue
-        for adopted in (first["adopted_figure_m"], (first.get("triangle_recomputation_m") or 0.0) + 3.0):
-            mine = E.clarified_on_primary(first, {"stem": stem, "route": {"source": E.MATURE_ROUTE}, E.ADOPTED: adopted})
-            theirs = fourth.clarified(first, {"stem": stem, "route": {"source": "code_triangle"}, E.ADOPTED: adopted})
-            assert mine[0] == theirs[0], (stem, adopted, mine, theirs)
-        stated = E.clarified_on_primary(first, {"stem": stem, "route": {"source": "rag_provisions"}, E.ADOPTED: 1.0})
-        assert stated[0] == first["verdict"]
+def _real():
+    S, R, H, synd, year = vu.load_pool()
+    pool = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
+    ex = E.load(E.EXPOSURE)
+    return pool, ex, E.current_figures(ex, pool)
+
+
+def _restated(name):
+    pool, ex, cur = _real()
+    if name == "draw_four":
+        verdicts = E.load(E.RATE)["clarified"]["final_verdicts"]
+    else:
+        verdicts = E.load(E.POOLED)["final_verdicts"]["A"]
+    return E.restated_population(verdicts, pool, cur, E.first_readings(E.FIRST_READINGS[name])), cur
+
+
+def test_the_current_figure_is_in_the_reports_currency():
+    """1274/2023 reports in US dollars: the fit holds GBP 68.330m at 1.2743 USD/GBP, the readings' USD 87.073m."""
+    pool, ex, cur = _real()
+    c = cur["syndicate_1274_2023"]
+    assert c["currency"] == "USD" and abs(c["figure_m"] - 87.073) < E.SAME_FIGURE_M
+    assert c["source"] == E.CONFIRMED_SOURCE_TAG and c["basis"] == "gross"
+    assert abs(cur["syndicate_4472_2022"]["figure_m"] - 122.3) < E.SAME_FIGURE_M
+
+
+def test_draw_fours_repaired_basis_errors_are_scored_on_their_repaired_figures():
+    """The fresh review of 28 October 2026, finding 1: draw four's two errors (a gross table's net companion read in its
+    place) were repaired through the confirmed-figure register to their readers' own gross recomputations. The
+    restatement used to miss that route and carry the basis-net verdict over to the repaired figure."""
+    out, _ = _restated("draw_four")
+    rows = {r["stem"]: r for r in out["reconciliation"]}
+    for stem, scored, now in (("syndicate_1274_2023", 58.692, 87.073), ("syndicate_4472_2022", -1.5, 122.3)):
+        r = rows[stem]
+        assert r["verdict_on_figure_scored"] == "error" and r["error_kind_on_figure_scored"] == "basis-net"
+        assert r["figure_scored_m"] == scored and abs(r["figure_now_m"] - now) < E.SAME_FIGURE_M
+        assert r["changed"] is True and r["route_now"] == E.CONFIRMED_SOURCE_TAG
+        assert (r["verdict_on_figure_now"], r["evidence"]) == ("correct", "own_reading"), r
+    assert {e["stem"] for e in out["errors_on_figure_scored"]} == {"syndicate_1274_2023", "syndicate_4472_2022"}
+    assert out["n_in_working_sample"] == 94
+
+
+def test_every_changed_figure_is_found_whatever_its_route():
+    """A changed figure is found by comparing the figure each reading scored with the figure adopted now, not by a route
+    tag: the confirmed-figure repairs are found as well as the mature-cohort figures."""
+    for name in ("draw_four", "pooled"):
+        out, cur = _restated(name)
+        rows = E.first_readings(E.FIRST_READINGS[name])
+        expect = {r["stem"] for r in out["reconciliation"]
+                  if abs(cur[r["stem"]]["figure_m"] - rows[r["stem"]]["adopted_figure_m"]) > E.SAME_FIGURE_M}
+        found = {r["stem"] for r in out["reconciliation"] if r["changed"]}
+        assert found == expect
+        routes = {cur[s]["source"] for s in found}
+        assert E.CONFIRMED_SOURCE_TAG in routes and E.MATURE_SOURCE_TAG in routes, (name, routes)
+        assert out["n_figure_changed"] == len(found) == len(out["rescored"])
+
+
+def test_a_scope_difference_is_not_scored_an_error():
+    """2232/2020's first reading recomputed the all-years figure the primary displaced (+55.227); the primary adopts the
+    mature cohort's +19.331, which two register readings give. The old rule scored it a magnitude error."""
+    out, _ = _restated("pooled")
+    r = {x["stem"]: x for x in out["reconciliation"]}["syndicate_2232_2020"]
+    assert r["changed"] and (r["verdict_on_figure_now"], r["evidence"]) == ("correct", "register")
+    assert "+55.227" in r["why"]
+
+
+def test_a_derived_register_figure_no_reading_gives_is_not_restated():
+    """1274/2016's register figure is derived from the readers' cells by a decision of the analysis session, and neither
+    reading gives it; its draw reading could not settle the figure then adopted. Nothing adjudicates it."""
+    out, _ = _restated("pooled")
+    r = {x["stem"]: x for x in out["reconciliation"]}["syndicate_1274_2016"]
+    assert r["changed"] and r["verdict_on_figure_now"] == E.NOT_RESTATED and r["evidence"] is None
+
+
+def test_the_reconciliation_is_not_a_rate():
+    for name in ("draw_four", "pooled"):
+        out, _ = _restated(name)
+        assert "posterior" not in out and "not a rate" in out["not_a_rate"]
+        assert sum(out["verdicts"].values()) + out["n_not_restated"] == out["n_in_working_sample"]
+        assert out["rescored_by_evidence"]["own_reading"] + out["rescored_by_evidence"]["register"] == sum(
+            1 for r in out["rescored"] if r["evidence"] in ("own_reading", "register"))
+
+
+def _first(**kw):
+    row = {"verdict": "error", "clarified_verdict": "error", "error_kind": "basis-net", "adopted_figure_m": -1.5,
+           "triangle_recomputation_m": 122.3}
+    row.update(kw)
+    return row
+
+
+def _cur(fig, basis="gross", source=E.CONFIRMED_SOURCE_TAG):
+    return {"figure_m": fig, "currency": "GBP", "basis": basis, "source": source}
+
+
+def test_a_sampled_population_restated_against_the_primary():
+    """Each route through verdict_on_current, on synthetic records (no register entries)."""
+    st = ["syndicate_%d_2020" % i for i in range(1, 10)]
+    verdicts = {st[0]: "error", st[1]: "error", st[2]: "error", st[3]: "correct", st[4]: "correct",
+                st[5]: "undeterminable", st[6]: "error", st[7]: "correct", "syndicate_99_2020": "error"}
+    rows = {st[0]: _first(),                                            # unchanged: the basis error stands
+            st[1]: _first(),                                            # repaired to its own recomputation: correct
+            st[2]: _first(),                                            # changed elsewhere: not restated, not an error
+            st[3]: _first(verdict="correct", clarified_verdict="correct", error_kind=None, adopted_figure_m=5.0),
+            st[4]: _first(verdict="error", clarified_verdict="error", adopted_figure_m=5.0),  # 2nd reading decided
+            st[5]: _first(verdict="undeterminable", clarified_verdict="undeterminable", adopted_figure_m=5.0),
+            st[6]: _first(),                                            # repaired, but net now: not restated
+            st[7]: _first(verdict="correct", clarified_verdict="correct", adopted_figure_m=5.0,
+                          triangle_recomputation_m=None)}               # changed, no recomputation recorded
+    cur = {st[0]: _cur(-1.5), st[1]: _cur(122.3), st[2]: _cur(80.0), st[3]: _cur(5.0, source=E.MATURE_SOURCE_TAG),
+           st[4]: _cur(122.3), st[5]: _cur(122.3), st[6]: _cur(122.3, basis="net"), st[7]: _cur(9.0),
+           st[8]: _cur(1.0)}
+    out = E.restated_population(verdicts, list(cur), cur, rows, mature={}, confirmed={})
+    got = {r["stem"]: (r["changed"], r["verdict_on_figure_now"], r["evidence"]) for r in out["reconciliation"]}
+    assert got == {st[0]: (False, "error", "figure_scored"),
+                   st[1]: (True, "correct", "own_reading"),
+                   st[2]: (True, E.NOT_RESTATED, None),
+                   st[3]: (False, "correct", "figure_scored"),
+                   st[4]: (True, E.NOT_RESTATED, None),
+                   st[5]: (True, E.NOT_RESTATED, None),
+                   st[6]: (True, E.NOT_RESTATED, None),
+                   st[7]: (True, E.NOT_RESTATED, None)}
+    assert out["n_in_working_sample"] == 8 and out["n_not_restated"] == 5
+    assert out["verdicts"] == {"error": 1, "correct": 2, "undeterminable": 0} and out["adjudicable"] == 3
+
+
+def test_a_register_reading_of_the_current_figure_decides_it():
+    st = "syndicate_7_2020"
+    rows = {st: _first(verdict="correct", clarified_verdict="correct", error_kind=None, adopted_figure_m=5.0,
+                       triangle_recomputation_m=5.0)}
+    mature = {"7_2020": {"figure_m": 9.0, "readings": [{"kind": "reading", "figure_m": 9.0}]}}
+    derived = {"7_2020": {"figure_m": 9.0, "readings": [{"kind": "reading", "figure_m": 5.0, "derived_figure_m": 9.0}]}}
+    cur = {st: _cur(9.0, source=E.MATURE_SOURCE_TAG)}
+    out = E.restated_population({st: "correct"}, [st], cur, rows, mature=mature, confirmed={})
+    assert (out["reconciliation"][0]["verdict_on_figure_now"], out["reconciliation"][0]["evidence"]) == ("correct",
+                                                                                                         "register")
+    out = E.restated_population({st: "correct"}, [st], cur, rows, mature=derived, confirmed={})
+    assert out["reconciliation"][0]["verdict_on_figure_now"] == E.NOT_RESTATED
+    confirmed = {"7_2020": {"figure_m": 9.0, "basis": "gross", "readings": ["first", "second"]}}
+    cur = {st: _cur(9.0)}
+    out = E.restated_population({st: "correct"}, [st], cur, rows, mature={}, confirmed=confirmed)
+    assert out["reconciliation"][0]["evidence"] == "register"
+    confirmed["7_2020"]["basis"] = "net"
+    out = E.restated_population({st: "correct"}, [st], cur, rows, mature={}, confirmed=confirmed)
+    assert out["reconciliation"][0]["verdict_on_figure_now"] == E.NOT_RESTATED
 
 
 def test_the_primary_frame_counts_a_changed_figure_as_read_only_through_the_register():
@@ -459,22 +584,49 @@ def test_the_primary_frame_counts_a_changed_figure_as_read_only_through_the_regi
     assert s["figure_changed_not_read"] == ["syndicate_1_2020", "syndicate_4_2020"]
 
 
-def test_a_sampled_population_restated_against_the_primary():
-    verdicts = {"syndicate_1_2020": "correct", "syndicate_2_2020": "error", "syndicate_3_2020": "correct",
-                "syndicate_4_2020": "correct", "syndicate_9_2020": "error"}
-    pool = ["syndicate_%d_2020" % i for i in (1, 2, 3, 4)]
-    changed = {"syndicate_3_2020": 5.0, "syndicate_4_2020": 5.0}
-    rows = {"syndicate_3_2020": {"verdict": "error", "clarified_verdict": "error", "error_kind": "magnitude",
-                                 "triangle_recomputation_m": 5.1},
-            "syndicate_4_2020": {"verdict": "error", "clarified_verdict": "correct", "error_kind": "magnitude",
-                                 "triangle_recomputation_m": 5.1}}
-    out = E.restated_population(verdicts, pool, changed, rows)
-    assert out["n_in_working_sample"] == 4 and out["n_rescored"] == 2 and out["n_not_restated"] == 1
-    got = {r["stem"]: r["verdict_on_primary"] for r in out["rescored"]}
-    # 3: its final verdict came from a second reading of the displaced figure; 4: re-scored, 5.1 within 0.5 of 5.0
-    assert got == {"syndicate_3_2020": E.NOT_RESTATED, "syndicate_4_2020": "correct"}
-    assert out["verdicts"] == {"error": 1, "correct": 2, "undeterminable": 0} and out["adjudicable"] == 3
-    assert (out["posterior"]["alpha"], out["posterior"]["beta"]) == (1.5, 2.5)
+def _recorded_figures():
+    """{stem: every figure an archived reading records as the figure it scored}, over the whole evidence archive."""
+    import glob
+    keys = ("adopted_figure_m", "adopted_m", "adopted_pyd_m")
+    seen = {}
+
+    def walk(x):
+        if isinstance(x, dict):
+            st = x.get("stem")
+            if isinstance(st, str) and st.startswith("syndicate_"):
+                for k in keys:
+                    if E._num(x.get(k)):
+                        seen.setdefault(st, set()).add(float(x[k]))
+                        break
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+
+    for f in glob.glob(os.path.join(str(E.ARCHIVE), "**", "*.json"), recursive=True):
+        if os.sep + "superseded" + os.sep in f:
+            continue
+        walk(E.load(f))
+    return seen
+
+
+def test_every_read_record_was_read_at_its_current_figure_or_is_changed_in_the_frame():
+    """Across every change route and every archived reading, not only the sampled populations': a record the study's
+    read set counts as read, whose every recorded figure differs from the figure adopted now, must be one the frame
+    treats as changed (the mature-cohort figures and the sampled figures a repair moved), so it is read only through a
+    reading of its current figure. On 28 October 2026 there are eight: six mature-cohort figures and draw four's two
+    repairs."""
+    pool, ex, cur = _real()
+    inp = E.inputs()
+    seen = _recorded_figures()
+    moved = {s for s in pool if s in inp["read"] and s in seen
+             and all(abs(v - cur[s]["figure_m"]) > E.SAME_FIGURE_M for v in seen[s])}
+    with io.open(os.path.join(HERE, "results", "error_rate_propagation_results.json"), encoding="utf-8") as _fh:
+        f = json.load(_fh)["frame_against_primary"]
+    mature = set(E.changed_figures(ex, pool))
+    assert moved <= mature | set(f["sampled_figure_changed_by_a_repair"]), sorted(moved - mature)
+    assert {"syndicate_1274_2023", "syndicate_4472_2022"} <= moved
 
 
 def test_the_recorded_frame_against_the_primary_adds_up():
@@ -487,7 +639,13 @@ def test_the_recorded_frame_against_the_primary_adds_up():
     ex = E.load(E.EXPOSURE)
     tagged = sum(1 for o in ex["observations"] if o.get("pyd_basis_source") == E.MATURE_SOURCE_TAG
                  and o.get("s_raw_a") is not None and o.get("opening_reserves_gbp_m") and o.get("hhi") is not None)
-    assert f["n_figure_changed_by_the_primary"] == tagged
+    assert f["n_figure_changed_by_the_primary_outcome"] == tagged
+    assert f["n_figure_changed_by_the_primary"] == tagged + len(f["sampled_figure_changed_by_a_repair"])
+    assert f["figure_changed_not_read"] == []
     for name in ("draw_four", "pooled"):
         blk = res["rate_population_on_primary"][name]
         assert sum(blk["verdicts"].values()) + blk["n_not_restated"] == blk["n_in_working_sample"]
+        assert "posterior" not in blk
+        for r in blk["reconciliation"]:
+            if r["verdict_on_figure_scored"] == "error" and r["changed"]:
+                assert r["verdict_on_figure_now"] != "error" or r["evidence"] is not None, r

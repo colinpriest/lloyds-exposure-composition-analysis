@@ -35,6 +35,16 @@ sampled records were drawn from the working sample of an earlier loader run, and
 result records that run, how many of the sampled records are still in the current working sample, their
 verdicts, and the rate on them alone, beside the rate.
 
+Each sampled population is also reconciled with the figures the fit adopts now (the fresh review of 28 October 2026,
+finding 1): every sampled record still in the working sample, with the figure its reading scored, the figure adopted
+now, its basis and route. An unchanged figure keeps its verdict; a changed one, on any route (the primary outcome's
+mature-cohort figures, a confirmed-figure repair, a precedence rule), is scored only on a reading of the current figure,
+or left not restated. The restatement used to find changed figures only on the mature-cohort route and to carry a
+reading's basis or scope error over to the figure that repaired it (draw four's 1274/2023 and 4472/2022). The
+reconciled counts are not a rate for the current working sample: the records are what remains of a draw from an earlier
+population, and the errors the readings found were repaired because they were found. The rate the propagation applies
+is the protocol's, unchanged.
+
 Run: python src/error_rate_propagation.py
 """
 import io
@@ -79,7 +89,6 @@ MATURE_READING_KINDS = ("reading", "error_rate_study")
 FIRST_READINGS = {"draw_four": (ARCHIVE / "fourth-sample" / "error-rate-verdicts-fourth.json",),
                   "pooled": (ARCHIVE / "third-sample" / "error-rate-verdicts-third.json",
                              ARCHIVE / "second-sample" / "error-rate-verdicts-after.json")}
-ADOPTED = "adopted_prior_year_development_m_report_currency"
 #: the study's constants (results/extraction_error_rate/scripts/error_rate_propagation.py)
 SEED = 20260915
 M = 2000
@@ -196,7 +205,9 @@ def rate_population(rate, pool_stems, current_run_id):
             "prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
             "credible_interval_95": [float(stats.beta.ppf(0.025, a, b)), float(stats.beta.ppf(0.975, a, b))]},
         "note": ("the study's rate (A_sampled) is the rate of the working sample it drew from; the records still "
-                 "in the current working sample give the rate beside it"),
+                 "in the current working sample are counted beside it with their historical verdicts, on the figures "
+                 "their readings scored: a post-selection subset of the draw, not a sample of the current working "
+                 "sample, and not restated on the figures adopted now (rate_population_on_primary does that)"),
     }
 
 
@@ -226,46 +237,51 @@ def _load_archive_module(name):
     return mod
 
 
-def study_figure_source(brief, overruled=frozenset()):
-    """The study's figure-source rule, as draw four applied it (score_error_rate_fourth.figure_source: the first
-    protocol's rule with a code_triangle route read as the triangle it names), with one extension for the route the
-    primary outcome added after it was written: a mature_cohort_triangle route is the printed gross triangle's figure
-    over u <= t-2, recomputed from the stored grid by the extraction's estimator and confirmed by at least two readings
-    (data/mature_cohort_figures.json), so its source is a triangle."""
-    if (brief.get("route") or {}).get("source") == MATURE_ROUTE:
-        return "triangle", ("a mature_cohort_triangle route: the gross triangle's figure over u <= t-2, recomputed by "
-                            "the extraction's estimator (data/mature_cohort_figures.json)")
-    return _archive_module("score_error_rate_fourth").figure_source(brief, overruled)
+#: two figures in a report's currency are one figure when they agree to the archive's precision (it records 0.001m)
+SAME_FIGURE_M = 0.0005
+#: the tag the loader writes for a figure it adopted from the confirmed-figure register (run_analysis; pyd_basis_source)
+CONFIRMED_SOURCE_TAG = "confirmed-figure:register"
+#: the verdict of a sampled record whose figure changed when no archived reading adjudicates the figure the primary
+#: adopts: it is left out of the counts
+NOT_RESTATED = "not_restated"
 
 
-def clarified_on_primary(first, brief, overruled=frozenset()):
-    """The study's clarified verdict (score_error_rate.clarified, the protocol's), with study_figure_source in place of
-    the first protocol's rule: a triangle-sourced figure is checked against the first reader's triangle recomputation,
-    any other against the first reader's verdict."""
-    ser = _archive_module("score_error_rate")
-    source, why = study_figure_source(brief, overruled)
-    if source != "triangle":
-        return first["verdict"], "checked against the stated movement (%s): the first reader's verdict" % why
-    if first["verdict"] == "undeterminable":
-        return "undeterminable", "the first reader could not settle it"
-    kind = str(first.get("error_kind") or "")
-    if first["verdict"] == "error" and kind and kind not in ("magnitude", "sign"):
-        return "error", "the first reader's %s error stands for the second reader" % kind
-    rec = first.get("triangle_recomputation_m")
-    if rec is None:
-        return "undeterminable", "triangle-sourced, but no triangle recomputation was recorded"
-    adopted = float(brief[ADOPTED])
-    if adopted != 0 and rec != 0 and (adopted > 0) != (rec > 0):
-        return "error", "sign: adopted %+.3f against the triangle's %+.3f" % (adopted, rec)
-    if abs(adopted - rec) > ser.tolerance(adopted):
-        return "error", "magnitude: adopted %+.3f, triangle %+.3f, tolerance %.3f" % (adopted, rec, ser.tolerance(adopted))
-    return "correct", "adopted %+.3f within %.3f of the triangle's %+.3f" % (adopted, ser.tolerance(adopted), rec)
+def _num(x):
+    return isinstance(x, (int, float)) and not isinstance(x, bool)
+
+
+def report_currency_figure(o):
+    """An observation's adopted figure in its report's currency, the currency the readings record: the loader converts
+    a US-dollar report's figure to sterling at fx_rate_usd_per_gbp (dollars per pound)."""
+    f = float(o["pyd_gbp_m"])
+    if o.get("fx_applied"):
+        if o.get("report_currency") != "USD":
+            raise SystemExit("%s/%s: an FX-converted figure in %r, not US dollars"
+                             % (o["syndicate"], o["year"], o.get("report_currency")))
+        f *= float(o["fx_rate_usd_per_gbp"])
+    return f
+
+
+def current_figures(exposure, pool_stems):
+    """{stem: {figure_m, currency, basis, source}} for the working sample: the figure the fit adopts in the report's
+    currency, its basis and the route the loader recorded for it (pyd_basis_source), whatever that route is."""
+    pool = set(pool_stems)
+    out = {}
+    for o in exposure["observations"]:
+        stem = "syndicate_%s_%s" % (o["syndicate"], o["year"])
+        if stem in pool:
+            out[stem] = {"figure_m": report_currency_figure(o), "currency": o.get("report_currency") or "GBP",
+                         "basis": o.get("pyd_basis"), "source": o.get("pyd_basis_source")}
+    missing = pool - set(out)
+    if missing:
+        raise SystemExit("no observation for %d working-sample records, e.g. %s" % (len(missing), sorted(missing)[0]))
+    return out
 
 
 def changed_figures(exposure, pool_stems):
     """{stem: the primary's figure in the report's currency} for the working-sample records whose figure the primary
     took from the mature-cohort register (pyd_basis_source MATURE_SOURCE_TAG): their earlier readings read another
-    figure."""
+    figure. A sampled record whose figure moved on any other route is found by comparing figures (scored_changes)."""
     pool = set(pool_stems)
     register = load(MATURE_REGISTER)
     out = {}
@@ -283,29 +299,80 @@ def register_read(changed):
             if any(r.get("kind") in MATURE_READING_KINDS for r in register[s.replace("syndicate_", "")].get("readings", []))}
 
 
-def primary_frame(pool_stems, read, changed, read_by_register):
-    """Which working-sample records are read against the primary: a record is read when a reading checked the figure the
-    primary adopts. A record whose figure the primary changed is read only through the mature-cohort readings (its
-    earlier readings, if any, checked the displaced figure); every other record keeps the study's read set."""
-    pool = list(pool_stems)
-    old_unread = [s for s in pool if s not in read]
-    now_read = {s for s in pool if (s in read and s not in changed) or s in read_by_register}
-    unread = [s for s in pool if s not in now_read]
-    return {
-        "unread": unread,
-        "summary": {
-            "rule": ("read against the primary: the study's read set less the records whose figure the primary changed "
-                     "(their readings checked the displaced figure), plus those the mature-cohort readings read "
-                     "(data/mature_cohort_figures.json, readings of kind %s)" % (" or ".join(MATURE_READING_KINDS))),
-            "n_working_sample": len(pool),
-            "n_unread_by_the_study_read_set_alone": len(old_unread),
-            "n_unread_against_the_primary": len(unread),
-            "n_figure_changed_by_the_primary": len(changed),
-            "n_figure_changed_and_read_before": len(set(changed) & set(read)),
-            "n_figure_changed_read_by_the_register": len(read_by_register),
-            "figure_changed_not_read": sorted(set(changed) - set(read_by_register)),
-            "newly_read": sorted(set(old_unread) - set(unread)),
-            "newly_unread": sorted(set(unread) - set(old_unread))}}
+def register_readings_of(stem, current, mature=None, confirmed=None):
+    """The register readings that give the figure the primary adopts, as (register, description), or None.
+
+    A mature-cohort entry counts through a reading of kind MATURE_READING_KINDS whose own figure is the adopted one: a
+    figure the register derives from the readers' cells, which neither reader gives (1274/2016, 3330/2017), is not read.
+    A confirmed-figure entry counts when the loader adopted it, its figure is the adopted one, its basis is gross and it
+    lists the readings that confirmed it."""
+    mature = load(MATURE_REGISTER) if mature is None else mature
+    confirmed = load(CONFIRMED_REGISTER) if confirmed is None else confirmed
+    key = stem.replace("syndicate_", "")
+    fig = current["figure_m"]
+    if current["source"] == MATURE_SOURCE_TAG:
+        e = mature.get(key) or {}
+        giving = [r for r in e.get("readings", []) if r.get("kind") in MATURE_READING_KINDS
+                  and _num(r.get("figure_m")) and abs(r["figure_m"] - fig) <= SAME_FIGURE_M]
+        if giving:
+            return "mature-cohort", "%d of the mature-cohort register's readings give %+.3f" % (len(giving), fig)
+    if current["source"] == CONFIRMED_SOURCE_TAG:
+        e = confirmed.get(key) or {}
+        if (_num(e.get("figure_m")) and abs(e["figure_m"] - fig) <= SAME_FIGURE_M and e.get("basis") == "gross"
+                and e.get("readings")):
+            return "confirmed-figure", ("the confirmed-figure register's %+.3f, gross, confirmed by %d readings"
+                                        % (e["figure_m"], len(e["readings"])))
+    return None
+
+
+def _agrees(figure, other):
+    """The study's rule for a triangle figure (score_error_rate.tolerance): the same sign, and within the larger of
+    0.5m and 5% of the figure. Returns (agrees, tolerance)."""
+    tol = _archive_module("score_error_rate").tolerance(figure)
+    if figure != 0 and other != 0 and (figure > 0) != (other > 0):
+        return False, tol
+    return abs(figure - other) <= tol, tol
+
+
+def verdict_on_current(first, final, current, register):
+    """The verdict on the figure the primary adopts, for a sampled record whose figure changed after its reading.
+
+    A historical verdict described the figure that reading scored, an error of basis or scope included, so it does not
+    carry over to another figure. The current figure is scored only on evidence that read it:
+      1. the record's own first reading, when it decided the record's final verdict (no second reading overturned it),
+         settled it (not undeterminable) and recomputed a figure from the gross triangle that agrees with the current
+         one under the study's rule: correct;
+      2. otherwise the readings of the register the figure came from, when one gives the figure itself
+         (register_readings_of): correct;
+      3. otherwise NOT_RESTATED. A recomputation that disagrees with the current figure is not scored an error: it may
+         read another cohort scope (2232/2020's first reading recomputed the all-years figure the primary displaced),
+         and without a reading of the current figure the archive cannot say which.
+    The readings recompute the gross triangle, so a figure on another basis is NOT_RESTATED.
+    Returns (verdict, evidence, why), evidence "own_reading", "register" or None."""
+    if current["basis"] != "gross":
+        return NOT_RESTATED, None, "the current figure's basis is %r; the readings recompute the gross triangle" % (
+            current["basis"],)
+    fig = current["figure_m"]
+    rec = (first or {}).get("triangle_recomputation_m")
+    if first is None:
+        why_own = "no first reading is archived"
+    elif first.get("clarified_verdict") != final:
+        why_own = ("a second reading decided its verdict (%s, the first reading's %s) on the figure then adopted"
+                   % (final, first.get("clarified_verdict")))
+    elif final == "undeterminable":
+        why_own = "its reading could not settle the figure then adopted"
+    elif not _num(rec):
+        why_own = "its reading recorded no recomputation from the gross triangle"
+    else:
+        ok, tol = _agrees(fig, rec)
+        if ok:
+            return "correct", "own_reading", ("the current figure %+.3f is its reading's own recomputation from the gross "
+                                              "triangle (%+.3f, within %.3f)" % (fig, rec, tol))
+        why_own = ("its reading's recomputation %+.3f is not the current figure %+.3f (another scope or an error; the "
+                   "reading cannot say which)" % (rec, fig))
+    if register is not None:
+        return "correct", "register", "%s; its own reading does not adjudicate it: %s" % (register[1], why_own)
+    return NOT_RESTATED, None, "%s, and no register reading gives the current figure" % why_own
 
 
 def first_readings(paths):
@@ -317,47 +384,108 @@ def first_readings(paths):
     return rows
 
 
-#: the verdict of a changed record that cannot be restated from its first reading: it is left out of the counts
-NOT_RESTATED = "not_restated"
-
-
-def restated_population(verdicts, pool_stems, changed, rows):
-    """A sampled population's verdicts against the primary: a record in the working sample whose figure the primary did
-    not change keeps its final verdict; one whose figure it changed is re-scored by clarified_on_primary from its first
-    reading against the primary's figure, unless a second reading decided its final verdict (that reading read the
-    displaced figure) or no first reading is archived, when it is NOT_RESTATED and left out of the counts; a record
-    outside the working sample is left out. Returns the counts, the re-scored records and the Jeffreys posterior."""
-    pool = set(pool_stems)
-    now, rescored = {}, []
-    for stem, v in sorted(verdicts.items()):
-        if stem not in pool:
+def scored_changes(verdicts, pool_stems, current, rows):
+    """{stem: current figure} for the sampled records in the working sample whose figure differs from the figure their
+    first reading scored (adopted_figure_m), on any route: a register's repair, the primary outcome, a precedence rule.
+    A record whose first reading recorded no scored figure is listed with None: it cannot be compared."""
+    out = {}
+    for stem in verdicts:
+        if stem not in current:
             continue
-        if stem in changed:
-            brief = {"stem": stem, "route": {"source": MATURE_ROUTE}, ADOPTED: changed[stem]}
-            first = rows.get(stem)
-            if first is None:
-                verdict, why = NOT_RESTATED, "no first reading is archived"
-            elif first.get("clarified_verdict") != v:
-                verdict, why = NOT_RESTATED, ("a second reading decided its verdict (%s, the first reading's %s) on the "
-                                              "displaced figure; the primary's figure needs a second reading of its own"
-                                              % (v, first.get("clarified_verdict")))
-            else:
-                verdict, why = clarified_on_primary(first, brief)
-            rescored.append({"stem": stem, "verdict_on_displaced_figure": v, "verdict_on_primary": verdict, "why": why})
-            now[stem] = verdict
+        scored = (rows.get(stem) or {}).get("adopted_figure_m")
+        if not _num(scored):
+            out[stem] = None
+        elif abs(current[stem]["figure_m"] - scored) > SAME_FIGURE_M:
+            out[stem] = current[stem]["figure_m"]
+    return out
+
+
+def primary_frame(pool_stems, read, changed, read_by_register):
+    """Which working-sample records are read against the primary: a record is read when a reading checked the figure the
+    primary adopts. A record whose figure changed after its reading (`changed`: the primary's mature-cohort figures and
+    any sampled figure a repair moved) is read only through a reading of its current figure (`read_by_register`); every
+    other record keeps the study's read set."""
+    pool = list(pool_stems)
+    old_unread = [s for s in pool if s not in read]
+    now_read = {s for s in pool if (s in read and s not in changed) or s in read_by_register}
+    unread = [s for s in pool if s not in now_read]
+    return {
+        "unread": unread,
+        "summary": {
+            "rule": ("read against the primary: the study's read set less the records whose figure changed after their "
+                     "reading (the primary's mature-cohort figures, and every sampled figure a repair moved), plus those "
+                     "a reading of the current figure covers (the mature-cohort readings of kind %s, a sampled record's "
+                     "own recomputation of the current figure, or the confirmed-figure register's readings)"
+                     % (" or ".join(MATURE_READING_KINDS))),
+            "n_working_sample": len(pool),
+            "n_unread_by_the_study_read_set_alone": len(old_unread),
+            "n_unread_against_the_primary": len(unread),
+            "n_figure_changed_by_the_primary": len(changed),
+            "n_figure_changed_and_read_before": len(set(changed) & set(read)),
+            "n_figure_changed_read_by_the_register": len(read_by_register),
+            "figure_changed_not_read": sorted(set(changed) - set(read_by_register)),
+            "newly_read": sorted(set(old_unread) - set(unread)),
+            "newly_unread": sorted(set(unread) - set(old_unread))}}
+
+
+def restated_population(verdicts, pool_stems, current, rows, mature=None, confirmed=None):
+    """A sampled population's verdicts reconciled with the figures the fit now adopts.
+
+    Every sampled record still in the working sample is listed with the figure its reading scored, the figure adopted
+    now, that figure's basis and route, and a verdict on the current figure: unchanged, its final verdict stands (the
+    reading scored this figure, its basis included); changed, verdict_on_current decides it from evidence that read the
+    current figure, or leaves it NOT_RESTATED. A record outside the working sample is left out.
+
+    The counts describe these records as they now stand. They are not a rate for the current working sample: the
+    records are what remains of a draw from an earlier population, and an error the readings found was repaired because
+    they found it, so the reconciled counts understate the rate among records nobody read. The rate applied to those is
+    the protocol's (the propagation's), unchanged."""
+    mature = load(MATURE_REGISTER) if mature is None else mature
+    confirmed = load(CONFIRMED_REGISTER) if confirmed is None else confirmed
+    recon, counts, evidence = [], {"error": 0, "correct": 0, "undeterminable": 0}, {"own_reading": 0, "register": 0}
+    n_not = 0
+    for stem, final in sorted(verdicts.items()):
+        if stem not in current:
+            continue
+        cur = current[stem]
+        first = rows.get(stem)
+        scored = (first or {}).get("adopted_figure_m")
+        row = {"stem": stem, "figure_scored_m": scored, "figure_now_m": round(cur["figure_m"], 6),
+               "currency": cur["currency"], "basis_now": cur["basis"], "route_now": cur["source"],
+               "verdict_on_figure_scored": final,
+               "error_kind_on_figure_scored": (first or {}).get("error_kind") if final == "error" else None}
+        if not _num(scored):
+            row.update(changed=None, verdict_on_figure_now=NOT_RESTATED, evidence=None,
+                       why="no archived reading records the figure it scored")
+        elif abs(cur["figure_m"] - scored) <= SAME_FIGURE_M:
+            row.update(changed=False, verdict_on_figure_now=final, evidence="figure_scored",
+                       why="the figure scored is the figure adopted: its verdict stands, basis and scope included")
         else:
-            now[stem] = v
-    counts = {"error": 0, "correct": 0, "undeterminable": 0}
-    for v in now.values():
-        if v != NOT_RESTATED:
+            v, ev, why = verdict_on_current(first, final, cur, register_readings_of(stem, cur, mature, confirmed))
+            row.update(changed=True, verdict_on_figure_now=v, evidence=ev, why=why)
+        v = row["verdict_on_figure_now"]
+        if v == NOT_RESTATED:
+            n_not += 1
+        else:
             counts[v] += 1
-    a, b = 0.5 + counts["error"], 0.5 + counts["correct"]
-    return {"n_in_working_sample": len(now), "n_rescored": len(rescored), "rescored": rescored,
-            "n_not_restated": sum(1 for v in now.values() if v == NOT_RESTATED),
-            "verdicts": counts, "adjudicable": counts["error"] + counts["correct"],
-            "posterior": {"prior": "Beta(1/2, 1/2)", "alpha": a, "beta": b, "mean": a / (a + b),
-                          "credible_interval_95": [float(stats.beta.ppf(0.025, a, b)),
-                                                float(stats.beta.ppf(0.975, a, b))]}}
+        if row["evidence"] in evidence:
+            evidence[row["evidence"]] += 1
+        recon.append(row)
+    changed = [r for r in recon if r["changed"] is not False]
+    return {"n_in_working_sample": len(recon), "n_figure_changed": len(changed), "n_rescored": len(changed),
+            "rescored": [{"stem": r["stem"], "verdict_on_displaced_figure": r["verdict_on_figure_scored"],
+                          "verdict_on_primary": r["verdict_on_figure_now"], "evidence": r["evidence"], "why": r["why"]}
+                         for r in changed],
+            "n_not_restated": n_not, "verdicts": counts, "adjudicable": counts["error"] + counts["correct"],
+            "rescored_by_evidence": evidence,
+            "errors_on_figure_scored": [{"stem": r["stem"], "error_kind": r["error_kind_on_figure_scored"],
+                                         "figure_scored_m": r["figure_scored_m"], "figure_now_m": r["figure_now_m"],
+                                         "verdict_on_figure_now": r["verdict_on_figure_now"]}
+                                        for r in recon if r["verdict_on_figure_scored"] == "error"],
+            "reconciliation": recon,
+            "not_a_rate": ("a reconciliation of the sampled records still in the working sample with the figures adopted "
+                           "now, not a rate for the current working sample: the records remain from a draw of an earlier "
+                           "population, and the errors the readings found were repaired because they were found")}
 
 
 #: further lines beside the 5% one (12 October 2026): about 15% of replicates move Vignette 1's VaR99.5 by close to
@@ -468,10 +596,24 @@ def main():
     v1, _v2_old, _v2_new = vu.load_targets()
     inp = inputs()
     pool_stems = ["syndicate_%s_%s" % (s, y) for s, y in zip(synd, year)]
-    # the unread records against the primary: a record whose figure the primary changed counts as read only through
-    # the mature-cohort readings (primary_frame)
-    changed = changed_figures(load(EXPOSURE), pool_stems)
-    frame = primary_frame(pool_stems, inp["read"], changed, register_read(changed))
+    exposure = load(EXPOSURE)
+    current = current_figures(exposure, pool_stems)
+    result = load(RATE)
+    # each sampled population reconciled with the figures adopted now, on every route (restated_population)
+    populations = {"draw_four": (result["clarified"]["final_verdicts"], first_readings(FIRST_READINGS["draw_four"])),
+                   "pooled": (load(POOLED)["final_verdicts"]["A"], first_readings(FIRST_READINGS["pooled"]))}
+    restated = {name: restated_population(v, pool_stems, current, rows) for name, (v, rows) in populations.items()}
+    # the unread records against the primary: a record whose figure changed after its reading counts as read only
+    # through a reading of its current figure -- the mature-cohort readings, or, for a sampled figure a repair moved,
+    # its own reading's recomputation or the confirmed-figure register's readings (primary_frame)
+    mature_changed = changed_figures(exposure, pool_stems)
+    recon = [r for blk in restated.values() for r in blk["reconciliation"]]
+    repaired = {r["stem"] for r in recon if r["changed"] and r["stem"] in inp["read"] and r["stem"] not in mature_changed}
+    read_now = {r["stem"] for r in recon if r["stem"] in repaired and r["evidence"] in ("own_reading", "register")}
+    changed = dict(mature_changed, **{st: current[st]["figure_m"] for st in repaired})
+    frame = primary_frame(pool_stems, inp["read"], changed, register_read(mature_changed) | read_now)
+    frame["summary"]["n_figure_changed_by_the_primary_outcome"] = len(mature_changed)
+    frame["summary"]["sampled_figure_changed_by_a_repair"] = sorted(repaired)
     unread_set = set(frame["unread"])
     unread = np.array([i for i, s in enumerate(pool_stems) if s in unread_set], int)
     # draw four's rate (the fourth protocol), and the pooled rate beside it as a sensitivity
@@ -504,7 +646,6 @@ def main():
                                  % (mode, block["V1_VaR995"], recorded))
             blocks[rate][mode] = {**transfer_operator.stamp(mode), **block, "per_model": per_model(block)}
 
-    result = load(RATE)
     run_now = fit["loader_run_id_without_calibration"]
     headline_keys = ("operator", "operator_role", "operator_construction", "V1_VaR995", "p_from_posterior",
                      "p_at_posterior_97_5", "per_model")
@@ -525,14 +666,12 @@ def main():
         "read_records_in_pool": int(len(S) - len(unread)),
         "frame_against_primary": frame["summary"],
         "rate_population_on_primary": {
-            "note": ("each sampled population against the primary: its records in the working sample, with the "
-                     "records whose figure the primary changed re-scored by the study's clarified rule from their first "
-                     "reading against the primary's figure (clarified_on_primary, with study_figure_source); the rates "
-                     "the propagation applies are the protocol's, unchanged"),
-            "draw_four": restated_population(result["clarified"]["final_verdicts"], pool_stems, changed,
-                                             first_readings(FIRST_READINGS["draw_four"])),
-            "pooled": restated_population(load(POOLED)["final_verdicts"]["A"], pool_stems, changed,
-                                          first_readings(FIRST_READINGS["pooled"]))},
+            "note": ("each sampled population reconciled with the figures adopted now (restated_population): every "
+                     "record in the working sample with the figure its reading scored and the figure adopted now, on "
+                     "every route; an unchanged figure keeps its verdict, a changed one is scored only on a reading of "
+                     "the current figure (verdict_on_current) or left not restated. A reconciliation, not a rate for the "
+                     "current working sample; the rates the propagation applies are the protocol's, unchanged"),
+            **restated},
         "draw_four_records_in_pool": int(sum(1 for s in pool_stems if s in inp["draw_four_records"])),
         "n_confirmed_error_shifts": int(len(inp["shifts"])),
         "replicates": M, "seed": SEED, "materiality_line_relative": MATERIAL,
@@ -552,14 +691,15 @@ def main():
         _fh.write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
           % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"], run_now))
-    print("unread %d of %d (by the study's read set alone %d; %d figures the primary changed, %d of them read by the "
-          "mature-cohort readings)" % (len(unread), len(S), frame["summary"]["n_unread_by_the_study_read_set_alone"],
-                                       len(changed), frame["summary"]["n_figure_changed_read_by_the_register"]))
+    print("unread %d of %d (by the study's read set alone %d; %d figures changed after their reading, %d of them read "
+          "at the current figure)" % (len(unread), len(S), frame["summary"]["n_unread_by_the_study_read_set_alone"],
+                                      len(changed), frame["summary"]["n_figure_changed_read_by_the_register"]))
     for name, blk in out["rate_population_on_primary"].items():
         if name == "note":
             continue
-        print("  %s on the primary: %d in the working sample, %d re-scored, verdicts %s, posterior mean %.4f"
-              % (name, blk["n_in_working_sample"], blk["n_rescored"], blk["verdicts"], blk["posterior"]["mean"]))
+        print("  %s on the primary: %d in the working sample, %d figures changed, verdicts %s, %d not restated "
+              "(%s)" % (name, blk["n_in_working_sample"], blk["n_figure_changed"], blk["verdicts"],
+                        blk["n_not_restated"], blk["rescored_by_evidence"]))
     for rate, (e, n) in rates.items():
         print("rate %s ~ Beta(%.1f, %.1f)" % (rate, 0.5 + e, 0.5 + n - e))
         for mode in transfer_operator.MODES:

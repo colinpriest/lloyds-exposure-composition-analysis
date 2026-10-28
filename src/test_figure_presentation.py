@@ -327,3 +327,30 @@ def test_figure_3_legend_names_the_gamma_free_fit_and_its_gamma(figures, inputs)
 def test_figure_5_keys_its_markers_in_the_legend(figures):
     texts = _legend_texts(figures["fig_v1_ritc_survivor"][1])
     assert any(t.startswith("VaR 99%") for t in texts) and any(t.startswith("VaR 99.5%") for t in texts), texts
+
+
+def test_the_coverage_figure_counts_listed_syndicates_not_sample_over_active(inputs, figures):
+    """The fresh review of 28 October 2026, finding 3: six working-sample records are off their year's official list
+    (1110/2020, 1884/2022, 1110/2023, 1884/2023, 1110/2024, 1884/2024), so sample / active is not a coverage. The line
+    is the listed syndicates' share in the sample, 2020-2024 only, from the lists' membership."""
+    yr = inputs[3]
+    got = MPF.listed_in_sample(yr, MPF.syndicates())
+    assert {y: v[:2] for y, v in got.items()} == {2020: (61, 98), 2021: (54, 92), 2022: (56, 93), 2023: (67, 95),
+                                                   2024: (72, 95)}
+    assert sum(v[2] for v in got.values()) == 6
+    fig, axes = figures["fig_corpus_coverage"]
+    line = [ln for ax in axes for ln in ax.lines if "Listed" in ln.get_label()]
+    assert len(line) == 1 and list(line[0].get_xdata()) == [6, 7, 8, 9, 10]
+    title = axes[0].get_title()
+    assert "310 of 473 listed" in title and "overall" not in title, title
+
+
+def test_an_off_list_record_does_not_count_as_a_listed_syndicate_in_the_sample():
+    import market_active
+    year = 2024
+    listed = sorted(market_active.official_lists()[year])
+    off = max(listed) + 1
+    yr = np.array([year, year, year])
+    syn = np.array([listed[0], listed[1], off])
+    got = MPF.listed_in_sample(yr, syn)[year]
+    assert got == (2, len(listed), 1)

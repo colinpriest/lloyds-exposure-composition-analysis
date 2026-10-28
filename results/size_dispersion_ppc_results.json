@@ -1,6 +1,6 @@
 {
   "figure": "paper_pack/fig_size_dispersion.pdf and .png",
-  "statistic": "median |S| of the records in each vigintile of opening reserves R: observed, and replicated under the headline fit (gamma = 0) for the same records, one replicate per saved posterior draw",
+  "statistic": "median |S| of the records in each vigintile of the reserve base R: observed, and replicated under the headline fit (gamma = 0) for the same records, one replicate per saved posterior draw",
   "replicate": "S_rep = exp(s_t + beta_RITC 1[RITC]) s(R) T_nu, s(R) = sqrt(sd_undiv^2 + sd_div^2 (R/500)^{2(k-1)}), nu = nu_clean or nu_RITC, each at the draw's value",
   "year_shock": "integrated out: s_t ~ N(0, tau_s) drawn once per reporting year and posterior draw, shared by that year's records; tau_s at its recorded posterior mean (the calibration saves neither tau_s draws nor the fitted year shocks, so the check is not conditional on them)",
   "tau_s_used": 0.137,

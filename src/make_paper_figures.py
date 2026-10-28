@@ -1,7 +1,7 @@
 """Four paper figures on the working-sample RITC-regime fit (n read from the data).
 
-  fig_corpus_coverage   - by-year active vs corpus vs working sample (+ coverage %)
-  fig_size_dispersion   - |S| vs opening reserves (log-log): the observed vigintile medians of |S| against the
+  fig_corpus_coverage   - by-year active vs corpus vs working sample (+ listed syndicates in the sample, 2020-24)
+  fig_size_dispersion   - |S| vs the reserve base R (log-log): the observed vigintile medians of |S| against the
                           posterior-predictive medians of |S| for the same records (with a 90% band), the base scale
                           s(R) as a labelled reference, and the floor; its record,
                           results/size_dispersion_ppc_results.json, holds every plotted bin (the edit review of
@@ -132,14 +132,31 @@ def points_under_legend(fig, ax, legend):
                 & (disp[:, 1] <= box.y1)).sum())
 
 
-def coverage_figure(yr, corpus_by_year):
+def listed_in_sample(yr, syn):
+    """{year: (listed syndicates with a working-sample record, listed syndicates, sample records off the list)} for
+    the years with an official list of active syndicates (2020-2024). The working sample and the list are not nested
+    sets: a sample record whose syndicate is not on its year's list counts in neither of the first two (the fresh
+    review of 28 October 2026, finding 3)."""
+    out = {}
+    for y, listed in market_active.official_lists().items():
+        have = {int(s) for s, t in zip(syn, yr) if int(t) == y}
+        out[y] = (len(have & listed), len(listed), len(have - listed))
+    return out
+
+
+def coverage_figure(yr, corpus_by_year, syn=None):
     """The coverage figure at its printed width, its legend BELOW the axes: in the plot area it sat over the
-    2014-2016 bars (review of 29 September 2026, M-16). Returns (fig, ax, legend)."""
+    2014-2016 bars (review of 29 September 2026, M-16). Returns (fig, ax, legend).
+
+    The bars are counts. The line is the share of each year's officially listed syndicates that have a working-sample
+    record, drawn for 2020-2024 only: for 2014-2019 Lloyd's publishes counts, not lists, so membership cannot be
+    checked and sample over active would be a ratio of two different populations, not a coverage."""
     years = list(range(2014, 2025))
     samp = {y: int((yr == y).sum()) for y in years}
     corp = corpus_by_year or samp
     active = market_active.active_by_year()
     act = [active[y] for y in years]; cor = [corp.get(y, 0) for y in years]; sam = [samp[y] for y in years]
+    listed = listed_in_sample(yr, syndicates() if syn is None else syn)
     x = np.arange(len(years)); w = 0.27
     with PFS.style():
         fig, ax = PFS.figure("fig_corpus_coverage", 3.5)
@@ -147,15 +164,17 @@ def coverage_figure(yr, corpus_by_year):
         ax.bar(x, cor, w, label="Corpus (extracted, in scope)", color=C_COR)
         ax.bar(x + w, sam, w, label="Working sample", color=C_SAM)
         ax2 = ax.twinx()
-        cov = [100 * s / a for s, a in zip(sam, act)]
-        ax2.plot(x, cov, "o-", color="#b2182b", lw=1.5, ms=3.5, label="Sample coverage %")
-        ax2.set_ylabel("Sample coverage (%)", color="#b2182b"); ax2.set_ylim(0, 100)
+        lx = [years.index(y) for y in sorted(listed)]
+        cov = [100 * listed[y][0] / listed[y][1] for y in sorted(listed)]
+        ax2.plot(lx, cov, "o-", color="#b2182b", lw=1.5, ms=3.5, label="Listed syndicates in the sample % (2020-24)")
+        ax2.set_ylabel("Listed syndicates in sample (%)", color="#b2182b"); ax2.set_ylim(0, 100)
         ax2.tick_params(axis="y", colors="#b2182b", labelsize=PFS.SMALL_PT)
         ax.set_xticks(x); ax.set_xticklabels([str(y)[2:] for y in years]); ax.set_ylabel("Syndicate-years")
         ax.set_xlabel("Reporting year (20xx)")
         ax.tick_params(labelsize=PFS.SMALL_PT)
-        ax.set_title(f"Corpus coverage by reporting year\n(n={sum(sam)} sample, {sum(cor)} corpus; "
-                     f"overall {100*sum(sam)/sum(act):.0f}%)")
+        have = sum(v[0] for v in listed.values()); size = sum(v[1] for v in listed.values())
+        ax.set_title(f"Corpus and sample by reporting year\n(n={sum(sam)} sample, {sum(cor)} corpus; "
+                     f"2020-24: {have} of {size} listed in the sample)")
         handles = ax.get_legend_handles_labels()[0] + ax2.get_legend_handles_labels()[0]
         labels = ax.get_legend_handles_labels()[1] + ax2.get_legend_handles_labels()[1]
         legend = ax.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2,
@@ -194,7 +213,7 @@ N_VIGINTILES = 20
 
 
 def vigintiles(R):
-    """The vigintile of each record's opening reserves (0..19), Figure 2's bins, as the figure has always drawn them."""
+    """The vigintile of each record's reserve base R (0..19), Figure 2's bins, as the figure has always drawn them."""
     edges = np.percentile(R, np.linspace(0, 100, N_VIGINTILES + 1))
     return np.clip(np.digitize(R, edges) - 1, 0, N_VIGINTILES - 1)
 
@@ -248,7 +267,7 @@ def size_ppc(S, R, yr, ritc, cal, draws_path=HEADLINE_DRAWS, seed=PPC_SEED, band
                      "share_replicates_at_or_above_observed": float((reps[:, j] >= obs).mean()),
                      "observed_outside_band": bool(obs < lo or obs > hi)})
     return {"figure": "paper_pack/fig_size_dispersion.pdf and .png",
-            "statistic": "median |S| of the records in each vigintile of opening reserves R: observed, and replicated "
+            "statistic": "median |S| of the records in each vigintile of the reserve base R: observed, and replicated "
                          "under the headline fit (gamma = 0) for the same records, one replicate per saved posterior "
                          "draw",
             "replicate": "S_rep = exp(s_t + beta_RITC 1[RITC]) s(R) T_nu, s(R) = sqrt(sd_undiv^2 + sd_div^2 "
@@ -331,7 +350,7 @@ def size_figure(S, R, H, cal, yr, ritc, ppc=None):
     n_below = int((aS < lo).sum())
     if n_below:      # a legend entry with no symbol: the count of the points under the axis (|S| = 0 among them)
         ax.plot([], [], " ", label="%d below %g not shown" % (n_below, lo))
-    ax.set_xlabel("Opening reserves $R$ (£m)"); ax.set_ylabel("Measured movement $|S|$ (absolute)")
+    ax.set_xlabel("Reserve base $R$ (£m)"); ax.set_ylabel("Measured movement $|S|$ (absolute)")
     # the title describes the axes and the fitted law, not the floor: the paper holds the floor to be a structural
     # specification, not a measured feature of these points (the review of 2 October 2026, P-27)
     ax.set_title("Size$-$dispersion: vigintile medians of $|S|$,\nobserved and posterior-predictive ($k=%.2f$)"
