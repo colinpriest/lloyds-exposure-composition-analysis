@@ -1,10 +1,10 @@
 {
   "spec_version": "2.0",
-  "analysis_run_id": "045d2fdd-2459-5364-bab7-3f8d529b6293",
-  "analysis_run_id_without_calibration": "929db703-c343-582e-8aa8-5231b30e3864",
-  "analysis_timestamp": "2026-10-26T10:02:07.217138+00:00",
-  "source_data_hash": "107f887f77c9ff37",
-  "analysis_code_hash": "21502e327ac3e541",
+  "analysis_run_id": "b39e6265-2f49-557c-beee-468030dde0e7",
+  "analysis_run_id_without_calibration": "f10a0410-2b03-58ea-870d-f7eb144b70bf",
+  "analysis_timestamp": "2026-10-29T12:25:07.515567+00:00",
+  "source_data_hash": "93452d58df46f03e",
+  "analysis_code_hash": "a359d49931afcd2a",
   "analysis_config": {
     "lob_weight_floor": 0.01,
     "lob_severity_cap": 5.0,
@@ -112,6 +112,7 @@
     "takeon_excluded": 8,
     "no_mature_cohort_skipped": 11,
     "first_year_from_filing_skipped": 1,
+    "eligible_unavailable_takeon_skipped": 1,
     "stated_basis_from_filing": 1,
     "provision_movement_unusable": 1,
     "unreconciled_triangle_unusable": 1,
@@ -420,8 +421,7 @@
         "p90": 0.7006247278888442,
         "n": 796
       }
-    },
-    "eligible_unavailable_takeon_skipped": 1
+    }
   },
   "dispersion_calibration": {
     "k": 0.6238737606675849,
@@ -74498,7 +74498,7 @@
       "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_uk.htm",
       "series_end": "2025-12-31",
       "series": "Spot exchange rate, United Kingdom pound, quoted as US dollars per 1 pound sterling; business-day (noon buying rates in New York for cable transfers, as certified by the FRBNY)",
-      "retrieved_utc": "2026-10-26T06:56:49+00:00"
+      "retrieved_utc": "2026-10-29T09:00:12+00:00"
     },
     "rate_selection_rule": "Reporting-date spot rate: last published business-day rate on or before 31 December of the reporting year (Lloyd's annual accounts report at 31 December). Conversion: GBP = USD / rate.",
     "year_end_rates_used": {

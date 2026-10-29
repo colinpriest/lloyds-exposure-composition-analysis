@@ -372,13 +372,13 @@ separate broader-potential-target stress that assumes all 20 unresolved cases el
   $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
   gradient (coefficient on $\log R$ $+0.95$). Refitting with each observation weighted
   by $[1/\max(\hat p,0.15)]/\operatorname{mean}[1/\max(\hat p,0.15)]$ — moves the pooling exponent to
-  $k=0.672$ $[0.572,0.757]$ against $0.624$ $[0.524,0.735]$. 1 of 632 model
+  $k=0.672$ $[0.582,0.763]$ against $0.624$ $[0.524,0.735]$. 1 of 632 model
   records lie below the 0.15 floor; $\hat p_{\min}=0.0585$, the mean-one weights span
   0.95--6.31 and have descriptive Kish ESS 590. Uncapped diagnostics span 0.93--15.92
   with ESS 458; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
   The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
   are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.025
-  against 0.029; $\nu_{\text{clean}}=3.77$ against 3.96.
+  against 0.029; $\nu_{\text{clean}}=3.76$ against 3.96.
 - **High-volatility eligible-outcome stress.** Appending only the 10 records whose outcome is
   eligible but unavailable moves the conditional bracketed estimate from $k=0.627$
   at $c=1$ to $0.575$ at $c=5$, between $0.575$ and $0.627$ across the grid. Because the
