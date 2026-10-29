@@ -17,7 +17,7 @@
 |---|---:|---:|
 | Filings retrieved | 1065 | — |
 | — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | 20 |
-| — No eligible mature cohort: no underwriting year up to t-2 (structural in the inferential ledger) | | 107 |
+| — Loader skips (structural exclusions or eligible outcome unavailable) | | 107 |
 | — No development record to parse | | 4 |
 | — In run-off (the filing states run-off for the whole year, with or without a development figure, outside the RITC regime; or GPW = 0, or GPW < 0 where the filing states run-off) | | 28 |
 | — No reserves | | 4 |
@@ -40,10 +40,10 @@ Every filing receives one mutually exclusive inferential disposition in `results
 
 | Inferential disposition | Records |
 |---|---:|
-| Structural no eligible outcome (no mature cohort) | 107 |
+| Structural no eligible outcome (no mature cohort) | 106 |
 | Eligibility unresolved (no deterministic reading; the filing was not read) | 20 |
 | Scientific exclusion | 273 |
-| Eligible outcome unavailable | 9 |
+| Eligible outcome unavailable | 10 |
 | Eligible outcome observed; composition unavailable | 24 |
 | Working sample | 632 |
 | **Total** | **1065** |
@@ -68,7 +68,7 @@ The scientific exclusions by detail:
 
 A record is a scope exclusion only if its filing prints no premium amount for any non-life line of business (life books are out of scope as life business). A page reading of the filing (`data/composition_page_readings.json`) decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (reason `extraction_lost_lines`, 11 records), or, for a record no page has been read for, another model reads a line with a positive amount (reason `readers_disagree`, 0 records), the extraction lost the lines: the record stays in the supported target as composition unavailable and gets no weights.
 
-The supported disclosure-defined target contains **665** records: the 9 eligible outcomes unavailable, the 24 observed eligible outcomes without composition and the 632 model records. If all 20 unresolved filings were economically eligible, the broader potential target would contain **685** records.
+The supported disclosure-defined target contains **666** records: the 10 eligible outcomes unavailable, the 24 observed eligible outcomes without composition and the 632 model records. If all 20 unresolved filings were economically eligible, the broader potential target would contain **686** records.
 
 - **Round-55 data correction.** Two extraction rules were corrected on 10 September 2026 -- the percentage-against-monetary unit decision, and the transposed-grid parser's handling of a page carrying a gross and a net triangle under one header -- and the records they touch were re-extracted offline from the committed caches. Every record that moved is listed, with its development figure and adoption route on both sides, in `docs/extraction-changelog.md` in the extraction repository; the counts in the table above are after that correction. Reports whose page caches cannot serve an offline replay are listed in `pdf_extraction/audit/offline_unservable.json` and their committed records stand unchanged.
 
@@ -178,7 +178,7 @@ For 2020–2024 the working sample holds 310 of the 473 listed syndicate-years (
 | 2024 | 95 | 82 | 13 | 6 | 2 |
 
   Of the 6 corpus records whose syndicate is not on that year's list, 3 have filings that state that the syndicate is in run-off or has ceased underwriting (1110/2020, 1884/2022, 1110/2024); 2 are legacy vehicles whose filings, on the register's reading, do not state that the syndicate is in run-off (1884/2023, 1884/2024; each says "Syndicate 1884 (“the Syndicate”) underwrites Reinsurance to Close (“RITC”) and legacy reinsurance in the Lloyd’s market ..."); and 1 has a filing that the register reviewed and found not to state that the syndicate is in run-off (1110/2023). The register is `pdf_extraction/audit/runoff_corpus_register.json`.
-- **Implication.** Where membership can be checked (2020–2024) the working sample holds 310 of the 473 listed syndicate-years (65.5%), 58.7–75.8% by year; the 2014 working sample has 0 records and no coverage can be measured for 2014–2019. The working sample's shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 665 records, of which 632 enter the model and 9 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 685. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.624 to 0.675, and the eligible-outcome stress moves the conditional bracketed estimate from 0.617 at $c=1$ to 0.576 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 4.00 at $c=1$ to 3.41 under it (headline 3.96).
+- **Implication.** Where membership can be checked (2020–2024) the working sample holds 310 of the 473 listed syndicate-years (65.5%), 58.7–75.8% by year; the 2014 working sample has 0 records and no coverage can be measured for 2014–2019. The working sample's shortfall is size-biased toward smaller and older-scanned syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. The supported disclosure-defined target has 666 records, of which 632 enter the model and 10 have an eligible but unavailable outcome. The 20 filings with no deterministic reading (the parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain eligibility-unresolved; if all were eligible the broader potential target would be 686. Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore reports inverse-probability weighting for model-sample membership within the supported target and a high-volatility sensitivity for the eligible unavailable outcomes instead of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from 0.624 to 0.672, and the eligible-outcome stress moves the conditional bracketed estimate from 0.627 at $c=1$ to 0.575 at a 5-fold inflation within the augmented sample --- a construction that makes the unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the clean-tail index moves from 3.98 at $c=1$ to 3.50 under it (headline 3.96).
 
 ## B.6 RITC and discontinuities
 

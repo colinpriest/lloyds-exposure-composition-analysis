@@ -343,17 +343,17 @@ model comparisons were not repeated).
 
 ## 2c. Sample selection: inferential disposition first
 
-The 1065 filings are classified before any selection diagnostic: 107 have no eligible
+The 1065 filings are classified before any selection diagnostic: 106 have no eligible
 outcome structurally, 20 have economic eligibility unresolved because the extraction has no
 deterministic reading of them (its parsers found no prior-year figure and its models were not
-run: nothing is established about those filings), 273 are scientific exclusions, 9 have an eligible but
+run: nothing is established about those filings), 273 are scientific exclusions, 10 have an eligible but
 unavailable outcome, 24 have an observed eligible outcome but no usable composition,
-and 632 enter the model. The supported disclosure-defined target is therefore 665
+and 632 enter the model. The supported disclosure-defined target is therefore 666
 records. If all 20 unresolved filings were economically eligible, the broader potential
-target would be 685; the primary selection analysis does not claim to describe it.
+target would be 686; the primary selection analysis does not claim to describe it.
 
 The selection response is membership in the 632-record model sample. Within the
-665-record supported disclosure-defined target, included records have median size £421.5m against £29.5m
+666-record supported disclosure-defined target, included records have median size £421.5m against £31.2m
 for records not included (filing reserves, or a same-syndicate median where unavailable).
 This shows selection by size within that supported target; missing-at-random cannot be
 established, and selection from the broader economically eligible population is not
@@ -364,30 +364,30 @@ The complete counts and diagnostics are generated in `docs/current-results.md` f
 `missingness_check_results.json`.
 
 Three sensitivities are reported instead of resting on it: bounded IPW with three
-probability floors, a stress for the 9 known eligible unavailable outcomes, and a
+probability floors, a stress for the 10 known eligible unavailable outcomes, and a
 separate broader-potential-target stress that assumes all 20 unresolved cases eligible.
 
 <!-- missingness:start -->
 - **Bounded selection weighting (IPW).** Response propensity
   $\operatorname{logit}P(\text{model-sample membership})\sim\log R+\text{year}$ measures selection
-  gradient (coefficient on $\log R$ $+0.96$). Refitting with each observation weighted
+  gradient (coefficient on $\log R$ $+0.95$). Refitting with each observation weighted
   by $[1/\max(\hat p,0.15)]/\operatorname{mean}[1/\max(\hat p,0.15)]$ — moves the pooling exponent to
-  $k=0.675$ $[0.578,0.763]$ against $0.624$ $[0.524,0.735]$. 1 of 632 model
-  records lie below the 0.15 floor; $\hat p_{\min}=0.1065$, the mean-one weights span
-  0.95--6.31 and have descriptive Kish ESS 590. Uncapped diagnostics span 0.94--8.85
-  with ESS 562; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
+  $k=0.672$ $[0.572,0.757]$ against $0.624$ $[0.524,0.735]$. 1 of 632 model
+  records lie below the 0.15 floor; $\hat p_{\min}=0.0585$, the mean-one weights span
+  0.95--6.31 and have descriptive Kish ESS 590. Uncapped diagnostics span 0.93--15.92
+  with ESS 458; uncapped weights are not fitted. Caps 0.10, 0.15 and 0.20 are refitted.
   The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
-  are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.024
-  against 0.029; $\nu_{\text{clean}}=3.73$ against 3.96.
-- **High-volatility eligible-outcome stress.** Appending only the 9 records whose outcome is
-  eligible but unavailable moves the conditional bracketed estimate from $k=0.617$
-  at $c=1$ to $0.576$ at $c=5$, between $0.576$ and $0.617$ across the grid. Because the
+  are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.025
+  against 0.029; $\nu_{\text{clean}}=3.77$ against 3.96.
+- **High-volatility eligible-outcome stress.** Appending only the 10 records whose outcome is
+  eligible but unavailable moves the conditional bracketed estimate from $k=0.627$
+  at $c=1$ to $0.575$ at $c=5$, between $0.575$ and $0.627$ across the grid. Because the
   construction makes those unavailable outcomes more volatile, it cannot test the
   adverse-to-sub-linearity direction.
-  $\nu_{\text{clean}}$ moves 4.00 to 3.41 at $c=5$; this is not a bound.
+  $\nu_{\text{clean}}$ moves 3.98 to 3.50 at $c=5$; this is not a bound.
 - **Eligibility-unresolved stress.** Assuming all 20 filings with no deterministic reading were economically
-  eligible expands the potential target from 665 to 685 and appends them with the 9 known
-  unavailable outcomes. This 29-record stress moves $k=0.588$ at $c=1$ to $0.547$ at $c=5$.
+  eligible expands the potential target from 666 to 686 and appends them with the 10 known
+  unavailable outcomes. This 30-record stress moves $k=0.593$ at $c=1$ to $0.546$ at $c=5$.
   It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.
 <!-- missingness:end -->
 

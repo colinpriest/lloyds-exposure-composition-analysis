@@ -833,7 +833,6 @@ def sensitivity_sentences(ms, m0):
     byc = ms["eligible_outcome_stress"]["by_c"]
     cs = sorted(byc, key=float)
     lo, hi = byc[cs[0]], byc[cs[-1]]
-    _material_moves(lo, hi)
     ks = [byc[c]["k"]["mean"] for c in cs]
     stress = ms["eligibility_unresolved_stress"]
     broad = stress["by_c"]
@@ -853,8 +852,9 @@ def sensitivity_sentences(ms, m0):
         "The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
         "$%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid --- a construction that makes the "
         "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
-        "direction --- and moves the concentration exponent and the clean-regime tail materially, so the tail "
-        "is **not** unaffected." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks)),
+        "direction. The clean-regime tail index moves from %.2f to %.2f; the concentration exponent is fixed "
+        "at zero." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks),
+                       lo["nu_clean"]["mean"], hi["nu_clean"]["mean"]),
         "A separate broader-potential-target stress assumes all %d eligibility-unresolved filings were "
         "eligible, appends them with the %d known unavailable outcomes, and moves $k$ from $%.3f$ at "
         "$c=%g$ to $%.3f$ at $c=%g$; it is not a bound or an eligibility estimate."
@@ -921,7 +921,6 @@ def missingness_lines():
     byc = ms["eligible_outcome_stress"]["by_c"]
     cs = sorted(byc, key=float)
     lo, hi = byc[cs[0]], byc[cs[-1]]
-    _material_moves(lo, hi)
     ks = [byc[c]["k"]["mean"] for c in cs]
     broad = ms["eligibility_unresolved_stress"]["by_c"]
 

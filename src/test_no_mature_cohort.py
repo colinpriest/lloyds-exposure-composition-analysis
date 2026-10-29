@@ -184,9 +184,9 @@ def test_the_data_audit_names_the_structural_step_the_same_way(monkeypatch):
     monkeypatch.setattr(gda, "load_runoff_corpus_register", lambda: {})
     monkeypatch.setattr(gda, "load_reviewed_not_runoff", lambda: {})
     text = gda.md(gda.compute(), gda.mine_raw())
-    rows = [line for line in text.splitlines() if "No eligible mature cohort" in line]
+    rows = [line for line in text.splitlines() if "Loader skips" in line]
     assert len(rows) == 1
-    assert "No eligible mature cohort: no underwriting year up to t-2" in rows[0]
+    assert "structural exclusions or eligible outcome unavailable" in rows[0]
     assert "no stated development figure" not in rows[0]
 
 

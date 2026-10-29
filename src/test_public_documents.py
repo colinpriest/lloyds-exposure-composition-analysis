@@ -436,8 +436,10 @@ def test_the_sensitivity_sentences_follow_the_record():
     bad = json.loads(json.dumps(ms))
     cs = sorted(bad["eligible_outcome_stress"]["by_c"], key=float)
     bad["eligible_outcome_stress"]["by_c"][cs[-1]]["nu_clean"]["mean"] = bad["eligible_outcome_stress"]["by_c"][cs[0]]["nu_clean"]["mean"]
-    with pytest.raises(SystemExit):
-        bcr.sensitivity_sentences(bad, m0)
+    changed = " ".join(bcr.sensitivity_sentences(bad, m0))
+    nu = bad["eligible_outcome_stress"]["by_c"][cs[0]]["nu_clean"]["mean"]
+    assert "tail index moves from %.2f to %.2f" % (nu, nu) in changed
+    assert "concentration exponent is fixed at zero" in changed
 
 
 #: the labels round 62's verification (MAT-2) found on the records the extraction did not read: each asserts something
