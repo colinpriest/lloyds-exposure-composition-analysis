@@ -121,3 +121,16 @@ def test_recorded_targeted_refits_have_matching_results_and_pass_diagnostics():
         assert len(result["refits"]) == 7
         assert all(v["_diag"]["divergences"] == 0 and v["_diag"]["max_rhat"] <= 1.01
                    for v in result["refits"].values())
+
+
+def test_recovered_group_sensitivity_is_reproducible_from_primary():
+    from build_maturity_group_sensitivity import build
+    root = Path(__file__).resolve().parent.parent
+    primary = json.loads((root / "model/maturity_share.json").read_text(encoding="utf-8"))
+    overrides = json.loads((root / "data/maturity_proxy_source_overrides.json").read_text(encoding="utf-8"))["records"]
+    stored = json.loads((root / "model/maturity_share_recovered_groups_omitted.json").read_text(encoding="utf-8"))
+    rebuilt, changed = build(primary, overrides)
+    assert rebuilt == stored
+    assert len(changed) == 62
+    assert all(primary["records"][k] == stored["records"][k]
+               for k in primary["records"] if k not in changed)
