@@ -1,0 +1,66 @@
+{
+  "final-robust-no-groups": {
+    "source_commit": "6675756b3ef59f594ab8bd6f17a2a69f3d5377a7",
+    "candidate_proxy_sha256": "87a93ee038ed6845f991007728efe24ebe9c73127d9d85138f1c561100a8e2bd",
+    "exposure_sha256": "1bd8453d7ae6603aca60bff0352c567cd624ed79a9e01821dd9a27ec41c66ac0",
+    "before": {
+      "usable": 614,
+      "refit": 607
+    },
+    "after": {
+      "usable": 614,
+      "refit": 608
+    },
+    "entered_refit": [
+      "382_2020"
+    ],
+    "left_refit": [],
+    "result_file": "results/check_maturity_denominator_recovered_groups_omitted_results.json",
+    "result_sha256": "965616de2096a813934433b053826bd595979333c7dd474d494baecccf297d17",
+    "diagnostics_sha256": "b880b25d2c74d5f1642300a38631e7fb9595f2544a9f318a1c90ad11ecaf0fb0",
+    "start_utc": "2026-10-29T01:10:24.280755+00:00",
+    "end_utc": "2026-10-29T01:19:16.991354+00:00",
+    "sampler": {
+      "chains": 4,
+      "tune": 1500,
+      "draws_per_chain": 1500,
+      "seed": 42,
+      "target_accept": 0.995,
+      "cores": 1
+    },
+    "note": "Targeted refit using the committed producer and a changed proxy in an isolated checkout; not covered by the earlier full-manifest report."
+  },
+  "final-robust-exclude-457": {
+    "source_commit": "6675756b3ef59f594ab8bd6f17a2a69f3d5377a7",
+    "candidate_proxy_sha256": "5b06099c2af9cbf24f3f0241e81a961bfa3ba068a554a7646987a6fdbd4f6dbe",
+    "exposure_sha256": "1bd8453d7ae6603aca60bff0352c567cd624ed79a9e01821dd9a27ec41c66ac0",
+    "before": {
+      "usable": 614,
+      "refit": 607
+    },
+    "after": {
+      "usable": 613,
+      "refit": 607
+    },
+    "entered_refit": [
+      "382_2020"
+    ],
+    "left_refit": [
+      "457_2015"
+    ],
+    "result_file": "results/check_maturity_denominator_exclude_457_2015_results.json",
+    "result_sha256": "d2c0ee5e3f8212e570af6185fa6d7f00af2787f2f3f5fb83d72beacefac010f8",
+    "diagnostics_sha256": "3f839a1534ffa871332404a4d67d25ff6786e71440d6f6ccb00c8a6326d8947f",
+    "start_utc": "2026-10-29T01:10:24.228239+00:00",
+    "end_utc": "2026-10-29T01:19:20.256333+00:00",
+    "sampler": {
+      "chains": 4,
+      "tune": 1500,
+      "draws_per_chain": 1500,
+      "seed": 42,
+      "target_accept": 0.995,
+      "cores": 1
+    },
+    "note": "Targeted refit using the committed producer and a changed proxy in an isolated checkout; not covered by the earlier full-manifest report."
+  }
+}
