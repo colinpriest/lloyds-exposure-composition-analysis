@@ -405,3 +405,33 @@ plots of raw vs target-basis PYD distributions, the adverse-tail survivor functi
 table with raw-to-adjusted deltas, a three-player Shapley waterfall of VaR99.5 (tail-regime,
 reserve-size and concentration effects, summing exactly to target minus raw), and
 click-through worked examples.
+
+### Targeted sensitivity outputs and historical execution records
+
+Three analyses were run separately from the full manifest: source-numerator alternatives,
+the conditional 1254/2022 inclusion, and maturity-proxy variants. The existing full
+run report does not attest to these later targeted runs. `reproduce.py` keeps explicit
+producer contracts for their tracked outputs and checks the separate historical
+provenance and input-comparison records against recorded SHA-256 hashes. A hash check
+is an integrity check on the archived record, not an independent rerun or evidence of
+its original execution beyond the record itself.
+
+To make a new targeted run, use a fresh, non-existent output directory in an isolated
+checkout. The scripts refuse an existing output directory and retain the historical
+records unchanged:
+
+```text
+python src/check_source_numerator_sensitivity.py --output-dir PATH
+python src/check_1254_2022_inclusion.py --output-dir PATH
+python src/targeted_maturity_refit.py --case primary --output-dir PATH
+python src/targeted_maturity_refit.py --case no-groups --output-dir PATH
+python src/targeted_maturity_refit.py --case exclude-457 --output-dir PATH
+python src/build_maturity_group_sensitivity.py --output PATH
+```
+
+The maturity cases write their own candidate input, sample comparison, seven-fit result
+and posterior diagnostics. The 1254 and numerator scripts save full posterior draws in
+their output directory. The 1254 allocation remains conditional; the no-groups case
+removes newly recovered groups only. Re-running an analysis does not recreate a past
+run's timing, dirty-tree state or provenance. Separately review and record the new
+execution before replacing any historical evidence.

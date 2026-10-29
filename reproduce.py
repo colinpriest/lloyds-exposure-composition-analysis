@@ -358,6 +358,61 @@ def check_test_counts():
 
 MANUAL_ASSETS = ()
 
+# Targeted analyses are separate from STEPS and its historical full-run report.
+# Each path maps to a committed executable producer and the producer's output in
+# a new explicit directory. Nothing here states that the historical manifest ran it.
+TARGETED_PRODUCERS = {
+    "model/maturity_share_recovered_groups_omitted.json": ("src/build_maturity_group_sensitivity.py", "--output PATH"),
+    "results/check_maturity_denominator_diagnostics.json": ("src/targeted_maturity_refit.py", "--case primary --output-dir PATH; diagnostics.json"),
+    "results/check_maturity_denominator_exclude_457_2015_results.json": ("src/targeted_maturity_refit.py", "--case exclude-457 --output-dir PATH; results.json"),
+    "results/check_maturity_denominator_recovered_groups_omitted_results.json": ("src/targeted_maturity_refit.py", "--case no-groups --output-dir PATH; results.json"),
+    "results/conditional_1254_2022_inclusion_results.json": ("src/check_1254_2022_inclusion.py", "--output-dir PATH; results.json"),
+    "results/source_numerator_sensitivity_results.json": ("src/check_source_numerator_sensitivity.py", "--output-dir PATH; results.json"),
+}
+
+# Historical execution records and input comparisons describe what actually
+# happened in those runs. A new run cannot truthfully regenerate those old facts.
+# Each record is tracked, parsed as JSON, and checked against a fixed LF-normalised
+# SHA-256; edits require an explicit evidence review and contract update.
+TARGETED_RUN_EVIDENCE = {
+    "results/check_maturity_additional_sensitivities_provenance.json": "f5e48bfcde40c42b59a9d7490d9dd0168d331ec82c4395c2fb8eab1e9bb5f759",
+    "results/check_maturity_denominator_exclude_457_2015_inputs.json": "882fa3067a40757b00cc77749c3f98d19eea6509679e2b509dc84ee91597909b",
+    "results/check_maturity_denominator_recovered_groups_omitted_inputs.json": "1bd97da270e42baa9b50f77126becaaba2dbf124f289434afe6d897380c6d614",
+    "results/check_maturity_denominator_provenance.json": "00837069c5d6ac21f03bab7ddcfd96b1d8bafa88743cbda40fb8cf33889b85a5",
+    "results/conditional_1254_2022_inclusion_provenance.json": "2581115c8f65817061bceba6f781d8d2e69b91ece5057c059510afc5fb5276ad",
+    "results/missingness_1254_refit_provenance.json": "42e216f446e70d3de99fc4ef181890313b1298a61f877ab4cca32ee87b673733",
+    "results/source_numerator_sensitivity_provenance.json": "4c103cded69e1d1ded4a02eb264c473d0d3665611476972ee7459a9eb3a664b2",
+}
+
+
+def check_targeted_contracts():
+    """Check explicit producers and historical evidence without claiming a rerun."""
+    import hashlib
+    bad = []
+    def is_tracked(rel):
+        return subprocess.run(["git", "-C", HERE, "ls-files", "--error-unmatch", rel],
+                              capture_output=True).returncode == 0
+    for artifact, (producer, command) in TARGETED_PRODUCERS.items():
+        if not is_tracked(artifact) or not os.path.isfile(os.path.join(HERE, artifact)):
+            bad.append("targeted artifact %s is absent or not tracked" % artifact)
+        if not is_tracked(producer) or not os.path.isfile(os.path.join(HERE, producer)):
+            bad.append("targeted artifact %s has no tracked producer %s" % (artifact, producer))
+        if "PATH" not in command:
+            bad.append("targeted artifact %s has no explicit output path" % artifact)
+    for rel, expected in TARGETED_RUN_EVIDENCE.items():
+        if not is_tracked(rel):
+            bad.append("targeted historical evidence %s is not tracked" % rel)
+        try:
+            with open(os.path.join(HERE, *rel.split("/")), "rb") as fh:
+                raw = fh.read().replace(b"\r\n", b"\n")
+            json.loads(raw.decode("utf-8"))
+        except (OSError, ValueError, UnicodeDecodeError) as exc:
+            bad.append("targeted historical evidence %s unreadable: %s" % (rel, exc))
+            continue
+        if hashlib.sha256(raw).hexdigest() != expected:
+            bad.append("targeted historical evidence %s differs from its recorded hash" % rel)
+    return bad
+
 # Evidence archives: a study's record, not a pipeline output. results/extraction_error_rate/
 # holds the extraction error-rate study (PLAN R163 and R213): its protocol, draws, readings,
 # evidence packs, censuses, repairs and the scripts that ran, placed there by the owner's
@@ -423,6 +478,8 @@ def check_manifest_completeness():
         if sc not in OUTPUTS:
             bad.append("step %s declares no outputs" % sc)
     produced = {rel for outs in OUTPUTS.values() for rel in outs}
+    produced.update(TARGETED_PRODUCERS)
+    bad.extend(check_targeted_contracts())
     archived = {}
     for prefix in EVIDENCE_ARCHIVES:
         files = _archive_manifest(prefix)
@@ -438,6 +495,8 @@ def check_manifest_completeness():
                 bad.append("tracked file %s is not listed in %sMANIFEST.json"
                            % (rel, prefix))
             continue
+        if rel in TARGETED_RUN_EVIDENCE:
+            continue  # validated above as historical evidence, not as a reproduced output
         if rel in MANUAL_ASSETS or rel.endswith(".xlsx"):
             continue
         if rel not in produced:
