@@ -26,5 +26,11 @@
   "source_1254_report_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
   "execution_detail": "Focused 11-fit run on the corrected disposition and 632-record primary sample; this is separate from, and is not covered by, the older full-manifest reproduction. The source producer subsequently changed only the reconciliation table label. No posterior draw archive was written by this sensitivity script.",
   "result_file": "results/check_missingness_sensitivity_results.json",
-  "divergences_all_fits": 0
+  "divergences_all_fits": 0,
+  "subsequent_changes": {
+    "src/run_analysis.py": "Only the reconciliation-table description changed after the fit; code and classification used in the run match commit 85b0637c after CRLF normalisation.",
+    "data/eligibility_from_filing.json": "A historical-decision description was added after the fit; eligibility and outcome inputs are unchanged. The executed record matches commit 85b0637c after CRLF normalisation."
+  },
+  "run_source_equivalent_commit": "85b0637c",
+  "old_full_reproduction_report_applies": false
 }
