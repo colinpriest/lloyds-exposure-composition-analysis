@@ -208,8 +208,9 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   DERIVED: the year's gross claims incurred from the opening and closing gross provision, paid and exchange line;
   the roll-forward may include current-year claims, whose amount the available cohort split does not establish, so it
   does not establish an exact mature-cohort movement). 1274/2016's
-  figure is DERIVED (a misprinted 2012 cell replaced by the 2015 report's at the 2012 column's own paid factor, 129,350 /
-  131,423 = 0.98423; the other columns' factors give +21.8m to +25.7m): neither reader gives it, so it is stored as
+  figure is DERIVED (the suspected erroneous 2012 cell is replaced by the 2015 report's cell using the ratio of the
+  corresponding paid cells, 129,350 / 131,423 = 0.98423, as a proxy scaling factor; the cell error and interpretation
+  of this ratio are assumptions, not confirmed by the filing; the other columns' factors give +21.8m to +25.7m): neither reader gives it, so it is stored as
   `correction.derived_figure_m` apart from each reader's own `figure_m` (+57.503m as printed), allowed only while both
   readers quote every cell used, and the record joins the least-certain list (clause `derived_correction`).
 - Rule 5 (take-on bases): every candidate whose transferred gross amount the readings print was already in

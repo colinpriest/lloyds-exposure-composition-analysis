@@ -384,14 +384,14 @@ CORRECTIONS = {
     "1274_2016": {
         "by": "printed_table_error", "rule": "rule 4 of the round-5 decision rules (known-cause correction)",
         "derived": True,
-        "cause": ("a misprinted cell: the 2016 table's 2012 column prints 141,355 at three years later between 174,440 "
+        "cause": ("a suspected error: the 2016 table's 2012 column prints 141,355 at three years later between 174,440 "
                   "and 185,418 (p41), a reserve of 12,005 against 47,564 in the 2015 report, whose own cell is 178,987; "
-                  "both readers read it as a misprint, which the filing does not correct"),
+                  "both readers suspected a misprint, but the filing does not confirm or correct it"),
         "derivation": ("DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8); not a "
-                       "figure either reader gives. The 2015 report's 2012 cell (178,987) replaces the misprinted 141,355 "
-                       "at the 2012 column's own exchange factor: its paid cells at end-2015, 129,350 in the 2016 table "
-                       "against 131,423 in the 2015 report (the 2012 column's paid history is a retranslation of cells "
-                       "the misprint does not touch), f = 129,350 / 131,423 = 0.98423. Corrected cell 178,987 x f = "
+                       "figure either reader gives. This assumes the 2012 cell 141,355 is erroneous and replaces it "
+                       "with the 2015 report's 178,987 scaled by the ratio of the corresponding paid cells: 129,350 "
+                       "in the 2016 table to 131,423 in the 2015 report. That ratio is a proxy, not an established "
+                       "exchange factor, f = 129,350 / 131,423 = 0.98423. Assumed replacement 178,987 x f = "
                        "176,163.7; the 2012 term is 185,418 - 176,163.7 = +9,254.3; M = +13,440 (the other six years) + "
                        "9,254.3 = +22,694.3, i.e. +22.6943m USD. Every cell used is quoted by both readers (P3, Q4) and "
                        "the build recomputes the figure from each reader's own quoted cells. Each reader's own figure is "
@@ -476,7 +476,7 @@ REVERSED = {
                     + ["results/extraction_error_rate/mature-cohort/round9/depth/second_reading.md"],
     },
 }
-#: the misprinted underwriting year of 1274/2016 and the first underwriting year of its table (the previous report's
+#: the suspect underwriting year of 1274/2016 and the first underwriting year of its table (the previous report's
 #: cells are listed from it)
 MISPRINT_YEAR, FIRST_YEAR = 2012, 2008
 
@@ -908,9 +908,10 @@ def derived_cells(key=None):
 
 
 def misprint_figure(spec, text, key, rid):
-    """1274/2016: the figure with the misprinted MISPRINT_YEAR cell replaced by the previous report's cell at the MISPRINT
-    YEAR COLUMN'S OWN exchange factor (its paid cell at end-(t-1) in the year t table over the same cell in the previous
-    report), from cells the reader quotes. The other years' terms are the sums of the reader's own cells (the table's
+    """1274/2016: replace the suspect MISPRINT_YEAR cell by the previous report's cell scaled by its paid-cell ratio.
+    Neither an error in that cell nor an exchange interpretation of the ratio is established by the filing. The ratio
+    uses the paid cell at end-(t-1) in the year t table over the same cell in the previous report. Other years' terms
+    are the sums of the reader's own cells (the table's
     latest cell less its end-(t-1) cell), checked against the reader's terms snippet. DERIVED, not a figure the reader
     gives: the reader's own figure is kept apart by correction_reading."""
     c = CORRECTIONS[key]
@@ -938,7 +939,7 @@ def misprint_figure(spec, text, key, rid):
 
 def other_factor_range(c, text, key, rid):
     """The figures the other columns' end-(t-1) cell ratios (the year t table's over the previous report's) give as the
-    misprinted column's factor: (lowest, highest), each cell quoted by the reader."""
+    suspect column's proxy factor: (lowest, highest), each cell quoted by the reader."""
     other = sum(_n(a) - _n(b) for a, b in c["cells_used"]["other_years_latest_and_end_2015"].values())
     latest, prev = _n(c["cells_used"]["misprinted_year_latest"]), _n(c["cells_used"]["previous_report_cell"])
     figs = []
@@ -1017,7 +1018,7 @@ def correction_reading(key, rid, spec, round_name):
         out["derived_figure_m"], parts = misprint_figure(ms, text, key, rid)
         out["cells_quoted"] = parts.pop("cells_quoted")
         out["derived_parts"] = parts
-        out["figure_from"] = ("the reader's own figure (m_recomputed_m), as printed with the misprinted cell; the "
+        out["figure_from"] = ("the reader's own figure (m_recomputed_m), as printed with the suspect cell; the "
                               "corrected figure is DERIVED by the build from the reader's quoted cells, not given by the "
                               "reader (derived_figure_m): %s" % json.dumps(parts))
         if "sensitivity" in ms:
@@ -1070,12 +1071,12 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
             "derived_figure_m": figure, "derived_by": SESSION_23_OCT,
             "factor": reads[0]["derived_parts"]["factor"],
             "factor_basis": ("the 2012 column's own paid cells at end-2015: 129,350 (2016 table) over 131,423 (2015 "
-                             "report)"),
+                             "report); treated as a proxy scaling factor, not an established exchange rate"),
             "cells_used": derived_cells(key),
             "range_other_factors_m": lows[0],
             "range_other_factors_basis": ("the ratio of each other column's end-2015 cell in the 2016 table to the 2015 "
                                           "report's latest cell (2008-2011, 2013-2015: 0.96766 to 0.98919) as the "
-                                          "misprinted column's factor; review 8 quotes +21.8m to +25.6m"),
+                                          "suspect column's proxy factor; review 8 quotes +21.8m to +25.6m"),
             "figure_before_review_8_m": 23.5435,
             "figure_before_review_8_basis": "the 2008 column's factor 209,137 / 213,518 = 0.97948"})
     entry["readings"] = reads
@@ -1105,7 +1106,8 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
     if derived:
         entry["decision"] = ("decision of the Claude analysis session, 23 October 2026 (after review 8), applying %s: "
                              "%s; the register carries the corrected figure DERIVED from the cells both readers (%s) "
-                             "quote, at the misprinted column's own exchange factor (a figure neither reader gives), in "
+                             "quote, using the suspect column's paid-cell ratio as an assumed proxy factor "
+                             "(a figure neither reader gives), in "
                              "place of the printed table's own (%s); primary, and listed with the least-certain records "
                              "(data/restated_base_excluded.json, history_restated, clause derived_correction); under "
                              "the %s" % (c["rule"], c["cause"], ", ".join(r["reader"] for r in reads), figure_printed,
@@ -1242,17 +1244,17 @@ DEPTH_CELLS = {
                   "rule 3: the previous cell is the 2017 report's printed end-2017 cell (page 29 of that report); both "
                   "columns are older than t-3, so the figure at t-3 equals the figure at t-2"),
 }
-#: 1274/2016 (rule 4, DERIVED): the misprinted 2012 cell is replaced by the previous report's cell at the 2012 column's own
-#: exchange factor (CORRECTIONS["1274_2016"]); the other six terms are the cells' differences
+#: 1274/2016 (rule 4, DERIVED): the suspect 2012 cell is replaced by the previous report's cell using its paid-cell
+#: ratio as an assumed proxy factor (CORRECTIONS["1274_2016"]); the other six terms are the cells' differences
 DEPTH_CELLS["1274_2016"] = ("000", "USD", "cumulative", 41, None, [
     (2008, "209,137", "208,456"), (2009, "165,410", "165,974"), (2010, "206,415", "208,906"),
     (2011, "174,535", "178,142"), "DERIVED2012", (2013, "183,933", "180,767"), (2014, "192,589", "203,214")],
-    "the 2012 term is DERIVED (the register's derivation): the misprinted 141,355 is replaced by 178,987 x 129,350 / "
+    "the 2012 term is DERIVED (the register's derivation): the suspect 141,355 is replaced by 178,987 x 129,350 / "
     "131,423 = 176,163.7, giving 185,418 - 176,163.7 = +9,254.3; the other defensible factors give a range at t-2 of "
     "+21.8m to +25.7m and at t-3 of 11.18m to 15.03m USD")
 DEPTH_2012_BASIS = ("DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8): the 2015 "
-                    "report's 2012 cell 178,987 at the 2012 column's own exchange factor f = 129,350 / 131,423 = 0.98423, "
-                    "i.e. 176,163.7 in place of the misprinted 141,355; term = 185,418 - 176,163.7")
+                    "report's 2012 cell 178,987 at the assumed proxy factor f = 129,350 / 131,423 = 0.98423, "
+                    "i.e. 176,163.7 in place of the suspect 141,355; term = 185,418 - 176,163.7")
 #: 3330/2017 (the accounts' roll-forward, DERIVED): an aggregate approximation to the two mature columns (2011 and 2012),
 #: with uncertain current-year claims; no cohort split is printed (the 2016 report is not in the corpus)
 DEPTH_3330_2017 = {"u": [2011, 2012], "opening": "14,059", "incurred": "559", "paid": "2,270", "fx": "647",
@@ -1508,7 +1510,7 @@ PURPOSE = (
     "1609/2024's rule-4 correction was REVERSED on 26 October 2026 and is recorded under _reversed_corrections) "
     "replaces the printed table's own figure, the adopted one, with a correction supported by source readings (archived "
     "in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a "
-    "misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and "
+    "suspected erroneous cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and "
     "4242/2022). 1274/2016's corrected figure is DERIVED (correction.derived_figure_m, decision of the Claude analysis "
     "session of 23 October 2026 after review 8), not given by either reader: each reading keeps its own figure_m and "
     "carries derived_figure_m and the cells it quotes (cells_quoted), and the entry is allowed only while both readers "
