@@ -5,8 +5,8 @@
     "malformed": 0,
     "ok": 798,
     "latest_uw_year_offset": {
-      "0": 757,
-      "-1": 41
+      "0": 762,
+      "-1": 36
     },
     "unusable_membership": 0
   },
@@ -23,33 +23,49 @@
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7091122511085993,
-      "phi_delta_4": 0.6012855425515329,
-      "phi_delta_2": 0.49363388821010873,
-      "phi_delta_1": 0.3132787797386408
+      "source_override": {
+        "source_filing": "syndicate_1084_2015.pdf",
+        "source_filing_sha256": "703d2dc76bbbc752be7819ef3d384f6b9e1896331055997ee52e913fd3fef615",
+        "source_pdf_page": 35,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 814.5,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.7851799531255017,
+      "phi_delta_4": 0.6616915823269083,
+      "phi_delta_2": 0.5326229770491748,
+      "phi_delta_1": 0.3236345877300067
     },
     "1084_2016": {
       "syndicate": 1084,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -57,25 +73,40 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8159521637782509,
-      "phi_delta_4": 0.7175472794946588,
-      "phi_delta_2": 0.6110182332374166,
-      "phi_delta_1": 0.4160446911226512
+      "source_override": {
+        "source_filing": "syndicate_1084_2016.pdf",
+        "source_filing_sha256": "5e341dfd1043e443190325258d2f14c296b3d4e971f0063d026688a03b7b52fc",
+        "source_pdf_page": 33,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 781.7,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8544016248864182,
+      "phi_delta_4": 0.7469317782087114,
+      "phi_delta_2": 0.6280582862160927,
+      "phi_delta_1": 0.4193229622387058
     },
     "1084_2017": {
       "syndicate": 1084,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -84,6 +115,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -91,10 +123,23 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8539292231296179,
-      "phi_delta_4": 0.749217197788493,
-      "phi_delta_2": 0.6301009595542552,
-      "phi_delta_1": 0.4114320884460503
+      "source_override": {
+        "source_filing": "syndicate_1084_2017.pdf",
+        "source_filing_sha256": "441f4b574d677ae4f4724468aab8d0e70b21c7c4f65b726b6a27345ef640f57c",
+        "source_pdf_page": 28,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 745.2,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.880555759399232,
+      "phi_delta_4": 0.7689482988209518,
+      "phi_delta_2": 0.6402128312806984,
+      "phi_delta_1": 0.41273960298218876
     },
     "1084_2018": {
       "syndicate": 1084,
@@ -131,9 +176,10 @@
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 9,
+      "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -144,6 +190,7 @@
         2018
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -153,19 +200,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8506824964529756,
-      "phi_delta_4": 0.7181165990328564,
-      "phi_delta_2": 0.5837634864562047,
-      "phi_delta_1": 0.37490105121419004
+      "source_override": {
+        "source_filing": "syndicate_1084_2019.pdf",
+        "source_filing_sha256": "81437623ed248c30c636af69796afcd677576aa972a38b3fa8103765e00ddcb7",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 863.5,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8691139891928983,
+      "phi_delta_4": 0.7279059987962496,
+      "phi_delta_2": 0.5867347942867042,
+      "phi_delta_1": 0.3750246494750942
     },
     "1084_2020": {
       "syndicate": 1084,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -177,6 +238,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -187,18 +249,31 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8784288401605974,
-      "phi_delta_4": 0.7493873999173727,
-      "phi_delta_2": 0.6126358780517811,
-      "phi_delta_1": 0.3904748184648832
+      "source_override": {
+        "source_filing": "syndicate_1084_2020.pdf",
+        "source_filing_sha256": "cadd96f73660ca1eb6d20a843781739ea6e35242f689a429265e2a01d920116b",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 860.1,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8915262729379345,
+      "phi_delta_4": 0.7557940012759062,
+      "phi_delta_2": 0.6142843914988569,
+      "phi_delta_1": 0.3905203520219992
     },
     "1084_2021": {
       "syndicate": 1084,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
-      "latest_uw_year": 2020,
+      "n_uw_years": 11,
+      "latest_uw_year": 2021,
       "opening_uw_years": [
         2011,
         2012,
@@ -223,10 +298,23 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9287880995588994,
-      "phi_delta_4": 0.8300345806880552,
-      "phi_delta_2": 0.7084482365777532,
-      "phi_delta_1": 0.4825665346910943
+      "source_override": {
+        "source_filing": "syndicate_1084_2021.pdf",
+        "source_filing_sha256": "ca527ee54de30e1a5230d15f561ac54cba163c98f0043d50c9f9214d8e920782",
+        "source_pdf_page": 31,
+        "reported_measure": "gross current cumulative claims; original extraction labels shifted one year",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 1637.1,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9000786236240867,
+      "phi_delta_4": 0.7561254162856229,
+      "phi_delta_2": 0.60210956461157,
+      "phi_delta_1": 0.36599386969664377
     },
     "1084_2022": {
       "syndicate": 1084,
@@ -267,9 +355,10 @@
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -281,6 +370,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -291,10 +381,23 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8738104178265766,
-      "phi_delta_4": 0.737226433937691,
-      "phi_delta_2": 0.5926142211991996,
-      "phi_delta_1": 0.36923620480682345
+      "source_override": {
+        "source_filing": "syndicate_1084_2023.pdf",
+        "source_filing_sha256": "8042e78b2fa3241198bdf5f29579ffacf22847d8e229556fa25ca58c50dda7f3",
+        "source_pdf_page": 37,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 2118,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9009683680001627,
+      "phi_delta_4": 0.752144651430681,
+      "phi_delta_2": 0.5965818920126773,
+      "phi_delta_1": 0.3693428912569312
     },
     "1084_2024": {
       "syndicate": 1084,
@@ -425,9 +528,10 @@
       "year": 2016,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -435,25 +539,40 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7495242387820513,
-      "phi_delta_4": 0.5981968989904232,
-      "phi_delta_2": 0.4486105434406041,
-      "phi_delta_1": 0.23752248783268776
+      "source_override": {
+        "source_filing": "syndicate_1176_2016.pdf",
+        "source_filing_sha256": "36bc6aa20375933b11ba0c7568560977c032e9768c8c9a5a7d41237bbd646883",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 13771,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8137486733572905,
+      "phi_delta_4": 0.6531641887396147,
+      "phi_delta_2": 0.4809523791670926,
+      "phi_delta_1": 0.24287744527282315
     },
     "1176_2017": {
       "syndicate": 1176,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -462,6 +581,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -469,19 +589,33 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7059981397763405,
-      "phi_delta_4": 0.5193054192213732,
-      "phi_delta_2": 0.36379899323593523,
-      "phi_delta_1": 0.1868612092764984
+      "source_override": {
+        "source_filing": "syndicate_1176_2017.pdf",
+        "source_filing_sha256": "a5d0f21328551ffab307053a5900d104cf390b216e95d0c5935aa7bc13dc526c",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 12702,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.7693652113416931,
+      "phi_delta_4": 0.5630979760583797,
+      "phi_delta_2": 0.38208947895929996,
+      "phi_delta_1": 0.1883899503939081
     },
     "1176_2018": {
       "syndicate": 1176,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 8,
+      "n_uw_years": 9,
       "latest_uw_year": 2018,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -491,6 +625,7 @@
         2017
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -499,19 +634,33 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8249899799599199,
-      "phi_delta_4": 0.6844057598426312,
-      "phi_delta_2": 0.5544495284957001,
-      "phi_delta_1": 0.3656690462144842
+      "source_override": {
+        "source_filing": "syndicate_1176_2018.pdf",
+        "source_filing_sha256": "b5e4114c94ea0229bb250fcb03f92703f6bdef7f691e3b9531027db47708ab33",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 3524,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8365341419586703,
+      "phi_delta_4": 0.6912387216768233,
+      "phi_delta_2": 0.5568554644311314,
+      "phi_delta_1": 0.36581707341180586
     },
     "1176_2019": {
       "syndicate": 1176,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 9,
+      "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -522,6 +671,7 @@
         2018
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -531,19 +681,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8171036579268415,
-      "phi_delta_4": 0.6407861570010693,
-      "phi_delta_2": 0.48330799185998746,
-      "phi_delta_1": 0.2776570667832974
+      "source_override": {
+        "source_filing": "syndicate_1176_2019.pdf",
+        "source_filing_sha256": "6c1f81b426fa61a85a76597512637ea882949f07cc342772017ba015b3ed860b",
+        "source_pdf_page": 29,
+        "reported_measure": "gross current cumulative claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 10056,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8477279917411792,
+      "phi_delta_4": 0.6590142758984168,
+      "phi_delta_2": 0.4886294552689397,
+      "phi_delta_1": 0.27784948972533413
     },
     "1176_2020": {
       "syndicate": 1176,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -555,6 +719,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -565,19 +730,33 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8049053454228158,
-      "phi_delta_4": 0.6069996919659009,
-      "phi_delta_2": 0.4468025192284242,
-      "phi_delta_1": 0.25436383081255126
+      "source_override": {
+        "source_filing": "syndicate_1176_2020.pdf",
+        "source_filing_sha256": "5a8941b5a808f16a4c8c09e2adb60f420e3cba84bb88415cd82debcfb80879f1",
+        "source_pdf_page": 32,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 9449,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8345585278363119,
+      "phi_delta_4": 0.6214070510559392,
+      "phi_delta_2": 0.44990830621120975,
+      "phi_delta_1": 0.25442686097632083
     },
     "1176_2021": {
       "syndicate": 1176,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2021,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -589,6 +768,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -599,19 +779,33 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7830440251572327,
-      "phi_delta_4": 0.6265516994811287,
-      "phi_delta_2": 0.4848232778947227,
-      "phi_delta_1": 0.2862028264762505
+      "source_override": {
+        "source_filing": "syndicate_1176_2021.pdf",
+        "source_filing_sha256": "d63189d1a9ef42f3ad77a48800e32872a159e57ba1dd1b37c3808e31586238b1",
+        "source_pdf_page": 33,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 22853,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8622430234972764,
+      "phi_delta_4": 0.6618248363663571,
+      "phi_delta_2": 0.49251962745603345,
+      "phi_delta_1": 0.2863694101426609
     },
     "1176_2022": {
       "syndicate": 1176,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -623,6 +817,7 @@
         2021
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -633,19 +828,33 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8057148789286549,
-      "phi_delta_4": 0.6454776500643573,
-      "phi_delta_2": 0.4988299049772947,
-      "phi_delta_1": 0.29342307126278705
+      "source_override": {
+        "source_filing": "syndicate_1176_2022.pdf",
+        "source_filing_sha256": "0e1ba6ea16e4d4e977a77a4189e843b4f3a3dd0a6170952cd0aaa9eba7a11e6c",
+        "source_pdf_page": 36,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 22809,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8779589175089664,
+      "phi_delta_4": 0.6817147902096926,
+      "phi_delta_2": 0.5071897104064049,
+      "phi_delta_1": 0.2936107476440377
     },
     "1176_2023": {
       "syndicate": 1176,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -657,6 +866,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -667,10 +877,23 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6887988862169345,
-      "phi_delta_4": 0.493414532816885,
-      "phi_delta_2": 0.34740526338267613,
-      "phi_delta_1": 0.18365854683989277
+      "source_override": {
+        "source_filing": "syndicate_1176_2023.pdf",
+        "source_filing_sha256": "4d03e196957a2b16b5636a0acd5738529eb7dfeaf7952264b46bfa80e32acc18",
+        "source_pdf_page": 36,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 25727,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8115342163355408,
+      "phi_delta_4": 0.5443286063256602,
+      "phi_delta_2": 0.3571578248857307,
+      "phi_delta_1": 0.183830613905125
     },
     "1176_2024": {
       "syndicate": 1176,
@@ -1103,9 +1326,10 @@
       "year": 2018,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -1113,25 +1337,40 @@
         2017
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9080251311613446,
-      "phi_delta_4": 0.852245030394106,
-      "phi_delta_2": 0.7826181823698375,
-      "phi_delta_1": 0.6196435419670903
+      "source_override": {
+        "source_filing": "syndicate_1200_2018.pdf",
+        "source_filing_sha256": "7f7cd99fc873af7fc37a790a36caeb5270323c2368d47fef900e73c6c6313175",
+        "source_pdf_page": 43,
+        "reported_measure": "gross cumulative claims, verified current diagonal",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 712.3,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8198367591128585,
+      "phi_delta_4": 0.6851059682356114,
+      "phi_delta_2": 0.5475980782231414,
+      "phi_delta_1": 0.3389445339040423
     },
     "1200_2019": {
       "syndicate": 1200,
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -1140,6 +1379,7 @@
         2018
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -1147,19 +1387,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8469337289812068,
-      "phi_delta_4": 0.753678379670758,
-      "phi_delta_2": 0.6507761076118618,
-      "phi_delta_1": 0.4558350398989276
+      "source_override": {
+        "source_filing": "syndicate_1200_2019.pdf",
+        "source_filing_sha256": "44ff74aa8da9dfb1856bb0f28a851cef5445286df2a4b597f093f7d5bf797ae4",
+        "source_pdf_page": 42,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 716.8,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8869943040747773,
+      "phi_delta_4": 0.7814924529707123,
+      "phi_delta_2": 0.6642942383165037,
+      "phi_delta_1": 0.4575296781630342
     },
     "1200_2020": {
       "syndicate": 1200,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -1168,6 +1422,7 @@
         2019
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -1175,10 +1430,23 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8459911645831375,
-      "phi_delta_4": 0.7415905639930815,
-      "phi_delta_2": 0.6225027629622613,
-      "phi_delta_1": 0.40187793046754117
+      "source_override": {
+        "source_filing": "syndicate_1200_2020.pdf",
+        "source_filing_sha256": "c21cf69f834dc6b603836b0484d03e261bf7406f850636568e52143442fb71f5",
+        "source_pdf_page": 43,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 918.6,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8924304096638656,
+      "phi_delta_4": 0.7775454515620538,
+      "phi_delta_2": 0.6413955490347474,
+      "phi_delta_1": 0.40435342280353564
     },
     "1200_2021": {
       "syndicate": 1200,
@@ -2015,10 +2283,18 @@
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8130038090176277,
-      "phi_delta_4": 0.7099843664586754,
-      "phi_delta_2": 0.5977112921293871,
-      "phi_delta_1": 0.3945156359397073
+      "source_override": {
+        "source_filing": "syndicate_1225_2016.pdf",
+        "source_filing_sha256": "20ef3409517540e53b5209a418edb187368cefb8d0772b81e6c4b92ea53faf99",
+        "source_pdf_page": 27,
+        "reported_measure": "gross ultimate; 2011-and-prior replaces incomplete 2011-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2011 and prior are assigned the age of 2011, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.933396434768891,
+      "phi_delta_4": 0.857228516399317,
+      "phi_delta_2": 0.7364257035299396,
+      "phi_delta_1": 0.4531391060240836
     },
     "1225_2017": {
       "syndicate": 1225,
@@ -2041,10 +2317,18 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7549363351171804,
-      "phi_delta_4": 0.634460984389381,
-      "phi_delta_2": 0.5116347955110289,
-      "phi_delta_1": 0.31094687850826275
+      "source_override": {
+        "source_filing": "syndicate_1225_2017.pdf",
+        "source_filing_sha256": "7fde014dec3f2039c21f450e193d13912fdcabc2f474f4bf8b573ad2f1a61b6b",
+        "source_pdf_page": 26,
+        "reported_measure": "gross ultimate; 2012-and-prior replaces incomplete 2012-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2012 and prior are assigned the age of 2012, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.9172327827983796,
+      "phi_delta_4": 0.823921207390331,
+      "phi_delta_2": 0.6805656812749713,
+      "phi_delta_1": 0.37414712406010603
     },
     "1225_2018": {
       "syndicate": 1225,
@@ -2067,10 +2351,18 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7593310712554532,
-      "phi_delta_4": 0.6412635675956464,
-      "phi_delta_2": 0.5223992090164694,
-      "phi_delta_1": 0.3285838443527632
+      "source_override": {
+        "source_filing": "syndicate_1225_2018.pdf",
+        "source_filing_sha256": "2565fface5e8b454b8753ee8709e6297f597a6902faff7d11464fad38e658fe6",
+        "source_pdf_page": 28,
+        "reported_measure": "gross ultimate; 2013-and-prior replaces incomplete 2013-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2013 and prior are assigned the age of 2013, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.9182424458654664,
+      "phi_delta_4": 0.8263475812145767,
+      "phi_delta_2": 0.6862049778425657,
+      "phi_delta_1": 0.38924211326721697
     },
     "1225_2019": {
       "syndicate": 1225,
@@ -2093,10 +2385,18 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7652680652680652,
-      "phi_delta_4": 0.6555641811242376,
-      "phi_delta_2": 0.5436250509097474,
-      "phi_delta_1": 0.35272243264407876
+      "source_override": {
+        "source_filing": "syndicate_1225_2019.pdf",
+        "source_filing_sha256": "2b8fdf0a2ac4f531635c1d3025615602774c2dc7045bc8dcff415771443c3905",
+        "source_pdf_page": 29,
+        "reported_measure": "gross ultimate; 2014-and-prior replaces incomplete 2014-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2014 and prior are assigned the age of 2014, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.9217560217560218,
+      "phi_delta_4": 0.8343757411032531,
+      "phi_delta_2": 0.7009824882488934,
+      "phi_delta_1": 0.41210639617368594
     },
     "1225_2020": {
       "syndicate": 1225,
@@ -2119,10 +2419,18 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7593579089423964,
-      "phi_delta_4": 0.6468251069975524,
-      "phi_delta_2": 0.5312490937320375,
-      "phi_delta_1": 0.33544902110040664
+      "source_override": {
+        "source_filing": "syndicate_1225_2020.pdf",
+        "source_filing_sha256": "dd21d9cfb5da83ab93de6d6c8c0ab7ea8237e214629db006d254619b08ca4a1d",
+        "source_pdf_page": 29,
+        "reported_measure": "gross ultimate; 2015-and-prior replaces incomplete 2015-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2015 and prior are assigned the age of 2015, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.9176029962546816,
+      "phi_delta_4": 0.8266127264521725,
+      "phi_delta_2": 0.6888045913078581,
+      "phi_delta_1": 0.394287833170215
     },
     "1225_2021": {
       "syndicate": 1225,
@@ -2145,10 +2453,18 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7771666814512552,
-      "phi_delta_4": 0.6628626836319328,
-      "phi_delta_2": 0.5433349675499789,
-      "phi_delta_1": 0.34064729160896057
+      "source_override": {
+        "source_filing": "syndicate_1225_2021.pdf",
+        "source_filing_sha256": "f22ecdd910f976a9b4befc5125da9ea93a10125248284313446ad97c1db80fcc",
+        "source_pdf_page": 29,
+        "reported_measure": "gross ultimate grouped 2016-and-prior and gross earned individual cohorts; selected triangle was net",
+        "units": "GBP million",
+        "grouped_cohort_note": "2016 and prior are assigned the age of 2016, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.9218897915153116,
+      "phi_delta_4": 0.834450940436826,
+      "phi_delta_2": 0.700036078427629,
+      "phi_delta_1": 0.40611404114468597
     },
     "1225_2022": {
       "syndicate": 1225,
@@ -2171,10 +2487,18 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7496020130437014,
-      "phi_delta_4": 0.6262241900720906,
-      "phi_delta_2": 0.5021944735449131,
-      "phi_delta_1": 0.30324122696978617
+      "source_override": {
+        "source_filing": "syndicate_1225_2022.pdf",
+        "source_filing_sha256": "b46ab831b4df192a3c0873f9fbc2e790fa405eadaf83a2cc4c6adda924706f20",
+        "source_pdf_page": 32,
+        "reported_measure": "gross ultimate; 2017-and-prior replaces incomplete 2017-only earned estimate",
+        "units": "GBP million",
+        "grouped_cohort_note": "2017 and prior are assigned the age of 2017, the latest year in the group; actual group ages are unknown."
+      },
+      "phi_delta_inf": 0.910833150464487,
+      "phi_delta_4": 0.8124518435750723,
+      "phi_delta_2": 0.6651163382199494,
+      "phi_delta_1": 0.36203310378802767
     },
     "1225_2023": {
       "syndicate": 1225,
@@ -2375,9 +2699,10 @@
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 9,
+      "n_uw_years": 10,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -2388,6 +2713,7 @@
         2018
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -2397,19 +2723,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.837234700983102,
-      "phi_delta_4": 0.7186360779023427,
-      "phi_delta_2": 0.5992544177843424,
-      "phi_delta_1": 0.39708306441695135
+      "source_override": {
+        "source_filing": "syndicate_1274_2019.pdf",
+        "source_filing_sha256": "b6d48cc3e795c138d93b500e43eec8b9a7b1d32f1195651204ff760126552aa8",
+        "source_pdf_page": 34,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 602757,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8710427759942768,
+      "phi_delta_4": 0.7348956547437904,
+      "phi_delta_2": 0.6039368148479284,
+      "phi_delta_1": 0.39727941427877006
     },
     "1274_2020": {
       "syndicate": 1274,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -2421,6 +2761,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -2431,19 +2772,33 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8722707793417688,
-      "phi_delta_4": 0.7572334929803664,
-      "phi_delta_2": 0.6327058679951842,
-      "phi_delta_1": 0.4128692012147139
+      "source_override": {
+        "source_filing": "syndicate_1274_2020.pdf",
+        "source_filing_sha256": "adfbf1ce271f169b1ea74bad5a802248cff98d533ee0b862e3b6f4e0dbb2e667",
+        "source_pdf_page": 36,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 621803,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.895254601327303,
+      "phi_delta_4": 0.7674553447876417,
+      "phi_delta_2": 0.6352624886009386,
+      "phi_delta_1": 0.4129422751279874
     },
     "1274_2021": {
       "syndicate": 1274,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2021,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -2455,6 +2810,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -2465,19 +2821,33 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9038154387421946,
-      "phi_delta_4": 0.8025620881173482,
-      "phi_delta_2": 0.6805829493353208,
-      "phi_delta_1": 0.4498799802472706
+      "source_override": {
+        "source_filing": "syndicate_1274_2021.pdf",
+        "source_filing_sha256": "59b9ae29f2dc622abfc3afdd304b9bc957522afc61638e6cc23d42026957582c",
+        "source_pdf_page": 36,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 785917,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9239071412605189,
+      "phi_delta_4": 0.8132314671238169,
+      "phi_delta_2": 0.6836643525549507,
+      "phi_delta_1": 0.4499824866756156
     },
     "1274_2022": {
       "syndicate": 1274,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -2489,6 +2859,7 @@
         2021
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -2499,19 +2870,33 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9132308028590432,
-      "phi_delta_4": 0.8076336063177688,
-      "phi_delta_2": 0.6739384542753036,
-      "phi_delta_1": 0.4240993801544496
+      "source_override": {
+        "source_filing": "syndicate_1274_2022.pdf",
+        "source_filing_sha256": "656895a5cc18ad98104573775c975cc0e7a64e92ea19aa78db4a856f87f3cf70",
+        "source_pdf_page": 36,
+        "reported_measure": "gross cumulative claims; selected triangle was net, replaced with gross filing values",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 946246,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9393913167198369,
+      "phi_delta_4": 0.8333366172537326,
+      "phi_delta_2": 0.6940184265691961,
+      "phi_delta_1": 0.43575844351707943
     },
     "1274_2023": {
       "syndicate": 1274,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -2523,6 +2908,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -2533,10 +2919,23 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9037244384385212,
-      "phi_delta_4": 0.7742107765250994,
-      "phi_delta_2": 0.6121546871720885,
-      "phi_delta_1": 0.35109298363246405
+      "source_override": {
+        "source_filing": "syndicate_1274_2023.pdf",
+        "source_filing_sha256": "4de4f0829ebee241354c57e9df1f85535c6127343c3f451df2462fa051d7bc29",
+        "source_pdf_page": 35,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 1139908,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9290649002316415,
+      "phi_delta_4": 0.7925310136813374,
+      "phi_delta_2": 0.6182576538354057,
+      "phi_delta_1": 0.35128574626732345
     },
     "1274_2024": {
       "syndicate": 1274,
@@ -3335,9 +3734,10 @@
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2009,
         2010,
         2011,
         2012,
@@ -3349,6 +3749,7 @@
         2018
       ],
       "mature_uw_years": [
+        2009,
         2010,
         2011,
         2012,
@@ -3359,19 +3760,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7670485240269905,
-      "phi_delta_4": 0.6530790167535321,
-      "phi_delta_2": 0.549705019744296,
-      "phi_delta_1": 0.3786360208270798
+      "source_override": {
+        "source_filing": "syndicate_1458_2019.pdf",
+        "source_filing_sha256": "c82f0d1dcf28456633cf8b442f917f3ef52454903a79538a7ce396d8c2c8c612",
+        "source_pdf_page": 41,
+        "reported_measure": "gross current cumulative claims incurred",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "Earlier, before 2010",
+          "latest_underwriting_year": 2009,
+          "current_estimate": 8.244487,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.7681952636235548,
+      "phi_delta_4": 0.6533481940880076,
+      "phi_delta_2": 0.5497528496964776,
+      "phi_delta_1": 0.37863703268174703
     },
     "1458_2020": {
       "syndicate": 1458,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -3383,6 +3798,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -3393,19 +3809,33 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8083006105771214,
-      "phi_delta_4": 0.6930379563062318,
-      "phi_delta_2": 0.5780185490922839,
-      "phi_delta_1": 0.379555539558064
+      "source_override": {
+        "source_filing": "syndicate_1458_2020.pdf",
+        "source_filing_sha256": "30ceee67f59f742bc1158361907b2f3f825e070ae1b3c82d12d0a406c8f66b70",
+        "source_pdf_page": 45,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 39.023755,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8119105840358245,
+      "phi_delta_4": 0.6940290647786145,
+      "phi_delta_2": 0.5782165087485923,
+      "phi_delta_1": 0.37956029587819407
     },
     "1458_2021": {
       "syndicate": 1458,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2021,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -3417,6 +3847,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -3427,19 +3858,33 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8200633605465838,
-      "phi_delta_4": 0.696173794504393,
-      "phi_delta_2": 0.5699540990345301,
-      "phi_delta_1": 0.36113405109688124
+      "source_override": {
+        "source_filing": "syndicate_1458_2021.pdf",
+        "source_filing_sha256": "bd2810e895471e2464cc4643815a64b8e666a8419c60aa750a21f8c0ce3a0882",
+        "source_pdf_page": 45,
+        "reported_measure": "gross current cumulative claims incurred",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "Earlier, before 2012",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 122.017776,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8263794524850862,
+      "phi_delta_4": 0.698128192090745,
+      "phi_delta_2": 0.5703690654072123,
+      "phi_delta_1": 0.36114423442972643
     },
     "1458_2022": {
       "syndicate": 1458,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -3451,6 +3896,7 @@
         2021
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -3461,19 +3907,33 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.825170940149248,
-      "phi_delta_4": 0.689016682086807,
-      "phi_delta_2": 0.5514260200364913,
-      "phi_delta_1": 0.3372064314989584
+      "source_override": {
+        "source_filing": "syndicate_1458_2022.pdf",
+        "source_filing_sha256": "cc0f705012f2a707045ef4f90de2c17ff7d3bbaea0e8e5a0f53e65498108d4a3",
+        "source_pdf_page": 45,
+        "reported_measure": "gross current cumulative claims incurred",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "Earlier, before 2013",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 194.271313,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8333977325886256,
+      "phi_delta_4": 0.6918693122638256,
+      "phi_delta_2": 0.5520564954620806,
+      "phi_delta_1": 0.3372217435092045
     },
     "1458_2023": {
       "syndicate": 1458,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -3485,6 +3945,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -3495,19 +3956,33 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8377048593407148,
-      "phi_delta_4": 0.6963383572339918,
-      "phi_delta_2": 0.5545556061860739,
-      "phi_delta_1": 0.3401647710737049
+      "source_override": {
+        "source_filing": "syndicate_1458_2023.pdf",
+        "source_filing_sha256": "786bdbca8b220a296e9c1ed4ca4e82de94f8c09f9da4576f996121544a179669",
+        "source_pdf_page": 45,
+        "reported_measure": "gross current cumulative claims incurred",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "Earlier, before 2014",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 289.444987,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8471849102445308,
+      "phi_delta_4": 0.700008435347689,
+      "phi_delta_2": 0.5553965752971349,
+      "phi_delta_1": 0.34018530850176076
     },
     "1458_2024": {
       "syndicate": 1458,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2024,
       "opening_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -3519,6 +3994,7 @@
         2023
       ],
       "mature_uw_years": [
+        2014,
         2015,
         2016,
         2017,
@@ -3529,10 +4005,24 @@
         2022
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9081686686986424,
-      "phi_delta_4": 0.8091167623694192,
-      "phi_delta_2": 0.6929024661607655,
-      "phi_delta_1": 0.4764059351491687
+      "source_override": {
+        "source_filing": "syndicate_1458_2024.html",
+        "source_filing_sha256": "f9a9829d60e2d46962c8a9bc055a4bdf06f5278ff469905d0dcceb513179454f",
+        "source_pdf_page": 47,
+        "reported_measure": "gross current cumulative claims incurred",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "Earlier, before 2015",
+          "latest_underwriting_year": 2014,
+          "current_estimate": 447207,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        },
+        "source_location_note": "Printed report page 47 in iXBRL HTML, not a PDF page index."
+      },
+      "phi_delta_inf": 0.9156038971043652,
+      "phi_delta_4": 0.8127312893397055,
+      "phi_delta_2": 0.693904285590577,
+      "phi_delta_1": 0.4764383910159808
     },
     "1492_2017": {
       "syndicate": 1492,
@@ -7831,57 +8321,88 @@
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7443333454236427,
-      "phi_delta_4": 0.6394710551624259,
-      "phi_delta_2": 0.5297326335722508,
-      "phi_delta_1": 0.3369107358783974
+      "source_override": {
+        "source_filing": "syndicate_2003_2015.pdf",
+        "source_filing_sha256": "d5c696c28ccff044e35304058e8f629dabe44d8badad41e98fe03ae5ea8fe740",
+        "source_pdf_page": 42,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 20340887,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9425156022486856,
+      "phi_delta_4": 0.8707081492578349,
+      "phi_delta_2": 0.7469253397170867,
+      "phi_delta_1": 0.43022317559138273
     },
     "2003_2016": {
       "syndicate": 2003,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
         2015
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7440158439782644,
-      "phi_delta_4": 0.6457211860596596,
-      "phi_delta_2": 0.5435183615108713,
-      "phi_delta_1": 0.3605475451782731
+      "source_override": {
+        "source_filing": "syndicate_2003_2016.pdf",
+        "source_filing_sha256": "1fbd0b4e98719bd7af55e907761157f051c727cad41aa8f28cb5e9833b686fe0",
+        "source_pdf_page": 43,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 21234414,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9459478184761765,
+      "phi_delta_4": 0.877922579887135,
+      "phi_delta_2": 0.7599484516706954,
+      "phi_delta_1": 0.4538918395481543
     },
     "2003_2017": {
       "syndicate": 2003,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -7889,16 +8410,30 @@
         2016
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7489243229562136,
-      "phi_delta_4": 0.6284070451478401,
-      "phi_delta_2": 0.507425844050597,
-      "phi_delta_1": 0.3114660121096114
+      "source_override": {
+        "source_filing": "syndicate_2003_2017.pdf",
+        "source_filing_sha256": "626318b8bf666eb2c1da1dae91705120cfa80de3d514b33b05d631834da5ff58",
+        "source_pdf_page": 44,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 21744,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9330769749713284,
+      "phi_delta_4": 0.828506265914492,
+      "phi_delta_2": 0.6586770097272246,
+      "phi_delta_1": 0.3447808224639027
     },
     "2003_2018": {
       "syndicate": 2003,
@@ -7933,9 +8468,10 @@
       "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_rag_triangle",
-      "n_uw_years": 8,
+      "n_uw_years": 9,
       "latest_uw_year": 2019,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -7945,6 +8481,7 @@
         2018
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -7953,19 +8490,33 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8421371731716559,
-      "phi_delta_4": 0.7282119807938825,
-      "phi_delta_2": 0.6087484546842677,
-      "phi_delta_1": 0.4049448546464485
+      "source_override": {
+        "source_filing": "syndicate_2003_2019.pdf",
+        "source_filing_sha256": "b01bcc08b9857d738ce44509732cd81015a6dd96efc6ffc841f0b10c2bb534ae",
+        "source_pdf_page": 46,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 21735,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9403664471800744,
+      "phi_delta_4": 0.8179360969012263,
+      "phi_delta_2": 0.6516885940882673,
+      "phi_delta_1": 0.40829505986889375
     },
     "2003_2020": {
       "syndicate": 2003,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 9,
+      "n_uw_years": 10,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -7976,6 +8527,7 @@
         2019
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -7985,34 +8537,62 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.854909955827387,
-      "phi_delta_4": 0.730150906396697,
-      "phi_delta_2": 0.5977128504324194,
-      "phi_delta_1": 0.377787645104419
+      "source_override": {
+        "source_filing": "syndicate_2003_2020.pdf",
+        "source_filing_sha256": "931da18c9eddf1d423bc146e1e832db92bb51fd23dfc5d59a2bcde084e6e16b1",
+        "source_pdf_page": 46,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 16076,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9386670496983626,
+      "phi_delta_4": 0.7991796360217539,
+      "phi_delta_2": 0.6238022765753289,
+      "phi_delta_1": 0.379007643223766
     },
     "2007_2015": {
       "syndicate": 2007,
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7355185080531225,
-      "phi_delta_4": 0.628987013913308,
-      "phi_delta_2": 0.5185487061328659,
-      "phi_delta_1": 0.32696928360886757
+      "source_override": {
+        "source_filing": "syndicate_2007_2015.pdf",
+        "source_filing_sha256": "dcb16886288a41e1c1ec455a74e1965fdb727294842bbe35948e079128cddc02",
+        "source_pdf_page": 37,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1559.3,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.874147030152274,
+      "phi_delta_4": 0.763451711209161,
+      "phi_delta_2": 0.6213121414888887,
+      "phi_delta_1": 0.3598349726079722
     },
     "2007_2016": {
       "syndicate": 2007,
@@ -9043,52 +9623,43 @@
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
         2016
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.6435762118054016,
-      "phi_delta_4": 0.5361997997579603,
-      "phi_delta_2": 0.43478894027751985,
-      "phi_delta_1": 0.27244832123570256
+      "source_override": {
+        "source_filing": "syndicate_2088_2017.pdf",
+        "source_filing_sha256": "b7f9fb201c9f74be9c1a71b479f669f48a22f177d25b3f189f8e4a8a59c7d6cd",
+        "source_pdf_page": 34,
+        "reported_measure": "gross estimate of incurred claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 34998,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.70149031988486,
+      "phi_delta_4": 0.5756143364317344,
+      "phi_delta_2": 0.4573820052407761,
+      "phi_delta_1": 0.277687585090117
     },
     "2088_2018": {
       "syndicate": 2088,
       "year": 2018,
-      "source_model": "gemini-2.5-flash",
-      "source_field": "_claims_triangle",
-      "n_uw_years": 5,
-      "latest_uw_year": 2018,
-      "opening_uw_years": [
-        2014,
-        2015,
-        2016,
-        2017
-      ],
-      "mature_uw_years": [
-        2014,
-        2015,
-        2016
-      ],
-      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.5495400603890176,
-      "phi_delta_4": 0.44297874442950397,
-      "phi_delta_2": 0.34958444743519174,
-      "phi_delta_1": 0.21121264425947955
-    },
-    "2088_2019": {
-      "syndicate": 2088,
-      "year": 2019,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 6,
@@ -9098,10 +9669,51 @@
         2014,
         2015,
         2016,
+        2017
+      ],
+      "mature_uw_years": [
+        2013,
+        2014,
+        2015,
+        2016
+      ],
+      "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
+      "source_override": {
+        "source_filing": "syndicate_2088_2018.pdf",
+        "source_filing_sha256": "e7ae96fc60e30bdbed30c6ba47f7272fa98be0598fa4860512ca6f12208a13e4",
+        "source_pdf_page": 35,
+        "reported_measure": "gross incurred claims",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 70138,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.6351154797277349,
+      "phi_delta_4": 0.496677146050358,
+      "phi_delta_2": 0.3780860747581445,
+      "phi_delta_1": 0.21710141898614294
+    },
+    "2088_2019": {
+      "syndicate": 2088,
+      "year": 2019,
+      "source_model": "gemini-2.5-flash",
+      "source_field": "_claims_triangle",
+      "n_uw_years": 8,
+      "latest_uw_year": 2019,
+      "opening_uw_years": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
         2017,
         2018
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -9109,10 +9721,23 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9096681691934615,
-      "phi_delta_4": 0.8550132272825076,
-      "phi_delta_2": 0.788478340023563,
-      "phi_delta_1": 0.6338873674425911
+      "source_override": {
+        "source_filing": "syndicate_2088_2019.pdf",
+        "source_filing_sha256": "8c1019d0869625c7ec0c562055bac889827b50e0ce08e742b9fc9c2512d2a488",
+        "source_pdf_page": 24,
+        "reported_measure": "gross incurred claims; extraction years shifted",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 35827,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.7194875626549054,
+      "phi_delta_4": 0.5912040833973573,
+      "phi_delta_2": 0.4789933050407981,
+      "phi_delta_1": 0.30959839087210295
     },
     "2121_2015": {
       "syndicate": 2121,
@@ -10971,8 +11596,8 @@
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
-      "latest_uw_year": 2022,
+      "n_uw_years": 11,
+      "latest_uw_year": 2023,
       "opening_uw_years": [
         2013,
         2014,
@@ -10997,10 +11622,23 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.841261643456608,
-      "phi_delta_4": 0.6845756635909566,
-      "phi_delta_2": 0.5339176558483596,
-      "phi_delta_1": 0.3177029363761327
+      "source_override": {
+        "source_filing": "syndicate_2623_2023.pdf",
+        "source_filing_sha256": "1639dfd0198f5baa9f780a842fb703008722e81693bc0ab3862061e0df3c09bb",
+        "source_pdf_page": 46,
+        "reported_measure": "gross current cumulative claims; original extraction labels shifted one year",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 8824.7,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9046980104321245,
+      "phi_delta_4": 0.7359993061246536,
+      "phi_delta_2": 0.5687777472850506,
+      "phi_delta_1": 0.3438278673356831
     },
     "2623_2024": {
       "syndicate": 2623,
@@ -12262,9 +12900,8 @@
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
       "n_uw_years": 10,
-      "latest_uw_year": 2020,
+      "latest_uw_year": 2021,
       "opening_uw_years": [
-        2011,
         2012,
         2013,
         2014,
@@ -12276,7 +12913,6 @@
         2020
       ],
       "mature_uw_years": [
-        2011,
         2012,
         2013,
         2014,
@@ -12287,10 +12923,18 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9306107040993233,
-      "phi_delta_4": 0.8300804031231183,
-      "phi_delta_2": 0.7019294065324816,
-      "phi_delta_1": 0.4617234953215978
+      "source_override": {
+        "source_filing": "syndicate_2999_2021.pdf",
+        "source_filing_sha256": "b73aad2000574d5e98af9d61a4cc91fdff2da87ff4ed303abc28111e144ff2bc",
+        "source_pdf_page": 46,
+        "reported_measure": "gross current cumulative claims; original extraction labels shifted one year",
+        "units": "GBP million",
+        "excluded_grouped_cohort": "Older grouped cohort is excluded: source triangle has no development cells for that group; this preserves the selected-triangle cohort rule. Source current totals for 1084, 6107 and 2623 are available and should be considered in a separate sensitivity."
+      },
+      "phi_delta_inf": 0.8984991211069545,
+      "phi_delta_4": 0.7829823515247043,
+      "phi_delta_2": 0.649390386541426,
+      "phi_delta_1": 0.4161862318974085
     },
     "2999_2022": {
       "syndicate": 2999,
@@ -15093,10 +15737,17 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9925054548904279,
-      "phi_delta_4": 0.9838680599168175,
-      "phi_delta_2": 0.9696857803194006,
-      "phi_delta_1": 0.9189605232486628
+      "source_override": {
+        "source_filing": "syndicate_382_2015.pdf",
+        "source_filing_sha256": "1691aa5206c8cb45050660a271140c249e847729f1d47bd37245bd43e948a085",
+        "source_pdf_page": 46,
+        "reported_measure": "ultimate claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.8924289957157494,
+      "phi_delta_4": 0.7697066326541048,
+      "phi_delta_2": 0.626431689606946,
+      "phi_delta_1": 0.3824799778429699
     },
     "382_2016": {
       "syndicate": 382,
@@ -15129,10 +15780,17 @@
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.46510395561235623,
-      "phi_delta_4": 0.30866691468922963,
-      "phi_delta_2": 0.21563058553803946,
-      "phi_delta_1": 0.11153717305517645
+      "source_override": {
+        "source_filing": "syndicate_382_2016.pdf",
+        "source_filing_sha256": "22fe0e219524a7ece35ef99306726f2c539125454d23ca2a162336360bd76220",
+        "source_pdf_page": 46,
+        "reported_measure": "ultimate claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.8785279734126216,
+      "phi_delta_4": 0.7343474039790837,
+      "phi_delta_2": 0.5746606076822998,
+      "phi_delta_1": 0.33492422945051753
     },
     "382_2017": {
       "syndicate": 382,
@@ -15165,10 +15823,17 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.5461693787860791,
-      "phi_delta_4": 0.3893882167221362,
-      "phi_delta_2": 0.2719485358907055,
-      "phi_delta_1": 0.1265594779721985
+      "source_override": {
+        "source_filing": "syndicate_382_2017.pdf",
+        "source_filing_sha256": "14bb57ae3f61c3eb7fb054eaea61229f386cd64fbda66f7127df89c5d08a680b",
+        "source_pdf_page": 47,
+        "reported_measure": "ultimate claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.8889368998312978,
+      "phi_delta_4": 0.7468841289211603,
+      "phi_delta_2": 0.5912801142577557,
+      "phi_delta_1": 0.35908289569264373
     },
     "382_2018": {
       "syndicate": 382,
@@ -15201,10 +15866,17 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7307110006570114,
-      "phi_delta_4": 0.5615099736478361,
-      "phi_delta_2": 0.4107639755242179,
-      "phi_delta_1": 0.21696075741162352
+      "source_override": {
+        "source_filing": "syndicate_382_2018.pdf",
+        "source_filing_sha256": "585a6683191600d50fbfc63f226597d42ad479064ebeb16138ac9bbcc5298f12",
+        "source_pdf_page": 46,
+        "reported_measure": "ultimate claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.8748582526296581,
+      "phi_delta_4": 0.7139982469705322,
+      "phi_delta_2": 0.5490973519321355,
+      "phi_delta_1": 0.32038511527247276
     },
     "382_2019": {
       "syndicate": 382,
@@ -15237,10 +15909,17 @@
         2017
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.5732635793719221,
-      "phi_delta_4": 0.44709382774155276,
-      "phi_delta_2": 0.35466275270709646,
-      "phi_delta_1": 0.22945649164321702
+      "source_override": {
+        "source_filing": "syndicate_382_2019.pdf",
+        "source_filing_sha256": "d4f61913fc36fc64626216f40f03e8c0c155d8ebadd66131a368da0dc30c63c1",
+        "source_pdf_page": 46,
+        "reported_measure": "earned claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.8844291091473334,
+      "phi_delta_4": 0.7335418620451702,
+      "phi_delta_2": 0.5825873265609486,
+      "phi_delta_1": 0.3655045439958502
     },
     "382_2020": {
       "syndicate": 382,
@@ -15273,10 +15952,17 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.30089510050251256,
-      "phi_delta_4": 0.1754920275790774,
-      "phi_delta_2": 0.1128624957664546,
-      "phi_delta_1": 0.0556903098212316
+      "source_override": {
+        "source_filing": "syndicate_382_2020.pdf",
+        "source_filing_sha256": "0cfd1765d6044d6a3b273e6089b523dea6467295c1c8c58e5f30c63c0422f287",
+        "source_pdf_page": 47,
+        "reported_measure": "earned claims",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.9309110575693745,
+      "phi_delta_4": 0.8278375655373349,
+      "phi_delta_2": 0.7082274581469803,
+      "phi_delta_1": 0.4932221191046658
     },
     "382_2021": {
       "syndicate": 382,
@@ -16731,9 +17417,10 @@
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2021,
       "opening_uw_years": [
+        2015,
         2016,
         2017,
         2018,
@@ -16741,25 +17428,41 @@
         2020
       ],
       "mature_uw_years": [
+        2015,
         2016,
         2017,
         2018,
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7460040528741169,
-      "phi_delta_4": 0.624835702505303,
-      "phi_delta_2": 0.4997992782410832,
-      "phi_delta_1": 0.29461552671833213
+      "source_override": {
+        "source_filing": "syndicate_4242_2021.pdf",
+        "source_filing_sha256": "08579f9833888470ef59b5c7ad7bf698cbb684069325401e02b0bfcfea4e241c",
+        "source_pdf_page": 46,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2015 and prior",
+          "latest_underwriting_year": 2015,
+          "current_estimate": 76292,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown.",
+          "calculation": "group gross paid plus gross outstanding, as shown in the source filing"
+        }
+      },
+      "phi_delta_inf": 0.7609428024737233,
+      "phi_delta_4": 0.6345012168999173,
+      "phi_delta_2": 0.5048016154635713,
+      "phi_delta_1": 0.29543939442473005
     },
     "4242_2022": {
       "syndicate": 4242,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2016,
         2017,
         2018,
         2019,
@@ -16767,25 +17470,41 @@
         2021
       ],
       "mature_uw_years": [
+        2016,
         2017,
         2018,
         2019,
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8489819852209527,
-      "phi_delta_4": 0.7547215276420612,
-      "phi_delta_2": 0.6473086823866349,
-      "phi_delta_1": 0.4447703089303185
+      "source_override": {
+        "source_filing": "syndicate_4242_2022.pdf",
+        "source_filing_sha256": "467682213f1da73be4b10ed84fdf2897d1dc049e4527ec0ca184dcbede2b3d55",
+        "source_pdf_page": 44,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2016 and prior",
+          "latest_underwriting_year": 2016,
+          "current_estimate": 155574,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown.",
+          "calculation": "group gross paid plus gross outstanding, as shown in the source filing"
+        }
+      },
+      "phi_delta_inf": 0.8660486827586558,
+      "phi_delta_4": 0.7684496314064264,
+      "phi_delta_2": 0.6557177329535151,
+      "phi_delta_1": 0.4465172494141089
     },
     "4242_2023": {
       "syndicate": 4242,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2017,
         2018,
         2019,
         2020,
@@ -16793,16 +17512,31 @@
         2022
       ],
       "mature_uw_years": [
+        2017,
         2018,
         2019,
         2020,
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8353122835400167,
-      "phi_delta_4": 0.7388931504633005,
-      "phi_delta_2": 0.6289145147739483,
-      "phi_delta_1": 0.41849499172258586
+      "source_override": {
+        "source_filing": "syndicate_4242_2023.pdf",
+        "source_filing_sha256": "cf0d48ffa3d5e9a3c002ae9df055c1de2f5fa05e0ff36fdb249e4a4cae447449",
+        "source_pdf_page": 45,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "USD thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2017 and prior",
+          "latest_underwriting_year": 2017,
+          "current_estimate": 467625,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown.",
+          "calculation": "group gross paid plus gross outstanding, as shown in the source filing"
+        }
+      },
+      "phi_delta_inf": 0.8857840175220828,
+      "phi_delta_4": 0.7825430787988362,
+      "phi_delta_2": 0.656952819699859,
+      "phi_delta_1": 0.424544952947252
     },
     "435_2015": {
       "syndicate": 435,
@@ -16823,10 +17557,17 @@
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8610034940600978,
-      "phi_delta_4": 0.7897121800343062,
-      "phi_delta_2": 0.7037600312469626,
-      "phi_delta_1": 0.5161200649961933
+      "source_override": {
+        "source_filing": "syndicate_435_2015.pdf",
+        "source_filing_sha256": "95888fc2dfc52d0a318d6982de32c36721392da8e1179caae9b5182fd50693f6",
+        "source_pdf_page": 34,
+        "reported_measure": "gross cumulative claims, verified current diagonal",
+        "units": "GBP thousand"
+      },
+      "phi_delta_inf": 0.7844310544181934,
+      "phi_delta_4": 0.6880202904257124,
+      "phi_delta_2": 0.5817190824987563,
+      "phi_delta_1": 0.3814857381897741
     },
     "435_2016": {
       "syndicate": 435,
@@ -19757,33 +20498,49 @@
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8210213187902826,
-      "phi_delta_4": 0.7388686056603533,
-      "phi_delta_2": 0.6451024541192056,
-      "phi_delta_1": 0.4550756093418127
+      "source_override": {
+        "source_filing": "syndicate_5820_2015.pdf",
+        "source_filing_sha256": "d0a1ef447281aac511c1c874a11d851303a734ce1b1829c8fffeeb4e17b07beb",
+        "source_pdf_page": 25,
+        "reported_measure": "gross ultimate claims on premium earned to date; long earning pattern",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 12.0,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8310715956948994,
+      "phi_delta_4": 0.7469492551669329,
+      "phi_delta_2": 0.6506796002641689,
+      "phi_delta_1": 0.4568775071325094
     },
     "5820_2016": {
       "syndicate": 5820,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -19791,25 +20548,40 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8525330751855436,
-      "phi_delta_4": 0.7632513100966455,
-      "phi_delta_2": 0.6592658329895201,
-      "phi_delta_1": 0.4540196932825731
+      "source_override": {
+        "source_filing": "syndicate_5820_2016.pdf",
+        "source_filing_sha256": "e7eaeaf0d759f4e3a584cf6a92955f465def24590a630af9fef9af531c474dbe",
+        "source_pdf_page": 42,
+        "reported_measure": "gross ultimate claims on premium earned to date; long earning pattern",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 11.8,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8579421821572895,
+      "phi_delta_4": 0.7673263557753092,
+      "phi_delta_2": 0.6617089026800181,
+      "phi_delta_1": 0.4545378188465982
     },
     "5820_2017": {
       "syndicate": 5820,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -19818,6 +20590,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -19825,10 +20598,23 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8299617277200656,
-      "phi_delta_4": 0.7029928011898215,
-      "phi_delta_2": 0.5603490170202579,
-      "phi_delta_1": 0.321400564197282
+      "source_override": {
+        "source_filing": "syndicate_5820_2017.pdf",
+        "source_filing_sha256": "52ee0103b97bde63d1745bf7d6c373fbc52802d9f97534974f9cf77c16992bb2",
+        "source_pdf_page": 41,
+        "reported_measure": "gross ultimate claims on premium earned to date; long earning pattern",
+        "units": "GBP million",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 9.0,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8340448239060833,
+      "phi_delta_4": 0.7058137792265338,
+      "phi_delta_2": 0.5617370872767985,
+      "phi_delta_1": 0.3215656868027356
     },
     "5886_2019": {
       "syndicate": 5886,
@@ -21053,8 +21839,8 @@
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
-      "latest_uw_year": 2022,
+      "n_uw_years": 11,
+      "latest_uw_year": 2023,
       "opening_uw_years": [
         2013,
         2014,
@@ -21079,10 +21865,23 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.9416624937406111,
-      "phi_delta_4": 0.8714405952035493,
-      "phi_delta_2": 0.7766902563552898,
-      "phi_delta_1": 0.566128785616319
+      "source_override": {
+        "source_filing": "syndicate_6107_2023.pdf",
+        "source_filing_sha256": "1447fdb085983af53a5b174fdfe0adb1fb77b512d18d90a5401ad8353f727470",
+        "source_pdf_page": 30,
+        "reported_measure": "gross current cumulative claims; original extraction labels shifted one year",
+        "units": "USD million",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 41.0,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.8923519539678734,
+      "phi_delta_4": 0.7832167033846424,
+      "phi_delta_2": 0.665092369458073,
+      "phi_delta_1": 0.4567309689810586
     },
     "6107_2024": {
       "syndicate": 6107,
@@ -22307,33 +23106,49 @@
       "year": 2015,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 5,
+      "n_uw_years": 6,
       "latest_uw_year": 2015,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.7811171069770397,
-      "phi_delta_4": 0.6845453916078333,
-      "phi_delta_2": 0.5787699685663961,
-      "phi_delta_1": 0.38072402560311935
+      "source_override": {
+        "source_filing": "syndicate_727_2015.pdf",
+        "source_filing_sha256": "c13b9af08d67323e60cd422a9a43c4ce5077eec07fcf26a1df93c802e465a9dc",
+        "source_pdf_page": 59,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1273782,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.967721446551446,
+      "phi_delta_4": 0.9223984372584794,
+      "phi_delta_2": 0.831888430004271,
+      "phi_delta_1": 0.5234772175945386
     },
     "727_2016": {
       "syndicate": 727,
       "year": 2016,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 6,
+      "n_uw_years": 7,
       "latest_uw_year": 2016,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22341,25 +23156,40 @@
         2015
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
         2014
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8274752400022962,
-      "phi_delta_4": 0.7223417997269198,
-      "phi_delta_2": 0.6035437181575815,
-      "phi_delta_1": 0.38693187854966593
+      "source_override": {
+        "source_filing": "syndicate_727_2016.pdf",
+        "source_filing_sha256": "9c54685264871ee046adcdaae4a1e65d09017a6c18da9d7fdf5a131c76822f27",
+        "source_pdf_page": 61,
+        "reported_measure": "gross current cumulative claims; selected individual cohort values verified against filing",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1466319,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9710110061947435,
+      "phi_delta_4": 0.9154270961228517,
+      "phi_delta_2": 0.7950043078372557,
+      "phi_delta_1": 0.4519095465495053
     },
     "727_2017": {
       "syndicate": 727,
       "year": 2017,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 7,
+      "n_uw_years": 8,
       "latest_uw_year": 2017,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22368,6 +23198,7 @@
         2016
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22375,19 +23206,33 @@
         2015
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8517339937870522,
-      "phi_delta_4": 0.740973121755251,
-      "phi_delta_2": 0.6168674203100438,
-      "phi_delta_1": 0.3999505823090327
+      "source_override": {
+        "source_filing": "syndicate_727_2017.pdf",
+        "source_filing_sha256": "c9a723c1f117960b906de049283aa86f287b52982f1a82f7bf88e4e8c68fc979",
+        "source_pdf_page": 67,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1360153,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9710316481418052,
+      "phi_delta_4": 0.9005788422787798,
+      "phi_delta_2": 0.749557847902704,
+      "phi_delta_1": 0.4237569088896016
     },
     "727_2018": {
       "syndicate": 727,
       "year": 2018,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 8,
+      "n_uw_years": 9,
       "latest_uw_year": 2018,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22397,6 +23242,7 @@
         2017
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22405,19 +23251,33 @@
         2016
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8696557675323722,
-      "phi_delta_4": 0.7486757655058804,
-      "phi_delta_2": 0.6123770887947595,
-      "phi_delta_1": 0.38427495866334005
+      "source_override": {
+        "source_filing": "syndicate_727_2018.pdf",
+        "source_filing_sha256": "d72ec26001ad9f1b0026bbe02e796e40307ba946bd90288ce10caa21c419c829",
+        "source_pdf_page": 69,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1421358,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.971644792507901,
+      "phi_delta_4": 0.8860294710254788,
+      "phi_delta_2": 0.7070129878608481,
+      "phi_delta_1": 0.39366924582527474
     },
     "727_2020": {
       "syndicate": 727,
       "year": 2020,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2020,
       "opening_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22429,6 +23289,7 @@
         2019
       ],
       "mature_uw_years": [
+        2010,
         2011,
         2012,
         2013,
@@ -22439,19 +23300,33 @@
         2018
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8921412553090697,
-      "phi_delta_4": 0.7616653202022542,
-      "phi_delta_2": 0.6188589473048447,
-      "phi_delta_1": 0.391082255698837
+      "source_override": {
+        "source_filing": "syndicate_727_2020.pdf",
+        "source_filing_sha256": "45a9dc9e13c1776ef0fbd63c3511f0b298431d072afa12b8fd4eaf5dc0e227eb",
+        "source_pdf_page": 70,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2010 and prior",
+          "latest_underwriting_year": 2010,
+          "current_estimate": 1323317,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9707739906697136,
+      "phi_delta_4": 0.8534784333452096,
+      "phi_delta_2": 0.6552688556034859,
+      "phi_delta_1": 0.39222153996746967
     },
     "727_2021": {
       "syndicate": 727,
       "year": 2021,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2021,
       "opening_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -22463,6 +23338,7 @@
         2020
       ],
       "mature_uw_years": [
+        2011,
         2012,
         2013,
         2014,
@@ -22473,19 +23349,33 @@
         2019
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8738976343801762,
-      "phi_delta_4": 0.7308003522897651,
-      "phi_delta_2": 0.5793548680601752,
-      "phi_delta_1": 0.34970767408332504
+      "source_override": {
+        "source_filing": "syndicate_727_2021.pdf",
+        "source_filing_sha256": "ab0882cb39ac98969495ad6cdd7023ee80e511bffc08affd9f0ee639098dfc31",
+        "source_pdf_page": 70,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2011 and prior",
+          "latest_underwriting_year": 2011,
+          "current_estimate": 1406103,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9676996480432357,
+      "phi_delta_4": 0.8371863378181426,
+      "phi_delta_2": 0.620224380154951,
+      "phi_delta_1": 0.35090730234404577
     },
     "727_2022": {
       "syndicate": 727,
       "year": 2022,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2022,
       "opening_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -22497,6 +23387,7 @@
         2021
       ],
       "mature_uw_years": [
+        2012,
         2013,
         2014,
         2015,
@@ -22507,19 +23398,33 @@
         2020
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8696313856876837,
-      "phi_delta_4": 0.7283937951690203,
-      "phi_delta_2": 0.5819706606966181,
-      "phi_delta_1": 0.36112966249785494
+      "source_override": {
+        "source_filing": "syndicate_727_2022.pdf",
+        "source_filing_sha256": "c3454c21608247644aafaecee16e42310117a30da172bccdb1aa2346826f3a1f",
+        "source_pdf_page": 70,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2012 and prior",
+          "latest_underwriting_year": 2012,
+          "current_estimate": 1601764,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.9673645251030594,
+      "phi_delta_4": 0.8361440315251684,
+      "phi_delta_2": 0.6222653057348642,
+      "phi_delta_1": 0.36228462567458014
     },
     "727_2023": {
       "syndicate": 727,
       "year": 2023,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2023,
       "opening_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -22531,6 +23436,7 @@
         2022
       ],
       "mature_uw_years": [
+        2013,
         2014,
         2015,
         2016,
@@ -22541,19 +23447,33 @@
         2021
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8661034626227422,
-      "phi_delta_4": 0.724918117098486,
-      "phi_delta_2": 0.5801588335084349,
-      "phi_delta_1": 0.360403467757086
+      "source_override": {
+        "source_filing": "syndicate_727_2023.pdf",
+        "source_filing_sha256": "c5e72055456aa9bcfec05cf29196d41414d75eba3a4c3037d31068b7d7e88a66",
+        "source_pdf_page": 71,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 1589038,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        }
+      },
+      "phi_delta_inf": 0.966228066666698,
+      "phi_delta_4": 0.8324684189163346,
+      "phi_delta_2": 0.6194575612500272,
+      "phi_delta_1": 0.36151935174096134
     },
     "727_2024": {
       "syndicate": 727,
       "year": 2024,
       "source_model": "gemini-2.5-flash",
       "source_field": "_claims_triangle",
-      "n_uw_years": 10,
+      "n_uw_years": 11,
       "latest_uw_year": 2024,
       "opening_uw_years": [
+        2013,
         2015,
         2016,
         2017,
@@ -22565,6 +23485,7 @@
         2023
       ],
       "mature_uw_years": [
+        2013,
         2015,
         2016,
         2017,
@@ -22575,10 +23496,24 @@
         2022
       ],
       "membership_rule": "opening u <= t-1; mature u <= t-2; age = (t-1) - u",
-      "phi_delta_inf": 0.8875202773348895,
-      "phi_delta_4": 0.764871613168247,
-      "phi_delta_2": 0.632484077820105,
-      "phi_delta_1": 0.41400862373786235
+      "source_override": {
+        "source_filing": "syndicate_727_2024.html",
+        "source_filing_sha256": "4a6ae7f76c5a01b684cf41343d148c47da86155c060c8ab2ed204c2ab7f8e1bc",
+        "source_pdf_page": 73,
+        "reported_measure": "gross ultimate claims on premium earned to date",
+        "units": "GBP thousand",
+        "additional_grouped_cohort": {
+          "source_label": "2013 and prior",
+          "latest_underwriting_year": 2013,
+          "current_estimate": 1641568,
+          "age_convention": "All years in the group are assigned the age of its latest labelled year; actual ages are unknown."
+        },
+        "source_location_note": "Printed report page 73 in iXBRL HTML, not a PDF page index; the filing leaves an explicit 2014 cohort gap."
+      },
+      "phi_delta_inf": 0.9707928530388296,
+      "phi_delta_4": 0.8421134532139453,
+      "phi_delta_2": 0.6541900790583528,
+      "phi_delta_1": 0.4144035204230433
     },
     "779_2015": {
       "syndicate": 779,

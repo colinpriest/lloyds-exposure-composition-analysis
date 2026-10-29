@@ -1,0 +1,34 @@
+{
+  "purpose": "Targeted corrected-proxy maturity refits; not a full manifest reproduction",
+  "source_commit": "6675756b3ef59f594ab8bd6f17a2a69f3d5377a7",
+  "input_proxy_sha256": "7ae4c1a28870ba81d1f50240fc252b9e2ca60cac8467516201c1611de427a522",
+  "original_proxy_sha256": "6378e16300b1b3edf27864e8d440cd7a6b99aeaaf6cbd4c34ef3a72bd4f589b0",
+  "exposure_sha256": "1bd8453d7ae6603aca60bff0352c567cd624ed79a9e01821dd9a27ec41c66ac0",
+  "before": {
+    "usable": 614,
+    "refit": 607
+  },
+  "after": {
+    "usable": 614,
+    "refit": 608
+  },
+  "entered_refit": [
+    "382_2020"
+  ],
+  "left_refit": [],
+  "source_checkout_status": "Committed producer with the corrected proxy staged in the working tree; model/maturity_share.json is the sole intended input modification.",
+  "sampler": {
+    "python": "3.12.6",
+    "chains": 4,
+    "tune": 1500,
+    "draws_per_chain": 1500,
+    "target_accept": 0.995,
+    "seed": 42,
+    "cores": 1
+  },
+  "result_sha256": "3ea08912b68310d7fa89b6768137d892c8634676ff1aba931dd6e5384277f0af",
+  "diagnostics_sha256": "a4f9d9c5761883744b3cdbd7f41c52ee3e215e5c50ad38921fc3541d0cd62223",
+  "start_utc": "2026-10-29T01:10:24.263748+00:00",
+  "end_utc": "2026-10-29T01:19:13.945053+00:00",
+  "old_full_reproduction_report_applies": false
+}
