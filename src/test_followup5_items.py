@@ -49,7 +49,7 @@ def test_the_coverage_lines_generate_the_intersection_and_the_retrieval_range():
     assert "~" not in text                     # "~47 %" was the old dataset's ratio of unlike populations
     got, active = bcr._retrieved_by_year(), bcr._active_by_year()
     recent = range(2020, 2025)
-    assert ("%d–%d PDFs retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, and it does "
+    assert ("%d–%d filings retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, and it does "
             "not show that every listed syndicate's filing was retrieved"
             % (min(got[y] for y in recent), max(got[y] for y in recent),
                min(active[y] for y in recent), max(active[y] for y in recent))) in text
@@ -72,7 +72,7 @@ def test_the_data_audit_generates_its_retrieval_range():
     with io.open(os.path.join(HERE, "src", "generate_data_audit.py"), encoding="utf-8") as _fh:
         src = _fh.read()
     assert "~90" not in src and "~91" not in src
-    assert re.search(r"\{min\(raw_years\)\}.\{max\(raw_years\)\} PDFs/year throughout", src)
+    assert re.search(r"\{min\(raw_years\)\}.\{max\(raw_years\)\} filings/year throughout", src)
 
 
 def test_the_round_55_table_says_what_it_compares():

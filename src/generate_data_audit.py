@@ -15,6 +15,7 @@ import csv, json, glob, re
 from collections import Counter, defaultdict
 from pathlib import Path
 import assumed_business
+import filing_sources
 
 SD = Path(__file__).resolve().parent.parent
 RESULTS = SD / "model" / "exposure_results.json"
@@ -71,6 +72,7 @@ def mine_raw():
     labels = Counter()
     ritc_sy = set()
     cap = Counter()
+    source_formats = Counter()
     raw_year, empty_year, extr_year = Counter(), Counter(), Counter()
     for f in RAW:
         ym = re.search(r"syndicate_(\d+)_(\d+)", f)
@@ -78,6 +80,7 @@ def mine_raw():
         if yr:
             raw_year[yr] += 1
         d = json.loads(Path(f).read_text(encoding="utf-8"))
+        source_formats[filing_sources.source_format(d.get("source_file"))] += 1
         m = d.get("models", {})
         g, p = m.get("gemini-2.5-flash"), m.get("gpt-5-mini")
         has_g += bool(g); has_p += bool(p)
@@ -114,7 +117,8 @@ def mine_raw():
                 cap[term] += 1
     return dict(n_files=n_files, has_g=has_g, has_p=has_p, neither=neither, tri=tri,
                 gpm=gpm, ritc=ritc, gross=gross, net=net, labels=labels, ritc_sy=ritc_sy, cap=cap,
-                raw_year=raw_year, empty_year=empty_year, extr_year=extr_year)
+                raw_year=raw_year, empty_year=empty_year, extr_year=extr_year,
+                source_formats=source_formats)
 
 
 def inferential_ledger():
@@ -363,6 +367,8 @@ def _ritc_scan_sets():
 
 
 def md(c, r):
+    if sum(r["source_formats"].values()) != c["total_files"]:
+        raise ValueError("source-format record count disagrees with the loader filing count")
     scan = _ritc_scan_sets()
     if scan:
         occ = scan["occ"]
@@ -427,7 +433,7 @@ def md(c, r):
     # B.2
     A("## B.2 Corpus and exclusions\n### Operational loader waterfall\n")
     A("| Stage | Count | Dropped |\n|---|---:|---:|")
-    A(f"| Filing PDFs retrieved | {c['total_files']} | — |")
+    A(f"| Filings retrieved | {c['total_files']} | — |")
     A(f"| — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | {c['disc']['excluded']} |")
     A(f"| — No eligible mature cohort: no underwriting year up to t-2 (structural in the inferential ledger) | | {c['disc']['skipped']} |")
     A(f"| — No development record to parse | | {c['disc'].get('incomplete_no_development_record', 0)} |")
@@ -449,7 +455,7 @@ def md(c, r):
       f"further stage: those filings are already inside the stages above, so subtracting it as "
       f"well would double-count them and is what made an earlier version of this table fail to "
       f"add up.")
-    A(f"\n- **File → record reconciliation.** {c['total_files']} retrieved PDFs; {r['neither']} "
+    A(f"\n- **File → record reconciliation.** {c['total_files']} retrieved filings; {r['neither']} "
       f"produced no usable dual-model output, leaving {r['has_g']} extracted "
       f"syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs "
       f"(Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same {r['has_g']} filings. The "
@@ -458,7 +464,7 @@ def md(c, r):
       f"tag. The tag counts in the table cover both these and the {r['neither']} unextracted "
       f"filings ({r['has_g'] - c['corpus']} + {r['neither']} = {c['total_files'] - c['corpus']} = "
       f"{c['total_files']} - {c['corpus']}), so they are not subtracted from {r['has_g']} again. "
-      "No usable output is an operational state, not a finding that every one of those PDFs "
+      "No usable output is an operational state, not a finding that every one of those filings "
       "failed OCR: disclosure absence, economic eligibility and extraction status are recorded "
       "separately in the inferential ledger below.")
     A(f"- **Working-sample exclusions:** of the {c['excl']} corpus records dropped, "
@@ -511,10 +517,14 @@ def md(c, r):
       "`pdf_extraction/audit/offline_unservable.json` and their committed records stand "
       "unchanged.")
     A("\n### Filing source\n")
-    A("The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the "
-      "form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated "
-      "collection and converted to structured JSON by a dual-LLM extraction (Gemini 2.5 Flash and "
-      "GPT-5 Mini) with cross-model agreement checks. The two readings are compared field by field: a "
+    A("The extraction records’ `source_file` paths identify "
+      + filing_sources.format_counts(r["source_formats"])
+      + " source documents. The original accounts are not distributed in this analysis repository; "
+        "these counts describe the recorded source paths. The 2024 HTML accounts use inline XBRL.\n")
+    A("The raw accounts are **Lloyd's syndicate annual reports**, retrieved by automated "
+      "collection. Where the models were run, a dual-LLM extraction (Gemini 2.5 Flash and "
+      "GPT-5 Mini) converted them to structured JSON with cross-model agreement checks. The two readings "
+      "are compared field by field: a "
       "numeric field is flagged when the values differ by more than 0.5% of the larger **and** by more "
       "than 0.05 in absolute terms (`check_tolerance` and `_is_numeric_near` in the extraction "
       "repository's `test_gemini.py`), while text, list, page and confidence fields are exempt and "
@@ -626,7 +636,7 @@ def md(c, r):
       f"The earliest year is the weakest: the 2014 working sample has {c['sample_by_year'].get(2014, 0)} records "
       f"against {c['market'][2014]} published active syndicates. The per-year comparison with the published counts "
       "and the official active lists follows:\n")
-    A("| Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |\n|---|---:|---:|---:|---:|---:|")
+    A("| Year | Active | Raw filings retrieved | Empty extraction | Corpus | Sample |\n|---|---:|---:|---:|---:|---:|")
     for y in YEARS:
         A(f"| {y} | {c['market'][y]} | {r['raw_year'].get(y, 0)} | {r['empty_year'].get(y, 0)} "
           f"| {c['corpus_by_year'].get(y, 0)} | {c['sample_by_year'].get(y, 0)} |")
@@ -637,13 +647,13 @@ def md(c, r):
         miss_txt = (f", and against the official lists {min(e['miss'] for e in c['diff'].values())}–"
                     f"{max(e['miss'] for e in c['diff'].values())} listed syndicates each year have no corpus record "
                     "(table below)")
-    A(f"\n- **Retrieved PDFs and active counts are not a membership check** "
-      f"({min(raw_years)}–{max(raw_years)} PDFs/year throughout, vs {min(act_years)}–{max(act_years)} active "
+    A(f"\n- **Retrieved filings and active counts are not a membership check** "
+      f"({min(raw_years)}–{max(raw_years)} filings/year throughout, vs {min(act_years)}–{max(act_years)} active "
       "syndicates). Totals of similar size do not "
-      "show that every listed syndicate's filing was retrieved: the PDFs include syndicates that are not on the list"
+      "show that every listed syndicate's filing was retrieved: the retrieved filings include syndicates that are not on the list"
       + miss_txt + ".")
     A(f"- The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output "
-      f"states. {r['neither']} of {c['total_files']} PDFs yielded no usable dual-model output "
+      f"states. {r['neither']} of {c['total_files']} filings yielded no usable dual-model output "
       f"(most often in 2014, {r['empty_year'].get(2014, 0)} of {r['raw_year'].get(2014, 0)}), but that "
       f"operational count overlaps the loader stages and is not evidence that all {r['neither']} were OCR failures. "
       "The inferential ledger above classifies the filings without conflating those dimensions.")

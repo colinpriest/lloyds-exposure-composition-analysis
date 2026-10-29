@@ -15,7 +15,7 @@
 
 | Stage | Count | Dropped |
 |---|---:|---:|
-| Filing PDFs retrieved | 1065 | — |
+| Filings retrieved | 1065 | — |
 | — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | 20 |
 | — No eligible mature cohort: no underwriting year up to t-2 (structural in the inferential ledger) | | 107 |
 | — No development record to parse | | 4 |
@@ -31,7 +31,7 @@
 
 - **The operational stages above are disjoint and subtract to the corpus.** 1065 - 20 - 107 - 4 - 28 - 4 = 902. Separately, 117 filings carry no usable dual-model extraction. That count is a diagnostic of extraction quality, not a further stage: those filings are already inside the stages above, so subtracting it as well would double-count them and is what made an earlier version of this table fail to add up.
 
-- **File → record reconciliation.** 1065 retrieved PDFs; 117 produced no usable dual-model output, leaving 948 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 948 filings. The 902-record corpus sits inside these: 948 - 46 = 902, the 46 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 117 unextracted filings (46 + 117 = 163 = 1065 - 902), so they are not subtracted from 948 again. No usable output is an operational state, not a finding that every one of those PDFs failed OCR: disclosure absence, economic eligibility and extraction status are recorded separately in the inferential ledger below.
+- **File → record reconciliation.** 1065 retrieved filings; 117 produced no usable dual-model output, leaving 948 extracted syndicate-years with **no duplicate (syndicate, year) pairs**. Both LLMs (Gemini 2.5 Flash, GPT-5 Mini) returned a record for the same 948 filings. The 902-record corpus sits inside these: 948 - 46 = 902, the 46 being extracted filings that carry a discard tag. The tag counts in the table cover both these and the 117 unextracted filings (46 + 117 = 163 = 1065 - 902), so they are not subtracted from 948 again. No usable output is an operational state, not a finding that every one of those filings failed OCR: disclosure absence, economic eligibility and extraction status are recorded separately in the inferential ledger below.
 - **Working-sample exclusions:** of the 270 corpus records dropped, 98 carry a development figure on a net or unstated basis (82 net, 16 unstated; severity divides development by GROSS reserves, and a net figure differs from the gross one by ceded development, whose sign is not fixed, so the two are not comparable), 8 carry a figure the filing shows to be dominated by a transfer (the reserves or premium a transfer brought in, or the commutation of one back to its cedant), which is not development, 71 lack usable LoB weights (12 of them because the classes of the adopted mix, with their signs, do not sum within 2% (or 0.2m) to a premium total a reader other than the one that produced the mix gave: a total or subtotal row, part of a table, or a table from another period, is not a partition), 93 an unusable severity, and **0 are missing reserves**. These are operational loader stages, not mutually interchangeable statements about economic eligibility, disclosure availability or extraction success.
 
 ### Inferential disposition
@@ -74,7 +74,9 @@ The supported disclosure-defined target contains **665** records: the 9 eligible
 
 ### Filing source
 
-The raw accounts are **Lloyd's syndicate annual reports** (PDF; `source_file` paths of the form `syndicate_reports/pdfs/syndicate_{number}_{year}.pdf`), retrieved by automated collection and converted to structured JSON by a dual-LLM extraction (Gemini 2.5 Flash and GPT-5 Mini) with cross-model agreement checks. The two readings are compared field by field: a numeric field is flagged when the values differ by more than 0.5% of the larger **and** by more than 0.05 in absolute terms (`check_tolerance` and `_is_numeric_near` in the extraction repository's `test_gemini.py`), while text, list, page and confidence fields are exempt and gross-premium-mix percentages are compared on absolute values within 5%. A flag is a comparison-stage discrepancy, not an excluded record: derived fields are resolved next (`resolve_computed_fields`), and what remains is written to the disagreement log for adjudication. The extraction repository's OCR guide holds the authoritative statement.
+The extraction records’ `source_file` paths identify 970 PDF and 95 HTML source documents. The original accounts are not distributed in this analysis repository; these counts describe the recorded source paths. The 2024 HTML accounts use inline XBRL.
+
+The raw accounts are **Lloyd's syndicate annual reports**, retrieved by automated collection. Where the models were run, a dual-LLM extraction (Gemini 2.5 Flash and GPT-5 Mini) converted them to structured JSON with cross-model agreement checks. The two readings are compared field by field: a numeric field is flagged when the values differ by more than 0.5% of the larger **and** by more than 0.05 in absolute terms (`check_tolerance` and `_is_numeric_near` in the extraction repository's `test_gemini.py`), while text, list, page and confidence fields are exempt and gross-premium-mix percentages are compared on absolute values within 5%. A flag is a comparison-stage discrepancy, not an excluded record: derived fields are resolved next (`resolve_computed_fields`), and what remains is written to the disagreement log for adjudication. The extraction repository's OCR guide holds the authoritative statement.
 
 ### Per-year counts
 | Reporting year | Corpus | Working sample |
@@ -149,7 +151,7 @@ The working sample spans **117 syndicates / 632 syndicate-years** (corpus 133 / 
 
 For 2020–2024 the working sample holds 310 of the 473 listed syndicate-years (65.5%), between 58.7% (2021) and 75.8% (2024) by year. The working sample has 316 records in those years, so 6 of them are records outside their year's official active list (1110/2020, 1884/2022, 1110/2023, 1884/2023, 1110/2024, 1884/2024). The official list is the stated denominator, so those records are reported separately and are not counted as coverage; they are valid observations and stay in the working sample. Being off a year's list does not assert that the syndicate had stopped trading. For 2014–2019 the working sample has 316 records against 572 published active-syndicate counts, and that is a ratio of two different populations (syndicate-years with a usable record, against a count of active syndicates); the assembled inputs hold no membership list to intersect them, so no coverage percentage is given for those years, nor for 2014–2024 as a whole (632 sample records against 1045 published counts). The earliest year is the weakest: the 2014 working sample has 0 records against 92 published active syndicates. The per-year comparison with the published counts and the official active lists follows:
 
-| Year | Active | Raw PDFs retrieved | Empty extraction | Corpus | Sample |
+| Year | Active | Raw filings retrieved | Empty extraction | Corpus | Sample |
 |---|---:|---:|---:|---:|---:|
 | 2014 | 92 | 96 | 26 | 67 | 0 |
 | 2015 | 94 | 102 | 11 | 85 | 62 |
@@ -163,8 +165,8 @@ For 2020–2024 the working sample holds 310 of the 473 listed syndicate-years (
 | 2023 | 95 | 94 | 11 | 82 | 69 |
 | 2024 | 95 | 95 | 7 | 84 | 74 |
 
-- **Retrieved PDFs and active counts are not a membership check** (90–107 PDFs/year throughout, vs 92–99 active syndicates). Totals of similar size do not show that every listed syndicate's filing was retrieved: the PDFs include syndicates that are not on the list, and against the official lists 13–16 listed syndicates each year have no corpus record (table below).
-- The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output states. 117 of 1065 PDFs yielded no usable dual-model output (most often in 2014, 26 of 96), but that operational count overlaps the loader stages and is not evidence that all 117 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
+- **Retrieved filings and active counts are not a membership check** (90–107 filings/year throughout, vs 92–99 active syndicates). Totals of similar size do not show that every listed syndicate's filing was retrieved: the retrieved filings include syndicates that are not on the list, and against the official lists 13–16 listed syndicates each year have no corpus record (table below).
+- The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output states. 117 of 1065 filings yielded no usable dual-model output (most often in 2014, 26 of 96), but that operational count overlaps the loader stages and is not evidence that all 117 were OCR failures. The inferential ledger above classifies the filings without conflating those dimensions.
 - **Against the official active lists (2020–2024)** the corpus holds 84–86% of listed syndicates each year:
 
 | Year | Listed | We have | Missing | Missing but retrieved in other years | In corpus, not on active list |

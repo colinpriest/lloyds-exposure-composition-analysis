@@ -34,6 +34,7 @@ import os
 import re
 import subprocess
 import assumed_business
+import filing_sources
 import market_active
 import transfer_operator
 
@@ -438,6 +439,8 @@ def main():
     ex = load(MODEL, "exposure_results.json")
     if ex is None:
         raise SystemExit("model/exposure_results.json not found; run src/run_analysis.py first")
+    print("docs/data-provenance.md filing formats %s"
+          % ("rewritten" if write_source_format_row() else "already current"))
     print("docs/data-provenance.md waterfall %s" % ("rewritten" if write_provenance_waterfall(ex) else "already current"))
     print("docs/data-provenance.md counts and sensitivities %s"
           % ("rewritten" if write_provenance_counts(ex) else "already current"))
@@ -480,6 +483,31 @@ def _rw(path, fn):
 #: the corpus-to-working-sample steps waterfall_lines prints, in the loader's order
 WATERFALL_STEPS = ("net_or_unstated_basis", "takeon_not_development", "unusable_severity",
                    "missing_opening_reserves", "missing_lob_weights")
+
+
+def source_format_row(paths):
+    """A raw-source row from the extraction's recorded source-file extensions."""
+    counts = filing_sources.count_sources(paths)
+    if not counts:
+        raise ValueError("no extraction records available for the source-format inventory")
+    return ("| Raw filing documents | extraction repository, `syndicate_reports/pdfs/` "
+            "| **no** ({:,} records: {}; source files not committed) "
+            "| source documents, not redistributed |".format(sum(counts.values()),
+                                                               filing_sources.format_counts(counts)))
+
+
+def source_format_text(text, paths):
+    """Replace exactly the source inventory row; refuse missing or duplicate rows."""
+    pattern = r"(?m)^\| Raw (?:PDFs|filing documents) \|[^\n]*$"
+    text, n = re.subn(pattern, lambda _m: source_format_row(paths), text)
+    if n != 1:
+        raise ValueError("expected exactly one raw-source inventory row; found %d" % n)
+    return text
+
+
+def write_source_format_row():
+    paths = sorted(glob.glob(os.path.join(HERE, "pdf_extraction", "syndicate_*_[0-9][0-9][0-9][0-9].json")))
+    return _rw(PROVENANCE, lambda t: source_format_text(t, paths))
 
 
 def waterfall_lines(ex):
@@ -704,7 +732,7 @@ def coverage_lines(ex):
         "the %d working-sample records against %d published counts compare two different populations. The "
         "retrieval counts are no membership check either:"
         % (pre_samp, pre_active),
-        "%d–%d PDFs retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, "
+        "%d–%d filings retrieved per year in 2020–2024 vs %d–%d active syndicates is a similar total, "
         "and it does not show that every listed syndicate's filing was retrieved."
         % (min(got.get(y, 0) for y in years), max(got.get(y, 0) for y in years),
            min(active[y] for y in years), max(active[y] for y in years)),

@@ -20,9 +20,9 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Lloyd's syndicate workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | open-year report records and annual count summaries; its 2020–2024 official active-list sheets are also held in the analysis's `data/market_active_syndicates.json` |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
 | Portfolio-transfer scan | `pdf_extraction/portfolio_transfer_scan.json` | yes | not read here: kept equal to the extraction's copy so that the two repositories hold one version of it |
-| Raw PDFs | extraction repository, `syndicate_reports/pdfs/` (PDF or HTML) | **no** (1,065 files, not committed) | source documents, not redistributed |
+| Raw filing documents | extraction repository, `syndicate_reports/pdfs/` | **no** (1,065 records: 970 PDF and 95 HTML; source files not committed) | source documents, not redistributed |
 
-The raw PDFs are deliberately not committed (volume + redistribution); everything downstream
+The raw source documents are deliberately not committed (volume + redistribution); everything downstream
 is re-runnable from the committed JSON, and what has been demonstrated is the recorded
 clean full-manifest run (`reproduce.py --verify` prints its coverage; see the README). The
 extraction itself is reconstructible from the public filings but not re-runnable from
@@ -275,7 +275,7 @@ counting the sample syndicate-years whose syndicate is on that year's official l
 is the stated denominator, so those records are reported separately and kept in the sample. Being off the list does not assert that the syndicate had stopped trading.
 For 2014–2019 only the published count of active syndicates is held, so membership cannot be checked and no coverage percentage is given:
 the 316 working-sample records against 572 published counts compare two different populations. The retrieval counts are no membership check either:
-90–95 PDFs retrieved per year in 2020–2024 vs 92–98 active syndicates is a similar total, and it does not show that every listed syndicate's filing was retrieved.
+90–95 filings retrieved per year in 2020–2024 vs 92–98 active syndicates is a similar total, and it does not show that every listed syndicate's filing was retrieved.
 <!-- coverage:end -->
 
 The residual shortfall of the working sample from the official lists combines scope, disclosure availability and extraction/output states.
@@ -306,7 +306,7 @@ The counts at `9c2895f`, before the correction, and now. The change is not the c
 ## 2b. Reporting currency (converted to GBP at reporting-date spot)
 
 The dataset is **single-currency GBP**. Each filing's presentation currency is determined from
-the source PDF with provenance (statement page, nearest section heading, verbatim quote) by
+the source filing with provenance (statement page, nearest section heading, verbatim quote) by
 `currency_scan.py`, and USD-presented filings are converted to GBP inside `run_analysis.py` at
 the **reporting-date spot rate** — the last Fed **H.10** business-day rate on or before
 31 December of the reporting year (`fetch_h10_rates.py` → `fx_rates_h10.json`, from
@@ -428,7 +428,7 @@ extraction repo for prompts and the reconciliation logic.
 ## 5. Reproducing from a fresh clone
 
 1. Clone the extraction repo and copy its `pdf_extraction/` and `syndicate_reports/` outputs
-   into this repo (the JSON only; the source PDFs stay in the extraction
+   into this repo (the JSON only; the source documents stay in the extraction
    repository under `syndicate_reports/pdfs/` and are needed only to re-run
    `python src/currency_scan.py --pdf-dir <that folder> --allow-llm-fallback --replace-canonical`;
    the two flags are needed because the 2024 filings published only as HTML have no PDF).
