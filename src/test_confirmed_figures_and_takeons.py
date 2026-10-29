@@ -584,7 +584,8 @@ def test_the_data_audit_prints_the_takeon_stage(tmp_path, monkeypatch):
     c = _audit_counts(tmp_path, monkeypatch)
     r = {"has_g": 5, "cap": Counter({"gross claims": 5}), "gross": 5, "net": 0, "tri": 5, "gpm": 5,
          "labels": Counter({"Property": 3, "Miscellaneous": 2}), "neither": 1,
-         "raw_year": Counter({2021: 6}), "empty_year": Counter({2021: 1}), "ritc": 0, "ritc_sy": set()}
+         "raw_year": Counter({2021: 6}), "empty_year": Counter({2021: 1}), "ritc": 0, "ritc_sy": set(),
+         "source_formats": Counter({"pdf": 6})}
     text = gda.md(c, r)
     assert "| — Take-on, not development (`data/takeon_not_development.json`) | | 1 |" in text
     assert "| **Working sample** | **1** | 4 excluded |" in text
