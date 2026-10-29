@@ -1,0 +1,109 @@
+{
+  "generated_utc": "2026-10-29T01:05:41.430087+00:00",
+  "note": "Post-run inventory of unchanged committed run inputs and the uncommitted producer; raw SHA-256 values fingerprint exact checkout bytes, while Git blob ids normalize line endings. This is a targeted run, not the old full-reproduction run.",
+  "run_code_commit": "abd0e2805fe49899a89fbe4e733f588dc40eb1b1",
+  "run_working_tree_dirty": true,
+  "run_working_tree_status": [
+    "?? src/check_source_numerator_sensitivity.py",
+    "?? src/test_source_numerator_sensitivity.py"
+  ],
+  "producer": {
+    "sha256_working_tree_bytes": "73724852259f35834385eac1a3e377da4c62125d5bd3cf27af146eb3dcc6130e",
+    "normalized_git_blob": "078268b5dd8a55ccfd318065f82c9085db3364bd"
+  },
+  "result_sha256": "2dff58def3eacbbaadc8a5d5ba202c2cf7329841a357e96704524ead14475b23",
+  "result_sha256_working_tree_bytes": "27d8c1d989556ce6099be9d63cc7a866483c38ab6acc067e103354ec7988d1d7",
+  "inputs": {
+    "src/adopted_model.py": {
+      "sha256_working_tree_bytes": "03aaa3ccc2b48e480dc5fe8904834c88a151bcbc7817417c6ba090d089e606ca",
+      "git_blob": "733c59fb07cf9a4081ebdd5d601c47a378fb43ef"
+    },
+    "src/check_cohort_scope.py": {
+      "sha256_working_tree_bytes": "2be5f00b7b09ac09075fbefcc7b8fe6abaeae76574e77052871569a8aefdc263",
+      "git_blob": "a74e071b6657e508129ab777f70c029d9fc42881"
+    },
+    "src/refit_vignettes.py": {
+      "sha256_working_tree_bytes": "5018a0064fa58f1398b6e365c64c798cb0dd148ea374f3df509794a5476b5b39",
+      "git_blob": "568f01d0ce9c7d1c7607f2a11335760c98267dfa"
+    },
+    "src/vignette_uncertainty.py": {
+      "sha256_working_tree_bytes": "629092ab447a329ec155bf393948f8ad1ef726e15c01b359b9902a0e35bb962b",
+      "git_blob": "1587a2608002defb32a4e8317a0d0d1f22969018"
+    },
+    "src/transfer_operator.py": {
+      "sha256_working_tree_bytes": "b9113fab97cf77dd2a9561c2464d86f2ba4ec8f10cef19e9a74c0c754656ed9c",
+      "git_blob": "30304f8c0a5fce52eb40fcb4e9f93fa5b38ae8c4"
+    },
+    "src/check_gamma0_vignette.py": {
+      "sha256_working_tree_bytes": "b3e8363a30b737472f80d8cf25443606ea2bfc87d75dd3baada4eb89aab793fb",
+      "git_blob": "8b250d79b02f24928fa3497e242b5767983a78ac"
+    },
+    "src/pool_quantile.py": {
+      "sha256_working_tree_bytes": "f012a5f589d0e4967379da346b5ddbb90bb671600b5dd92dfcc983193288ba12",
+      "git_blob": "004915f78a4b57468db717f48285d5d29d55afdf"
+    },
+    "src/donor_pool.py": {
+      "sha256_working_tree_bytes": "b123aabc005d92d587ba965746c61f5ea6f05128b302f5343fdc4f67f185dcc4",
+      "git_blob": "c80e923543486071858f85b83aa833bb038eab6c"
+    },
+    "src/assumed_business.py": {
+      "sha256_working_tree_bytes": "8fd22dd821ebd3176365cc534aa1fe581127014385abd7f4cf5fce81e79fde8a",
+      "git_blob": "f0e2aa8500cc4a7e2033f4bf11c7c17af0e3d3e3"
+    },
+    "pdf_extraction/ritc_scan.json": {
+      "sha256_working_tree_bytes": "4f069ad61c39385bacc7438ce709bc1772ccf5ad39d0bf19a629e3bc84f99632",
+      "git_blob": "005638ce92bc027ef3722390ce1de1d5ab0e44ae"
+    },
+    "pdf_extraction/audit/portfolio_transfer_adjudication.json": {
+      "sha256_working_tree_bytes": "fb450a3471cfe2dfa22c44bc068ea7fa9cdc6c0a40881a1f31301fbb516bf328",
+      "git_blob": "0b22544d46657e40bf4a4b57388aaef5bc6c8bd6"
+    },
+    "data/opening_reserves_takeon_base.json": {
+      "sha256_working_tree_bytes": "5d9bdd04402512d1e73b8e8d306222dc4bb540fd4c1a803bfe9b0ed48019cb27",
+      "git_blob": "86c8733e48df401620482725b8f7df0d22b1243c"
+    },
+    "data/mature_cohort_figures.json": {
+      "sha256_working_tree_bytes": "a3d77b6bd7a2a63c1841e4d213a0c405b174736c98aba60d3bcada782000672a",
+      "git_blob": "8f8d99a286c6973c5de027dcd742515c6971d8f4"
+    },
+    "model/exposure_results.json": {
+      "sha256_working_tree_bytes": "1bd8453d7ae6603aca60bff0352c567cd624ed79a9e01821dd9a27ec41c66ac0",
+      "git_blob": "d5d1de38f8f9978247b91aedaaf3482cd3fa4ff6"
+    },
+    "model/dispersion_calibration_ritc.json": {
+      "sha256_working_tree_bytes": "2b23be29d829d36a8747b76a16419ef340ad154a8ea04ed67e0e98da92c86b66",
+      "git_blob": "13017c3a1e3e41720bd182db57c0af348c207eef"
+    },
+    "model/dispersion_posterior_draws_ritc.npz": {
+      "sha256_working_tree_bytes": "3f354d2b0bee8ccb921e8756501a0fddac7bdd84abb2f115fc774de15bb130df",
+      "git_blob": "0a3286084c33ef9ea39ce3db7fd2618afdc315c7"
+    },
+    "vignettes/vignette-1/target_profile.json": {
+      "sha256_working_tree_bytes": "4a4101ecf4107cb34bf8e50d0ef0d0453e6f73be7f5293c1740d4bfeb14f7b14",
+      "git_blob": "c0990c6c84e9244a6960107c42aed187c22c479a"
+    },
+    "vignettes/vignette-2/target_transition.json": {
+      "sha256_working_tree_bytes": "629a8807b46da333089fa8a9fb3bd5c3ccb9671f61da30508ee25932bb940af0",
+      "git_blob": "1ab03ff6a677be687f9926c5605771e46145328a"
+    },
+    "results/check_gamma0_vignette_results.json": {
+      "sha256_working_tree_bytes": "574f5f3f8ac0dde21bed7e55c95a884072457add4f7141d502ee72f89b68da73",
+      "git_blob": "180d7864883f68f6ee9af62517f198b925f1d9e0"
+    }
+  },
+  "run_environment": {
+    "python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "numpy": "2.1.3",
+    "scipy": "1.14.1",
+    "pymc": "5.25.1",
+    "pytensor": "2.31.7",
+    "arviz": "0.22.0",
+    "numba": "0.61.2",
+    "PYMC_CORES": "1",
+    "PYTHONPATH": "D:/tmp/r62/oc/te414",
+    "PYTENSOR_FLAGS": "cxx=,base_compiledir=D:/tmp/baj-numerator-portable-20261029/pytensor-cache",
+    "mode": "NUMBA"
+  },
+  "old_full_reproduction_report_applies_to_this_targeted_run": false
+}
