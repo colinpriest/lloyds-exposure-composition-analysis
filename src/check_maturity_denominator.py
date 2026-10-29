@@ -95,6 +95,13 @@ def ritc_flag(key):
     return np.array([k in occ for k in key])
 
 
+def require_converged(tag, diagnostics):
+    """Refuse to publish a refit with divergent transitions or a bad R-hat."""
+    rhat = diagnostics["max_rhat"]
+    if diagnostics["divergences"] or not np.isfinite(rhat) or rhat > 1.01:
+        raise RuntimeError("Maturity refit %s failed convergence checks: %s" % (tag, diagnostics))
+
+
 def fit(S, R, H, yidx, n_y, ritc, tag):
     """The adopted model (scale_block) on rebased inputs: no departure in the model,
     only in the data it is given."""
@@ -110,8 +117,7 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
                "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
     out["_diag"] = {"max_rhat": float(s["r_hat"].max()),
                     "divergences": int(idata.sample_stats["diverging"].sum())}
-    if out["_diag"]["divergences"] or not np.isfinite(out["_diag"]["max_rhat"]) or out["_diag"]["max_rhat"] > 1.01:
-        raise RuntimeError("Maturity refit %s failed convergence checks: %s" % (tag, out["_diag"]))
+    require_converged(tag, out["_diag"])
     print(f"    {tag:34s} k={out['k']['mean']:.3f} "
           f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}]  "
           f"floor={out['sd_undiv']['mean']:.4f}  "

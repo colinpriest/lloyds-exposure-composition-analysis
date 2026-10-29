@@ -92,3 +92,13 @@ def test_uniform_scale_does_not_change_share():
     scaled=lambda xs:[(u,a,v*1000) for u,a,v in xs]
     for delta in maturity.DELTAS:
         assert maturity.phi_from(opening,mature,delta) == pytest.approx(maturity.phi_from(scaled(opening),scaled(mature),delta))
+
+
+def test_maturity_refit_convergence_guard_rejects_unreliable_fits():
+    from check_maturity_denominator import require_converged
+    require_converged("passing", {"divergences": 0, "max_rhat": 1.001})
+    for diag in ({"divergences": 1, "max_rhat": 1.001},
+                 {"divergences": 0, "max_rhat": 1.02},
+                 {"divergences": 0, "max_rhat": float("nan")}):
+        with pytest.raises(RuntimeError, match="failed convergence"):
+            require_converged("bad", diag)
