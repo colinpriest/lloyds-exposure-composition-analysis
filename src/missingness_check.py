@@ -53,6 +53,7 @@ from scipy import stats
 
 import assumed_business
 from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, FIRST_YEAR_FROM_FILING_REASON, MATURE_LAG,
+                          ELIGIBLE_UNAVAILABLE_TAKEON, ELIGIBLE_UNAVAILABLE_TAKEON_REASON,
                           NO_MATURE_COHORT_REASON, load_filing_eligibility, load_runoff_corpus_register,
                           triangle_years, whole_year_runoff)
 
@@ -264,6 +265,13 @@ def classify_filings():
             # a first-year report with nil openings, read from its filing (P-10): the register's evidence
             category, detail, economic, disclosure, extraction, evidence = first_year_disposition(
                 filing.get("%d_%d" % key), entry["file"])
+        elif disposition == "SKIPPED" and entry.get("reason") == ELIGIBLE_UNAVAILABLE_TAKEON_REASON:
+            held = filing.get("%d_%d" % key)
+            if not held or held.get("kind") != ELIGIBLE_UNAVAILABLE_TAKEON:
+                raise AssertionError(f"missing source-backed take-on decision: {entry['file']}")
+            category, detail = "eligible_outcome_unavailable", "unreconciled_mature_takeon"
+            economic, disclosure, extraction = "eligible", "gross_triangle_unreconciled", "source_page_review"
+            evidence = held["reason"]
         elif disposition == "SKIPPED":
             reviewed = structural.get(entry["file"])
             if reviewed is None:
@@ -701,9 +709,9 @@ def main():
         "eligible_unavailable_records": [r["file"] for r in unavailable],
         "eligibility_unresolved_audit": {
             "classification_rule": (
-                "The extraction found neither a claims-development triangle nor reserve-"
-                "movement text. This establishes disclosure/extraction unavailability, not "
-                "economic ineligibility. Eligibility therefore remains unresolved."
+                "Eligibility remains unresolved where no usable source evidence establishes it; "
+                "the mature RITC take-on whose gross outcome is unreconciled is separately "
+                "classified as eligible outcome unavailable."
             ),
             "n_records": len(unresolved),
             "n_with_size_proxy": sum(r["size_proxy"] is not None for r in unresolved),

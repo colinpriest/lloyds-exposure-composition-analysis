@@ -93,7 +93,7 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # the regeneration at f15a357f (26 October 2026): rule 8, the source-history rule, sets the census's 11 records aside
     # as scientific exclusions: 262 -> 273 and 643 -> 632
     assert (counts["scientific_exclusion"], counts["eligible_outcome_unavailable"],
-            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (273, 9, 24, 632)
+            counts["eligible_observed_composition_unavailable"], counts["working_sample"]) == (273, 10, 24, 632)
     unresolved = [row for row in rows if row["category"] == "eligibility_unresolved"]
     assert all(row["economic_eligibility"] == "unresolved" for row in unresolved)
     assert all(row["in_supported_target_population"] == "False" for row in unresolved)

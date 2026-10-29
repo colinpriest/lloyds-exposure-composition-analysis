@@ -9,13 +9,13 @@
   "disposition_counts": {
     "eligibility_unresolved": 20,
     "eligible_observed_composition_unavailable": 24,
-    "eligible_outcome_unavailable": 9,
+    "eligible_outcome_unavailable": 10,
     "scientific_exclusion": 273,
-    "structural_no_eligible_outcome": 107,
+    "structural_no_eligible_outcome": 106,
     "working_sample": 632
   },
   "disposition_detail_counts": {
-    "first_year_nil_opening": 2,
+    "first_year_nil_opening": 1,
     "fx_untranslated_table": 5,
     "gross_development_unavailable": 5,
     "gross_triangle_does_not_reconcile": 1,
@@ -34,7 +34,8 @@
     "restated_base_table": 4,
     "source_history_set_aside": 11,
     "takeon_base_unmeasurable": 1,
-    "takeon_not_development": 8
+    "takeon_not_development": 8,
+    "unreconciled_mature_takeon": 1
   },
   "scientific_exclusion_detail_counts": {
     "fx_untranslated_table": 5,
@@ -66,20 +67,20 @@
     "other_labels": 1,
     "unreconciled": 2
   },
-  "n_supported_target_population": 665,
-  "n_target_population": 665,
+  "n_supported_target_population": 666,
+  "n_target_population": 666,
   "n_eligibility_unresolved": 20,
-  "n_broader_potential_target_if_all_unresolved_eligible": 685,
+  "n_broader_potential_target_if_all_unresolved_eligible": 686,
   "n_model_sample": 632,
-  "n_eligible_outcome_unavailable": 9,
-  "n_distinct_syndicates_with_unavailable_outcome": 7,
+  "n_eligible_outcome_unavailable": 10,
+  "n_distinct_syndicates_with_unavailable_outcome": 8,
   "n_syndicates_with_unavailable_outcome_and_no_model_record": 2,
   "model_sample_selection_by_size": {
     "median_size_included": 421.462,
-    "median_size_not_included": 29.50388055288639,
+    "median_size_not_included": 31.235940276443195,
     "n_included": 632,
-    "n_not_included": 33,
-    "mann_whitney_p": 2.235651502357586e-12
+    "n_not_included": 34,
+    "mann_whitney_p": 9.37191379746483e-13
   },
   "model_sample_by_year": {
     "2014": {
@@ -116,7 +117,7 @@
     },
     "2022": {
       "model_sample": 57,
-      "target_population": 59
+      "target_population": 60
     },
     "2023": {
       "model_sample": 69,
@@ -128,13 +129,14 @@
     }
   },
   "outcome_given_size": {
-    "signed_S_unavailable_history_coef": -0.026488839109874315,
-    "signed_S_p": 0.2640938645479929,
-    "abs_S_unavailable_history_coef": -0.0030942117175758077,
-    "abs_S_p": 0.8696962159023871,
+    "signed_S_unavailable_history_coef": -0.01927814291192033,
+    "signed_S_p": 0.40746294456732235,
+    "abs_S_unavailable_history_coef": 0.0003985763641557662,
+    "abs_S_p": 0.9828101866552341,
     "n": 632
   },
   "eligible_unavailable_records": [
+    "syndicate_1254_2022.json",
     "syndicate_3330_2014.json",
     "syndicate_3622_2015.json",
     "syndicate_4242_2024.json",
@@ -146,7 +148,7 @@
     "syndicate_6107_2021.json"
   ],
   "eligibility_unresolved_audit": {
-    "classification_rule": "The extraction found neither a claims-development triangle nor reserve-movement text. This establishes disclosure/extraction unavailability, not economic ineligibility. Eligibility therefore remains unresolved.",
+    "classification_rule": "Eligibility remains unresolved where no usable source evidence establishes it; the mature RITC take-on whose gross outcome is unreconciled is separately classified as eligible outcome unavailable.",
     "n_records": 20,
     "n_with_size_proxy": 20,
     "n_without_size_proxy": 0,

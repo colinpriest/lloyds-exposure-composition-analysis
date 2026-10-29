@@ -1,7 +1,7 @@
 """What a filing shows about a record whose models read no usable figure (the review of 2 October 2026, P-10).
 
-Two of the twelve "eligible outcome unavailable" records are first-year reports with nil openings (1254/2022,
-6118/2014), labelled eligible by processing status; 435/2014 states its prior-year movement as a "net release",
+The 6118/2014 first-year report has nil openings; 1254/2022 has a mature take-on whose gross development is
+unreconciled. 435/2014 states its prior-year movement as a "net release",
 which the settled net-basis rule excludes. data/eligibility_from_filing.json records each from its filing. The page
 readings are the PC's, so the committed entries are marked "_to_complete" and the loader applies none of them; these
 tests hold the mechanism: the evidence rule, the loader's two effects and the ledger's classification.
@@ -54,22 +54,19 @@ def test_the_committed_entries_are_complete_and_applied():
     assert "42,433" in entries["435_2014"]["quote"] and "98,556" in entries["435_2014"]["quote"]
 
 
-def test_1254_2022_is_kept_as_a_first_year_nil_opening_by_the_analysis_sessions_decision():
-    """Option A of the page check: the opening is nil (p41), the reserves came by an inwards RITC of 2689's 2017-2019
-    years, and the only printed development (-28.229 on p30) is the cedant's estimate, which conflicts with the
-    syndicate's own 4.7m release (p7)."""
+def test_1254_2022_is_an_eligible_unavailable_mature_takeon():
+    """A nil legal opening does not make a source-confirmed mature RITC take-on ineligible."""
     with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
-        e = json.load(fh)["1254_2022"]
-    assert e["kind"] == "first_year_nil_opening" and e["pages"] == [6, 7, 21, 41, 30]
-    # a decision of the Claude analysis session, reported to the owner: not the owner's own
-    assert e["decision"].startswith("decision of the Claude analysis session, 5 October 2026, reported to the owner")
-    assert "option A" in e["decision"] and "owner's decision" not in e["decision"]
-    with open(ra.FILING_ELIGIBILITY_REGISTER, encoding="utf-8") as fh:
-        assert "owner's decision of 5 October" not in fh.read()
-    for words in ("2689", "-28.229", "p30", "4.7m", "p7"):
-        assert words in e["reason"] or words in e["decision"], words
-    for words in ("At 1 January 2022 -", "Inwards RITC of liabilities 75,257", "-28,229"):
-        assert words in e["quote"], words
+        entry = json.load(fh)["1254_2022"]
+    assert entry["kind"] == ra.ELIGIBLE_UNAVAILABLE_TAKEON
+    for amount in ("75.257", "28.229", "22.748", "27.481", "4.733", "23.496"):
+        assert amount in entry["reason"]
+    rows = MC.add_size_proxies(MC.classify_filings())
+    row = next(r for r in rows if r["file"] == "syndicate_1254_2022.json")
+    assert (row["category"], row["economic_eligibility"], row["detail"]) == (
+        "eligible_outcome_unavailable", "eligible", "unreconciled_mature_takeon")
+    assert row["size_proxy"] == pytest.approx(75.257)
+
 
 
 def test_an_entry_is_applied_only_with_its_evidence(tmp_path):
@@ -90,11 +87,10 @@ def _load(monkeypatch, tmp_path, reg):
 
 
 def test_completed_entries_move_the_three_records(monkeypatch, tmp_path):
-    records, counters, log = _load(monkeypatch, tmp_path, {"1254_2022": FIRST_YEAR, "6118_2014": FIRST_YEAR,
-                                                             "435_2014": NET})
-    for name in ("syndicate_1254_2022.json", "syndicate_6118_2014.json"):
-        assert (log[name]["status"], log[name]["reason"]) == ("SKIPPED", ra.FIRST_YEAR_FROM_FILING_REASON)
-    assert counters["first_year_from_filing_skipped"] == 2
+    records, counters, log = _load(monkeypatch, tmp_path, {"6118_2014": FIRST_YEAR, "435_2014": NET})
+    name = "syndicate_6118_2014.json"
+    assert (log[name]["status"], log[name]["reason"]) == ("SKIPPED", ra.FIRST_YEAR_FROM_FILING_REASON)
+    assert counters["first_year_from_filing_skipped"] == 1
     rec = next(r for r in records if (r["syndicate"], r["year"]) == (435, 2014))
     assert (rec["pyd_basis"], rec["pyd_basis_source"]) == ("net", "filing-register:stated-basis")
     assert counters["stated_basis_from_filing"] == 1
@@ -116,10 +112,28 @@ def test_a_stated_basis_entry_on_a_record_with_a_figure_stops_the_run(monkeypatc
 
 
 def test_the_ledger_classifies_a_first_year_report_as_structural():
-    got = MC.first_year_disposition(FIRST_YEAR, "syndicate_1254_2022.json")
+    got = MC.first_year_disposition(FIRST_YEAR, "syndicate_6118_2014.json")
     assert (got[0], got[1], got[2]) == ("structural_no_eligible_outcome", "first_year_nil_opening", "ineligible")
     assert got[5] == ('first-year report with nil opening reserves; the filing (pages 6, 17): '
                       '"The Syndicate was set up on 1 January 2022"')
     for held in (None, NET):
         with pytest.raises(AssertionError, match="first-year report"):
             MC.first_year_disposition(held, "syndicate_1254_2022.json")
+
+
+def test_missingness_pseudo_outcome_preserves_known_ritc(monkeypatch):
+    import numpy as np
+    import check_missingness_sensitivity as cms
+
+    captured = {}
+    def fake_fit(S, R, H, yidx, n_y, ritc, tag):
+        captured["ritc"] = ritc.copy()
+        return {}
+    monkeypatch.setattr(cms, "fit", fake_fit)
+    row = {"file": "syndicate_1254_2022.json", "syndicate": 1254, "year": 2022,
+           "size_proxy": 75.257, "observation": None}
+    calibration = {"k": 0.6, "gamma": 0, "sd_undiv": 0.03, "sd_div": 0.04, "nu_clean": 4}
+    cms._stress_fit([row], [row], np.array([0.1, -0.1]), np.array([100., 200.]),
+                    np.array([0.3, 0.4]), np.array([2021, 2022]), np.array([0., 0.]),
+                    calibration, [1.0], "test", "test")
+    assert captured["ritc"].tolist() == [0.0, 0.0, 1.0]

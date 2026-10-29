@@ -1180,17 +1180,20 @@ def _opening_gaps(entry):
 # What a filing shows about a record whose models read no usable figure (the review of 2 October 2026, P-10). The
 # loader labelled such a record by processing status: one whose validation failed with no development percentage
 # stopped at model resolution and counted as an eligible record whose outcome is unavailable; one whose models read
-# nothing stayed in the corpus as incomplete. Reading the filings found two first-year reports with nil openings
-# (1254/2022, 6118/2014: no mature cohort, so no eligible outcome) and one that states its prior-year movement on a
+# nothing stayed in the corpus as incomplete. Filing review identifies 6118/2014 as a first-year nil-opening
+# case, 1254/2022 as a mature take-on with an unreconciled gross movement, and one stated prior-year movement on a
 # basis the paper excludes (435/2014's "net release"; the settled net-basis rule, D-9). Each entry carries the
 # filing's evidence, as the other registers do; until it does it is marked "_to_complete" and skipped.
 FILING_ELIGIBILITY_REGISTER = SCRIPT_DIR / "data" / "eligibility_from_filing.json"
 #: a first-year report whose opening reserves are nil on the syndicate's own balance sheet, so no figure it prints
 #: measures development of reserves the syndicate held (the entry's reason says why: a book can hold mature years by
-#: an inwards RITC or a quota share, as 1254/2022 and 6118/2014 do)
+#: an inwards RITC or a quota share; each case requires source-specific assessment)
 FIRST_YEAR_NIL_OPENING = "first_year_nil_opening"
 #: a prior-year movement the filing states on a basis the paper excludes, where no model read a figure
 STATED_BASIS_EXCLUDED = "stated_basis_excluded"
+ELIGIBLE_UNAVAILABLE_TAKEON = "eligible_unavailable_takeon"
+ELIGIBLE_UNAVAILABLE_TAKEON_REASON = ("mature-cohort take-on with positive reserve base; "
+                                      "gross development cannot be reconciled to the accounts")
 FIRST_YEAR_FROM_FILING_REASON = ("first-year report with nil opening reserves, read from the filing "
                                  "(data/eligibility_from_filing.json)")
 
@@ -1198,8 +1201,8 @@ FIRST_YEAR_FROM_FILING_REASON = ("first-year report with nil opening reserves, r
 def _filing_eligibility_gaps(entry):
     gaps = _evidence_gaps(entry)
     kind = entry.get("kind")
-    if kind not in (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED):
-        gaps.append("a kind (%s or %s)" % (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED))
+    if kind not in (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON):
+        gaps.append("a kind (%s, %s or %s)" % (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON))
     if kind == STATED_BASIS_EXCLUDED and entry.get("basis") not in ("net", "unknown"):
         gaps.append("the stated basis (net or unknown)")
     return gaps
@@ -2762,6 +2765,7 @@ def load_and_classify(outcome=None):
         "no_mature_cohort_skipped": 0,
         # first-year reports with nil openings read from the filing (P-10)
         "first_year_from_filing_skipped": 0,
+        "eligible_unavailable_takeon_skipped": 0,
         # records whose filing states a prior-year movement on an excluded basis, where no model read one (P-10)
         "stated_basis_from_filing": 0,
         "provision_movement_unusable": 0,
@@ -2886,6 +2890,15 @@ def load_and_classify(outcome=None):
             counters["skipped"] += 1
             counters["first_year_from_filing_skipped"] += 1
             classification_log.append({"file": fname, "status": "SKIPPED", "reason": FIRST_YEAR_FROM_FILING_REASON})
+            continue
+
+        # The filing establishes a mature take-on and a positive base, but its gross outcome does not reconcile.
+        # Keep it outside the primary sample without falsely calling the underlying cohort structurally absent.
+        if (filing_eligibility.get(filing_key) or {}).get("kind") == ELIGIBLE_UNAVAILABLE_TAKEON:
+            counters["skipped"] += 1
+            counters["eligible_unavailable_takeon_skipped"] += 1
+            classification_log.append({"file": fname, "status": "SKIPPED",
+                                       "reason": ELIGIBLE_UNAVAILABLE_TAKEON_REASON})
             continue
 
         # A.2.2 Model resolution. The corpus test is on the extraction's validation flag and the percentage, not on
@@ -9981,6 +9994,7 @@ def main():
         "no_mature_cohort_skipped": counters["no_mature_cohort_skipped"],
         # P-10: what the filings show about records whose models read no usable figure
         "first_year_from_filing_skipped": counters["first_year_from_filing_skipped"],
+        "eligible_unavailable_takeon_skipped": counters["eligible_unavailable_takeon_skipped"],
         "stated_basis_from_filing": counters["stated_basis_from_filing"],
         "provision_movement_unusable": counters["provision_movement_unusable"],
         "unreconciled_triangle_unusable": counters["unreconciled_triangle_unusable"],

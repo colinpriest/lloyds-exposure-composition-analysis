@@ -299,7 +299,7 @@ def _stress_fit(records, dispositions, S, R, H, year, ritc, calibration,
         R_aug = np.concatenate([R, R_missing])
         H_aug = np.concatenate([H, H_missing])
         year_aug = np.concatenate([year, year_missing])
-        ritc_aug = np.concatenate([ritc, np.zeros(len(records))])
+        ritc_aug = np.concatenate([ritc, ritc_flag([row["file"] for row in records]).astype(float)])
         years_aug = np.sort(np.unique(year_aug))
         yidx_aug = np.searchsorted(years_aug, year_aug)
         stress["by_c"][str(c)] = fit(
