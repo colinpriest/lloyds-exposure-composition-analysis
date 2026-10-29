@@ -6,20 +6,21 @@ it, the filing's disclosed prior-year movement, of unestablished cohort partitio
 otherwise (check_cohort_scope.py counts the two). The rebasing below matches the
 DENOMINATOR to a mature-reserve proxy; it does not establish that the numerator is
 mature, so it is a mixed-scope denominator sensitivity, not a matched-cohort refit
-(round 55, M01). With phi = R_mature / R_total (build_maturity_share.py),
+(round 55, M01). The identity with the *true* mature reserve share q is
 
-    S = phi * (M / R_mature),
+    S = q * (M / R_mature), where q = R_mature / R_total.
 
-so a systematic relationship between phi and reserve size would put a mechanical size
-gradient into S that the pooling exponent would absorb as diversification.
+The calculated phi is a proxy for q, based on estimated ultimate claims and an assumed
+run-off curve, not a measurement of opening mature reserves. A relationship between q
+and reserve size could induce a mechanical size gradient in S. The proxy sensitivity
+can explore this possibility; it cannot establish or eliminate the confound.
 
 Three things are reported.
 
   (a) ASSOCIATION.  Spearman / Pearson correlation of phi with log R, for every run-off
-      weighting delta.  If phi is unrelated to size there is no engine for the confound.
+      weighting delta. A weak proxy association does not rule out an association in q.
 
-  (b) MATCHED REFIT.  Refit the headline two-regime model on a mature-matched reserve
-      population:
+  (b) MIXED-SCOPE DENOMINATOR REFIT. Refit using a proxy-rebased reserve denominator:
         V2 "mixed-scope denominator"  severity M/R_mat with size covariate R_mat = phi*R  (primary)
         V1 "severity only"  severity M/R_mat with size covariate R (secondary)
       A baseline refit on the SAME subsample with the original S isolates the denominator
@@ -231,8 +232,9 @@ def main():
         "phi_guard_scope": "every delta: a refit record has phi >= phi_min_guard at each delta",
         "phi_guard_by_delta": guard_by_delta,
         "deltas": tags,
-        "delta_meaning": ("phi(delta) = mature reserve share with unpaid weight "
-                          "exp(-age/delta); delta=inf is the pure ultimate share"),
+        "delta_meaning": ("phi(delta) is a proxy for the mature opening reserve share, "
+                          "calculated from estimated ultimate claims with assumed unpaid "
+                          "weight exp(-age/delta); delta=inf is the pure ultimate share"),
         "association_phi_vs_size": assoc,
         "stratification": strat,
         "refits": fits,
