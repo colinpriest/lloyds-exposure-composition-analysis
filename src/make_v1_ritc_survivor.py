@@ -81,12 +81,21 @@ CALLOUT_CANDIDATES = tuple(sorted(ANNOTATION_CANDIDATES, key=lambda p: (p[0] - C
 
 
 def survivor(x):
-    """Empirical survivor on the adverse (positive) side: sorted x>0 and P(S>=x)."""
-    xp = np.sort(x[x > 0])[::-1]
-    n = len(x)
-    # exceedance prob over the FULL sample (so levels match VaR quantiles)
-    p = (np.arange(1, len(xp) + 1)) / n
-    return xp[::-1], p[::-1]
+    """Distinct positive support values and their full-sample strict survivor P(S > x).
+
+    A strict empirical survivor is right-continuous: tied observations all leave the
+    tail at their common value.  The maximum therefore has survival zero, which is
+    off the logarithmic axis; its endpoint still completes the preceding step.
+    """
+    sample = np.asarray(x, dtype=float)
+    if sample.ndim != 1 or not np.isfinite(sample).all():
+        raise ValueError("survivor expects a finite one-dimensional sample")
+    positive = np.unique(sample[sample > 0])
+    if not len(positive):
+        return positive, np.empty(0, dtype=float)
+    ordered = np.sort(sample)
+    probabilities = (len(sample) - np.searchsorted(ordered, positive, side="right")) / len(sample)
+    return positive, probabilities
 
 
 def step_vertices(xs, ps):
@@ -191,8 +200,12 @@ def build_figure(raw, transferred, sqrt_r, mode, printed=None, target_gbp_m=None
         curves.append(step_vertices(xs, ps))
         for a, mark in ((0.99, "o"), (0.995, "s")):
             v = var_q(arr, a)
-            ax.plot(v, 1 - a, mark, color=col, ms=5, zorder=5)
-            marker_pts.append((v, 1 - a))
+            # The empirical strict survivor at VaR need not equal the nominal tail
+            # probability, especially when there are ties or a finite donor pool.
+            exceedance = float(np.count_nonzero(arr > v) / len(arr))
+            if exceedance > 0:  # zero cannot be plotted on the logarithmic axis
+                ax.plot(v, exceedance, mark, color=col, ms=5, zorder=5)
+                marker_pts.append((v, exceedance))
     # the markers' key, in the legend: it was the title's fourth line (the final review of 14 October 2026, P30)
     for mark, txt in (("o", "VaR 99% (each curve)"), ("s", "VaR 99.5% (each curve)")):
         ax.plot([], [], mark, color="#6c757d", ms=5, label=txt)
