@@ -270,7 +270,7 @@ def test_the_appendix_reports_the_intersection_and_no_coverage_for_years_without
     for y, v in lists.items():
         n = sum(1 for s, yy in keys if yy == y and s in v)
         assert "%d/%d (%.1f%%) |" % (n, len(v), 100.0 * n / len(v)) in b5, y
-    # 2014-2019: a published count and no list, so the row carries no share
+    # 2014-2019: counts but no membership list in the assembled input, so no share is reported
     for y in range(2014, 2020):
         row = next(l for l in b5.splitlines() if l.startswith("| %d | %d |" % (y, market_active.MARKET_AR[y])))
         assert row.endswith("| not checkable | not computed |"), row

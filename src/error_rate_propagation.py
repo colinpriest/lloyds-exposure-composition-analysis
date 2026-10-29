@@ -2,7 +2,7 @@
 
 The study (results/extraction_error_rate/, an evidence archive; protocol fifth amendment, point 5, and
 tenth amendment) simulated the errors its samples had not found onto Vignette 1's VaR99.5: an error rate
-drawn from the posterior of its sampled records, a count of the working-sample records nobody read, and
+drawn from the posterior of its sampled records, a count of the working-sample records classified as unread, and
 each chosen record's severity changed under three error models -- its sign reversed ("sign"), replaced by
 another record's ("replace"), or shifted by a shift drawn from the errors confirmed before repair
 ("shift"). It ran once, on analysis commit 5b31803 and a 685-record fit, and the manuscript then said it
@@ -23,8 +23,10 @@ gamma-free fit), the labelled sensitivity, each at its own fit's posterior means
 generator afresh, so they see the same records, replacements, shifts and signs.
 
 The rate is draw four's (the fourth protocol, results/extraction_error_rate/protocol/error-rate-protocol-fourth.md,
-"What happens to the propagation"): its Jeffreys posterior under the clarified rule, the rate among the records
-nobody had read, applied to the records nobody has read. Draw four's 100 records and its census stratum's 7 join the
+"What happens to the propagation"): its Jeffreys posterior under the clarified rule, applied to the records
+classified as unread in the current simulation frame. This classification is not a guarantee that each adopted
+figure outside the frame was directly read: for mature-cohort replacements, qualifying source readings cover the
+record even if the adopted figure was derived from their cells. Draw four's 100 records and its census stratum's 7 join the
 read set, so the unread records fall from the 400 of its frame (fewer as records leave the working sample). The
 pooled rate of the second and third samples, Beta(8.5, 154.5), is run beside it as a sensitivity, with the same seed
 and replicates (`pooled_rate_sensitivity`); nothing else changes. Draw four's errors are listed with whether a
@@ -293,7 +295,12 @@ def changed_figures(exposure, pool_stems):
 
 
 def register_read(changed):
-    """The changed records the register's readings read (at least one reading of kind MATURE_READING_KINDS)."""
+    """Classify changed records as covered if the register has a qualifying source reading.
+
+    This simulation-frame rule does not compare the reading's figure with the adopted figure. It includes
+    figures derived from read source cells, including 1274/2016 and 3330/2017. It differs from
+    register_readings_of, which asks whether a reading directly gives the adopted figure for reconciliation.
+    """
     register = load(MATURE_REGISTER)
     return {s for s in changed
             if any(r.get("kind") in MATURE_READING_KINDS for r in register[s.replace("syndicate_", "")].get("readings", []))}
@@ -401,10 +408,14 @@ def scored_changes(verdicts, pool_stems, current, rows):
 
 
 def primary_frame(pool_stems, read, changed, read_by_register):
-    """Which working-sample records are read against the primary: a record is read when a reading checked the figure the
-    primary adopts. A record whose figure changed after its reading (`changed`: the primary's mature-cohort figures and
-    any sampled figure a repair moved) is read only through a reading of its current figure (`read_by_register`); every
-    other record keeps the study's read set."""
+    """Apply the existing simulation-frame classification to the working sample.
+
+    Unchanged records retain the study's read-set classification. A changed record is covered if it appears
+    in `read_by_register`; the caller combines qualifying mature-register source readings (register_read) with
+    direct evidence for sampled figures repaired on other routes. The mature-register rule does not require
+    the source reading to give the adopted figure directly. This classification is distinct from a verdict
+    on the current figure in restated_population, which requires direct evidence for changed figures.
+    """
     pool = list(pool_stems)
     old_unread = [s for s in pool if s not in read]
     now_read = {s for s in pool if (s in read and s not in changed) or s in read_by_register}
@@ -412,10 +423,11 @@ def primary_frame(pool_stems, read, changed, read_by_register):
     return {
         "unread": unread,
         "summary": {
-            "rule": ("read against the primary: the study's read set less the records whose figure changed after their "
-                     "reading (the primary's mature-cohort figures, and every sampled figure a repair moved), plus those "
-                     "a reading of the current figure covers (the mature-cohort readings of kind %s, a sampled record's "
-                     "own recomputation of the current figure, or the confirmed-figure register's readings)"
+            "rule": ("simulation-frame classification: the study's read set less records whose adopted figure changed "
+                     "after reading, plus changed records covered by a mature-cohort source reading of kind %s "
+                     "(including figures derived from read source cells), or by a sampled record's direct recomputation "
+                     "or confirmed-figure register reading of its current figure. Mature source-reading coverage does "
+                     "not require a reading to give the adopted figure directly; current-figure reconciliation does."
                      % (" or ".join(MATURE_READING_KINDS))),
             "n_working_sample": len(pool),
             "n_unread_by_the_study_read_set_alone": len(old_unread),
@@ -438,8 +450,8 @@ def restated_population(verdicts, pool_stems, current, rows, mature=None, confir
 
     The counts describe these records as they now stand. They are not a rate for the current working sample: the
     records are what remains of a draw from an earlier population, and an error the readings found was repaired because
-    they found it, so the reconciled counts understate the rate among records nobody read. The rate applied to those is
-    the protocol's (the propagation's), unchanged."""
+    they found it, so the reconciled counts understate the rate among records that were not read in that study.
+    The simulation applies the protocol's rate to its separately classified unread frame, unchanged."""
     mature = load(MATURE_REGISTER) if mature is None else mature
     confirmed = load(CONFIRMED_REGISTER) if confirmed is None else confirmed
     recon, counts, evidence = [], {"error": 0, "correct": 0, "undeterminable": 0}, {"own_reading": 0, "register": 0}
@@ -603,9 +615,8 @@ def main():
     populations = {"draw_four": (result["clarified"]["final_verdicts"], first_readings(FIRST_READINGS["draw_four"])),
                    "pooled": (load(POOLED)["final_verdicts"]["A"], first_readings(FIRST_READINGS["pooled"]))}
     restated = {name: restated_population(v, pool_stems, current, rows) for name, (v, rows) in populations.items()}
-    # the unread records against the primary: a record whose figure changed after its reading counts as read only
-    # through a reading of its current figure -- the mature-cohort readings, or, for a sampled figure a repair moved,
-    # its own reading's recomputation or the confirmed-figure register's readings (primary_frame)
+    # Existing simulation-frame classification: mature-cohort source readings cover the changed record even if its
+    # adopted figure is derived; for sampled figures changed by other repairs use direct evidence (primary_frame).
     mature_changed = changed_figures(exposure, pool_stems)
     recon = [r for blk in restated.values() for r in blk["reconciliation"]]
     repaired = {r["stem"] for r in recon if r["changed"] and r["stem"] in inp["read"] and r["stem"] not in mature_changed}
@@ -691,8 +702,8 @@ def main():
         _fh.write(json.dumps(out, indent=1) + "\n")
     print("fit: commit %s, tree dirty %s, n=%d, loader run %s"
           % (fit["analysis_commit"], fit["tree_dirty_src_model_results"], fit["n_working_sample"], run_now))
-    print("unread %d of %d (by the study's read set alone %d; %d figures changed after their reading, %d of them read "
-          "at the current figure)" % (len(unread), len(S), frame["summary"]["n_unread_by_the_study_read_set_alone"],
+    print("classified unread %d of %d (by the study's read set alone %d; %d figures changed after their reading, "
+          "%d covered under the simulation-frame rule)" % (len(unread), len(S), frame["summary"]["n_unread_by_the_study_read_set_alone"],
                                       len(changed), frame["summary"]["n_figure_changed_read_by_the_register"]))
     for name, blk in out["rate_population_on_primary"].items():
         if name == "note":

@@ -1,16 +1,16 @@
 """Temporal correlation of the PYD-severity ratio across consecutive years, within
 syndicate (syndicate-year unit).
 
-Why it matters: the pooling likelihood treats a syndicate's yearly severities as
-conditionally independent given size/HHI (mu=0, no within-syndicate serial term). If
-S = PYD/reserves is strongly autocorrelated year-to-year within a syndicate, that
-independence is violated and the effective sample is smaller than n. This tests it.
+Why it matters: the pooling likelihood has no within-syndicate serial term. Lagged
+association in S = PYD/reserves and in the year-adjusted, base-scaled diagnostic can
+indicate dependence, but these summaries do not directly establish the likelihood's
+conditional dependence or determine an effective sample size.
 
 The alternative is POSITIVE persistence, so every test here is one-sided in that direction and each
 p-value is the rank of the observed statistic in the null the permutation actually draws. Until the
 frozen review of 25 September 2026 (M01) (a) instead reported the share of permutations whose
 statistic was further from ZERO than the observed one. That is not directed at positive persistence:
-demeaning within syndicate biases the lag-1 correlation down by about 1/(T-1), so this null is
+the observed within-syndicate permutation null is
 centred near -0.195 rather than at zero, and a negative observed value can sit high in it. It did.
 The published p = 0.963 was the rank of |-0.089| in |null|; the observed statistic sits in the upper
 3.7% of the null itself. Every null's own location is now reported beside its p-value, so the
@@ -41,16 +41,16 @@ Reports, on consecutive-year pairs (t, t+1) within each syndicate, de-meaned per
       syndicate's own observed variance moves the coefficient that reads the observed (a) from about
       0.075 to about 0.141, so heterogeneity matters to it. Both readings are recorded (frozen
       review of 25 September 2026, D01).
-  (f) the same directed test on the residuals of the ADOPTED MODEL rather than on raw severities:
-      z_it = S_it / sigma_it with sigma_it from adopted_model.sigma_numeric, which is what the
-      likelihood's conditional independence given size, HHI, regime and reporting year actually
-      claims. Permuting unstandardised severities does not test that. Two nulls, because the
-      reporting-year shock is common to a year's whole cross-section:
+  (f) the same directed test on base-scaled severities rather than on raw severities:
+      z_it = S_it / sigma_numeric(R,H,ritc) at the published posterior means. This scale has the
+      size and RITC multiplier, with concentration fixed at zero, but not the fitted reporting-year factor, so z is not
+      the full model's conditional residual. Two nulls, because a year shock may affect a whole cross-section:
         * a calendar-year BLOCK permutation, which relabels the eleven reporting years by one
           permutation so each year's cross-section moves whole and only temporal adjacency is
-          destroyed -- the null for serial dependence GIVEN the year;
+          destroyed, so year-block structure and serial order cannot be separated;
         * a within-syndicate permutation after the per-year location and scale are taken out of the
-          cross-section, which conditions on the year explicitly instead.
+          cross-section. This empirical adjustment does not guarantee removal of every systemic effect.
+      Each adjusted series is then demeaned within syndicate before consecutive pairs are formed.
       Spearman leads here: the fitted regimes are Student-t with nu about 5, where a rank statistic
       is the better-behaved one (frozen review of 25 September 2026, M01).
   (g) the calibration of those nulls on these year sets, because a p-value is only worth printing if
@@ -98,8 +98,8 @@ HLO, HCE = 0.01, 1.0
 #: if its null is the right one, and the WITHIN-SYNDICATE permutation is not when a reporting-year
 #: component is present: permuting a syndicate's own years destroys its alignment with the calendar,
 #: so the year component contributes to the observed statistic and not to the null, and the test
-#: rejects whether or not anything is serially dependent. Removing each year's location and scale
-#: from the cross-section first repairs it. So the script measures the size and the power of both,
+#: rejects whether or not anything is serially dependent. The empirical year adjustment improves it
+#: under the stated simulation design, but does not establish general calibration. The script measures both,
 #: under a design with a common year component and no within-syndicate dynamics (the null) and one
 #: that adds them (the alternative), rather than asserting which null to trust.
 CAL_REPS, CAL_PERMS, CAL_SEED, CAL_ALPHA = 20, 200, 20260925, 0.05
@@ -300,9 +300,8 @@ def null_location(null):
     return {"mean": float(null.mean()), "median": float(np.median(null)), "sd": float(null.std()),
             "pct2_5": float(q[0]), "pct97_5": float(q[2]),
             "share_below_zero": float((null < 0).mean()), "draws": int(null.size),
-            "note": "demeaning within syndicate biases the pooled lag-1 correlation down by about 1/(T-1), so a "
-                    "null centred well below zero is expected here and a p-value measured as distance from zero "
-                    "is not a test of positive persistence."}
+            "note": "The permutation null is specific to the stated scheme; its location is recorded above. "
+                    "A distance from zero is not in general a directed test of positive persistence."}
 
 
 def within_syndicate_null(series, b, rng, stat):
@@ -317,9 +316,9 @@ def within_syndicate_null(series, b, rng, stat):
 def year_block_null(vals, syn, yr, b, rng, stat, min_obs=3):
     """Draws of `stat` under a permutation of the CALENDAR-YEAR LABELS, one permutation for all syndicates.
 
-    Each reporting year's whole cross-section keeps its members and its values and moves to another year's place, so
-    the systemic year component -- the exp(s_t) shock the model carries, and any common movement in a year -- is
-    left intact and only temporal adjacency is destroyed. This is the null for serial dependence GIVEN the year.
+    Each reporting year's cross-section keeps its members and values but moves to another year's place.
+    This rearranges the temporal order of the year blocks as well as each syndicate's serial order, so it
+    cannot distinguish a persistent common year component from within-syndicate dynamics.
     """
     years = np.array(sorted(set(np.asarray(yr).tolist())))
     out = []
@@ -334,9 +333,9 @@ def simulate_panel(series, year_rho, syn_rho, rng):
     """A panel on THESE syndicates' own year sets: a common reporting-year component with lag-1
     correlation `year_rho`, plus a per-syndicate AR(1) with lag-1 correlation `syn_rho`.
 
-    At syn_rho = 0 nothing is serially dependent WITHIN a syndicate, which is the null the pooling
-    likelihood's conditional independence asserts; the year component is still there, because it is
-    in the data and in the model (as exp(s_t)), and a null that cannot tolerate it is the wrong null.
+    At syn_rho = 0 the simulated syndicate-specific component has no serial dependence; the common
+    year component can still create serial association. This is one illustrative design, not a
+    complete representation of the fitted likelihood or a general validation of a permutation null.
     """
     years = sorted({int(y) for _s, (yy, _ss) in series.items() for y in yy})
     a = {}
@@ -362,8 +361,8 @@ def calibrate_nulls(series, reps=CAL_REPS, perms=CAL_PERMS, seed=CAL_SEED):
 
     Returns {design: {method: {null: rejection share}}} at CAL_ALPHA, one-sided for positive
     persistence, over `reps` simulated panels. `unadjusted` is the within-syndicate permutation the
-    published statistic used; `per_year_adjusted` takes each reporting year's location and scale out
-    of the cross-section before the same permutation.
+    published statistic used; `per_year_adjusted` uses each reporting year's empirical median and
+    robust scale before the same permutation. This is a check under the stated simulated designs.
 
     Both Pearson and Spearman, because the section leads with the rank statistic: calibrating one and
     reporting the other would leave the reported p-value's behaviour unmeasured, which is the defect
@@ -428,8 +427,8 @@ def pooled_lag1(series, method="pearson"):
 def per_year_adjusted(z, yr):
     """z with each reporting year's own median and robust scale removed from its cross-section.
 
-    The model's year shock is a multiplicative scale common to a year; a common movement in a year is a location.
-    Taking both out conditions on the year explicitly, so what survives is within-syndicate and not systemic.
+    This empirical adjustment subtracts the year median and divides by 1.4826 times its MAD (or 1 if zero).
+    It does not guarantee that every reporting-year or other systemic effect is removed.
     """
     out = np.array(z, dtype=float, copy=True)
     for t in sorted(set(np.asarray(yr).tolist())):
@@ -531,8 +530,8 @@ def main():
     # DEMEANED one? If there is, the contrast between them excludes nothing.
     ce_var, n_short = short_history_variance_reading(series, float(r1_raw_p), float(r1_p))
 
-    # (f) the same directed test on the adopted model's own residuals. sigma_it comes from
-    # adopted_model.sigma_numeric, so the residual is this model's and not a second scale typed here.
+    # (f) base-scaled severities use adopted_model.sigma_numeric without the fitted year factor;
+    # the empirical year adjustment and syndicate demeaning are applied separately.
     import adopted_model as AM
     S_m, R_m, H_m, yr_m, syn_m, ritc_m = AM.load_sample()
     if not (len(S_m) == len(S) and np.allclose(S_m, S) and np.array_equal(yr_m, yr)):
@@ -551,9 +550,9 @@ def main():
              "the year."),
             ("per_year_adjusted", z_year,
              "each reporting year's own median and robust scale removed from its cross-section first, then each "
-             "syndicate's years permuted. This is the test that conditions on the year; in (g)'s one small "
-             "illustrative design it is the better-behaved null. What it finds is within-syndicate and not the "
-             "systemic year component.")):
+             "syndicate's years permuted. The pooled lag statistic also demeans within syndicate. In (g)'s one "
+             "small illustrative design the adjusted null behaves better; this adjustment does not guarantee "
+             "removal of every systemic effect or directly establish conditional dependence.")):
         ser = series_by_synd(vec, syn_m, yr_m, min_obs=3)
         entry = {"note": note}
         for method in ("pearson", "spearman"):
@@ -601,12 +600,12 @@ def main():
                                "because this null is centred near the mean recorded in permutation_null and not "
                                "at zero. It is kept so the change is visible, and it is not to be read as a "
                                "p-value for dependence.",
-            "block_bootstrap_note": "the interval is for the demeaned STATISTIC, which is biased down by the "
-                                    "demeaning; it is not an interval for an underlying AR coefficient. "
+            "block_bootstrap_note": "the interval is for the demeaned STATISTIC, which demeaning can alter; "
+                                    "it is not an interval for an underlying AR coefficient. "
                                     "e_demeaning_benchmark maps the statistic onto one under stated assumptions."},
         "a_lag1_raw_level": {"pearson": float(r1_raw_p), "spearman": float(r1_raw_s),
-                             "note": "not de-meaned; carries the persistent per-syndicate level (sign), "
-                                     "i.e. the mu=0 boundary (check 6), and any serial component together. "
+                             "note": "not de-meaned; may reflect persistent between-syndicate levels and serial "
+                                     "dependence together. "
                                      "The demeaned statistic does not separate them: see "
                                      "e_demeaning_benchmark for how strong a level-free AR(1) could be and "
                                      "still read as (a)."},
@@ -616,21 +615,22 @@ def main():
                                     "binomial_p_vs_50pct": binom_p},
         "d_effective_sample": {"lag1_rho": float(rho),
                                "variance_inflation_1plusrho_over_1minusrho": vif_factor,
-                               "interpretation": "the factor is read off the DEMEANED statistic, which the "
-                                                 "demeaning biases down, so a value near 1 says nothing about "
-                                                 "whether dependence is present: under the correctly directed "
-                                                 "test in (a) and (f) it is. The factor is kept as the arithmetic "
+                               "interpretation": "the factor is read off the DEMEANED statistic, which estimated "
+                                                 "syndicate means can alter, so a value near 1 says nothing about "
+                                                 "whether dependence is present: the directed statistics in (a) "
+                                                 "and (f) are described separately. The factor is kept as the arithmetic "
                                                  "of a stationary finite-variance AR(1) at that rho and nothing "
                                                  "more; the consequence for the fit is measured in "
-                                                 "check_serial_sensitivity.py, and the persistent syndicate "
-                                                 "intercept is tested directly in "
+                                                 "check_serial_sensitivity.py, and an alternative syndicate "
+                                                 "intercept model is fitted in "
                                                  "check_syndicate_random_effect.py."},
         "f_conditional_on_adopted_model": {
-            "residual": "z_it = S_it / sigma_it, sigma_it from adopted_model.sigma_numeric at the published "
-                        "posterior means: the conditional scale in size, HHI and regime that the likelihood "
-                        "assumes the severities are independent given.",
-            "why": "permuting unstandardised severities tests exchangeability of the raw ratios, not the fitted "
-                   "model's conditional independence. This does (frozen review of 25 September 2026, M01).",
+            "residual": "z_it = S_it / sigma_numeric(R,H,ritc) at published posterior means, including the "
+                        "size and RITC scale multiplier, concentration fixed at zero, but not the fitted year factor. It is "
+                        "base-scaled severity, not the full conditional residual.",
+            "why": "the directed test uses base-scaled severities and empirical year medians and robust scales, "
+                   "then demeans within syndicate before forming lag pairs; it is a diagnostic, not a direct "
+                   "proof of the likelihood's conditional dependence.",
             "primary": ("spearman under per_year_adjusted. The fitted regimes are Student-t with nu about 5, where "
                         "a rank statistic is the better-behaved one. Under (g)'s single illustrative design, the "
                         "per-year-adjusted test rejects %d/%d null panels and %d/%d alternative panels; those small "
@@ -721,7 +721,7 @@ def main():
             "note": "What (a) would read, in the population, under a stationary AR(1) in calendar time with that "
                     "lag-1 correlation and no persistent per-syndicate level, after the same demeaning, grouped "
                     "as (a) groups: over a syndicate's whole series, keeping the consecutive-year pairs. "
-                    "Demeaning biases the demeaned lag-1 correlation downward, so the raw-against-demeaned "
+                    "Under this stationary AR(1) benchmark demeaning lowers the lag-1 correlation; the raw-against-demeaned "
                     "contrast does not identify the level on its own (frozen review of 24 September 2026, D02). "
                     "monte_carlo_check draws AR(1) paths on the real year sets and pools them through lag_pairs, "
                     "so the closed form is measured and not asserted. What the contrast does NOT do is exclude "
@@ -739,7 +739,7 @@ def main():
     print("(b) lag-2 demeaned: Pearson %.3f, Spearman %.3f" % (r2_p, r2_s))
     print("(c) direction persistence: %.1f%% same-sign (%d pairs), binomial p vs 50pct=%.3f"
           % (100 * share_same, len(same_sign), binom_p))
-    print("(d) lag-1 demeaned rho=%.3f -> AR(1) variance-inflation arithmetic %.3f (read off a downward-biased "
+    print("(d) lag-1 demeaned rho=%.3f -> AR(1) variance-inflation arithmetic %.3f (read off the demeaned "
           "statistic; not a detection either way)" % (rho, vif_factor))
     for tag, entry in cond.items():
         print("(f) %-24s Pearson obs %+.4f %s (null %+.3f) | Spearman obs %+.4f %s (null %+.3f)"

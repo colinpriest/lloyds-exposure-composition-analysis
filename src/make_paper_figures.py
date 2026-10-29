@@ -149,8 +149,8 @@ def coverage_figure(yr, corpus_by_year, syn=None):
     2014-2016 bars (review of 29 September 2026, M-16). Returns (fig, ax, legend).
 
     The bars are counts. The line is the share of each year's officially listed syndicates that have a working-sample
-    record, drawn for 2020-2024 only: for 2014-2019 Lloyd's publishes counts, not lists, so membership cannot be
-    checked and sample over active would be a ratio of two different populations, not a coverage."""
+    record, drawn for 2020-2024 only: the assembled 2014-2019 inputs contain counts but no membership lists, so
+    membership cannot be checked from them and sample over active is a ratio of different populations, not coverage."""
     years = list(range(2014, 2025))
     samp = {y: int((yr == y).sum()) for y in years}
     corp = corpus_by_year or samp

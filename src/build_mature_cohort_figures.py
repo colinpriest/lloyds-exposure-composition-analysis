@@ -353,12 +353,13 @@ CORRECTIONS = {
                   "movement works the wrong way to explain it; the table's implied incurred, -990, has the opposite sign "
                   "to the accounts' +559 (p12, p28) and to the report's own 'strengthening' narrative (p7)"),
         "derivation": ("DERIVED by the decision of the Claude analysis session, 26 October 2026; not a cohort figure either "
-                       "reader prints. The whole gross reserve (11,701) sits in the two mature columns (2011 8,862; 2012 "
-                       "2,839) and the year's own new business is negligible (gross written premium 104), so the "
-                       "year's gross claims incurred is M: closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = "
+                       "reader prints. The closing gross reserve (11,701) sits in the two mature columns (2011 8,862; "
+                       "2012 2,839). Gross written premium is 104, but this does not bound current-year claims. The "
+                       "year's gross claims incurred is used as an approximation to M: closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = "
                        "+559 (GBP 000), i.e. +0.559m GBP, the technical account's gross claims incurred (p12, p28). Both "
                        "readers (L4, Z12) quote every cell; each reader's own figure is kept as given (-0.990m as "
-                       "printed). No cohort split is printed (the 2016 report is not in the corpus). K4 stands on the "
+                       "printed). The roll-forward may include current-year claims, whose amount the available cohort "
+                       "split does not establish. No cohort split is printed (the 2016 report is not in the corpus). K4 stands on the "
                        "printed figure"),
         "cells_used": ["14,059", "559", "2,270", "647", "11,701"],
         "roll_forward": {"opening": "14,059", "incurred": "559", "paid": "2,270", "fx": "647", "closing": "11,701"},
@@ -1058,8 +1059,9 @@ def correction_entry(entry, key, tri, year, figure_printed, details, model, prin
             "derived_figure_m": figure, "derived_by": SESSION_26_OCT, "method": "roll_forward",
             "cells_used": list(c["cells_used"]), "roll_forward": dict(c["roll_forward"]),
             "method_basis": ("closing gross provision - opening gross provision + gross claims paid + exchange movement = "
-                             "the year's gross claims incurred, which is M because the whole gross reserve sits in the "
-                             "mature columns (GBP 000: 11,701 - 14,059 + 2,270 + 647 = 559)")})
+                             "the year's gross claims incurred (GBP 000: 11,701 - 14,059 + 2,270 + 647 = 559), "
+                             "used as an approximation to M; it may include current-year claims whose amount is not "
+                             "established by the available cohort split")})
     elif derived:
         lows = [r["derived_parts"]["range_other_factors_m"] for r in reads]
         if any(x != lows[0] for x in lows):
@@ -1251,13 +1253,13 @@ DEPTH_CELLS["1274_2016"] = ("000", "USD", "cumulative", 41, None, [
 DEPTH_2012_BASIS = ("DERIVED by the decision of the Claude analysis session, 23 October 2026 (after review 8): the 2015 "
                     "report's 2012 cell 178,987 at the 2012 column's own exchange factor f = 129,350 / 131,423 = 0.98423, "
                     "i.e. 176,163.7 in place of the misprinted 141,355; term = 185,418 - 176,163.7")
-#: 3330/2017 (the accounts' roll-forward, DERIVED): one aggregate term for the two mature columns (2011 and 2012), which hold
-#: the whole gross reserve; no cohort split is printed (the 2016 report is not in the corpus)
+#: 3330/2017 (the accounts' roll-forward, DERIVED): an aggregate approximation to the two mature columns (2011 and 2012),
+#: with uncertain current-year claims; no cohort split is printed (the 2016 report is not in the corpus)
 DEPTH_3330_2017 = {"u": [2011, 2012], "opening": "14,059", "incurred": "559", "paid": "2,270", "fx": "647",
                    "closing": "11,701", "term": 559.0, "derived": True,
                    "basis": ("closing 11,701 - opening 14,059 + paid 2,270 + exchange 647 = +559 (the technical account's "
-                             "gross claims incurred): the whole gross reserve sits in the 2011 and 2012 columns, so "
-                             "this is their step; no cohort split is printed")}
+                             "gross claims incurred), used as an approximation to the 2011 and 2012 cohorts' step; "
+                             "it may include current-year claims, whose amount the available cohort split does not establish")}
 
 
 def cohort_cells_block(key):
@@ -1504,13 +1506,15 @@ PURPOSE = (
     "and 4 of the round-5 decision rules of 23 October 2026: 318/2024, 1274/2016, 2232/2020 and 4242/2022; and, from 26 "
     "October 2026, the source-history census's 3330/2018 (rule 3) and 3330/2017 (the accounts' roll-forward, DERIVED); "
     "1609/2024's rule-4 correction was REVERSED on 26 October 2026 and is recorded under _reversed_corrections) "
-    "replaces the printed table's own figure, the adopted one, with the corrected figure its readings give (archived "
+    "replaces the printed table's own figure, the adopted one, with a correction supported by source readings (archived "
     "in round5/readings/); its displaced.by is 'printed_table_error' (a body transposed against its labels, a "
     "misprinted cell) or 'previous_report_base' (the year t-1 report's printed cells as the base: 2232/2020 and "
     "4242/2022). 1274/2016's corrected figure is DERIVED (correction.derived_figure_m, decision of the Claude analysis "
     "session of 23 October 2026 after review 8), not given by either reader: each reading keeps its own figure_m and "
     "carries derived_figure_m and the cells it quotes (cells_quoted), and the entry is allowed only while both readers "
-    "quote every cell in correction.cells_used and the derivation is recorded (independent_reading_gaps).")
+    "quote every cell in correction.cells_used and the derivation is recorded (independent_reading_gaps). 3330/2017 "
+    "is also derived from cells, not directly read; its roll-forward may include current-year claims, whose amount "
+    "the available cohort split does not establish.")
 
 
 def dumps(reg):

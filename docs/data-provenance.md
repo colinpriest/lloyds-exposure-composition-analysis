@@ -17,7 +17,7 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Corpus-wide run-off register | `pdf_extraction/audit/runoff_corpus_register.json` | yes | what each filing says about the syndicate's own run-off, year by year (page, file hash, quote); a year whose filing states run-off for the whole year, outside the assumed-business regime, is a run-off year, with or without a development figure (the author's decision of 1 October 2026) |
 | Extraction audit | `pdf_extraction/audit/` | yes | per-filing extraction QA |
 | Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
-| Lloyd's lists workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | the syndicates on Lloyd's lists by year, 2014-2024 (`src/market_active.py` holds the official active lists to it) |
+| Lloyd's syndicate workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | open-year report records and annual count summaries; its 2020–2024 official active-list sheets are also held in the analysis's `data/market_active_syndicates.json` |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
 | Portfolio-transfer scan | `pdf_extraction/portfolio_transfer_scan.json` | yes | not read here: kept equal to the extraction's copy so that the two repositories hold one version of it |
 | Raw PDFs | extraction repository, `syndicate_reports/pdfs/` (PDF or HTML) | **no** (1,065 files, not committed) | source documents, not redistributed |
@@ -205,8 +205,9 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   -0.185m USD (-11.123m at t-3), the reversal is recorded under `_reversed_corrections` and the earlier readings are
   kept. The source-history census (rule 8, below) adds 3330/2018 at +1.094m GBP (rule 3: the 2017 report's printed
   end-2017 cells as the base; the 2018 table's own are 2,478 too high) and 3330/2017 at +0.559m GBP (`accounts_roll_forward`,
-  DERIVED: the year's gross claims incurred from the opening and closing gross provision, paid and exchange line, the
-  whole reserve being in the two mature columns). 1274/2016's
+  DERIVED: the year's gross claims incurred from the opening and closing gross provision, paid and exchange line;
+  the roll-forward may include current-year claims, whose amount the available cohort split does not establish, so it
+  does not establish an exact mature-cohort movement). 1274/2016's
   figure is DERIVED (a misprinted 2012 cell replaced by the 2015 report's at the 2012 column's own paid factor, 129,350 /
   131,423 = 0.98423; the other columns' factors give +21.8m to +25.7m): neither reader gives it, so it is stored as
   `correction.derived_figure_m` apart from each reader's own `figure_m` (+57.503m as printed), allowed only while both
@@ -394,8 +395,9 @@ separate broader-potential-target stress that assumes all 20 unresolved cases el
 
 ## 3. Extraction method (as documented by the source project)
 
-Each report is extracted independently by **two** LLMs — **Gemini 2.5 Flash** and **GPT-5
-Mini** — and reconciled; `pdf_extraction/audit/` records per-filing agreement/QA. The RITC scan
+The extraction design uses **two** LLMs — **Gemini 2.5 Flash** and **GPT-5 Mini** —
+and reconciles their readings where available; the models were not run on every filing,
+as the disposition above explains. `pdf_extraction/audit/` records per-filing agreement/QA. The RITC scan
 is a targeted pass over the related-parties / RITC sections producing the `ritc_scan.json`
 flags (evidence snippet, section, page, and a strong/weak confidence). A second deterministic
 scan (`scripts/portfolio_transfer_scanner.py`) looks for loss portfolio transfers, novations and

@@ -43,7 +43,7 @@ def test_the_outbound_docstring_names_every_confirmed_record_outside_the_sample(
 
 def test_the_coverage_lines_generate_the_intersection_and_the_retrieval_range():
     """The sample's share of the listed syndicate-years is an intersection with the 2020-2024 lists; a retrieval total
-    is not a membership check, and 2014-2019 (a published count, no list) carries no percentage."""
+    is not a membership check, and 2014-2019 (counts but no list in the assembled input) carries no percentage."""
     ex = _exposure()
     text = " ".join(" ".join(bcr.coverage_lines(ex)).split())
     assert "~" not in text                     # "~47 %" was the old dataset's ratio of unlike populations

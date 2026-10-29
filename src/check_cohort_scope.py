@@ -1,17 +1,18 @@
 """Check (referee, 7 September 2026, M02; the owner's decision of 22 October 2026): the numerator's cohort coverage,
 the primary outcome beside the 672-record sensitivity.
 
-The manuscript defines every numerator as the sum of ultimate-estimate changes over underwriting years u <= t-2
-(Equation 1). That restriction is enforced by construction only where the figure came from a triangle route, which
-reads the development diagonal with the two most recent underwriting years excluded. Where the figure is the movement
+The target numerator is the sum of ultimate-estimate changes over underwriting years u <= t-2 (Equation 1). A
+triangle route normally reads the development diagonal with the two most recent underwriting years excluded, but a
+route or mature-enforced classification is not proof of a figure's exact cohort scope: 3330/2017 uses an accounts
+roll-forward that may include current-year claims, whose amount the available cohort split does not establish. Where the figure is the movement
 the filing discloses for "prior years" (the provisions note, a model's reading), the filing does not partition by
 cohort, so the figure may include u = t-1. The review's example was 780/2016.
 
-Until 22 October 2026 the working sample was the extraction's precedence construction (672 records): 571 triangle
-figures and 101 disclosed movements, two sign-only precedence rules having put a broader figure in the place of a
+Until 22 October 2026 the working sample was the extraction's precedence construction (672 records): 571 classified
+as triangle-sourced and 101 as disclosed movements, two sign-only precedence rules having put a broader figure in the place of a
 printed gross triangle's for 61 of them. This script refitted the adopted model on the 571 and reported the subset's
-stresses. The owner then decided (option c) that the consistently scoped sample is the primary: every figure is the
-mature-cohort movement (data/mature_cohort_figures.json; run_analysis.ANALYSIS_CONFIG["outcome"] "mature_cohort"), and
+stresses. The owner then chose (option c) the mature-cohort construction as primary
+(data/mature_cohort_figures.json; run_analysis.ANALYSIS_CONFIG["outcome"] "mature_cohort"), and
 the 672 construction stays reproducible as a sensitivity (outcome "precedence_672"). So this script now reports the
 two side by side: the primary is the headline (model/exposure_results.json, its fit and its vignette record), and the
 sensitivity is the 672 construction, loaded in memory by run_analysis.load_and_classify("precedence_672") (no second
@@ -19,7 +20,8 @@ exposure_results.json), refitted with the headline's model and settings, and tra
 
 The record keeps the keys the paper reads with their meaning: n_gross_sample, n_mature_enforced, n_disclosed_prior_year,
 share_enforced and n_syndicates_enforced describe the cohort coverage of the 672 construction (571 and 101 of 672), and
-"headline" is the headline fit. The primary's own counts are under "primary" (every record mature-enforced, checked),
+"headline" is the headline fit. The primary's own counts are under "primary" (every record classified mature-enforced;
+that label is not independent confirmation of cohort scope),
 the two samples' membership under "membership", the 672 refit under "sensitivity_672_fit" (was enforced_subset_fit),
 and the vignettes under vignettes.precedence_672 (was vignettes.triangle_only), with the same two centre-only legs (the
 headline fit on the 672 donors: the pool alone; the 672 fit on the headline's donors: the posterior alone), the
@@ -483,6 +485,27 @@ def primary_fit_unrounded(names=VARS):
     return out
 
 
+def scope_notes():
+    """Explanatory notes, shared by a full refit and an explicit metadata refresh."""
+    return {
+        "purpose": ("the cohort classifications of the numerators: the primary mature-cohort construction "
+                    "(the owner's decision of 22 October 2026) beside the 672 construction (the extraction's "
+                    "precedence rules), refitted and transferred as a sensitivity; classifications are not proof "
+                    "of every figure's exact cohort scope"),
+        "estimand_note": ("a triangle route ordinarily computes the sum of ultimate-estimate changes over u <= t-2; "
+                          "3330/2017 uses an accounts roll-forward that may include current-year claims, whose amount "
+                          "the available cohort split does not establish. A "
+                          "disclosed prior-year movement is whatever the filing reports for prior years and is not "
+                          "partitioned by cohort, so the restriction is not established for those records"),
+        "count_note": ("n_gross_sample, n_mature_enforced, n_disclosed_prior_year, share_enforced and "
+                       "n_syndicates_enforced describe the 672 construction (the working sample before the owner's "
+                       "decision of 22 October 2026), as they always have; the primary's counts are under 'primary'. "
+                       "For the 672 construction n_mature_enforced counts figures classified as triangle-sourced: the route field the "
+                       "extraction writes, read as the basis rule reads it, or, for a block from before that field, a "
+                       "triangle's override annotation (the review of 2 October 2026, M-2)"),
+    }
+
+
 def main():
     primary = load()
     off = [key_of(o) for o in primary if o.get("pyd_cohort_scope") != ENFORCED]
@@ -492,19 +515,7 @@ def main():
                          % (len(off), ", ".join(off[:5])))
     sens_records, sensitivity = load_sensitivity()
     cov672 = coverage(sensitivity)
-    out = {
-        "purpose": ("the cohort coverage of the numerators: the primary outcome (every figure the mature-cohort "
-                    "movement over u <= t-2; the owner's decision of 22 October 2026) beside the 672 construction (the "
-                    "extraction's precedence rules), refitted and transferred as a sensitivity"),
-        "estimand_note": ("a triangle route computes the sum of ultimate-estimate changes over u <= t-2 directly; a "
-                          "disclosed prior-year movement is whatever the filing reports for prior years and is not "
-                          "partitioned by cohort, so the restriction is not established for those records"),
-        "count_note": ("n_gross_sample, n_mature_enforced, n_disclosed_prior_year, share_enforced and "
-                       "n_syndicates_enforced describe the 672 construction (the working sample before the owner's "
-                       "decision of 22 October 2026), as they always have; the primary's counts are under 'primary'. "
-                       "n_mature_enforced counts the figures whose recorded route is a triangle: the route field the "
-                       "extraction writes, read as the basis rule reads it, or, for a block from before that field, a "
-                       "triangle's override annotation (the review of 2 October 2026, M-2)"),
+    out = {**scope_notes(),
         "n_gross_sample": cov672["n_gross_sample"],
         "n_mature_enforced": cov672["n_mature_enforced"],
         "n_disclosed_prior_year": cov672["n_disclosed_prior_year"],
@@ -542,7 +553,7 @@ def main():
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
         _fh.write(json.dumps(out, indent=1) + "\n")
     print("wrote", OUT.name)
-    print("  primary %d (all mature-enforced); 672 construction %d: enforced %d, disclosed %d"
+    print("  primary %d (all classified mature-enforced); 672 construction %d: enforced %d, disclosed %d"
           % (out["primary"]["n_gross_sample"], out["n_gross_sample"], out["n_mature_enforced"],
              out["n_disclosed_prior_year"]))
     m = out["membership"]
@@ -574,5 +585,24 @@ def main():
                  "" if rel is None else " (%+.2f%%)" % (100 * rel["bayesian_var995_median"])))
 
 
+def refresh_notes():
+    """Update explanatory text only; retain all previously fitted results unchanged."""
+    with io.open(OUT, encoding="utf-8") as fh:
+        out = json.load(fh)
+    notes = scope_notes()
+    if not set(notes).issubset(out):
+        raise SystemExit("Existing result lacks the expected metadata fields")
+    out.update(notes)
+    with io.open(OUT, "w", encoding="utf-8", newline="") as fh:
+        fh.write(json.dumps(out, indent=1) + "\n")
+    print("Refreshed explanatory notes only; existing fitted results were not rerun:", OUT)
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if sys.argv[1:] == ["--refresh-notes"]:
+        refresh_notes()
+    elif not sys.argv[1:]:
+        main()
+    else:
+        raise SystemExit("Usage: check_cohort_scope.py [--refresh-notes]")

@@ -167,6 +167,8 @@ def test_main_writes_both_operators_and_the_fit_it_ran_on(small_main):
     assert res["overlay_sensitivity"]["operator"] == "overlay"
     assert res["V1_VaR995"] == record["centres_full_pool_posterior_mean"]["V1_adj"]["v995"]
     assert res["fit"]["n_working_sample"] == len(vu.load_pool()[0])
+    # At the cited inputs, documentation changes must not alter the simulation's existing frame.
+    assert res["unread_working_sample_records"] == 247
     with io.open(str(E.EXPOSURE), encoding="utf-8") as _fh:
         ex = json.load(_fh)
     assert res["fit"]["loader_run_id_without_calibration"] == ex["analysis_run_id_without_calibration"]
@@ -571,7 +573,7 @@ def test_a_register_reading_of_the_current_figure_decides_it():
     assert out["reconciliation"][0]["verdict_on_figure_now"] == E.NOT_RESTATED
 
 
-def test_the_primary_frame_counts_a_changed_figure_as_read_only_through_the_register():
+def test_the_primary_frame_counts_a_changed_figure_as_covered_only_through_the_register():
     pool = ["syndicate_%d_2020" % i for i in range(6)]
     read = {"syndicate_0_2020", "syndicate_1_2020", "syndicate_2_2020"}
     changed = {"syndicate_1_2020": 1.0, "syndicate_3_2020": 2.0, "syndicate_4_2020": 3.0}
@@ -582,6 +584,38 @@ def test_the_primary_frame_counts_a_changed_figure_as_read_only_through_the_regi
     assert (s["n_unread_by_the_study_read_set_alone"], s["n_unread_against_the_primary"]) == (3, 3)
     assert s["newly_read"] == ["syndicate_3_2020"] and s["newly_unread"] == ["syndicate_1_2020"]
     assert s["figure_changed_not_read"] == ["syndicate_1_2020", "syndicate_4_2020"]
+
+
+def test_mature_frame_coverage_and_direct_figure_reconciliation_are_distinct(monkeypatch):
+    """Source-cell coverage includes a derived value even when no reading gives that value directly."""
+    direct, derived, unsupported = ("syndicate_%d_2020" % i for i in range(1, 4))
+    mature = {
+        "1_2020": {"figure_m": 9.0, "readings": [{"kind": "reading", "figure_m": 9.0}]},
+        "2_2020": {"figure_m": 9.0, "readings": [{"kind": "reading", "figure_m": 5.0}]},
+        "3_2020": {"figure_m": 9.0, "readings": [{"kind": "other", "figure_m": 9.0}]},
+    }
+    monkeypatch.setattr(E, "load", lambda _path: mature)
+    changed = {s: 9.0 for s in (direct, derived, unsupported)}
+    covered = E.register_read(changed)
+    assert covered == {direct, derived}
+    assert E.primary_frame(list(changed), set(), changed, covered)["unread"] == [unsupported]
+    current = _cur(9.0, source=E.MATURE_SOURCE_TAG)
+    assert E.register_readings_of(direct, current, mature=mature, confirmed={}) is not None
+    assert E.register_readings_of(derived, current, mature=mature, confirmed={}) is None
+    assert E.register_readings_of(unsupported, current, mature=mature, confirmed={}) is None
+
+
+def test_two_real_derived_figures_keep_existing_source_reading_frame_classification():
+    """The current source register treats the two derived figures as covered, not directly read."""
+    mature = E.load(E.MATURE_REGISTER)
+    changed = {"syndicate_1274_2016": mature["1274_2016"]["figure_m"],
+               "syndicate_3330_2017": mature["3330_2017"]["figure_m"]}
+    covered = E.register_read(changed)
+    assert covered == set(changed)
+    assert E.primary_frame(list(changed), set(), changed, covered)["unread"] == []
+    for stem, figure in changed.items():
+        assert E.register_readings_of(stem, _cur(figure, source=E.MATURE_SOURCE_TAG),
+                                      mature=mature, confirmed={}) is None
 
 
 def _recorded_figures():

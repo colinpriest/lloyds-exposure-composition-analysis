@@ -1897,30 +1897,30 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         % (a["spearman"], null["mean"]),
         "  positive persistence gives **%s** (two-sided rank %.4f). The interval is for the *statistic*, which the"
         % (_perm_p(a), a["p_two_sided_rank"]),
-        "  demeaning biases down; it is not an interval for an AR coefficient.",
-        "- **The same test on the adopted model's own residuals** $z=S/\\sigma_{it}$, which is what conditional",
-        "  independence given size, HHI, regime and reporting year actually asserts, with each reporting year's",
-        "  location and scale taken out of the cross-section: Spearman **%+.3f** against a null centred at %+.3f,"
+        "  demeaning can alter; it is not an interval for an AR coefficient.",
+        "- **The year-adjusted test on base-scaled severities** divides $S$ by the fitted size and RITC scale",
+        "  at posterior means, with concentration fixed at zero and without the fitted year factor; it then removes each year's empirical median and",
+        "  robust scale and demeans within syndicate: Spearman **%+.3f** against a null centred at %+.3f,"
         % (prim["observed"], prim["permutation_null"]["mean"]),
-        "  **%s**. This is the year-adjusted test; the association survives conditioning on the"
+        "  **%s**. This diagnostic is not the model's full conditional residual; the empirical year adjustment"
         % _perm_p(prim),
-        "  year, so it is not the systemic year component the model already carries as $\\exp(s_t)$. Permuting the",
+        "  does not guarantee removal of every systemic effect. Permuting the",
         "  calendar-year labels instead, which leaves each year's cross-section whole but also destroys the",
         "  arrangement of the year blocks, gives %s on the same residuals."
         % _perm_p(block),
-        "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It carries the"
+        "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It may reflect"
         % (raw["pearson"], raw["spearman"]),
-        "  *persistent per-syndicate level* (sign) and any serial component together.",
+        "  persistent per-syndicate level and serial dependence together; the statistic does not separate them.",
         "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs,"
         % (100.0 * c["share_same_sign"], c["n_pairs"]),
         "  binomial $p<0.001$) — releasers keep releasing.",
         "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
         % (b["pearson"], b["spearman"]),
         "",
-        "**Decision.** There **is** positive residual lag-1 association in the adopted model's own residuals under the",
-        "year-adjusted procedure, and it survives conditioning on the reporting",
-        "year. The pooling likelihood's conditional-independence assumption is **not supported** for the dispersion",
-        "process; the earlier reading of this section, that no residual dependence was detected and that there was",
+        "**Decision.** The year-adjusted, base-scaled diagnostic shows positive lag-1 association under the",
+        "stated procedure. It does not directly establish the likelihood's conditional dependence,",
+        "identify the process, or guarantee that every systemic effect was removed. The earlier reading of this",
+        "section, that no residual dependence was detected and that there was",
         "therefore no reason to consider an autoregressive term, was an artefact of measuring distance from zero in",
         "a null centred at %+.3f." % null["mean"],
         "What these diagnostics do **not** do is identify the process. Over these syndicates' own year sets a",
@@ -1956,9 +1956,9 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "On this evidence the paper reports the association and leaves all posterior uncertainty explicitly",
         "conditional on the working independence likelihood. It does not add a longitudinal component because the",
         "diagnostics do not identify the process that would justify a particular one,",
-        "and the persistent syndicate intercept is material when tested directly ($\\tau_\\alpha=%.3f$) while the"
+        "and the alternative random-intercept model estimates a between-syndicate location scale of $\\tau_\\alpha=%.3f$;"
         % tau,
-        "persistent per-syndicate mean is the unresolved $\\mu=0$ boundary in §6 (%.0f%% credibly-positive"
+        "that model does not uniquely identify a persistent component. The $\\mu=0$ boundary is considered in §6 (%.0f%% credibly-positive"
         % share,
         "means, about %.2fσ a year in the most-persistent decile). Dependence of a form a lag-1 statistic cannot"
         % frac,
