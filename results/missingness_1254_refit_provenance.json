@@ -1,0 +1,30 @@
+{
+  "command": "python src/check_missingness_sensitivity.py",
+  "working_directory": "D:\\tmp\\baj-1254-classification-20261029\\A",
+  "seed": 42,
+  "sampler": "4 sequential NUTS chains, 1500 tune + 1500 draws each",
+  "python": "3.12.6",
+  "note": "Live output was initially consumed by the session and not redirected. The observed first five fits finished sampling in 37, 33, 33, 34 and 33 seconds; subsequent output is captured in missingness-refit-live-log.txt. Files hashed during execution; interpretation must match the reviewed source patch.",
+  "sha256": {
+    "src/check_missingness_sensitivity.py": "2a74f3511d63a7281612e89cf355ea67e388af47dcee6461d55986f1cf3098eb",
+    "src/missingness_check.py": "e2310ecb006033fc0c4ac6ebc4462dff73ef704335bf54a99ef3636214f22de0",
+    "src/run_analysis.py": "d60c560c30271a7ed42c235ddfa1bddd0589f8e23258e60b8c3b12dde147c9fe",
+    "data/eligibility_from_filing.json": "e8a603d2d39e3671ab19da56e19e964876b53698d11284b4d375b3a3128fffd4",
+    "results/disposition_ledger.csv": "8bd80bc26ed26d87525e888fe631586ec87850bef443cd3d74620cb76e009c4d",
+    "results/inferential_disposition_ledger.csv": "59ba0e8aec0971d04fc0641b78be426709a2c163fd0978edbb84dbe7ed5b5084",
+    "results/missingness_check_results.json": "05dead863649abdb19cfb076806b6cea753f681e2bfe07f19fe46c581f06f3db",
+    "model/exposure_results.json": "5849618cfeb7eca294222f4d4fd7af996748c986dbe252fbb52a8bd7b5935694",
+    "model/dispersion_calibration_ritc.json": "2b23be29d829d36a8747b76a16419ef340ad154a8ea04ed67e0e98da92c86b66",
+    "src/assumed_business.py": "8fd22dd821ebd3176365cc534aa1fe581127014385abd7f4cf5fce81e79fde8a",
+    "src/adopted_model.py": "03aaa3ccc2b48e480dc5fe8904834c88a151bcbc7817417c6ba090d089e606ca",
+    "pdf_extraction/ritc_scan.json": "4f069ad61c39385bacc7438ce709bc1772ccf5ad39d0bf19a629e3bc84f99632",
+    "pdf_extraction/audit/portfolio_transfer_adjudication.json": "fb450a3471cfe2dfa22c44bc068ea7fa9cdc6c0a40881a1f31301fbb516bf328",
+    "data/opening_reserves_takeon_base.json": "5d9bdd04402512d1e73b8e8d306222dc4bb540fd4c1a803bfe9b0ed48019cb27",
+    "results/check_gamma0_vignette_results.json": "574f5f3f8ac0dde21bed7e55c95a884072457add4f7141d502ee72f89b68da73",
+    "results/check_missingness_sensitivity_results.json": "d1240d15418010e28bd6bf42422037b3ee5d879df17365ea8fb2e92f7e3e13c1"
+  },
+  "source_1254_report_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
+  "execution_detail": "Focused 11-fit run on the corrected disposition and 632-record primary sample; this is separate from, and is not covered by, the older full-manifest reproduction. The source producer subsequently changed only the reconciliation table label. No posterior draw archive was written by this sensitivity script.",
+  "result_file": "results/check_missingness_sensitivity_results.json",
+  "divergences_all_fits": 0
+}

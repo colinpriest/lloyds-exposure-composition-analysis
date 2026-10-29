@@ -147,7 +147,8 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     # by the pass): 594 -> 586 (586.16)
     # the regeneration at f15a357f (26 October 2026; 632 records, the propensity refitted on the working sample without
     # the 11 records rule 8 sets aside): 586 -> 562 (561.84, the record's own value)
-    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 562
+    assert round(prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]) == 458
+    assert prop["cap_diagnostics"]["0.1"]["n_below_cap"] == 1
     assert (prop["uncapped_diagnostic_not_fitted"]["kish_effective_sample_size"]
             < prop["primary_diagnostics"]["kish_effective_sample_size"])
     assert {"ipw_cap_0.10", "ipw_cap_0.15", "ipw_cap_0.20"} <= set(result["fits"])

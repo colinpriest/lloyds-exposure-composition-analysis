@@ -8330,7 +8330,7 @@ def _gen_table39(results):
     rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
     for label, key in (("no deterministic reading (the parsers found no prior-year figure; the models were not run)",
                         "excluded"),
-                       ("structural exclusion (no eligible mature cohort: no underwriting year up to $t-2$)",
+                       ("loader skips (structural exclusions or unavailable eligible outcome)",
                         "skipped"),
                        (INCOMPLETE_PRE_LABEL, "incomplete_no_development_record"),
                        ("in run-off (the filing states run-off for the whole year, with or without a development "

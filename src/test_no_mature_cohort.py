@@ -175,7 +175,7 @@ def test_the_structural_step_keeps_its_name_and_no_longer_says_no_stated_figure(
     from test_runoff_label import _table39
     rows = [line for line in _table39(monkeypatch, 1).splitlines() if "structural exclusion" in line]
     assert len(rows) == 1
-    assert "(no eligible mature cohort: no underwriting year up to $t-2$)" in rows[0]
+    assert "loader skips (structural exclusions or unavailable eligible outcome)" in rows[0]
     assert "no stated development figure" not in rows[0]
 
 
