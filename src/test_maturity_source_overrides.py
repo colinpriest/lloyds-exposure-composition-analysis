@@ -59,6 +59,11 @@ def test_shifted_years_and_recovered_groups():
             assert current[0] not in [u for u,_,_ in opening]
     assert {u:v for u,_,v in corrected('435_2015')}[2011] == 184880
     assert {u:v for u,_,v in corrected('1225_2022')}[2017] == pytest.approx(3893.2)
+    assert {u:v for u,_,v in corrected('1225_2018')}[2013] == pytest.approx(2640.1)
+    assert {u:v for u,_,v in corrected('1225_2016')}[2011] == pytest.approx(2280.9)
+    assert {u:v for u,_,v in corrected('1225_2020')}[2015] == pytest.approx(2890.0)
+    gross_1225 = {u:v for u,_,v in corrected('1225_2021')}
+    assert [gross_1225[u] for u in range(2016,2022)] == [3216.6,319.0,309.6,342.3,354.8,207.0]
     # The previously selected 1274/2022 triangle was net; the filing gives gross.
     gross = {u:v for u,_,v in corrected('1274_2022')}
     assert [gross[u] for u in (2012, 2013, 2021, 2022)] == [946246, 179555, 235997, 180131]
