@@ -102,3 +102,22 @@ def test_maturity_refit_convergence_guard_rejects_unreliable_fits():
                  {"divergences": 0, "max_rhat": float("nan")}):
         with pytest.raises(RuntimeError, match="failed convergence"):
             require_converged("bad", diag)
+
+
+def test_recorded_targeted_refits_have_matching_results_and_pass_diagnostics():
+    import hashlib
+    root = Path(__file__).resolve().parent.parent
+    primary = json.loads((root / "results/check_maturity_denominator_provenance.json").read_text(encoding="utf-8"))
+    additional = json.loads((root / "results/check_maturity_additional_sensitivities_provenance.json").read_text(encoding="utf-8"))
+    assert not primary["old_full_reproduction_report_applies"]
+    assert primary["sampler"]["target_accept"] == 0.995
+    checks = [("results/check_maturity_denominator_results.json", primary["result_sha256"])]
+    checks.extend((entry["result_file"], entry["result_sha256"]) for entry in additional.values())
+    assert len(checks) == 3
+    for filename, expected in checks:
+        raw = (root / filename).read_bytes().replace(b"\r\n", b"\n")
+        assert hashlib.sha256(raw).hexdigest() == expected
+        result = json.loads(raw)
+        assert len(result["refits"]) == 7
+        assert all(v["_diag"]["divergences"] == 0 and v["_diag"]["max_rhat"] <= 1.01
+                   for v in result["refits"].values())
