@@ -56,6 +56,7 @@ MAT = SD / "model" / "maturity_share.json"
 OUT = SD / "results" / "check_maturity_denominator_results.json"
 REF, HLO, HCE, SEED = 500.0, 0.01, 1.0, 42
 PHI_MIN = 0.10                     # guard: S/phi explodes for a near-zero mature share
+TARGET_ACCEPT = 0.995               # reduce divergences in the refitted maturity sensitivities
 
 
 def refit_subsample(phis, tags, phi_min=PHI_MIN):
@@ -101,14 +102,16 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
     with pm.Model():
         b = scale_block(ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y)
         pm.StudentT("S_obs", nu=b["nu_obs"], mu=0.0, sigma=b["sigma"], observed=S)
-        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=0.98,
+        idata = pm.sample(1500, tune=1500, chains=4, cores=SAMPLE_CORES, target_accept=TARGET_ACCEPT,
                           random_seed=SEED, progressbar=False)
     vn = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s"]     # gamma: 0 in the likelihood
-    s = az.summary(idata, var_names=vn, hdi_prob=0.95)
+    s = az.summary(idata, var_names=vn, hdi_prob=0.95, round_to="none")
     out = {v: {"mean": float(s.loc[v, "mean"]), "hdi_2.5": float(s.loc[v, "hdi_2.5%"]),
                "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
     out["_diag"] = {"max_rhat": float(s["r_hat"].max()),
                     "divergences": int(idata.sample_stats["diverging"].sum())}
+    if out["_diag"]["divergences"] or not np.isfinite(out["_diag"]["max_rhat"]) or out["_diag"]["max_rhat"] > 1.01:
+        raise RuntimeError("Maturity refit %s failed convergence checks: %s" % (tag, out["_diag"]))
     print(f"    {tag:34s} k={out['k']['mean']:.3f} "
           f"[{out['k']['hdi_2.5']:.3f},{out['k']['hdi_97.5']:.3f}]  "
           f"floor={out['sd_undiv']['mean']:.4f}  "
