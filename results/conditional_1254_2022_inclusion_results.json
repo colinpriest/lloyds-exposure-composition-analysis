@@ -1,0 +1,222 @@
+{
+  "question": "Conditional inclusion of 1254/2022 with whole-account gross incurred as mature-cohort proxy",
+  "interpretation": "A source-based what-if, not an established or exact mature-cohort outcome. Vignette values are empirical inverse-CDF points at posterior-mean parameters; cross-validation and vignette uncertainty intervals are not refitted.",
+  "code_commit": "dff9844d692c74f3400bd6c6c826222bcf062b4b",
+  "working_tree_dirty": true,
+  "working_tree_status": [
+    "?? data/conditional_1254_2022.json",
+    "?? src/check_1254_2022_inclusion.py"
+  ],
+  "producer_sha256": "1e3e5170eac567227bcc58615e19390d908fe0838ebc7e77156d60bf584ad6d5",
+  "fixture_sha256": "16aba9e895758fddec68ece54846a1658c57a2dddbaf06c2de7fdc5bf9a8a7a2",
+  "input_sha256": {
+    "model/exposure_results.json": "1bd8453d7ae6603aca60bff0352c567cd624ed79a9e01821dd9a27ec41c66ac0",
+    "model/dispersion_calibration_ritc.json": "2b23be29d829d36a8747b76a16419ef340ad154a8ea04ed67e0e98da92c86b66",
+    "model/dispersion_posterior_draws_ritc.npz": "3f354d2b0bee8ccb921e8756501a0fddac7bdd84abb2f115fc774de15bb130df",
+    "results/check_gamma0_vignette_results.json": "574f5f3f8ac0dde21bed7e55c95a884072457add4f7141d502ee72f89b68da73",
+    "src/adopted_model.py": "03aaa3ccc2b48e480dc5fe8904834c88a151bcbc7817417c6ba090d089e606ca",
+    "src/check_cohort_scope.py": "2be5f00b7b09ac09075fbefcc7b8fe6abaeae76574e77052871569a8aefdc263",
+    "src/refit_vignettes.py": "5018a0064fa58f1398b6e365c64c798cb0dd148ea374f3df509794a5476b5b39",
+    "src/run_analysis.py": "6c74e5ccbef8a2822f04f9e1b54a8aa6e41de8ebebd8d9df62a5d198ccf5c425",
+    "src/assumed_business.py": "8fd22dd821ebd3176365cc534aa1fe581127014385abd7f4cf5fce81e79fde8a",
+    "src/donor_pool.py": "b123aabc005d92d587ba965746c61f5ea6f05128b302f5343fdc4f67f185dcc4",
+    "src/pool_quantile.py": "f012a5f589d0e4967379da346b5ddbb90bb671600b5dd92dfcc983193288ba12",
+    "src/check_gamma0_vignette.py": "b3e8363a30b737472f80d8cf25443606ea2bfc87d75dd3baada4eb89aab793fb",
+    "src/vignette_uncertainty.py": "629092ab447a329ec155bf393948f8ad1ef726e15c01b359b9902a0e35bb962b",
+    "src/transfer_operator.py": "b9113fab97cf77dd2a9561c2464d86f2ba4ec8f10cef19e9a74c0c754656ed9c",
+    "pdf_extraction/ritc_scan.json": "4f069ad61c39385bacc7438ce709bc1772ccf5ad39d0bf19a629e3bc84f99632",
+    "pdf_extraction/audit/portfolio_transfer_adjudication.json": "fb450a3471cfe2dfa22c44bc068ea7fa9cdc6c0a40881a1f31301fbb516bf328",
+    "data/opening_reserves_takeon_base.json": "5d9bdd04402512d1e73b8e8d306222dc4bb540fd4c1a803bfe9b0ed48019cb27",
+    "vignettes/vignette-1/target_profile.json": "4a4101ecf4107cb34bf8e50d0ef0d0453e6f73be7f5293c1740d4bfeb14f7b14",
+    "vignettes/vignette-2/target_transition.json": "629a8807b46da333089fa8a9fb3bd5c3ccb9671f61da30508ee25932bb940af0"
+  },
+  "source_report_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
+  "sampler": {
+    "chains": 4,
+    "tune": 1500,
+    "draws": 1500,
+    "target_accept": 0.98,
+    "seed": 42
+  },
+  "scenario": {
+    "reserve_base_gbp_m": 75.257,
+    "gross_movement_gbp_m": -4.7330000000000005,
+    "severity": -0.06289115962634706,
+    "hhi": 0.4471842622070249,
+    "weights": [
+      0.6266453928998803,
+      0.20063821300358994,
+      0.09174311926605505,
+      0.07618667730355005,
+      0.0,
+      0.004786597526924611,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "weight_source": "premium_mix",
+    "closing_triangle_difference_gbp_m": 0.2979999999999947
+  },
+  "scenario_source": {
+    "scenario": "1254_2022_conditional_roll_forward",
+    "source_file": "syndicate_reports/pdfs/syndicate_1254_2022.pdf",
+    "source_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
+    "report_currency": "GBP",
+    "gross_opening_reserves_gbp_m": 0.0,
+    "gross_ritc_reserves_taken_on_gbp_m": 75.257,
+    "gross_claims_paid_gbp_m": 22.748,
+    "gross_change_in_claims_provision_gbp_m": -27.481,
+    "gross_foreign_exchange_change_gbp_m": 7.798,
+    "gross_closing_claims_provision_gbp_m": 55.574,
+    "gross_closing_triangle_gbp_m": 55.276,
+    "gross_written_premiums_gbp_m": 2.507,
+    "gross_premium_mix": [
+      {
+        "line_of_business": "Casualty",
+        "amount_gbp_m": 0.503
+      },
+      {
+        "line_of_business": "Property",
+        "amount_gbp_m": 1.571
+      },
+      {
+        "line_of_business": "Marine",
+        "amount_gbp_m": 0.23
+      },
+      {
+        "line_of_business": "Energy",
+        "amount_gbp_m": 0.191
+      },
+      {
+        "line_of_business": "Motor",
+        "amount_gbp_m": 0.0
+      },
+      {
+        "line_of_business": "Aviation",
+        "amount_gbp_m": 0.012
+      }
+    ],
+    "ritc_years_of_account": [
+      2017,
+      2018,
+      2019
+    ],
+    "pages": {
+      "claims_development": 30,
+      "technical_account": 16,
+      "gross_premium_mix_and_business": 36,
+      "claims_outstanding_reconciliation": 41
+    },
+    "assumptions": [
+      "Gross incurred (paid plus change in provision) is attributed to the mature 2017\u20132019 book. The accounts do not print an exact mature-cohort allocation.",
+      "The RITC reserve is used as the base for the transferred liabilities, despite the syndicate's nil opening balance.",
+      "The 2022 premium mix is applied under the existing class-label taxonomy; it comprises small adjustment and reinstatement premiums on underlying quota shares, not the RITC premium and not a direct measurement of inherited reserve composition.",
+      "The 2022 gross triangle's 55.276m total differs from the 55.574m closing gross provision by 0.298m; no adjustment is invented."
+    ]
+  },
+  "ritc_assumed_business": true,
+  "baseline_n": 632,
+  "conditional_n": 633,
+  "baseline_n_syndicates": 117,
+  "conditional_n_syndicates": 117,
+  "baseline_centre": {
+    "V1_v99": 0.27603898912667046,
+    "V1_v995": 0.34240782846350193,
+    "V2_old_v995": 0.3049613352310951,
+    "V2_new_v995": 0.32041233767833627,
+    "V2_d995": 0.01545100244724118
+  },
+  "baseline_exactly_reproduces_published_centre": true,
+  "fit": {
+    "k": {
+      "mean": 0.6248846247933925,
+      "sd": 0.057585163625105136,
+      "hdi_2.5%": 0.5217450209647405,
+      "hdi_97.5%": 0.7332179813057091
+    },
+    "sd_undiv": {
+      "mean": 0.02897669953889837,
+      "sd": 0.007673201449405049,
+      "hdi_2.5%": 0.012407293185998574,
+      "hdi_97.5%": 0.042224955672277
+    },
+    "sd_div": {
+      "mean": 0.04358518259995704,
+      "sd": 0.006218425083380222,
+      "hdi_2.5%": 0.032032528714623636,
+      "hdi_97.5%": 0.0558644075707465
+    },
+    "nu_clean": {
+      "mean": 3.9373188821297664,
+      "sd": 0.6592109537481684,
+      "hdi_2.5%": 2.7907100224231893,
+      "hdi_97.5%": 5.286458031943331
+    },
+    "nu_ritc": {
+      "mean": 5.5037447738823975,
+      "sd": 3.5965971639109724,
+      "hdi_2.5%": 1.1530608952748975,
+      "hdi_97.5%": 12.347414041469756
+    },
+    "tau_s": {
+      "mean": 0.13256145640071623,
+      "sd": 0.07021815423115856,
+      "hdi_2.5%": 0.0006158375887083758,
+      "hdi_97.5%": 0.2588194882650273
+    }
+  },
+  "diagnostics": {
+    "divergences": 0,
+    "max_rhat": 1.0030444471008897,
+    "min_ess_bulk": 1883.2403238766642,
+    "min_ess_tail": 2146.3147160204717
+  },
+  "posterior_sha256": "845af4b299c482d92352e793ae6c37a72abd95ab7cc749f000ce1752d29d6923",
+  "pool_only": {
+    "V1_v99": 0.27603898912667046,
+    "V1_v995": 0.34240782846350193,
+    "V2_old_v995": 0.3049613352310951,
+    "V2_new_v995": 0.32041233767833627,
+    "V2_d995": 0.01545100244724118
+  },
+  "fit_only": {
+    "V1_v99": 0.27685418381617394,
+    "V1_v995": 0.34324322816620945,
+    "V2_old_v995": 0.30583954305061106,
+    "V2_new_v995": 0.3212752127729675,
+    "V2_d995": 0.015435669722356438
+  },
+  "refit_and_rebuilt_pool": {
+    "V1_v99": 0.27685418381617394,
+    "V1_v995": 0.34324322816620945,
+    "V2_old_v995": 0.30583954305061106,
+    "V2_new_v995": 0.3212752127729675,
+    "V2_d995": 0.015435669722356438
+  },
+  "relative_to_baseline": {
+    "V1_v99": 0.002953186765690452,
+    "V1_v995": 0.0024397797984241354,
+    "V2_d995": -0.0009923449910189674
+  },
+  "V1_thresholds": {
+    "0.99": {
+      "value": 0.27685418381617394,
+      "donors_at_threshold": [
+        "1991_2016"
+      ],
+      "rank_from_top": 7
+    },
+    "0.995": {
+      "value": 0.34324322816620945,
+      "donors_at_threshold": [
+        "5820_2016"
+      ],
+      "rank_from_top": 4
+    }
+  },
+  "scenario_donor_transferred_v1": -0.036223319684567615
+}

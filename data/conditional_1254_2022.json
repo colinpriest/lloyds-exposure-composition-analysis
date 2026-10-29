@@ -1,0 +1,31 @@
+{
+  "scenario": "1254_2022_conditional_roll_forward",
+  "source_file": "syndicate_reports/pdfs/syndicate_1254_2022.pdf",
+  "source_sha256": "faa232fe62f1b2d3d8f8f4034abdf1611126cab59ca1de2fae784b32050d2932",
+  "report_currency": "GBP",
+  "gross_opening_reserves_gbp_m": 0.0,
+  "gross_ritc_reserves_taken_on_gbp_m": 75.257,
+  "gross_claims_paid_gbp_m": 22.748,
+  "gross_change_in_claims_provision_gbp_m": -27.481,
+  "gross_foreign_exchange_change_gbp_m": 7.798,
+  "gross_closing_claims_provision_gbp_m": 55.574,
+  "gross_closing_triangle_gbp_m": 55.276,
+  "gross_written_premiums_gbp_m": 2.507,
+  "gross_premium_mix": [
+    {"line_of_business": "Casualty", "amount_gbp_m": 0.503},
+    {"line_of_business": "Property", "amount_gbp_m": 1.571},
+    {"line_of_business": "Marine", "amount_gbp_m": 0.230},
+    {"line_of_business": "Energy", "amount_gbp_m": 0.191},
+    {"line_of_business": "Motor", "amount_gbp_m": 0.0},
+    {"line_of_business": "Aviation", "amount_gbp_m": 0.012}
+  ],
+  "ritc_years_of_account": [2017, 2018, 2019],
+  "pages": {"claims_development": 30, "technical_account": 16,
+            "gross_premium_mix_and_business": 36, "claims_outstanding_reconciliation": 41},
+  "assumptions": [
+    "Gross incurred (paid plus change in provision) is attributed to the mature 2017–2019 book. The accounts do not print an exact mature-cohort allocation.",
+    "The RITC reserve is used as the base for the transferred liabilities, despite the syndicate's nil opening balance.",
+    "The 2022 premium mix is applied under the existing class-label taxonomy; it comprises small adjustment and reinstatement premiums on underlying quota shares, not the RITC premium and not a direct measurement of inherited reserve composition.",
+    "The 2022 gross triangle's 55.276m total differs from the 55.574m closing gross provision by 0.298m; no adjustment is invented."
+  ]
+}
