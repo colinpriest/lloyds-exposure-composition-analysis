@@ -47,3 +47,20 @@ def test_real_quantile_markers_use_empirical_strict_survival():
                 assert exceedance != pytest.approx(1 - alpha)
     finally:
         plt.close(fig)
+
+
+def test_visible_curve_is_unchanged_and_off_axis_endpoints_are_bounded():
+    raw, transferred, sqrt_r, _ritc = survivor.pools(operator.HEADLINE)
+    fig, ax, _note, _obstacles = survivor.build_figure(raw, transferred, sqrt_r, operator.HEADLINE)
+    try:
+        floor = ax.get_ylim()[0]
+        for label, values in (("Raw (untransferred)", raw),
+                              ("Square-root benchmark", sqrt_r),
+                              ("Size-only transfer (headline)", transferred)):
+            line = next(line for line in ax.lines if line.get_label() == label)
+            x, probability = survivor.survivor(values)
+            np.testing.assert_array_equal(line.get_xdata(), x)
+            np.testing.assert_allclose(line.get_ydata(), np.maximum(probability, floor), rtol=0, atol=0)
+            assert probability[-1] == 0.0 and line.get_ydata()[-1] == floor
+    finally:
+        plt.close(fig)

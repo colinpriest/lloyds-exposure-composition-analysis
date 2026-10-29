@@ -193,10 +193,10 @@ def build_figure(raw, transferred, sqrt_r, mode, printed=None, target_gbp_m=None
         printed = {"raw": var_q(raw, 0.995), "transferred": var_q(transferred, 0.995), "sqrt": var_q(sqrt_r, 0.995)}
 
     fig, ax = PFS.figure("fig_v1_ritc_survivor", 4.0)   # 3.4 with the legend inside the axes
-    curves, marker_pts = [], []
+    curves, marker_pts, plotted_curves = [], [], []
     for label, arr, col, ls in series:
         xs, ps = survivor(arr)
-        ax.step(xs, ps, where="post", color=col, ls=ls, lw=2.0, label=label)
+        plotted_curves.extend(ax.step(xs, ps, where="post", color=col, ls=ls, lw=2.0, label=label))
         curves.append(step_vertices(xs, ps))
         for a, mark in ((0.99, "o"), (0.995, "s")):
             v = var_q(arr, a)
@@ -212,6 +212,14 @@ def build_figure(raw, transferred, sqrt_r, mode, printed=None, target_gbp_m=None
 
     ax.set_yscale("log")
     ax.set_xlim(left=0)
+    # Matplotlib sends zero-survival endpoints far below the log axes in its PDF
+    # path and clips them only at rendering time. Bound the invisible part of each
+    # endpoint at the already selected lower plot limit, preserving the visible
+    # step while keeping the exported paths out of the labels and legend.
+    ylim = ax.get_ylim()
+    for line in plotted_curves:
+        line.set_ydata(np.maximum(np.asarray(line.get_ydata(), dtype=float), ylim[0]))
+    ax.set_ylim(*ylim)
     # 99 / 99.5 guide lines
     for a, txt in ((0.99, "99%"), (0.995, "99.5%")):
         ax.axhline(1 - a, color="#adb5bd", lw=0.8, ls=":", zorder=0)
