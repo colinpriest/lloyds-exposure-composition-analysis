@@ -13,9 +13,10 @@ NOT the conditional derivative d log sigma / d log R that the two candidate scal
 statements about (frozen review of 25 September 2026, D03). Even a floorless law carries a
 -gamma(k-1) log H term, so a concentration index that moves with size lands partly in an
 unadjusted size slope. The controlled estimate is check_large_book_slope_conditional.py,
-which adds log H, the regime and a year effect, and which also carries the uncertainty in k
-instead of comparing against a fixed number; its comparison with the floorless law is a
-product-of-marginals diagnostic, not a joint posterior probability.
+which adds log H, the regime and a year effect. Its single conditional linear trend over
+the selected size range is not the size-varying local derivative of the floored scale model.
+It also carries the uncertainty in k instead of comparing against a fixed number; its comparison
+with the floorless law is a product-of-marginals diagnostic, not a joint posterior probability.
 
     no-floor law   d log sigma / d log R = k - 1, constant at every size
     floor law      -> 0 as R grows, because the floor comes to dominate
@@ -80,8 +81,9 @@ def main():
            "b_is": ("a MARGINAL large-book slope: concentration, reporting year and the RITC regime are not "
                     "held, so b is not the conditional derivative d log sigma / d log R that the candidate "
                     "scale laws are statements about. The controlled estimate is "
-                    "check_large_book_slope_conditional.py, whose comparison against the floorless law is a "
-                    "product-of-marginals diagnostic (frozen review of 25 September 2026, D03)."),
+                    "check_large_book_slope_conditional.py. Its single linear trend over a size range is not "
+                    "the size-varying local derivative of the floored scale model; its comparison against the "
+                    "floorless law is a product-of-marginals diagnostic (frozen review of 25 September 2026, D03)."),
            "b_implied_by_nofloor_law": b_nofloor,
            "b_implied_by_nofloor_law_source": ("k - 1 from the no-floor calibration in "
                                                "check_pooling_cv_extended_results.json at run time, not a "

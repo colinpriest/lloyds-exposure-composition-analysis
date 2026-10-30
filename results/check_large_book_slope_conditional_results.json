@@ -6,7 +6,7 @@
     -0.3152314599833771,
     -0.19670453119345632
   ],
-  "note": "marginal = size only with a syndicate intercept; conditional adds log H, the RITC indicator and a reporting-year effect, so b is the partial slope the scale model implies. Comparisons with the floorless law are draw-by-draw against its own k posterior.",
+  "note": "marginal = size only with a syndicate intercept; conditional adds log H, the RITC indicator and a reporting-year effect. Its b is a single partial linear trend over the selected size range, not the size-varying local derivative of the floored scale model. Comparisons with the floorless law pair draws from separately specified likelihoods; they are product-of-marginals diagnostics, not joint posterior probabilities.",
   "thresholds": {
     "above_500m": {
       "n": 273,

@@ -23,9 +23,10 @@ law gives
 
 so a concentration term correlated with size contributes to an unadjusted size slope, and
 reporting year and the RITC regime do the same.  The controlled estimate, which holds
-concentration, year and regime, is check_large_book_slope_conditional.py: read that one
-for the derivative, together with its own caveat that its comparison against the floorless
-law pairs draws from two separately specified likelihoods and is a product-of-marginals
+concentration, year and regime, is check_large_book_slope_conditional.py. Its single
+linear coefficient describes a conditional trend over the selected size range, not the
+size-varying local derivative of the floored scale model. Its comparison against the
+floorless law pairs draws from separately specified likelihoods and is a product-of-marginals
 diagnostic rather than a joint posterior probability.
 
 What remains here is a descriptive marginal diagnostic of the large-book range, with an
@@ -90,8 +91,9 @@ def main():
                           "descriptive diagnostic of the large-book range and not as an equivalence statement "
                           "(frozen review of 25 September 2026, D03)."),
            "model_local_slopes_are": ("the two candidate scale laws' CONDITIONAL derivatives at the fitted "
-                                      "calibrations, computed by model_local_slope; they are the quantity the "
-                                      "conditional diagnostic estimates, not this one."),
+                                      "calibrations, computed by model_local_slope; the "
+                                      "conditional regression supplies a single controlled trend over a size range, "
+                                      "not the size-varying floored local derivative."),
            "model_local_slopes": {
                "no_floor_constant": kn - 1.0,
                "floor_k_minus_1": kf - 1.0},

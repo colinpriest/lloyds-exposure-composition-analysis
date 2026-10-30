@@ -59,7 +59,7 @@
   "reversal": {
     "k_at_which_direction_reverses": 0.9999999999999998,
     "posterior_mean_k": 0.6238737606675849,
-    "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
+    "note": "k=1 is the flat boundary: the scale law is flat in both size and concentration because the exponent on effective size vanishes. For this scenario the direction reverses only beyond the boundary, at k>1. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
   },
   "overlay_sensitivity": {
     "operator": "overlay",
@@ -95,7 +95,7 @@
     "reversal": {
       "k_at_which_direction_reverses": 0.9999999999999996,
       "posterior_mean_k": 0.6321006680067495,
-      "note": "the reversing exponent is exactly 1, the bracket's upper endpoint: at k=1 the scale law is flat in both size and concentration, so the exponent on effective size vanishes. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
+      "note": "k=1 is the flat boundary: the scale law is flat in both size and concentration because the exponent on effective size vanishes. For this scenario the direction reverses only beyond the boundary, at k>1. This establishes c>1 under k<1; it establishes a quantile rise only conditional on a positive old quantile"
     }
   }
 }

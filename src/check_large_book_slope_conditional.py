@@ -1,4 +1,4 @@
-"""The large-book slope as a CONDITIONAL derivative, compared draw-by-draw.
+"""A conditional linear large-book trend, compared with a floorless reference.
 
 check_large_book_slope_bayes.py regressed log|S| on log R with only a syndicate
 intercept. That estimates a *marginal* large-book association: it does not hold
@@ -11,9 +11,11 @@ This refits it with the controls the scale model actually uses:
     log|S_it| = a + b logR_it + c logH_it + d 1[RITC] + year_t + alpha_i + eps_it
     alpha_i ~ N(0, tau_alpha^2),  year_t ~ N(0, tau_year^2),  eps ~ StudentT(nu)
 
-so b is the partial slope with concentration, regime and period held. Both the
-marginal and conditional versions are reported, because the gap between them is
-itself informative about how entangled size is with the other covariates.
+so b is one partial linear coefficient over the selected size range, with concentration,
+regime and period held in this regression. It is not generally the local derivative of
+the floored scale model, which varies with size and concentration; the two models have
+different likelihoods and functional forms. Both marginal and controlled versions are
+reported as descriptive diagnostics; their gap does not by itself identify a causal effect.
 
 The comparison with the floorless law carries the uncertainty in k as well. The previous
 version tested against a FIXED -0.342, ignoring that k in the no-floor model has its
@@ -24,8 +26,8 @@ likelihoods on overlapping data, so the fraction is not a joint posterior probab
 of b < k-1 (round 52).  The b intervals and P(b<0) do not depend on the pairing.  Its k draws
 retained, and the two posteriors compared draw by draw:
 
-    P(b < k_nofloor - 1)      is the large-book decline steeper than the floorless law?
-    P(b > (k_nofloor - 1)/2)  is it at most half that rate, i.e. materially flattened?
+    P(b < k_nofloor - 1)      product-of-marginals fraction below the floorless reference
+    P(b > (k_nofloor - 1)/2)  product-of-marginals fraction above half that reference
 
 Writes check_large_book_slope_conditional_results.json.
 Usage:  python src/check_large_book_slope_conditional.py
@@ -142,9 +144,11 @@ def main():
            "nofloor_slope_mean": float(kdraws.mean() - 1.0),
            "nofloor_slope_hdi": [float(x) for x in az.hdi(kdraws - 1, hdi_prob=0.95)],
            "note": ("marginal = size only with a syndicate intercept; conditional "
-                    "adds log H, the RITC indicator and a reporting-year effect, so b "
-                    "is the partial slope the scale model implies. Comparisons with "
-                    "the floorless law are draw-by-draw against its own k posterior."),
+                    "adds log H, the RITC indicator and a reporting-year effect. Its b is a single "
+                    "partial linear trend over the selected size range, not the size-varying local "
+                    "derivative of the floored scale model. Comparisons with the floorless law pair "
+                    "draws from separately specified likelihoods; they are product-of-marginals "
+                    "diagnostics, not joint posterior probabilities."),
            "thresholds": {}}
 
     for name, T in THRESHOLDS:

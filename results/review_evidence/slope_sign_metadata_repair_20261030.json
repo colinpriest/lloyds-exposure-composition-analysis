@@ -1,0 +1,41 @@
+{
+  "base_commit": "07d15fbec8b0fab6d89e4dd9ed9fe22fe8807de9",
+  "method": "Edited the named explanatory strings in deposited results and corrected their source producers; no model fit or posterior resampling was run for this repair. Numeric, boolean, list and object values were checked against the base commit and retained. Historical execution provenance and prior recorded tests remain applicable only to their actual versions.",
+  "results": [
+    {
+      "path": "results/check_large_book_slope_results.json",
+      "pre_repair_git_blob_sha256": "8019b2ff6beed7980c466a89713d889c1758727b6681cbc0d1ef6aea51b31cf3",
+      "repaired_lf_content_sha256": "5187bd6d8e78b3951e3edbace8efe72433e46220c034a4701f61d79b3d39f00f",
+      "changed_explanatory_fields": [
+        "model_local_slopes_are"
+      ]
+    },
+    {
+      "path": "results/check_large_book_slope_bayes_results.json",
+      "pre_repair_git_blob_sha256": "32be922236b6355886ce5419da65c54f37324072a84a6ee0768ea102bf9a04a5",
+      "repaired_lf_content_sha256": "3ee44b03803795505026947b546ea1bffedab95f5aa6c70f35df9f4cdc97709b",
+      "changed_explanatory_fields": [
+        "b_is"
+      ]
+    },
+    {
+      "path": "results/check_large_book_slope_conditional_results.json",
+      "pre_repair_git_blob_sha256": "8a60ab5c6cdd51fda577f725d843e6dd0455245407f5b55288a138ce0b0c06fd",
+      "repaired_lf_content_sha256": "26d7be5c9142dc36bcbaaff5ca9a4f314bde0dff18e2b5e5edccd762186dc6a5",
+      "changed_explanatory_fields": [
+        "note"
+      ]
+    },
+    {
+      "path": "results/check_vignette2_sign_results.json",
+      "pre_repair_git_blob_sha256": "8fddf86ac598f0cbc99db1a77e7dd8394b10c9f961aa6c52fcca337a0691d9fa",
+      "repaired_lf_content_sha256": "a6dc91523babdf7162e69061d4afd2b9f9e72f13f41b86977e509ce57d80c93f",
+      "changed_explanatory_fields": [
+        "reversal.note",
+        "overlay_sensitivity.reversal.note"
+      ]
+    }
+  ],
+  "focused_test": "python -m pytest src/test_slope_boundary_interpretation.py src/test_serial_dependence_claims.py -q -p no:cacheprovider",
+  "focused_test_result": "83 passed, 1 warning; log analysis-slope-boundary-focused.log in review evidence folder"
+}

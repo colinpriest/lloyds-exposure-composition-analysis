@@ -14,17 +14,18 @@ sigma(target):
 
 whenever VaR_q(z0) is non-zero. The scenario moves reserves 800 -> 650 and
 concentration 0.21 -> 0.2618, and under the adopted support (k <= 1, gamma >= 0) the
-fitted scale is non-increasing in reserves and non-decreasing in concentration. So both
-changes raise the scale for EVERY posterior draw. The quantile rises only for a
-weighting whose old quantile is positive; a negative old quantile falls and zero does
+fitted scale is non-increasing in reserves and non-decreasing in concentration. For k<1
+the smaller reserve raises the scale; higher concentration raises it when gamma>0. At
+k=1 both effects vanish, and concentration has no effect when gamma=0. The quantile
+rises only for a weighting whose old quantile is positive; a negative old quantile falls and zero does
 not move. All 4,000 sampled Bayesian-bootstrap replicates had a positive old quantile,
 but this is an observed simulation result rather than a universal probability-one
 identity over every allowable positive weighting.
 
-That makes P(rise) = 1 a statement about the model's support and the scenario, not about
-the strength of the evidence. What the posterior does carry is the MAGNITUDE, and the
+For the reported positive baseline, the posterior-draw fraction giving a rise is 1.
+This reflects the model support and scenario, not the strength of the evidence. What the posterior does carry is the MAGNITUDE, and the
 distance to the constraint boundary: this script reports the ratio across all committed
-draws and solves for the pooling exponent at which the direction would reverse.
+draws and solves for the flat boundary; the direction reverses across that boundary.
 
 Operator. Everything is computed under the paper's headline size-only operator (the headline fit,
 gamma fixed at 0 in the likelihood, in every draw; transfer_operator.py), where only the reserve
@@ -162,11 +163,11 @@ def sign_check(mode, z, tg):
         "reversal": {
             "k_at_which_direction_reverses": kstar,
             "posterior_mean_k": kbar,
-            "note": ("the reversing exponent is exactly 1, the bracket's upper endpoint: "
-                     "at k=1 the scale law is flat in both size and concentration, so "
-                     "the exponent on effective size vanishes. This establishes c>1 "
-                     "under k<1; it establishes a quantile rise only conditional on a "
-                     "positive old quantile")},
+            "note": ("k=1 is the flat boundary: the scale law is flat in both size and "
+                     "concentration because the exponent on effective size vanishes. "
+                     "For this scenario the direction reverses only beyond the boundary, "
+                     "at k>1. This establishes c>1 under k<1; it establishes a quantile "
+                     "rise only conditional on a positive old quantile")},
     }
 
 
@@ -238,7 +239,7 @@ def main():
     print("  draws with k <= 1: %.3f;  with gamma >= 0: %.3f"
           % ((k <= 1.0).mean(), (g >= 0.0).mean()))
     kstar = head["reversal"]["k_at_which_direction_reverses"]
-    print("  direction reverses only at k = %s (posterior mean %.3f, bracket [0.5, 1])"
+    print("  flat boundary k = %s (posterior mean %.3f; root search [0.5, 5])"
           % ("none in [0.5, 5]" if kstar is None else "%.3f" % kstar, head["reversal"]["posterior_mean_k"]))
     print("\n  => The support imposes c > 1. A rise follows at the reported positive")
     print("     baseline, but is not universal over every allowable weighting. The")
