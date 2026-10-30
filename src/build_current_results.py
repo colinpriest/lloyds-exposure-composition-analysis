@@ -66,6 +66,32 @@ def f(x, n=3):
     return "--" if x is None else ("%.*f" % (n, x))
 
 
+def inherited_history_sentence(record):
+    """Describe the wider conditional stress, including its regridded outcomes."""
+    if record is None:
+        raise SystemExit("the inherited-history sensitivity record is missing")
+    scenarios = record["scenarios"]
+    original, permuted = scenarios["742_original"], scenarios["742_permuted"]
+    earlier = scenarios["690_permuted"]
+    target, previous = original["n_target_assumed"], earlier["n_target_assumed"]
+    if (permuted["n_target_assumed"] != target or original["n_pseudo"] != permuted["n_pseudo"]
+            or original["allocation"] != "original" or permuted["allocation"] != "permuted"):
+        raise SystemExit("the inherited-history targets or allocations differ")
+    if original["n_pseudo"] - earlier["n_pseudo"] != target - previous:
+        raise SystemExit("the added proxy and pseudo-outcome counts differ")
+    def k(scenario, c):
+        return scenario["by_c"][c]["k"]["mean"]
+    return ("A wider hypothetical target of %d adds %d source-positive whole-account or transferred-base proxies "
+            "to the %d target, assuming compatible eligible mature gross outcomes and reserve bases. "
+            "The grid is recomputed for all %d pseudo-outcomes, including the earlier %d, so the comparison "
+            "does not isolate the added cases. At $c=1$ and $c=5$, ledger-order fits give $k=%.3f$ and $%.3f$; "
+            "one fixed permutation gives $%.3f$ and $%.3f$. These separate conditional scenarios are not an "
+            "eligibility estimate or a bound; no posterior interval for between-fit differences was computed. "
+            "Source: `results/check_inherited_history_sensitivity_results.json`; see Supplement S6."
+            % (target, target - previous, previous, original["n_pseudo"], earlier["n_pseudo"],
+               k(original, "1.0"), k(original, "5.0"), k(permuted, "1.0"), k(permuted, "5.0")))
+
+
 #: descriptive screening distance; it does not attribute a posterior to prior or data
 PRIOR_CLOSE = 0.05
 
@@ -411,8 +437,10 @@ def main():
         A(withdrawn_grouping_sentence(miss["disposition_detail_counts"]))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
-        A("Three sensitivities are reported instead of resting on it. %s See the manuscript for all three."
+        A("The following sensitivities address that concern. %s"
           % " ".join(sensitivity_sentences(sens, m0)))
+        A("")
+        A(inherited_history_sentence(load(RESULTS, "check_inherited_history_sensitivity_results.json")))
         A("")
 
     A("## Open questions")

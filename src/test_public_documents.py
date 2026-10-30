@@ -405,6 +405,20 @@ def test_each_currency_clause_form_is_refused_where_the_record_calls_for_the_oth
         bcr.currency_clauses(_NONE_FORM, dict(_SCAN, undetermined=["9_2014"]), _OBS, 3)
 
 
+def test_the_wider_inherited_history_summary_follows_its_conditional_scenarios():
+    record = _json("results", "check_inherited_history_sensitivity_results.json")
+    sentence = bcr.inherited_history_sentence(record)
+    assert sentence in _read("docs", "current-results.md")
+    assert all(part in sentence for part in ("742", "52", "690", "86", "34", "0.634", "0.518",
+                                             "0.628", "0.517", "does not isolate", "not an eligibility estimate or a bound"))
+    changed = json.loads(json.dumps(record))
+    changed["scenarios"]["742_original"]["by_c"]["1.0"]["k"]["mean"] = 0.611
+    assert "$k=0.611$" in bcr.inherited_history_sentence(changed)
+    changed["scenarios"]["742_permuted"]["n_pseudo"] -= 1
+    with pytest.raises(SystemExit, match="targets or allocations differ"):
+        bcr.inherited_history_sentence(changed)
+
+
 def test_the_sensitivity_sentences_follow_the_record():
     """The generated documents are rewritten from the regenerated records (option B)."""
     ms = _json("results", "check_missingness_sensitivity_results.json")
