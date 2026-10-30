@@ -35,5 +35,7 @@
     "result": "All sample arrays, target keys and sizes, unavailable and selected unresolved keys, pseudo-reserve, HHI, year and regime arrays match exactly between the run snapshot and the current implementation."
   },
   "input_patch_uncompressed_sha256": "6f3f1485045954cd21485f99bbf7dc7daed3b3c025b0678aa6744124914dd969",
-  "input_patch_recovery": "Decompress the gzip file byte for byte, then apply to a clean checkout of the base commit with git apply --ignore-whitespace <decompressed-patch-path>. The patch has CRLF context, so plain git apply may fail on an LF checkout."
+  "input_patch_recovery": "Decompress the gzip file byte for byte, then apply to a clean checkout of the base commit with git apply --ignore-whitespace <decompressed-patch-path>. The patch has CRLF context, so plain git apply may fail on an LF checkout.",
+  "run_log_sha256_normalized_lf": "b672af0a58f07bbb3a99664d143e13f3793b558506f544fe12dd6b26e490ce21",
+  "hash_interpretation": "run_log_sha256 records the original log bytes at execution; run_log_sha256_normalized_lf verifies the preserved text independent of checkout line endings. The raw result and compressed input patch are separately hashed above."
 }

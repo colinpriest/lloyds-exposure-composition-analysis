@@ -564,3 +564,33 @@ def test_partial_verifier_detects_changed_unrun_vignette_and_untracked_output(mo
         monkeypatch.setattr(rp, "changed_paths", lambda root, path=changed: [path])
         assert not rp.verify()
         assert changed in capsys.readouterr().out
+
+
+def test_review_evidence_requires_its_exact_tracked_content_and_does_not_exempt_the_directory(tmp_path, monkeypatch):
+    import hashlib
+    import subprocess
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    folder = tmp_path / "results" / "review_evidence"
+    folder.mkdir(parents=True)
+    allowed = folder / "verified.json"
+    allowed.write_bytes(b'{"record": 1}\r\n')
+    subprocess.run(["git", "-C", str(tmp_path), "add", "results/review_evidence/verified.json"], check=True)
+    rel = "results/review_evidence/verified.json"
+    digest = hashlib.sha256(b'{"record": 1}\n').hexdigest()
+    monkeypatch.setattr(rp, "HERE", str(tmp_path))
+    monkeypatch.setattr(rp, "REVIEW_EVIDENCE_SHA256", {rel: digest})
+    assert rp.check_review_evidence_contract() == []
+    allowed.write_bytes(b'{"record": 2}\n')
+    assert any("differs from its recorded hash" in e for e in rp.check_review_evidence_contract())
+    allowed.write_bytes(b'{"record": 1}\n')
+    extra = folder / "unlisted.json"
+    extra.write_text("{}\n", encoding="utf8")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "results/review_evidence/unlisted.json"], check=True)
+    monkeypatch.setattr(rp, "STEPS", [])
+    monkeypatch.setattr(rp, "OUTPUTS", {})
+    monkeypatch.setattr(rp, "TARGETED_PRODUCERS", {})
+    monkeypatch.setattr(rp, "TARGETED_RUN_EVIDENCE", {})
+    monkeypatch.setattr(rp, "EVIDENCE_ARCHIVES", ())
+    assert any("unlisted.json has no manifest producer" in e for e in rp.check_manifest_completeness())
+    allowed.unlink()
+    assert any("unreadable" in e for e in rp.check_review_evidence_contract())

@@ -385,6 +385,60 @@ TARGETED_RUN_EVIDENCE = {
 }
 
 
+# Individually pinned October 2026 review evidence: captured source comparisons, logs,
+# refit summaries and provenance. These are historical records, not pipeline outputs.
+# Text is hashed after CRLF-to-LF normalization; the compressed patch is hashed as bytes.
+# Every tracked file still needs its own explicit entry: this is not a directory exemption.
+REVIEW_EVIDENCE_SHA256 = {
+    'results/review_evidence/baj-compare-selection-inputs.py': '26a60efe477a231c23e2fa0b6251f4ed198311fd69ebe66634a4e9350efbcee6',
+    'results/review_evidence/baj-selection-current-inputs.json': '40411082918d45f6830132cd31ae8108a374f8126b79a4ccf770df960289dd87',
+    'results/review_evidence/baj-selection-run-inputs.json': '40411082918d45f6830132cd31ae8108a374f8126b79a4ccf770df960289dd87',
+    'results/review_evidence/clean_pin_conditional.log': 'c6ea07602a16dc995f169bc2e9ccfcb32ac912a4b21d4e6b670b0135f776a31a',
+    'results/review_evidence/clean_pin_conditional_results.json': '3f9773b58ed883173a4c2c220f0e708cb4d42522bac82e97bdde7d003790160c',
+    'results/review_evidence/clean_pin_maturity-exclude.log': '16d18ecf522ef813e6ca51dbaca7abeaacb03a0427bc236fff8ec11e28006e4e',
+    'results/review_evidence/clean_pin_maturity-exclude_diagnostics.json': '84d08aa5924ff72384f19e7c88b3919b13a18441a632ca39490aae0a3c96ccdd',
+    'results/review_evidence/clean_pin_maturity-exclude_results.json': 'd2c0ee5e3f8212e570af6185fa6d7f00af2787f2f3f5fb83d72beacefac010f8',
+    'results/review_evidence/clean_pin_maturity-nogroups.log': 'e3b6388e32e169ad67e16d4aedd2e821239d148cc7f9c72cb7a317c44c605e7f',
+    'results/review_evidence/clean_pin_maturity-nogroups_diagnostics.json': 'c6550d0a5e24411b8158c68b858d7112a8020c48fb62154758caadb0d66313fe',
+    'results/review_evidence/clean_pin_maturity-nogroups_results.json': '965616de2096a813934433b053826bd595979333c7dd474d494baecccf297d17',
+    'results/review_evidence/clean_pin_selection.log': '622aff36c81fb7622c249cf499a741f03863b32b1959f7f5ec49fb752729369d',
+    'results/review_evidence/clean_pin_selection_results.json': '268641213b5786fdd8f9ac978fae462b162261e7ea250be174a389236ab4cd54',
+    'results/review_evidence/clean_pin_source.log': 'c58ee6ceaccec95c53163f0b2bc9dcd0112ba155b2dafb0d405a9ce52a8d5389',
+    'results/review_evidence/clean_pin_source_results.json': 'c900a206964c8263c6629a83f941abdcdbfc2bbfeb86aa890bf96fef102f5b6c',
+    'results/review_evidence/clean_pin_targeted_refits_20261030.json': '12b2ed0c47be974b1cc3d85aef5162491477316f8ba26ea299872941ad515c07',
+    'results/review_evidence/maturity_provenance_hash_addendum.json': 'cc3ec4d14a91ea011a04ff42241e60dd52da94734ae9a2c4ae5a5c13390c585b',
+    'results/review_evidence/missingness_1254_compiler_available.json': 'd1240d15418010e28bd6bf42422037b3ee5d879df17365ea8fb2e92f7e3e13c1',
+    'results/review_evidence/missingness_1254_compiler_comparison.json': '1557b2429c55ac3292522cb6b890a65a27931e9ddc386eb84efa0fce64df4b10',
+    'results/review_evidence/missingness_1254_compiler_unavailable.json': '268641213b5786fdd8f9ac978fae462b162261e7ea250be174a389236ab4cd54',
+    'results/review_evidence/selection_690_input.patch.gz': 'edde3dbe217da0c8e1ab4c9e0f442cecce6efed02dfb0803ff0b9ce0c3f7286d',
+    'results/review_evidence/selection_690_provenance.json': '68ecc0a43d8eb46a9e4390a7b49117956e825caf3c46d47e1addc26373744884',
+    'results/review_evidence/selection_690_raw_results.json': 'ffbfdd56a3c0c36025b0d9fd3fb621ea94ef060b9c4547a99671bc7b24e4ad24',
+    'results/review_evidence/selection_690_run.log': 'b672af0a58f07bbb3a99664d143e13f3793b558506f544fe12dd6b26e490ce21',
+}
+
+
+def check_review_evidence_contract():
+    """Require each specifically listed review record to be tracked and retain its bytes."""
+    import hashlib
+    bad = []
+    for rel, expected in REVIEW_EVIDENCE_SHA256.items():
+        tracked = subprocess.run(["git", "-C", HERE, "ls-files", "--error-unmatch", rel],
+                                 capture_output=True).returncode == 0
+        if not tracked:
+            bad.append("review evidence %s is not tracked" % rel)
+            continue
+        try:
+            with open(os.path.join(HERE, *rel.split("/")), "rb") as fh:
+                raw = fh.read()
+        except OSError as exc:
+            bad.append("review evidence %s unreadable: %s" % (rel, exc))
+            continue
+        if not rel.endswith(".gz"):
+            raw = raw.replace(b"\r\n", b"\n")
+        if hashlib.sha256(raw).hexdigest() != expected:
+            bad.append("review evidence %s differs from its recorded hash" % rel)
+    return bad
+
 def check_targeted_contracts():
     """Check explicit producers and historical evidence without claiming a rerun."""
     import hashlib
@@ -479,7 +533,9 @@ def check_manifest_completeness():
             bad.append("step %s declares no outputs" % sc)
     produced = {rel for outs in OUTPUTS.values() for rel in outs}
     produced.update(TARGETED_PRODUCERS)
+    produced.update(REVIEW_EVIDENCE_SHA256)
     bad.extend(check_targeted_contracts())
+    bad.extend(check_review_evidence_contract())
     archived = {}
     for prefix in EVIDENCE_ARCHIVES:
         files = _archive_manifest(prefix)

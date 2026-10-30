@@ -43,7 +43,8 @@
         "min_ess_bulk": 1883.2403238766642,
         "min_ess_tail": 2146.3147160204717
       },
-      "comparison": "All reported numerical summaries, diagnostics and vignette centres match the deposited result exactly."
+      "comparison": "All reported numerical summaries, diagnostics and vignette centres match the deposited result exactly.",
+      "preserved_log_sha256_normalized_lf": "c6ea07602a16dc995f169bc2e9ccfcb32ac912a4b21d4e6b670b0135f776a31a"
     },
     "source": {
       "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
@@ -94,7 +95,8 @@
           "min_ess_tail": 1784.221463538948
         }
       },
-      "comparison": "All reported numeric summaries and diagnostics match the deposited result exactly; posterior archive hashes differ and arrays were not compared."
+      "comparison": "All reported numeric summaries and diagnostics match the deposited result exactly; posterior archive hashes differ and arrays were not compared.",
+      "preserved_log_sha256_normalized_lf": "c58ee6ceaccec95c53163f0b2bc9dcd0112ba155b2dafb0d405a9ce52a8d5389"
     },
     "maturity-nogroups": {
       "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
@@ -119,7 +121,8 @@
         "min_ess_tail": 1456.2780483149118,
         "zero_divergences_all_fits": true
       },
-      "comparison": "Result JSON equals the deposited result as parsed JSON."
+      "comparison": "Result JSON equals the deposited result as parsed JSON.",
+      "preserved_log_sha256_normalized_lf": "e3b6388e32e169ad67e16d4aedd2e821239d148cc7f9c72cb7a317c44c605e7f"
     },
     "maturity-exclude": {
       "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
@@ -144,7 +147,8 @@
         "min_ess_tail": 1687.5817932820914,
         "zero_divergences_all_fits": true
       },
-      "comparison": "Result JSON equals the deposited result as parsed JSON."
+      "comparison": "Result JSON equals the deposited result as parsed JSON.",
+      "preserved_log_sha256_normalized_lf": "16d18ecf522ef813e6ca51dbaca7abeaacb03a0427bc236fff8ec11e28006e4e"
     },
     "selection": {
       "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
@@ -161,8 +165,10 @@
         "ess_note": "This historical producer did not record ESS."
       },
       "comparison": "The entire parsed result JSON exactly equals the result deposited at c4afe6c.",
-      "n_selected_unresolved": 20
+      "n_selected_unresolved": 20,
+      "preserved_log_sha256_normalized_lf": "622aff36c81fb7622c249cf499a741f03863b32b1959f7f5ec49fb752729369d"
     }
   },
-  "selection_note": "The clean-pin selection reproduction and changed-input selection sensitivity are separate runs; their records must identify their own inputs, outputs, and diagnostics. No claim about the changed-input run is made by this clean-pin addendum."
+  "selection_note": "The clean-pin selection reproduction and changed-input selection sensitivity are separate runs; their records must identify their own inputs, outputs, and diagnostics. No claim about the changed-input run is made by this clean-pin addendum.",
+  "preservation_line_endings": "Execution hashes record original run outputs and logs. Preserved text snapshots are verified using LF-normalized bytes by the explicit evidence contract in reproduce.py; compressed or binary files are hashed byte for byte."
 }
