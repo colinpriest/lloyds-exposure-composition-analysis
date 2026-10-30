@@ -415,7 +415,7 @@ def test_the_sensitivity_sentences_follow_the_record():
         assert "not a bound" in text
     flat_lines = " ".join(lines)
     # the stress's size is the record's (70 = 58 + 12 until round 62's records made it 57 = 45 + 12)
-    assert broad["n_pseudo"] == broad["n_eligibility_unresolved"] + broad["n_known_eligible_unavailable"]
+    assert broad["n_pseudo"] == broad["n_eligibility_unresolved"] + broad["n_unavailable_outcomes"]
     assert "%d-record" % broad["n_pseudo"] in flat_lines
     prop = ms["propensity_model"]
     assert "%.2f--%.2f" % (
@@ -494,7 +494,7 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
     ms = _json("results", "check_missingness_sensitivity_results.json")
     m0 = _json("model", "dispersion_calibration_ritc.json")
     broad = json.loads(json.dumps(ms))
-    broad["eligibility_unresolved_stress"].update(n_eligibility_unresolved=7, n_known_eligible_unavailable=3,
+    broad["eligibility_unresolved_stress"].update(n_eligibility_unresolved=7, n_unavailable_outcomes=3,
                                                   n_pseudo=10)
     text = " ".join(bcr.sensitivity_sentences(broad, m0))
     assert "assumes the 7 selected eligibility-unresolved filings" in text and "the 3 unavailable outcomes" in text

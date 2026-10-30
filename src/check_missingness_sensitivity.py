@@ -435,7 +435,7 @@ def main():
         f"the potential target to {len(target) + len(unresolved)}; "
         "not an exhaustive upper bound or an estimate of their eligibility; other disclosure-screened histories remain unverified",
     )
-    result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)
+    result["eligibility_unresolved_stress"]["n_unavailable_outcomes"] = len(unavailable)
     result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
         _fh.write(json.dumps(result, indent=2) + "\n")

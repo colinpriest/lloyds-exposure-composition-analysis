@@ -11,8 +11,8 @@
   "run_log": "results/review_evidence/selection_690_run.log",
   "run_log_sha256": "e4137b3b468814a82621a3233fb27de7475ca037e00ba8e7f059eb86c454cc3f",
   "published_result": "results/check_missingness_sensitivity_results.json",
-  "published_result_sha256": "e8d3cf1ce6e375bace78147adf2ea2d7e1341d853adcd5dd472243ba2055ceba",
-  "post_run_adaptations": "Updated interpretation strings to name the 24 selected cases and the nine provisional eligibility assumptions; added names for existing median imputations and explicit one-plus-nine counts. No numerical fit, propensity, pool or stress values changed. Subsequent source-audit wording, loader reason, input line ending normalisation and review metadata changes preserve the same sampler inputs; the patch records the exact run state.",
+  "published_result_sha256": "dd94e6ce00b0b2e4d81e408393cd260c58f92f2ab87b2455624eb6a7a76c6e9f",
+  "post_run_adaptations": "Updated interpretation strings to name the 24 selected cases and the nine provisional eligibility assumptions; added names for existing median imputations and explicit one-plus-nine counts. No numerical fit, propensity, pool or stress values changed. Subsequent source-audit wording, loader reason, input line ending normalisation and review metadata changes preserve the same sampler inputs; the patch records the exact run state. Renamed the live result field n_known_eligible_unavailable to n_unavailable_outcomes: the historical name incorrectly suggested all ten were established eligible. The raw historical result retains its original field and hash.",
   "diagnostics": {
     "fit_count": 11,
     "max_rhat": 1.0034497160364368,

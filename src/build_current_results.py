@@ -837,10 +837,10 @@ def sensitivity_sentences(ms, m0):
     stress = ms["eligibility_unresolved_stress"]
     broad = stress["by_c"]
     bc = sorted(broad, key=float)
-    if stress["n_pseudo"] != stress["n_eligibility_unresolved"] + stress["n_known_eligible_unavailable"]:
+    if stress["n_pseudo"] != stress["n_eligibility_unresolved"] + stress["n_unavailable_outcomes"]:
         raise SystemExit("the broader stress's records are not its unresolved filings plus the known unavailable "
                          "outcomes (%d against %d + %d)" % (stress["n_pseudo"], stress["n_eligibility_unresolved"],
-                                                            stress["n_known_eligible_unavailable"]))
+                                                            stress["n_unavailable_outcomes"]))
     if "%.3f" % ipw["k"]["mean"] == "%.3f" % un["k"]["mean"]:
         move = "leaves the pooling exponent at $k = %.3f$" % un["k"]["mean"]
     else:
@@ -858,7 +858,7 @@ def sensitivity_sentences(ms, m0):
         "A separate broader-potential-target stress assumes the %d selected eligibility-unresolved filings were "
         "eligible, appends them with the %d unavailable outcomes (one source-supported eligible and nine provisional), and moves $k$ from $%.3f$ at "
         "$c=%g$ to $%.3f$ at $c=%g$; this selected scenario is not a bound or an eligibility estimate."
-        % (stress["n_eligibility_unresolved"], stress["n_known_eligible_unavailable"],
+        % (stress["n_eligibility_unresolved"], stress["n_unavailable_outcomes"],
            broad[bc[0]]["k"]["mean"], float(bc[0]), broad[bc[-1]]["k"]["mean"], float(bc[-1])),
     ]
 

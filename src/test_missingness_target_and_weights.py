@@ -159,7 +159,7 @@ def test_generated_sensitivity_discloses_caps_and_broader_target(sources):
     target = sum(row["in_supported_target_population"] == "True" for row in rows)
     broad = result["eligibility_unresolved_stress"]
     assert broad["n_eligibility_unresolved"] == len(sources["unresolved"])
-    assert broad["n_known_eligible_unavailable"] == unavailable
+    assert broad["n_unavailable_outcomes"] == unavailable
     assert broad["n_pseudo"] == len(sources["unresolved"]) + unavailable
     assert result["n_broader_potential_target_if_all_unresolved_eligible"] == target + len(sources["unresolved"])
 
@@ -274,3 +274,11 @@ def test_unavailable_outcome_target_labels_nine_as_provisional():
     assert [r['file'] for r in supported] == ['syndicate_1254_2022.json']
     assert len(provisional) == 9
     assert all('provisional target inclusion' in r['classification_evidence'] for r in provisional)
+
+
+def test_unavailable_outcome_count_does_not_claim_all_cases_are_known_eligible():
+    result = _sensitivity()['eligibility_unresolved_stress']
+    assert result['n_unavailable_outcomes'] == 10
+    assert result['n_source_supported_eligible_unavailable'] == 1
+    assert result['n_provisionally_assumed_unavailable'] == 9
+    assert 'n_known_eligible_unavailable' not in result
