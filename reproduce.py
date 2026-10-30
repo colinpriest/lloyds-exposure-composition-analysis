@@ -368,6 +368,7 @@ TARGETED_PRODUCERS = {
     "results/check_maturity_denominator_recovered_groups_omitted_results.json": ("src/targeted_maturity_refit.py", "--case no-groups --output-dir PATH; results.json"),
     "results/conditional_1254_2022_inclusion_results.json": ("src/check_1254_2022_inclusion.py", "--output-dir PATH; results.json"),
     "results/source_numerator_sensitivity_results.json": ("src/check_source_numerator_sensitivity.py", "--output-dir PATH; results.json"),
+    "results/check_inherited_history_sensitivity_results.json": ("src/targeted_inherited_history.py", "--output-dir PATH; results.json"),
 }
 
 # Historical execution records and input comparisons describe what actually
