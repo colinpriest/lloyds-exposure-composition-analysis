@@ -256,11 +256,16 @@ def test_the_readme_states_the_tree_state_the_run_report_records():
     rep = _run_report()
     with io.open(os.path.join(ROOT, "README.md"), encoding="utf-8") as _fh:
         text = _fh.read()
-    m = re.search(r"was made on\s+\d{1,2} \w+ \d{4} on a source tree([^;.]*)", text)
+    from datetime import datetime, timedelta, timezone
+    m = re.search(r"began on\s+\d{1,2} \w+ \d{4} and finished at\s+"
+                  r"(\d{2}:\d{2} on \d{1,2} \w+ \d{4} Brisbane time \(UTC\+10\)), on a source tree([^;.]*)", text)
     assert m, "the README no longer carries the manifest-run sentence"
-    said_clean = "no uncommitted change" in m.group(1)
+    said_clean = "no uncommitted change" in m.group(2)
     assert said_clean != bool(rep.get("worktree_dirty_src")), m.group(0)[:160]
-    assert rep["finished_utc"][:4] in text
+    finished = datetime.fromisoformat(rep["finished_utc"].replace("Z", "+00:00"))
+    expected = finished.astimezone(timezone(timedelta(hours=10))).strftime(
+        "%H:%M on %d %B %Y Brisbane time (UTC+10)")
+    assert m.group(1) == expected
 
 
 def test_the_provenance_correction_block_is_the_disposition_flow():

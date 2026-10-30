@@ -266,7 +266,7 @@ the round-8 readings Z7 and Z8 of 780/2016 and 4747/2024, `results/extraction_er
   set of years is no figure at t-3, never zero (5678/2016 leaves; 1609/2023 has none).
 - Primary at 35a259c: 649 records; 643 after the round-5 decisions, rule 5b, review 8 and the round-8 readings (2689/2023
   and 6134/2022 under rule 1, 4747/2024 and 2232/2017 under rule 4b, 3000/2022 and 1110/2022 leave; 780/2016 is back);
-  632 of 117 syndicates after rule 8 (11 set aside; predicted on the loader, to be confirmed by the regeneration).
+  632 records from 117 syndicates after rule 8 (11 set aside), confirmed by the regenerated model sample.
 
 <!-- coverage:start -->
 Where membership can be checked, 2020–2024, the working sample holds **310 of the 473 listed syndicate-years (65.5 %)**,
