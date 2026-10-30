@@ -780,8 +780,8 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
     near = "\n".join(bcr.posterior_rows(_m0((0.496, 0.037, 0.668), (0.500, 0.036, 0.841))))
     assert "| Statement | Posterior | Prior | Status |" in near
     first = [line for line in near.splitlines() if "nu_{\\text{clean}})$" in line][0]
-    assert "| 0.496 | 0.500 |" in first and "lighter" not in first and "heavier" not in first
-    assert "do not settle" in first
+    assert "| 0.496 | 0.500 |" in first
+    assert "ordering remains unresolved at the 0.95 threshold" in first
     finite = [line for line in near.splitlines() if "< 2)$" in line][0]
     assert "| 0.037 | 0.036 |" in finite and "odds factor 1.03" in finite
     assert "does not apportion" in finite and "the prior's, not a finding" not in finite
@@ -792,11 +792,16 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
     beta = [line for line in near.splitlines() if "beta" in line][0]
     assert "| 0.668 | 0.841 |" in beta and "move it below its prior mass" in beta
     far = "\n".join(bcr.posterior_rows(_m0((0.314, 0.20, 0.9), (0.500, 0.036, 0.841))))
-    assert "RITC tail leans lighter" in far and "ordering remains unresolved" in far
-    assert "RITC tail leans heavier" in "\n".join(bcr.posterior_rows(_m0((0.70, 0.2, 0.9), (0.5, 0.036, 0.841))))
+    assert "greater probability to a lighter RITC tail" in far and "ordering remains unresolved" in far
+    assert "greater probability to a heavier RITC tail" in "\n".join(bcr.posterior_rows(_m0((0.70, 0.2, 0.9), (0.5, 0.036, 0.841))))
     # Direction comes from posterior probability, not merely its movement versus a non-0.5 prior.
     shifted = "\n".join(bcr.posterior_rows(_m0((0.48, 0.2, 0.9), (0.2, 0.036, 0.841))))
-    assert "RITC tail leans lighter" in shifted and "ordering remains unresolved" in shifted
+    assert "greater probability to a lighter RITC tail" in shifted and "ordering remains unresolved" in shifted
+    # Prior closeness cannot suppress posterior resolution: these are only 0.02 apart.
+    resolved = "\n".join(bcr.posterior_rows(_m0((0.97, 0.2, 0.9), (0.95, 0.036, 0.841))))
+    assert "greater probability to a heavier RITC tail" in resolved and "ordering meets the 0.95 threshold" in resolved
+    reversed_order = "\n".join(bcr.posterior_rows(_m0((0.03, 0.2, 0.9), (0.05, 0.036, 0.841))))
+    assert "greater probability to a lighter RITC tail" in reversed_order and "ordering meets the 0.95 threshold" in reversed_order
     with pytest.raises(SystemExit):
         bcr.posterior_rows({"posterior_prob": _m0((0.4, 0.1, 0.5), (0.5, 0.1, 0.5))["posterior_prob"],
                             "prior_prob": {}})

@@ -71,11 +71,11 @@ PRIOR_CLOSE = 0.05
 
 
 def posterior_rows(m0):
-    """The table of what the posterior does and does not settle: each posterior probability beside the prior mass the
-    calibration records for the same event (model/dispersion_calibration_ritc.json prior_prob), and no direction read
-    from a probability within PRIOR_CLOSE of its prior. Round 62's verification (N-V-A-6) found
-    P(nu_RITC < nu_clean) = 0.496 printed as "RITC tail lighter in this fit" against a prior mass of 0.500, and two
-    more probabilities printed without their prior masses."""
+    """Report posterior probabilities with their corresponding prior masses.
+
+    Tail-order resolution follows the posterior probability's 0.95 convention; closeness
+    to its prior is not evidence that this ordering is or is not resolved.
+    """
     post, prior = m0.get("posterior_prob") or {}, m0.get("prior_prob") or {}
 
     def pair(key):
@@ -89,19 +89,18 @@ def posterior_rows(m0):
 
     rows = ["| Statement | Posterior | Prior | Status |", "|---|---:|---:|---|"]
     p, q = pair("nu_ritc_lt_nu_clean")
-    if moved(p, q):
-        movement = "above" if p > q else "below"
-        if p == 0.5:
-            order = "the data move it %s its prior mass; the tail ordering remains unresolved" % movement
-        else:
-            direction = "heavier" if p > 0.5 else "lighter"
-            resolution = ("but the ordering remains unresolved" if 0.05 < p < 0.95
-                          else "at this posterior probability")
-            order = ("the data move it %s its prior mass; the RITC tail leans %s, %s"
-                     % (movement, direction, resolution))
+    if p == q:
+        movement = "the posterior equals its prior mass"
     else:
-        order = ("within %.2f of its prior mass: the data do not settle the order of the two tail indices"
-                 % PRIOR_CLOSE)
+        movement = "the posterior is %s its prior mass" % ("above" if p > q else "below")
+    if p == 0.5:
+        order = "the posterior ordering is unresolved at the 0.95 threshold"
+    else:
+        direction = "heavier" if p > 0.5 else "lighter"
+        resolution = ("the ordering remains unresolved at the 0.95 threshold" if 0.05 < p < 0.95
+                      else "the ordering meets the 0.95 threshold")
+        order = "the posterior assigns greater probability to a %s RITC tail; %s" % (direction, resolution)
+    order = "%s; %s" % (movement, order)
     rows.append(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %.3f | %.3f | %s; the ordering is not imposed (the "
                 r"prior on $\lambda_{\text{RITC}}$ admits both signs) |" % (p, q, order))
     p, q = pair("nu_ritc_lt_2")
