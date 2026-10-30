@@ -1051,9 +1051,27 @@ function logSurvivor(values) {
   const points = empiricalSurvivor(values);
   const positive = points.filter(p => p.y > 0);
   if (positive.length && points[points.length - 1].y === 0) {
-    positive.push({x: points[points.length - 1].x, y: positive[positive.length - 1].y});
+    positive.push({x: points[points.length - 1].x, y: positive[positive.length - 1].y, bridge: true});
   }
   return positive;
+}
+
+// The bridge draws the left limit at the maximum; it is not an observation
+// of P(S > max). Do not display or interact with it as a data point.
+function survivorPointRadius(context) {
+  return context.raw && context.raw.bridge ? 0 : 2;
+}
+
+function survivorPointHoverRadius(context) {
+  return context.raw && context.raw.bridge ? 0 : 4;
+}
+
+function survivorPointHitRadius(context) {
+  return context.raw && context.raw.bridge ? 0 : 1;
+}
+
+function survivorTooltipFilter(item) {
+  return !(item.raw && item.raw.bridge);
 }
 
 function renderTailPlot() {
@@ -1064,8 +1082,8 @@ function renderTailPlot() {
     type: 'scatter',
     data: {
       datasets: [
-        { label: 'Raw market', data: logSurvivor(r.raw), borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.3)', pointRadius: 2, showLine: true, stepped: "after", borderWidth: 2 },
-        { label: 'Target basis', data: logSurvivor(r.adj), borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.3)', pointRadius: 2, showLine: true, stepped: "after", borderWidth: 2 },
+        { label: 'Raw market', data: logSurvivor(r.raw), borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.3)', pointRadius: survivorPointRadius, pointHoverRadius: survivorPointHoverRadius, pointHitRadius: survivorPointHitRadius, showLine: true, stepped: "after", borderWidth: 2 },
+        { label: 'Target basis', data: logSurvivor(r.adj), borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.3)', pointRadius: survivorPointRadius, pointHoverRadius: survivorPointHoverRadius, pointHitRadius: survivorPointHitRadius, showLine: true, stepped: "after", borderWidth: 2 },
       ]
     },
     options: {
@@ -1073,6 +1091,7 @@ function renderTailPlot() {
       plugins: {
         legend: { position: 'top' },
         title: { display: true, text: 'Empirical Survivor Function (zero at maximum omitted on log axis)' },
+        tooltip: { filter: survivorTooltipFilter },
       },
       scales: {
         x: { title: { display: true, text: 'Signed PYD Ratio (adverse)' }, min: 0 },

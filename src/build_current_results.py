@@ -379,7 +379,7 @@ def main():
           "one inferential disposition before any selection diagnostic is calculated.")
         A("")
         disp = miss["disposition_counts"]
-        A("- Of %s filings: **%s** have no separately disclosed usable mature-cohort outcome or a nil opening; "
+        A("- Of %s filings: **%s** have no mature underwriting-year diagonal established in their reviewed or parsed triangles; "
           "**%s** selected filings have unresolved eligibility (20 unread and four with source-reviewed transfers); "
           "inherited history has not been established for all disclosure-screened filings. "
           "**%s** are scientific exclusions, **%s** have unavailable outcomes (one source-supported eligible and nine provisionally included), "
@@ -1112,7 +1112,7 @@ def provenance_clauses(t, ex, records=None):
     t = _numbers(
         t,
         r"The (?P<files>[0-9,]+) filings are classified before any selection diagnostic: "
-        r"(?P<struct>[0-9,]+) have no separately disclosed usable mature-cohort\s+outcome or a nil opening, (?P<unresolved>[0-9,]+) selected cases have "
+        r"(?P<struct>[0-9,]+) have no mature underwriting-year diagonal established in their reviewed or parsed\s+triangles, (?P<unresolved>[0-9,]+) selected cases have "
         r"economic eligibility unresolved.*?; (?P<sci>[0-9,]+) are scientific "
         r"exclusions, (?P<unavail>[0-9,]+) have unavailable outcomes \(one source-supported eligible and nine provisionally included\), (?P<comp>[0-9,]+) have an "
         r"observed eligible outcome but no usable composition,\s+and (?P<sample>[0-9,]+) enter the model",

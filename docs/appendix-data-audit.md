@@ -40,7 +40,7 @@ Every filing receives one mutually exclusive inferential disposition in `results
 
 | Inferential disposition | Records |
 |---|---:|
-| Disclosure screen: no separately disclosed usable mature-cohort outcome or nil opening | 102 |
+| Screen: no mature underwriting-year diagonal established in reviewed or parsed triangles | 102 |
 | Selected eligibility-unresolved cases (unread or transferred-liability scope unresolved) | 24 |
 | Scientific exclusion | 273 |
 | Outcome unavailable (one source-supported eligible; nine provisional) | 10 |

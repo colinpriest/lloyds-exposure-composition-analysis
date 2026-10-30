@@ -884,6 +884,33 @@ def test_survivor_uses_full_pool_and_strict_inequality_with_ties():
 def test_log_survivor_extends_to_maximum_while_omitting_zero_endpoint():
     points = harness('console.log(JSON.stringify(logSurvivor([-1, 0, 1, 1, 2])));',
                      extra=('empiricalSurvivor', 'logSurvivor'))
-    assert points == [{'x': 1, 'y': 0.2}, {'x': 2, 'y': 0.2}]
+    assert points == [{'x': 1, 'y': 0.2}, {'x': 2, 'y': 0.2, 'bridge': True}]
     template = _read(TEMPLATE)
     assert 'zero at maximum omitted on log axis' in template
+
+
+def test_tail_chart_bridge_has_no_marker_hit_target_or_tooltip():
+    body = r"""
+const RESULT = {raw: [-1, 0, 1, 1, 2], adj: [-2, 0, 3, 3, 5]};
+let charts = {};
+const document = {getElementById: () => ({})};
+class Chart { constructor(element, config) { this.config = config; } }
+renderTailPlot();
+const cfg = charts.tail.config;
+const output = cfg.data.datasets.map(ds => {
+  const bridge = ds.data[ds.data.length - 1], actual = ds.data[0];
+  return {bridge, actual, stepped: ds.stepped,
+          radius: ds.pointRadius({raw: bridge}), hover: ds.pointHoverRadius({raw: bridge}),
+          hit: ds.pointHitRadius({raw: bridge}), tooltip: cfg.options.plugins.tooltip.filter({raw: bridge}),
+          actualRadius: ds.pointRadius({raw: actual}), actualTooltip: cfg.options.plugins.tooltip.filter({raw: actual})};
+});
+console.log(JSON.stringify(output));
+"""
+    result = harness(body, extra=('empiricalSurvivor', 'logSurvivor', 'survivorPointRadius',
+                                  'survivorPointHoverRadius', 'survivorPointHitRadius',
+                                  'survivorTooltipFilter', 'renderTailPlot'))
+    for series in result:
+        assert series['bridge']['bridge'] is True and series['stepped'] == 'after'
+        assert (series['radius'], series['hover'], series['hit'], series['tooltip']) == (0, 0, 0, False)
+        assert series['actualRadius'] == 2 and series['actualTooltip'] is True
+        assert series['bridge']['x'] > series['actual']['x']

@@ -343,8 +343,8 @@ model comparisons were not repeated).
 
 ## 2c. Sample selection: inferential disposition first
 
-The 1065 filings are classified before any selection diagnostic: 102 have no separately disclosed usable mature-cohort
-outcome or a nil opening, 24 selected cases have economic eligibility unresolved: 20 have no deterministic
+The 1065 filings are classified before any selection diagnostic: 102 have no mature underwriting-year diagonal established in their reviewed or parsed
+triangles, 24 selected cases have economic eligibility unresolved: 20 have no deterministic
 reading, and four source-reviewed transfers have unresolved mature outcome scope or reserve
 base. A mature inherited cohort is established for 3268/2019; 273 are scientific exclusions, 10 have unavailable outcomes (one source-supported eligible and nine provisionally included), 24 have an observed eligible outcome but no usable composition,
 and 632 enter the model. The provisional disclosure-defined analysis target is therefore 666

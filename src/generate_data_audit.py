@@ -482,7 +482,7 @@ def md(c, r):
       "operational loader stages, not mutually interchangeable statements about economic eligibility, "
       "disclosure availability or extraction success.")
     labels = {
-        "structural_no_eligible_outcome": "Disclosure screen: no separately disclosed usable mature-cohort outcome or nil opening",
+        "structural_no_eligible_outcome": "Screen: no mature underwriting-year diagonal established in reviewed or parsed triangles",
         "eligibility_unresolved": "Selected eligibility-unresolved cases (unread or transferred-liability scope unresolved)",
         "scientific_exclusion": "Scientific exclusion",
         "eligible_outcome_unavailable": "Outcome unavailable (one source-supported eligible; nine provisional)",

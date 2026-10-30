@@ -889,3 +889,14 @@ def test_the_readme_describes_the_transfer_as_the_code_does():
     m = 1.5
     conditional = base(*tgt) * sps.t.ppf(sps.t.cdf(z / m, df=6.0), df=4.0)
     assert abs(float(ritc_to_clean[0]) - conditional) > 1e-3
+
+
+def test_screened_count_describes_reviewed_or_parsed_triangles_without_claiming_filing_absence():
+    import missingness_check as mc
+    rows = [r for r in mc.classify_filings() if r['category'] == 'structural_no_eligible_outcome']
+    assert len(rows) == 102
+    assert {r['detail'] for r in rows} == {'no_disclosed_mature_diagonal', 'no_mature_cohort'}
+    for name in ('current-results.md', 'data-provenance.md', 'appendix-data-audit.md'):
+        text = ' '.join(_read('docs', name).split())
+        assert 'no mature underwriting-year diagonal established in' in text
+        assert 'nil opening' not in text.lower() or name == 'data-provenance.md'  # other historical cases may mention it
