@@ -802,6 +802,12 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
     assert "greater probability to a heavier RITC tail" in resolved and "ordering meets the 0.95 threshold" in resolved
     reversed_order = "\n".join(bcr.posterior_rows(_m0((0.03, 0.2, 0.9), (0.05, 0.036, 0.841))))
     assert "greater probability to a lighter RITC tail" in reversed_order and "ordering meets the 0.95 threshold" in reversed_order
+    for posterior in (0.05, 0.95):
+        at_boundary = "\n".join(bcr.posterior_rows(_m0((posterior, 0.2, 0.9), (posterior, 0.036, 0.841))))
+        assert "ordering meets the 0.95 threshold" in at_boundary
+    for posterior in (0.0501, 0.9499):
+        just_inside = "\n".join(bcr.posterior_rows(_m0((posterior, 0.2, 0.9), (posterior, 0.036, 0.841))))
+        assert "ordering remains unresolved at the 0.95 threshold" in just_inside
     with pytest.raises(SystemExit):
         bcr.posterior_rows({"posterior_prob": _m0((0.4, 0.1, 0.5), (0.5, 0.1, 0.5))["posterior_prob"],
                             "prior_prob": {}})
