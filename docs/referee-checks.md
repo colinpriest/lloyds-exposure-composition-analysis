@@ -97,7 +97,7 @@ estimate: the pooling **distinction is not adjudicated by predictive CV**.
 → State this. **Superseded recommendation:** the original advice here was to rest the claim on
 $P(k>0.5)=1.00$. That probability is one by construction: the adopted prior restricts $k$ to
 $[\tfrac12,1]$, the finite-variance benchmarks; that is a modelling choice, not a universal bound. The manuscript rests the claim on $k<1$, which the by-syndicate comparison with
-fixed $k=1$ establishes; it does not claim $k>\tfrac12$, and it reports what fixing $k=\tfrac12$ does
+fixed $k=1$ supports within the models compared; it does not claim $k>\tfrac12$, and it reports what fixing $k=\tfrac12$ does
 to the transferred stresses.
 
 ---

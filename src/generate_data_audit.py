@@ -711,8 +711,8 @@ def md(c, r):
              f"**{ritc_total} syndicate-years**") if scan else (
              f"flags **{ritc_total} syndicate-years** as RITC-affected")
     A(f"- **RITC prevalence.** Reinsurance-to-close is common and identifiable in the notes. A deterministic "
-      f"sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: every RITC "
-      f"sentence classified by direction and effective year; `pdf_extraction/ritc_scan.json` is its "
+      f"sentence-level scan (`scripts/ritc_scanner.py` in the extraction repository: matched RITC "
+      f"sentences classified by direction and effective year; `pdf_extraction/ritc_scan.json` is its "
       f"flag file) {flags}{split}: {ritc_corpus} in the corpus, "
       f"**{ritc_sample} in the {c['sample']}-record working sample** (~{100*ritc_sample/c['sample']:.0f}%). "
       "A typical note records an incoming transfer, e.g. one syndicate \"assumed the liabilities of "
