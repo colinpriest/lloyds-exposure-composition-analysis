@@ -134,6 +134,9 @@ def calculate(dispositions, unavailable, unresolved, selected, S, R, H, year, ke
         keep = {}
         fit = original.fit(sy, rs, hs, yidx, len(years), ritc,
                            f'{tag} c={c:g}', keep=keep, keep_as='fit')
+        # Historical output key retained for reproducibility: these diagnostics
+        # cover only the named parameters in convergence['parameters'], not the
+        # latent reporting-year effects. Divergences cover the sampler transitions.
         fit['_diag_full'] = keep['fit']['convergence']
         result['by_c'][str(c)] = fit
         np.savez_compressed(outdir / f'{tag}-c{c:g}-draws.npz', **keep['fit']['draws'])

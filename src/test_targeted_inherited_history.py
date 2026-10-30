@@ -77,3 +77,9 @@ def test_committed_draw_archives_match_result_hashes():
             for value in arrays.values():
                 assert value.size > 0
                 assert np.isfinite(value).all()
+    named = ["k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "lambda_ritc", "beta_ritc", "tau_s"]
+    for scenario in result["scenarios"].values():
+        for fit in scenario["by_c"].values():
+            diagnostic = fit["_diag_full"]
+            assert diagnostic["parameters"] == named
+            assert all(np.isfinite(diagnostic[key]) for key in ("max_rhat", "min_ess_bulk", "min_ess_tail"))
