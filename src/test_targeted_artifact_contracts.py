@@ -76,7 +76,7 @@ def test_targeted_contracts_reject_untracked_producer_and_altered_history(tmp_pa
 
 
 def test_real_contracts_cover_thirteen_new_records():
-    assert len(rp.TARGETED_PRODUCERS) == 6
+    assert len(rp.TARGETED_PRODUCERS) == 7
     assert len(rp.TARGETED_RUN_EVIDENCE) == 7
     assert set(rp.TARGETED_PRODUCERS).isdisjoint(rp.TARGETED_RUN_EVIDENCE)
     assert rp.check_targeted_contracts() == []
