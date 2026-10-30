@@ -369,6 +369,12 @@ TARGETED_PRODUCERS = {
     "results/conditional_1254_2022_inclusion_results.json": ("src/check_1254_2022_inclusion.py", "--output-dir PATH; results.json"),
     "results/source_numerator_sensitivity_results.json": ("src/check_source_numerator_sensitivity.py", "--output-dir PATH; results.json"),
     "results/check_inherited_history_sensitivity_results.json": ("src/targeted_inherited_history.py", "--output-dir PATH; results.json"),
+    "results/inherited_history_draws/690_permuted-c1-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 690_permuted-c1-draws.npz"),
+    "results/inherited_history_draws/690_permuted-c5-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 690_permuted-c5-draws.npz"),
+    "results/inherited_history_draws/742_original-c1-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 742_original-c1-draws.npz"),
+    "results/inherited_history_draws/742_original-c5-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 742_original-c5-draws.npz"),
+    "results/inherited_history_draws/742_permuted-c1-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 742_permuted-c1-draws.npz"),
+    "results/inherited_history_draws/742_permuted-c5-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH; 742_permuted-c5-draws.npz"),
 }
 
 # Historical execution records and input comparisons describe what actually

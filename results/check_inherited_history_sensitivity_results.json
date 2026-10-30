@@ -1,0 +1,3619 @@
+{
+  "run": {
+    "source_commit": "7f70e5480c7b9bf79a2ab8544df8329fcdc6fd47",
+    "python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "numpy": "2.1.3",
+    "pymc": "5.25.1",
+    "arviz": "0.22.0",
+    "fit_seed": 42,
+    "chains": 4,
+    "tune_per_chain": 1500,
+    "draws_per_chain": 1500,
+    "target_accept": 0.98
+  },
+  "interpretation": [
+    "scenario assumes the 24 selected unresolved and the 52 additional positive-base cases meet mature gross eligibility",
+    "size proxies may not be the applicable mature-cohort base; 1980/2018 uses the transferred base under that assumption",
+    "the missing outcomes are fixed synthetic quantiles, not observed data or a probability bound",
+    "one predetermined permutation is not an exhaustive allocation analysis",
+    "these fits exclude 24 target observations with unavailable composition, as in the historical scenario"
+  ],
+  "historical_690_original_order_k": {
+    "1.0": {
+      "mean": 0.6024894132859095,
+      "hdi_2.5": 0.5105241185447019,
+      "hdi_97.5": 0.6925995957086094
+    },
+    "5.0": {
+      "mean": 0.55073012003921,
+      "hdi_2.5": 0.5024455126604385,
+      "hdi_97.5": 0.6156063034078371
+    }
+  },
+  "scenarios": {
+    "690_permuted": {
+      "allocation": "permuted",
+      "permutation_seed": 20261031,
+      "n_pseudo": 34,
+      "n_fit": 666,
+      "n_target_assumed": 690,
+      "n_target_observed_outcome_missing_composition_not_added": 24,
+      "weights": "one per observed and pseudo row; no inverse-propensity weights",
+      "group_abs_t": {
+        "eligibility_unresolved": {
+          "n": 24,
+          "mean_abs_t": 1.1877894186201756
+        },
+        "eligible_outcome_unavailable": {
+          "n": 10,
+          "mean_abs_t": 0.4549046932996859
+        }
+      },
+      "rho_abs_t_size": -0.0033636576943618973,
+      "rho_abs_t_year": -0.477649941561847,
+      "pseudo_inputs": [
+        {
+          "file": "syndicate_1254_2022.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2022,
+          "size_gbp_m": 75.257,
+          "hhi": 0.9422156629000301,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.4264705882352941,
+          "unit_t": -0.1978086825763566,
+          "sigma": 0.09336163013341331
+        },
+        {
+          "file": "syndicate_3330_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 7.578,
+          "hhi": 0.7349752056904406,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.22058823529411764,
+          "unit_t": -0.8551150156880923,
+          "sigma": 0.21249422279863664
+        },
+        {
+          "file": "syndicate_3622_2015.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2015,
+          "size_gbp_m": 5.097,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.1323529411764706,
+          "unit_t": -1.2982479585155873,
+          "sigma": 0.24608925941944162
+        },
+        {
+          "file": "syndicate_4242_2024.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2024,
+          "size_gbp_m": 324.3870297899529,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.5735294117647058,
+          "unit_t": 0.19780868257635642,
+          "sigma": 0.05883046382140413
+        },
+        {
+          "file": "syndicate_4711_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 288.174,
+          "hhi": 0.27597619703255516,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.7205882352941176,
+          "unit_t": 0.6374950914247277,
+          "sigma": 0.06087345892449885
+        },
+        {
+          "file": "syndicate_5623_2020.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2020,
+          "size_gbp_m": 11.923290879812619,
+          "hhi": 0.3650500489525392,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.5441176470588235,
+          "unit_t": 0.11806788166698415,
+          "sigma": 0.17986035875238435
+        },
+        {
+          "file": "syndicate_6050_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 9.807820238007244,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.45588235294117646,
+          "unit_t": -0.11806788166698427,
+          "sigma": 0.1932291002998091
+        },
+        {
+          "file": "syndicate_6107_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 29.50388055288639,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.5147058823529411,
+          "unit_t": 0.039254456876411666,
+          "sigma": 0.12952237118134946
+        },
+        {
+          "file": "syndicate_6107_2019.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2019,
+          "size_gbp_m": 73.61617303489335,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.27941176470588236,
+          "unit_t": -0.6374950914247277,
+          "sigma": 0.09406475043477618
+        },
+        {
+          "file": "syndicate_6107_2021.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2021,
+          "size_gbp_m": 92.31081481481482,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.3382352941176471,
+          "unit_t": -0.44968619058063025,
+          "sigma": 0.08714289332339077
+        },
+        {
+          "file": "syndicate_1221_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 571.088,
+          "hhi": 0.25789487031264036,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.36764705882352944,
+          "unit_t": -0.3628137162931011,
+          "sigma": 0.050507741565529465
+        },
+        {
+          "file": "syndicate_1225_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 705.6500000000001,
+          "hhi": 0.29461642900598684,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8970588235294118,
+          "unit_t": 1.5118082210038952,
+          "sigma": 0.047943228815968304
+        },
+        {
+          "file": "syndicate_1274_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 744.4732158421962,
+          "hhi": 0.46042536834210296,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.4852941176470588,
+          "unit_t": -0.03925445687641181,
+          "sigma": 0.0473367175437292
+        },
+        {
+          "file": "syndicate_1882_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 155.30399999999997,
+          "hhi": 0.34852813204442035,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.3088235294117647,
+          "unit_t": -0.5408072576893065,
+          "sigma": 0.0735191167979148
+        },
+        {
+          "file": "syndicate_1897_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 110.206,
+          "hhi": 0.45855421536597396,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.10294117647058823,
+          "unit_t": -1.511808221003895,
+          "sigma": 0.08216115424411624
+        },
+        {
+          "file": "syndicate_1980_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 167.02464390685057,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": false,
+          "quantile": 0.6617647058823529,
+          "unit_t": 0.44968619058063025,
+          "sigma": 0.07184470532505807
+        },
+        {
+          "file": "syndicate_2088_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 116.631,
+          "hhi": 0.388782387626083,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.39705882352941174,
+          "unit_t": -0.27914282839692406,
+          "sigma": 0.08064495861666107
+        },
+        {
+          "file": "syndicate_2232_2024.json",
+          "category": "eligibility_unresolved",
+          "year": 2024,
+          "size_gbp_m": 384.8535,
+          "hhi": 0.42523067805460346,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.6029411764705882,
+          "unit_t": 0.27914282839692395,
+          "sigma": 0.05607309049652263
+        },
+        {
+          "file": "syndicate_2526_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 190.834,
+          "hhi": 0.5757422578635949,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.25,
+          "unit_t": -0.7414769327353937,
+          "sigma": 0.06891276162659378
+        },
+        {
+          "file": "syndicate_2987_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 3247.5515633400482,
+          "hhi": 0.3186365792285366,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.04411764705882353,
+          "unit_t": -2.2514950280701833,
+          "sigma": 0.03604524591118232
+        },
+        {
+          "file": "syndicate_3002_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 25.9565,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.07352941176470588,
+          "unit_t": -1.799798260498132,
+          "sigma": 0.13560462762381262
+        },
+        {
+          "file": "syndicate_3268_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 44.829,
+          "hhi": 0.5063635837795618,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": true,
+          "quantile": 0.9852941176470589,
+          "unit_t": 3.3364857848277567,
+          "sigma": 0.11167903246231307
+        },
+        {
+          "file": "syndicate_3500_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 1576.2429629629628,
+          "hhi": 0.3317446417290759,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": true,
+          "quantile": 0.16176470588235295,
+          "unit_t": -1.1266927630966455,
+          "sigma": 0.040430221194880045
+        },
+        {
+          "file": "syndicate_3622_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.19117647058823528,
+          "unit_t": -0.9818004200004115,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3622_2018.json",
+          "category": "eligibility_unresolved",
+          "year": 2018,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.6911764705882353,
+          "unit_t": 0.5408072576893065,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3624_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 612.2477687384448,
+          "hhi": 0.8682247231885292,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.014705882352941176,
+          "unit_t": -3.3364857848277527,
+          "sigma": 0.04963376771369225
+        },
+        {
+          "file": "syndicate_4020_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 478.51149999999996,
+          "hhi": 0.3241590422442663,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8382352941176471,
+          "unit_t": 1.1266927630966457,
+          "sigma": 0.052869757504478365
+        },
+        {
+          "file": "syndicate_4242_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 216.09541002398498,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8088235294117647,
+          "unit_t": 0.9818004200004115,
+          "sigma": 0.06632909711778176
+        },
+        {
+          "file": "syndicate_44_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 1.041,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.9558823529411765,
+          "unit_t": 2.2514950280701838,
+          "sigma": 0.44511326355228015
+        },
+        {
+          "file": "syndicate_6103_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 9.1305,
+          "hhi": 1.0,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.75,
+          "unit_t": 0.7414769327353937,
+          "sigma": 0.1983841972501585
+        },
+        {
+          "file": "syndicate_6111_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 174.2775,
+          "hhi": 0.3666300677012758,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8676470588235294,
+          "unit_t": 1.2982479585155873,
+          "sigma": 0.070890781230897
+        },
+        {
+          "file": "syndicate_6112_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 45.1005,
+          "hhi": 0.3688438900927111,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.9264705882352942,
+          "unit_t": 1.7997982604981324,
+          "sigma": 0.11144266949602928
+        },
+        {
+          "file": "syndicate_6118_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 86.0745,
+          "hhi": 0.2006918568236387,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.7794117647058824,
+          "unit_t": 0.8551150156880923,
+          "sigma": 0.08921347505318711
+        },
+        {
+          "file": "syndicate_6124_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 421.462,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "unavailable",
+          "ritc_flag": true,
+          "quantile": 0.6323529411764706,
+          "unit_t": 0.3628137162931011,
+          "sigma": 0.054695779338763816
+        }
+      ],
+      "imputation": {
+        "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
+        "n_size_imputed_working_sample_median": 1,
+        "size_imputed_working_sample_median_records": [
+          "syndicate_6124_2015.json"
+        ],
+        "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
+      },
+      "by_c": {
+        "1.0": {
+          "k": {
+            "mean": 0.604292129080051,
+            "hdi_2.5": 0.5114886425154168,
+            "hdi_97.5": 0.6954822702128123
+          },
+          "sd_undiv": {
+            "mean": 0.03192731602557524,
+            "hdi_2.5": 0.018574768022125352,
+            "hdi_97.5": 0.043763300934713326
+          },
+          "sd_div": {
+            "mean": 0.0416141396305177,
+            "hdi_2.5": 0.030829709167818763,
+            "hdi_97.5": 0.05352484774086975
+          },
+          "nu_clean": {
+            "mean": 4.006178621576974,
+            "hdi_2.5": 2.819070841526457,
+            "hdi_97.5": 5.34259651198479
+          },
+          "nu_ritc": {
+            "mean": 5.216664903471221,
+            "hdi_2.5": 1.1651803076009906,
+            "hdi_97.5": 11.51366148517328
+          },
+          "tau_s": {
+            "mean": 0.12425019070964943,
+            "hdi_2.5": 9.513089742065091e-05,
+            "hdi_97.5": 0.24043809619334616
+          },
+          "_diag": {
+            "max_rhat": 1.0017281123531172,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0017281123531172,
+            "min_ess_bulk": 1842.9352952327524,
+            "min_ess_tail": 1964.7750444966268,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        },
+        "5.0": {
+          "k": {
+            "mean": 0.575874605252737,
+            "hdi_2.5": 0.5036545394309407,
+            "hdi_97.5": 0.6575142708200213
+          },
+          "sd_undiv": {
+            "mean": 0.03650211905118683,
+            "hdi_2.5": 0.01960931438530144,
+            "hdi_97.5": 0.05470251381025505
+          },
+          "sd_div": {
+            "mean": 0.048179989799770215,
+            "hdi_2.5": 0.030429747683569573,
+            "hdi_97.5": 0.0676272513313003
+          },
+          "nu_clean": {
+            "mean": 3.6786120569264598,
+            "hdi_2.5": 2.628891110247418,
+            "hdi_97.5": 4.825356732823615
+          },
+          "nu_ritc": {
+            "mean": 2.113271171636043,
+            "hdi_2.5": 0.8874887683522705,
+            "hdi_97.5": 3.611552693632012
+          },
+          "tau_s": {
+            "mean": 0.519696599381668,
+            "hdi_2.5": 0.29738461562034324,
+            "hdi_97.5": 0.7799950757504356
+          },
+          "_diag": {
+            "max_rhat": 1.0019394771906647,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0019394771906647,
+            "min_ess_bulk": 1298.4320953363283,
+            "min_ess_tail": 2106.5959920005034,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        }
+      }
+    },
+    "742_original": {
+      "allocation": "original",
+      "permutation_seed": null,
+      "n_pseudo": 86,
+      "n_fit": 718,
+      "n_target_assumed": 742,
+      "n_target_observed_outcome_missing_composition_not_added": 24,
+      "weights": "one per observed and pseudo row; no inverse-propensity weights",
+      "group_abs_t": {
+        "eligibility_unresolved": {
+          "n": 24,
+          "mean_abs_t": 0.7585520254431816
+        },
+        "eligible_outcome_unavailable": {
+          "n": 10,
+          "mean_abs_t": 2.3006573252669926
+        },
+        "structural_no_eligible_outcome": {
+          "n": 52,
+          "mean_abs_t": 0.8412663193889879
+        }
+      },
+      "rho_abs_t_size": 0.08728511337680168,
+      "rho_abs_t_year": -0.17245126474817646,
+      "pseudo_inputs": [
+        {
+          "file": "syndicate_1254_2022.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2022,
+          "size_gbp_m": 75.257,
+          "hhi": 0.9422156629000301,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.005813953488372093,
+          "unit_t": -4.438762450659934,
+          "sigma": 0.09336163013341331
+        },
+        {
+          "file": "syndicate_3330_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 7.578,
+          "hhi": 0.7349752056904406,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.01744186046511628,
+          "unit_t": -3.1546444923684653,
+          "sigma": 0.21249422279863664
+        },
+        {
+          "file": "syndicate_3622_2015.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2015,
+          "size_gbp_m": 5.097,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.029069767441860465,
+          "unit_t": -2.6414870410815876,
+          "sigma": 0.24608925941944162
+        },
+        {
+          "file": "syndicate_4242_2024.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2024,
+          "size_gbp_m": 324.3870297899529,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.040697674418604654,
+          "unit_t": -2.3252061652743237,
+          "sigma": 0.05883046382140413
+        },
+        {
+          "file": "syndicate_4711_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 288.174,
+          "hhi": 0.27597619703255516,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.05232558139534884,
+          "unit_t": -2.0979778887784573,
+          "sigma": 0.06087345892449885
+        },
+        {
+          "file": "syndicate_5623_2020.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2020,
+          "size_gbp_m": 11.923290879812619,
+          "hhi": 0.3650500489525392,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.06395348837209303,
+          "unit_t": -1.9209920738703186,
+          "sigma": 0.17986035875238435
+        },
+        {
+          "file": "syndicate_6050_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 9.807820238007244,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.0755813953488372,
+          "unit_t": -1.7760413278964156,
+          "sigma": 0.1932291002998091
+        },
+        {
+          "file": "syndicate_6107_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 29.50388055288639,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.0872093023255814,
+          "unit_t": -1.653183326051743,
+          "sigma": 0.12952237118134946
+        },
+        {
+          "file": "syndicate_6107_2019.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2019,
+          "size_gbp_m": 73.61617303489335,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.09883720930232558,
+          "unit_t": -1.5464186051192397,
+          "sigma": 0.09406475043477618
+        },
+        {
+          "file": "syndicate_6107_2021.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2021,
+          "size_gbp_m": 92.31081481481482,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.11046511627906977,
+          "unit_t": -1.4518598815694397,
+          "sigma": 0.08714289332339077
+        },
+        {
+          "file": "syndicate_1221_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 571.088,
+          "hhi": 0.25789487031264036,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.12209302325581395,
+          "unit_t": -1.3668501155970807,
+          "sigma": 0.050507741565529465
+        },
+        {
+          "file": "syndicate_1225_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 705.6500000000001,
+          "hhi": 0.29461642900598684,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.13372093023255813,
+          "unit_t": -1.289495788169297,
+          "sigma": 0.047943228815968304
+        },
+        {
+          "file": "syndicate_1274_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 744.4732158421962,
+          "hhi": 0.46042536834210296,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.14534883720930233,
+          "unit_t": -1.2184014930262757,
+          "sigma": 0.0473367175437292
+        },
+        {
+          "file": "syndicate_1882_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 155.30399999999997,
+          "hhi": 0.34852813204442035,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.1569767441860465,
+          "unit_t": -1.152510158265889,
+          "sigma": 0.0735191167979148
+        },
+        {
+          "file": "syndicate_1897_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 110.206,
+          "hhi": 0.45855421536597396,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.1686046511627907,
+          "unit_t": -1.0910022943360873,
+          "sigma": 0.08216115424411624
+        },
+        {
+          "file": "syndicate_1980_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 167.02464390685057,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": false,
+          "quantile": 0.18023255813953487,
+          "unit_t": -1.0332299693693472,
+          "sigma": 0.07184470532505807
+        },
+        {
+          "file": "syndicate_2088_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 116.631,
+          "hhi": 0.388782387626083,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.19186046511627908,
+          "unit_t": -0.9786721125095323,
+          "sigma": 0.08064495861666107
+        },
+        {
+          "file": "syndicate_2232_2024.json",
+          "category": "eligibility_unresolved",
+          "year": 2024,
+          "size_gbp_m": 384.8535,
+          "hhi": 0.42523067805460346,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.20348837209302326,
+          "unit_t": -0.92690340154267,
+          "sigma": 0.05607309049652263
+        },
+        {
+          "file": "syndicate_2526_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 190.834,
+          "hhi": 0.5757422578635949,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.21511627906976744,
+          "unit_t": -0.8775720775253123,
+          "sigma": 0.06891276162659378
+        },
+        {
+          "file": "syndicate_2987_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 3247.5515633400482,
+          "hhi": 0.3186365792285366,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.22674418604651161,
+          "unit_t": -0.8303837872659114,
+          "sigma": 0.03604524591118232
+        },
+        {
+          "file": "syndicate_3002_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 25.9565,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.23837209302325582,
+          "unit_t": -0.7850895941519962,
+          "sigma": 0.13560462762381262
+        },
+        {
+          "file": "syndicate_3268_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 44.829,
+          "hhi": 0.5063635837795618,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": true,
+          "quantile": 0.25,
+          "unit_t": -0.7414769327353937,
+          "sigma": 0.11167903246231307
+        },
+        {
+          "file": "syndicate_3500_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 1576.2429629629628,
+          "hhi": 0.3317446417290759,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": true,
+          "quantile": 0.2616279069767442,
+          "unit_t": -0.6993626815593948,
+          "sigma": 0.040430221194880045
+        },
+        {
+          "file": "syndicate_3622_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.27325581395348836,
+          "unit_t": -0.6585877859862078,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3622_2018.json",
+          "category": "eligibility_unresolved",
+          "year": 2018,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.28488372093023256,
+          "unit_t": -0.6190130324301738,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3624_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 612.2477687384448,
+          "hhi": 0.8682247231885292,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.29651162790697677,
+          "unit_t": -0.580515689840983,
+          "sigma": 0.04963376771369225
+        },
+        {
+          "file": "syndicate_4020_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 478.51149999999996,
+          "hhi": 0.3241590422442663,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.3081395348837209,
+          "unit_t": -0.5429868119443878,
+          "sigma": 0.052869757504478365
+        },
+        {
+          "file": "syndicate_4242_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 216.09541002398498,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.31976744186046513,
+          "unit_t": -0.5063290494814673,
+          "sigma": 0.06632909711778176
+        },
+        {
+          "file": "syndicate_44_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 1.041,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.3313953488372093,
+          "unit_t": -0.47045485924488156,
+          "sigma": 0.44511326355228015
+        },
+        {
+          "file": "syndicate_6103_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 9.1305,
+          "hhi": 1.0,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.3430232558139535,
+          "unit_t": -0.4352850251675646,
+          "sigma": 0.1983841972501585
+        },
+        {
+          "file": "syndicate_6111_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 174.2775,
+          "hhi": 0.3666300677012758,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.3546511627906977,
+          "unit_t": -0.4007474266971781,
+          "sigma": 0.070890781230897
+        },
+        {
+          "file": "syndicate_6112_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 45.1005,
+          "hhi": 0.3688438900927111,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.36627906976744184,
+          "unit_t": -0.36677600459527715,
+          "sigma": 0.11144266949602928
+        },
+        {
+          "file": "syndicate_6118_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 86.0745,
+          "hhi": 0.2006918568236387,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.37790697674418605,
+          "unit_t": -0.33330988536548806,
+          "sigma": 0.08921347505318711
+        },
+        {
+          "file": "syndicate_6124_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 421.462,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "unavailable",
+          "ritc_flag": true,
+          "quantile": 0.38953488372093026,
+          "unit_t": -0.3002926338285594,
+          "sigma": 0.054695779338763816
+        },
+        {
+          "file": "syndicate_1322_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 1.7179139046402043,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4011627906976744,
+          "unit_t": -0.26767160966340503,
+          "sigma": 0.36903070172999225,
+          "source_evidence": {
+            "raw_amount_m": 2.151,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2521,
+            "source_page": 34,
+            "source_sha256": "56e97fe3d1567156638cef24273cb996ca0f370368be5e32d710eb0ec9471584"
+          }
+        },
+        {
+          "file": "syndicate_1416_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 0.1299991719797963,
+          "hhi": 0.428351370609958,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4127906976744186,
+          "unit_t": -0.235397408546426,
+          "sigma": 0.9718053563048349,
+          "source_evidence": {
+            "raw_amount_m": 0.157,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 30,
+            "source_sha256": "df2d3203b09ae0d9318b7f93beb41ed1dc32873e7f7418be0f89f464ef5f7b08"
+          }
+        },
+        {
+          "file": "syndicate_1492_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 0.132,
+          "hhi": 0.34299160822656083,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.42441860465116277,
+          "unit_t": -0.203423372222002,
+          "sigma": 0.9662433817203031,
+          "source_evidence": {
+            "raw_amount_m": 0.132,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 44,
+            "source_sha256": "3e1fd8b8aa0e8fe6118145aefe014eb2df0f7e7a740d032326389c02cf237154"
+          }
+        },
+        {
+          "file": "syndicate_1609_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 13.49590129999172,
+          "hhi": 0.5630046873416656,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.436046511627907,
+          "unit_t": -0.17170515469684627,
+          "sigma": 0.1718876082606265,
+          "source_evidence": {
+            "raw_amount_m": 16.299,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 31,
+            "source_sha256": "537868e88a74e1b4abc0e3d3b682c33a4f28893d1cbc4f66e7cfc61bb0155cf8"
+          }
+        },
+        {
+          "file": "syndicate_1618_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 93.23507493582844,
+          "hhi": 0.30449459159034553,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4476744186046512,
+          "unit_t": -0.14020033396809262,
+          "sigma": 0.08685286333476686,
+          "source_evidence": {
+            "raw_amount_m": 112.6,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 51,
+            "source_sha256": "45508632a3d4d2b81beba96d62d8b575a7f2a78c53e2881a03f7defbc1f23da4"
+          }
+        },
+        {
+          "file": "syndicate_1686_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 27.506442425064424,
+          "hhi": 0.2818149373466596,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.45930232558139533,
+          "unit_t": -0.10886806041514156,
+          "sigma": 0.13281278032360938,
+          "source_evidence": {
+            "raw_amount_m": 40.561,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.4746,
+            "source_page": 25,
+            "source_sha256": "c96c13d702555fd0c67f9c21f845f7b06fb85021e2c09858c5b6e451ab4bf561"
+          }
+        },
+        {
+          "file": "syndicate_1699_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 19.423,
+          "hhi": 0.23419899039684483,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.47093023255813954,
+          "unit_t": -0.07766873431584594,
+          "sigma": 0.15055622674820945,
+          "source_evidence": {
+            "raw_amount_m": 19.423,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 35,
+            "source_sha256": "10ff4d6c3c0d491c59fe8eda354fdc0469fd497b8590b3bd6f724320ca76ac74"
+          }
+        },
+        {
+          "file": "syndicate_1729_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 12.419,
+          "hhi": 0.3088437704985605,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.48255813953488375,
+          "unit_t": -0.04656370596791289,
+          "sigma": 0.1771968336399043,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 28,
+            "source_sha256": "79eed2b66322786d99358ab73101287020c556a5e56181287a0382e10d746c2d"
+          }
+        },
+        {
+          "file": "syndicate_1796_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 0.02980872733294692,
+          "hhi": 0.9803500797562825,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4941860465116279,
+          "unit_t": -0.015514992664879613,
+          "sigma": 1.6905184733750822,
+          "source_evidence": {
+            "raw_amount_m": 0.036,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 32,
+            "source_sha256": "2c63fb20dfa6c59025213913eaa4e26a76ab60175830d6471d47feea2886b01e"
+          }
+        },
+        {
+          "file": "syndicate_1840_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 0.012,
+          "hhi": 0.8496445194604061,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5058139534883721,
+          "unit_t": 0.015514992664879613,
+          "sigma": 2.380232254569072,
+          "source_evidence": {
+            "raw_amount_m": 0.012,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 38,
+            "source_sha256": "ddda7b0a020f6ccb73f3d5ee9f4446f1a9ce15a4a2c519466763f2ace9736aa2"
+          }
+        },
+        {
+          "file": "syndicate_1856_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 30.16,
+          "hhi": 0.35020495224054915,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5174418604651163,
+          "unit_t": 0.046563705967913094,
+          "sigma": 0.12850860786584073,
+          "source_evidence": {
+            "raw_amount_m": 30.16,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 36,
+            "source_sha256": "ac1c57bb97e03cbc51870574887c7aa61bba57ac51c3497cd0e8653aca4aedbd"
+          }
+        },
+        {
+          "file": "syndicate_1884_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 6.328,
+          "hhi": 0.5663461037775253,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5290697674418605,
+          "unit_t": 0.07766873431584594,
+          "sigma": 0.22713468453816932,
+          "source_evidence": {
+            "raw_amount_m": 6.328,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "9cbac3a19175c613d5018a4d644fa3e334afa4e9e19201e1ff54ac838af1e0c6"
+          }
+        },
+        {
+          "file": "syndicate_1892_2020.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2020,
+          "size_gbp_m": 6.58,
+          "hhi": 1.0,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5406976744186046,
+          "unit_t": 0.10886806041514148,
+          "sigma": 0.22387692748820112,
+          "source_evidence": {
+            "raw_amount_m": 6.58,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 27,
+            "source_sha256": "ce833dfff67ca18c69741926537ec82364d668fc9a44b3c79c17a1a72371361f"
+          }
+        },
+        {
+          "file": "syndicate_1902_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 4.711,
+          "hhi": 0.6150522116920979,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5523255813953488,
+          "unit_t": 0.14020033396809262,
+          "sigma": 0.2533870656644314,
+          "source_evidence": {
+            "raw_amount_m": 4.711,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "602e0c1ae445b80862851a14b9413ce8d75cea6333117f33a0c612612d221cfe"
+          }
+        },
+        {
+          "file": "syndicate_1947_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 20.974,
+          "hhi": 0.6505576173256493,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.563953488372093,
+          "unit_t": 0.17170515469684627,
+          "sigma": 0.14642820474298576,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 33,
+            "source_sha256": "6fa15c35758c469cb0524594ef9d576a54d444f258da63620ab454993ec869ad"
+          }
+        },
+        {
+          "file": "syndicate_1971_2020.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2020,
+          "size_gbp_m": 20.521153564631824,
+          "hhi": 0.4263983016931695,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5755813953488372,
+          "unit_t": 0.203423372222002,
+          "sigma": 0.14758847408175135,
+          "source_evidence": {
+            "raw_amount_m": 28.036,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.3662,
+            "source_page": 40,
+            "source_sha256": "3e26d7256dc1d8ee0e24d7af966b85fae4b6cb4ebe12217fa92a384be967c0b1"
+          }
+        },
+        {
+          "file": "syndicate_1975_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 14.938,
+          "hhi": 1.0,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5872093023255814,
+          "unit_t": 0.23539740854642613,
+          "sigma": 0.16563324557449766,
+          "source_evidence": {
+            "raw_amount_m": 14.938,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "fd09e0212ef00b51a622d4d10d1fe634c640b53c698dc40a348e879f40d806e1"
+          }
+        },
+        {
+          "file": "syndicate_1980_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 127.87980882237719,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "transferred_base_assumed_compatible",
+          "ritc_flag": false,
+          "quantile": 0.5988372093023255,
+          "unit_t": 0.26767160966340486,
+          "sigma": 0.0782577421349793,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 29,
+            "source_sha256": "898e955f8f768594c0694fdf459d713aa73d4502da4f116ca34ef34cadb85fe8"
+          }
+        },
+        {
+          "file": "syndicate_1985_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 14.660170912866386,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6104651162790697,
+          "unit_t": 0.3002926338285594,
+          "sigma": 0.1667713760724015,
+          "source_evidence": {
+            "raw_amount_m": 18.356,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2521,
+            "source_page": 36,
+            "source_sha256": "2fc5cb2d0f91f463f302543c5fd40781bd5457c12c683cf8d8b19adfac6fa28e"
+          }
+        },
+        {
+          "file": "syndicate_1988_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 7.0489359940382545,
+          "hhi": 0.8081053533045746,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.622093023255814,
+          "unit_t": 0.33330988536548806,
+          "sigma": 0.21825100804702244,
+          "source_evidence": {
+            "raw_amount_m": 8.513,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 33,
+            "source_sha256": "315503ff950cbd737a16f1116a0c316e2990907145501fd04c35118ebe6aa78d"
+          }
+        },
+        {
+          "file": "syndicate_1991_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 0.396,
+          "hhi": 0.5200207591066163,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6337209302325582,
+          "unit_t": 0.36677600459527715,
+          "sigma": 0.6395554240260255,
+          "source_evidence": {
+            "raw_amount_m": 0.396,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 16,
+            "source_sha256": "bc42508f889b8bc86ecfb522dc06368619099d7b58f5bbb8c8c244b757e91781"
+          }
+        },
+        {
+          "file": "syndicate_1996_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 0.139,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.6453488372093024,
+          "unit_t": 0.40074742669717817,
+          "sigma": 0.9476623593739696,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": null,
+            "source_sha256": "75769493fdf5f03f54200a718543ee90ed890da13bf47feed4e1baf85a0b98b6"
+          }
+        },
+        {
+          "file": "syndicate_2014_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 18.715,
+          "hhi": 0.41695357840206215,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.6569767441860465,
+          "unit_t": 0.4352850251675644,
+          "sigma": 0.15259623684835721,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 33,
+            "source_sha256": "77854f7037c300c5f8f3772425eeca05b5b97fdc455ff5a01078dd655df34927"
+          }
+        },
+        {
+          "file": "syndicate_2019_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 206.2222222222222,
+          "hhi": 0.8541030044948505,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6686046511627907,
+          "unit_t": 0.4704548592448814,
+          "sigma": 0.06728429553004296,
+          "source_evidence": {
+            "raw_amount_m": 278.4,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.35,
+            "source_page": 32,
+            "source_sha256": "b1acd1bba309d67cebe1cb4a57c4e24786e5ab9522bb743c9fa6f0d2820cf788"
+          }
+        },
+        {
+          "file": "syndicate_2288_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 56.885925925925925,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6802325581395349,
+          "unit_t": 0.5063290494814673,
+          "sigma": 0.1027773978714064,
+          "source_evidence": {
+            "raw_amount_m": 76.796,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.35,
+            "source_page": 37,
+            "source_sha256": "b97c41f60b4875c846280e5fa30a852a7793c8b6d6f8de716a15ab8b1ab13479"
+          }
+        },
+        {
+          "file": "syndicate_2358_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 7.301263438750687,
+          "hhi": 0.2468169798841189,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6918604651162791,
+          "unit_t": 0.5429868119443878,
+          "sigma": 0.21543347167118565,
+          "source_evidence": {
+            "raw_amount_m": 9.304,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 34,
+            "source_sha256": "eafcd6e57ef094de742af04714aa174c673a2cb0541a540f292fabbd75f626eb"
+          }
+        },
+        {
+          "file": "syndicate_2689_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 26.627752095902217,
+          "hhi": 0.8210233393574186,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7034883720930233,
+          "unit_t": 0.5805156898409832,
+          "sigma": 0.1343677472095587,
+          "source_evidence": {
+            "raw_amount_m": 33.985,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2763,
+            "source_page": 31,
+            "source_sha256": "5693fa0ee674e54bdfaf53b911eed4e822623d0c35320c193deb7118f4a545a5"
+          }
+        },
+        {
+          "file": "syndicate_2786_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 20.968,
+          "hhi": 0.4592017930466664,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7151162790697675,
+          "unit_t": 0.6190130324301739,
+          "sigma": 0.146443349463429,
+          "source_evidence": {
+            "raw_amount_m": 20.968,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 28,
+            "source_sha256": "9f3071cf096ce9446825b85a00b667d0324ae30bdbdbb91490e7210b67163a94"
+          }
+        },
+        {
+          "file": "syndicate_2880_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 6.436474927411128,
+          "hhi": 0.48105804468758484,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7267441860465116,
+          "unit_t": 0.6585877859862076,
+          "sigma": 0.22571076214184638,
+          "source_evidence": {
+            "raw_amount_m": 8.202,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 30,
+            "source_sha256": "e01f948df806d44431be28c686bab1d35b25bfb6a3e7db6dda8ec20e3670ee56"
+          }
+        },
+        {
+          "file": "syndicate_2988_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 52.0931,
+          "hhi": 0.3768526093370518,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7383720930232558,
+          "unit_t": 0.6993626815593948,
+          "sigma": 0.10596739867610744,
+          "source_evidence": {
+            "raw_amount_m": 52.0931,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 43,
+            "source_sha256": "ccac469777e1a8f7fb23a27e75dc3d93f082bf8d7cea652989e4684ff914bbb1"
+          }
+        },
+        {
+          "file": "syndicate_3456_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 0.3829553480342149,
+          "hhi": 0.4024858644302125,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.75,
+          "unit_t": 0.7414769327353937,
+          "sigma": 0.64764748112783,
+          "source_evidence": {
+            "raw_amount_m": 0.488,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 32,
+            "source_sha256": "449293f167528afa0aecc9396e5541d3fcb7cc1866cd6a5b12d27db27917fd02"
+          }
+        },
+        {
+          "file": "syndicate_3902_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 30.259,
+          "hhi": 0.36537695566820017,
+          "size_proxy_source": "exact_source_opening_replaces_rounded_model",
+          "ritc_flag": false,
+          "quantile": 0.7616279069767442,
+          "unit_t": 0.7850895941519961,
+          "sigma": 0.12835831430375716,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 25,
+            "source_sha256": "d91ee7d7967f7061659583a6d84ede0382afa1d8d20c77456628b821cb928d2b"
+          }
+        },
+        {
+          "file": "syndicate_4321_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 3.5756101388997883,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7732558139534884,
+          "unit_t": 0.8303837872659116,
+          "sigma": 0.2807376437470969,
+          "source_evidence": {
+            "raw_amount_m": 4.5564,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 33,
+            "source_sha256": "aaab9a1300185e2f60b35b1203aca2aadc259e1450382bfc41b47196d4580a38"
+          }
+        },
+        {
+          "file": "syndicate_4747_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 0.055,
+          "hhi": 0.3709412094325141,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7848837209302325,
+          "unit_t": 0.8775720775253121,
+          "sigma": 1.3427656904501708,
+          "source_evidence": {
+            "raw_amount_m": 0.055,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "e2656ba064e300f2d7f6f1c437f94fe9af3da00e38fbb6f2f78e5cf92d3c4863"
+          }
+        },
+        {
+          "file": "syndicate_5183_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 0.003138978262575532,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7965116279069767,
+          "unit_t": 0.9269034015426703,
+          "sigma": 3.9414159043714205,
+          "source_evidence": {
+            "raw_amount_m": 0.004,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 31,
+            "source_sha256": "8c228405dad8db09f682eeca51ebef73e78de62b44e9df83d55a11889208800c"
+          }
+        },
+        {
+          "file": "syndicate_5623_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 1.3242896977918457,
+          "hhi": 0.3650500489525392,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8081395348837209,
+          "unit_t": 0.9786721125095323,
+          "sigma": 0.4067567847045117,
+          "source_evidence": {
+            "raw_amount_m": 1.7572,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.3269,
+            "source_page": 30,
+            "source_sha256": "7c639c6239e4c361d4ce8010ea877087135e5ee6197e0b3fa80b6f22fe074835"
+          }
+        },
+        {
+          "file": "syndicate_5886_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 86.626,
+          "hhi": 0.46029036972026627,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8197674418604651,
+          "unit_t": 1.0332299693693472,
+          "sigma": 0.0890219039141934,
+          "source_evidence": {
+            "raw_amount_m": 86.626,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "c3807a788936219f86cca1e4a16eb843c1ab92383eaf5fba2139a16295a97643"
+          }
+        },
+        {
+          "file": "syndicate_6050_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 4.45189268055443,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8313953488372093,
+          "unit_t": 1.0910022943360875,
+          "sigma": 0.25876620914310183,
+          "source_evidence": {
+            "raw_amount_m": 5.4923,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2337,
+            "source_page": 27,
+            "source_sha256": "f97837ff9eb8fc259dbd5c75df265e213d0fd9f25b2d98a366556081ca7a8b6c"
+          }
+        },
+        {
+          "file": "syndicate_6113_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 4.984,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8430232558139535,
+          "unit_t": 1.1525101582658894,
+          "sigma": 0.2481445645753242,
+          "source_evidence": {
+            "raw_amount_m": 4.984,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 14,
+            "source_sha256": "650447c8f89744f06a3e3a19d2c2800e1d89c4399858275ff652542c038dfc8a"
+          }
+        },
+        {
+          "file": "syndicate_6115_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 21.367,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8546511627906976,
+          "unit_t": 1.218401493026276,
+          "sigma": 0.14544915627733546,
+          "source_evidence": {
+            "raw_amount_m": 21.367,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 13,
+            "source_sha256": "da927be954b3e81a4b35d17a9316c086fd61059d3b66becf2fa31186cf79f358"
+          }
+        },
+        {
+          "file": "syndicate_6117_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 2.395,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.8662790697674418,
+          "unit_t": 1.2894957881692968,
+          "sigma": 0.3259595656906016,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 22,
+            "source_sha256": "b542b36347d6557938cace1127edcf7757e457a1b533b43571282a70ab8da642"
+          }
+        },
+        {
+          "file": "syndicate_6119_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 4.332,
+          "hhi": 0.3579077160810357,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.877906976744186,
+          "unit_t": 1.3668501155970807,
+          "sigma": 0.26140383151299107,
+          "source_evidence": {
+            "raw_amount_m": 4.332,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "41afe79231d77862472d2bca497932a6bf60c4aa5126035be61f08d6db5e32ac"
+          }
+        },
+        {
+          "file": "syndicate_6121_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 5.926,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8895348837209303,
+          "unit_t": 1.4518598815694395,
+          "sigma": 0.2327209424548553,
+          "source_evidence": {
+            "raw_amount_m": 5.926,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "2b7bc34a521928be497a0e9682cc8d4ed7ba58249e721ea15127ee827033e963"
+          }
+        },
+        {
+          "file": "syndicate_6123_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 0.07862527356731783,
+          "hhi": 0.7978778607584446,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9011627906976745,
+          "unit_t": 1.5464186051192403,
+          "sigma": 1.173969076770424,
+          "source_evidence": {
+            "raw_amount_m": 0.097,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2337,
+            "source_page": 32,
+            "source_sha256": "17cb988726accac171260355bda9ecc6911a75a9e4e6d2f4a5127c6321c13de9"
+          }
+        },
+        {
+          "file": "syndicate_6125_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 4.571,
+          "hhi": 0.35544894382877884,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9127906976744186,
+          "unit_t": 1.6531833260517421,
+          "sigma": 0.25624123513766817,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 27,
+            "source_sha256": "07baf00e33efeb944b90dbed2e419ba455194eff3c1e45344a98781ded6205b1"
+          }
+        },
+        {
+          "file": "syndicate_6126_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 8.561,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9244186046511628,
+          "unit_t": 1.7760413278964147,
+          "sigma": 0.20314649278760435,
+          "source_evidence": {
+            "raw_amount_m": 8.561,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 26,
+            "source_sha256": "9a00249589207e89592beaac9d5a0940f2573263fb4570316afca90d8e4430e5"
+          }
+        },
+        {
+          "file": "syndicate_6129_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 14.7,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.936046511627907,
+          "unit_t": 1.9209920738703186,
+          "sigma": 0.1666063855772863,
+          "source_evidence": {
+            "raw_amount_m": 14.7,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "e34b3eb50541e0086e2542b2075b56a03c8e60f8fbdea9112f63a8de6be72012"
+          }
+        },
+        {
+          "file": "syndicate_6130_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 0.8455909527681277,
+          "hhi": 0.5615373658315352,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9476744186046512,
+          "unit_t": 2.0979778887784573,
+          "sigma": 0.481170031955567,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 12,
+            "source_sha256": "5b69e253654288e00142d58b2d5b20a47d98aba8aefd21c247d47d1b28a09c51"
+          }
+        },
+        {
+          "file": "syndicate_6131_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 0.934,
+          "hhi": 0.39905215158614243,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9593023255813954,
+          "unit_t": 2.3252061652743246,
+          "sigma": 0.46357051602194144,
+          "source_evidence": {
+            "raw_amount_m": 0.934,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 25,
+            "source_sha256": "a4ee6ecd94417be2d996eafa6cb6f8c5e6a429c4881a301ead7b66a1b5cb91e7"
+          }
+        },
+        {
+          "file": "syndicate_6132_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 15.992,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9709302325581395,
+          "unit_t": 2.6414870410815854,
+          "sigma": 0.16156894086929377,
+          "source_evidence": {
+            "raw_amount_m": 15.992,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "46dbac16c4c5274aebcce3cadfd468519db388dea659812d197720fe64feda01"
+          }
+        },
+        {
+          "file": "syndicate_6133_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 51.04378626874671,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9825581395348837,
+          "unit_t": 3.1546444923684636,
+          "sigma": 0.10672121530853082,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 38,
+            "source_sha256": "56daac8324ae631fa45b627d9a8bb1749b9cf3be22ea4e5fba957af17dda7f84"
+          }
+        },
+        {
+          "file": "syndicate_6134_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 9.216,
+          "hhi": 0.5787436150743507,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9941860465116279,
+          "unit_t": 4.438762450659932,
+          "sigma": 0.19770468868603885,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 36,
+            "source_sha256": "0a5ffd2fb069e9365f4e478c3edfc3402fad570452c788fd1c7611a943bf4224"
+          }
+        }
+      ],
+      "imputation": {
+        "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
+        "n_size_imputed_working_sample_median": 1,
+        "size_imputed_working_sample_median_records": [
+          "syndicate_6124_2015.json"
+        ],
+        "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
+      },
+      "by_c": {
+        "1.0": {
+          "k": {
+            "mean": 0.6335494319879056,
+            "hdi_2.5": 0.5704318032879916,
+            "hdi_97.5": 0.697676943183582
+          },
+          "sd_undiv": {
+            "mean": 0.02805140155054869,
+            "hdi_2.5": 0.013964974511121053,
+            "hdi_97.5": 0.03975151187029994
+          },
+          "sd_div": {
+            "mean": 0.04477025697531866,
+            "hdi_2.5": 0.03445026865830801,
+            "hdi_97.5": 0.055161030725002655
+          },
+          "nu_clean": {
+            "mean": 4.082199020786988,
+            "hdi_2.5": 2.8678734614032653,
+            "hdi_97.5": 5.424915781658776
+          },
+          "nu_ritc": {
+            "mean": 4.240936969542558,
+            "hdi_2.5": 1.1080010249122072,
+            "hdi_97.5": 9.217064962472023
+          },
+          "tau_s": {
+            "mean": 0.11892348240772906,
+            "hdi_2.5": 0.0004757050164923296,
+            "hdi_97.5": 0.22961211384375688
+          },
+          "_diag": {
+            "max_rhat": 1.0019037490577118,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0019037490577118,
+            "min_ess_bulk": 1659.28552230725,
+            "min_ess_tail": 1428.0650366861255,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        },
+        "5.0": {
+          "k": {
+            "mean": 0.5183620308475884,
+            "hdi_2.5": 0.5013140000416852,
+            "hdi_97.5": 0.5423221409926366
+          },
+          "sd_undiv": {
+            "mean": 0.029037555945219055,
+            "hdi_2.5": 0.017459829297093027,
+            "hdi_97.5": 0.04001941439188855
+          },
+          "sd_div": {
+            "mean": 0.049201143185871626,
+            "hdi_2.5": 0.0361079113864292,
+            "hdi_97.5": 0.06492250654031975
+          },
+          "nu_clean": {
+            "mean": 2.51878122792118,
+            "hdi_2.5": 1.9701847115893583,
+            "hdi_97.5": 3.107521341314018
+          },
+          "nu_ritc": {
+            "mean": 1.8370251668369686,
+            "hdi_2.5": 0.706420065611849,
+            "hdi_97.5": 3.1474615008556643
+          },
+          "tau_s": {
+            "mean": 0.4040774977050198,
+            "hdi_2.5": 0.20889530528755917,
+            "hdi_97.5": 0.6220171617466683
+          },
+          "_diag": {
+            "max_rhat": 1.0046296421922516,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0046296421922516,
+            "min_ess_bulk": 1622.2674631136158,
+            "min_ess_tail": 2168.6918499450107,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        }
+      }
+    },
+    "742_permuted": {
+      "allocation": "permuted",
+      "permutation_seed": 20261031,
+      "n_pseudo": 86,
+      "n_fit": 718,
+      "n_target_assumed": 742,
+      "n_target_observed_outcome_missing_composition_not_added": 24,
+      "weights": "one per observed and pseudo row; no inverse-propensity weights",
+      "group_abs_t": {
+        "eligibility_unresolved": {
+          "n": 24,
+          "mean_abs_t": 0.8969781390035748
+        },
+        "eligible_outcome_unavailable": {
+          "n": 10,
+          "mean_abs_t": 0.818495247417227
+        },
+        "structural_no_eligible_outcome": {
+          "n": 52,
+          "mean_abs_t": 1.0624085127168383
+        }
+      },
+      "rho_abs_t_size": 0.075863793547311,
+      "rho_abs_t_year": -0.11966784950548405,
+      "pseudo_inputs": [
+        {
+          "file": "syndicate_1254_2022.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2022,
+          "size_gbp_m": 75.257,
+          "hhi": 0.9422156629000301,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.6918604651162791,
+          "unit_t": 0.5429868119443878,
+          "sigma": 0.09336163013341331
+        },
+        {
+          "file": "syndicate_3330_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 7.578,
+          "hhi": 0.7349752056904406,
+          "size_proxy_source": "filing",
+          "ritc_flag": true,
+          "quantile": 0.29651162790697677,
+          "unit_t": -0.580515689840983,
+          "sigma": 0.21249422279863664
+        },
+        {
+          "file": "syndicate_3622_2015.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2015,
+          "size_gbp_m": 5.097,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.37790697674418605,
+          "unit_t": -0.33330988536548806,
+          "sigma": 0.24608925941944162
+        },
+        {
+          "file": "syndicate_4242_2024.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2024,
+          "size_gbp_m": 324.3870297899529,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.23837209302325582,
+          "unit_t": -0.7850895941519962,
+          "sigma": 0.05883046382140413
+        },
+        {
+          "file": "syndicate_4711_2014.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2014,
+          "size_gbp_m": 288.174,
+          "hhi": 0.27597619703255516,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.9244186046511628,
+          "unit_t": 1.7760413278964147,
+          "sigma": 0.06087345892449885
+        },
+        {
+          "file": "syndicate_5623_2020.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2020,
+          "size_gbp_m": 11.923290879812619,
+          "hhi": 0.3650500489525392,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.3313953488372093,
+          "unit_t": -0.47045485924488156,
+          "sigma": 0.17986035875238435
+        },
+        {
+          "file": "syndicate_6050_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 9.807820238007244,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.20348837209302326,
+          "unit_t": -0.92690340154267,
+          "sigma": 0.1932291002998091
+        },
+        {
+          "file": "syndicate_6107_2017.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2017,
+          "size_gbp_m": 29.50388055288639,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.47093023255813954,
+          "unit_t": -0.07766873431584594,
+          "sigma": 0.12952237118134946
+        },
+        {
+          "file": "syndicate_6107_2019.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2019,
+          "size_gbp_m": 73.61617303489335,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.6337209302325582,
+          "unit_t": 0.36677600459527715,
+          "sigma": 0.09406475043477618
+        },
+        {
+          "file": "syndicate_6107_2021.json",
+          "category": "eligible_outcome_unavailable",
+          "year": 2021,
+          "size_gbp_m": 92.31081481481482,
+          "hhi": 0.7789,
+          "size_proxy_source": "filing",
+          "ritc_flag": false,
+          "quantile": 0.9593023255813954,
+          "unit_t": 2.3252061652743246,
+          "sigma": 0.08714289332339077
+        },
+        {
+          "file": "syndicate_1221_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 571.088,
+          "hhi": 0.25789487031264036,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.877906976744186,
+          "unit_t": 1.3668501155970807,
+          "sigma": 0.050507741565529465
+        },
+        {
+          "file": "syndicate_1225_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 705.6500000000001,
+          "hhi": 0.29461642900598684,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.5872093023255814,
+          "unit_t": 0.23539740854642613,
+          "sigma": 0.047943228815968304
+        },
+        {
+          "file": "syndicate_1274_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 744.4732158421962,
+          "hhi": 0.46042536834210296,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.21511627906976744,
+          "unit_t": -0.8775720775253123,
+          "sigma": 0.0473367175437292
+        },
+        {
+          "file": "syndicate_1882_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 155.30399999999997,
+          "hhi": 0.34852813204442035,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.936046511627907,
+          "unit_t": 1.9209920738703186,
+          "sigma": 0.0735191167979148
+        },
+        {
+          "file": "syndicate_1897_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 110.206,
+          "hhi": 0.45855421536597396,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.75,
+          "unit_t": 0.7414769327353937,
+          "sigma": 0.08216115424411624
+        },
+        {
+          "file": "syndicate_1980_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 167.02464390685057,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": false,
+          "quantile": 0.8430232558139535,
+          "unit_t": 1.1525101582658894,
+          "sigma": 0.07184470532505807
+        },
+        {
+          "file": "syndicate_2088_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 116.631,
+          "hhi": 0.388782387626083,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8662790697674418,
+          "unit_t": 1.2894957881692968,
+          "sigma": 0.08064495861666107
+        },
+        {
+          "file": "syndicate_2232_2024.json",
+          "category": "eligibility_unresolved",
+          "year": 2024,
+          "size_gbp_m": 384.8535,
+          "hhi": 0.42523067805460346,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.040697674418604654,
+          "unit_t": -2.3252061652743237,
+          "sigma": 0.05607309049652263
+        },
+        {
+          "file": "syndicate_2526_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 190.834,
+          "hhi": 0.5757422578635949,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.14534883720930233,
+          "unit_t": -1.2184014930262757,
+          "sigma": 0.06891276162659378
+        },
+        {
+          "file": "syndicate_2987_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 3247.5515633400482,
+          "hhi": 0.3186365792285366,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.48255813953488375,
+          "unit_t": -0.04656370596791289,
+          "sigma": 0.03604524591118232
+        },
+        {
+          "file": "syndicate_3002_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 25.9565,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.8197674418604651,
+          "unit_t": 1.0332299693693472,
+          "sigma": 0.13560462762381262
+        },
+        {
+          "file": "syndicate_3268_2019.json",
+          "category": "eligibility_unresolved",
+          "year": 2019,
+          "size_gbp_m": 44.829,
+          "hhi": 0.5063635837795618,
+          "size_proxy_source": "source_audit_filing",
+          "ritc_flag": true,
+          "quantile": 0.0872093023255814,
+          "unit_t": -1.653183326051743,
+          "sigma": 0.11167903246231307
+        },
+        {
+          "file": "syndicate_3500_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 1576.2429629629628,
+          "hhi": 0.3317446417290759,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": true,
+          "quantile": 0.13372093023255813,
+          "unit_t": -1.289495788169297,
+          "sigma": 0.040430221194880045
+        },
+        {
+          "file": "syndicate_3622_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.7034883720930233,
+          "unit_t": 0.5805156898409832,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3622_2018.json",
+          "category": "eligibility_unresolved",
+          "year": 2018,
+          "size_gbp_m": 14.774,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.42441860465116277,
+          "unit_t": -0.203423372222002,
+          "sigma": 0.16630148394044786
+        },
+        {
+          "file": "syndicate_3624_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 612.2477687384448,
+          "hhi": 0.8682247231885292,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.7965116279069767,
+          "unit_t": 0.9269034015426703,
+          "sigma": 0.04963376771369225
+        },
+        {
+          "file": "syndicate_4020_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 478.51149999999996,
+          "hhi": 0.3241590422442663,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.12209302325581395,
+          "unit_t": -1.3668501155970807,
+          "sigma": 0.052869757504478365
+        },
+        {
+          "file": "syndicate_4242_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 216.09541002398498,
+          "hhi": 0.5766708662276202,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.7616279069767442,
+          "unit_t": 0.7850895941519961,
+          "sigma": 0.06632909711778176
+        },
+        {
+          "file": "syndicate_44_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 1.041,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.38953488372093026,
+          "unit_t": -0.3002926338285594,
+          "sigma": 0.44511326355228015
+        },
+        {
+          "file": "syndicate_6103_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 9.1305,
+          "hhi": 1.0,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.45930232558139533,
+          "unit_t": -0.10886806041514156,
+          "sigma": 0.1983841972501585
+        },
+        {
+          "file": "syndicate_6111_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 174.2775,
+          "hhi": 0.3666300677012758,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.36627906976744184,
+          "unit_t": -0.36677600459527715,
+          "sigma": 0.070890781230897
+        },
+        {
+          "file": "syndicate_6112_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 45.1005,
+          "hhi": 0.3688438900927111,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.5174418604651163,
+          "unit_t": 0.046563705967913094,
+          "sigma": 0.11144266949602928
+        },
+        {
+          "file": "syndicate_6118_2014.json",
+          "category": "eligibility_unresolved",
+          "year": 2014,
+          "size_gbp_m": 86.0745,
+          "hhi": 0.2006918568236387,
+          "size_proxy_source": "same_syndicate_median",
+          "ritc_flag": false,
+          "quantile": 0.27325581395348836,
+          "unit_t": -0.6585877859862078,
+          "sigma": 0.08921347505318711
+        },
+        {
+          "file": "syndicate_6124_2015.json",
+          "category": "eligibility_unresolved",
+          "year": 2015,
+          "size_gbp_m": 421.462,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "unavailable",
+          "ritc_flag": true,
+          "quantile": 0.18023255813953487,
+          "unit_t": -1.0332299693693472,
+          "sigma": 0.054695779338763816
+        },
+        {
+          "file": "syndicate_1322_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 1.7179139046402043,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.28488372093023256,
+          "unit_t": -0.6190130324301738,
+          "sigma": 0.36903070172999225,
+          "source_evidence": {
+            "raw_amount_m": 2.151,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2521,
+            "source_page": 34,
+            "source_sha256": "56e97fe3d1567156638cef24273cb996ca0f370368be5e32d710eb0ec9471584"
+          }
+        },
+        {
+          "file": "syndicate_1416_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 0.1299991719797963,
+          "hhi": 0.428351370609958,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9011627906976745,
+          "unit_t": 1.5464186051192403,
+          "sigma": 0.9718053563048349,
+          "source_evidence": {
+            "raw_amount_m": 0.157,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 30,
+            "source_sha256": "df2d3203b09ae0d9318b7f93beb41ed1dc32873e7f7418be0f89f464ef5f7b08"
+          }
+        },
+        {
+          "file": "syndicate_1492_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 0.132,
+          "hhi": 0.34299160822656083,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8895348837209303,
+          "unit_t": 1.4518598815694395,
+          "sigma": 0.9662433817203031,
+          "source_evidence": {
+            "raw_amount_m": 0.132,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 44,
+            "source_sha256": "3e1fd8b8aa0e8fe6118145aefe014eb2df0f7e7a740d032326389c02cf237154"
+          }
+        },
+        {
+          "file": "syndicate_1609_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 13.49590129999172,
+          "hhi": 0.5630046873416656,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.25,
+          "unit_t": -0.7414769327353937,
+          "sigma": 0.1718876082606265,
+          "source_evidence": {
+            "raw_amount_m": 16.299,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 31,
+            "source_sha256": "537868e88a74e1b4abc0e3d3b682c33a4f28893d1cbc4f66e7cfc61bb0155cf8"
+          }
+        },
+        {
+          "file": "syndicate_1618_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 93.23507493582844,
+          "hhi": 0.30449459159034553,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7267441860465116,
+          "unit_t": 0.6585877859862076,
+          "sigma": 0.08685286333476686,
+          "source_evidence": {
+            "raw_amount_m": 112.6,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 51,
+            "source_sha256": "45508632a3d4d2b81beba96d62d8b575a7f2a78c53e2881a03f7defbc1f23da4"
+          }
+        },
+        {
+          "file": "syndicate_1686_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 27.506442425064424,
+          "hhi": 0.2818149373466596,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5755813953488372,
+          "unit_t": 0.203423372222002,
+          "sigma": 0.13281278032360938,
+          "source_evidence": {
+            "raw_amount_m": 40.561,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.4746,
+            "source_page": 25,
+            "source_sha256": "c96c13d702555fd0c67f9c21f845f7b06fb85021e2c09858c5b6e451ab4bf561"
+          }
+        },
+        {
+          "file": "syndicate_1699_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 19.423,
+          "hhi": 0.23419899039684483,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5406976744186046,
+          "unit_t": 0.10886806041514148,
+          "sigma": 0.15055622674820945,
+          "source_evidence": {
+            "raw_amount_m": 19.423,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 35,
+            "source_sha256": "10ff4d6c3c0d491c59fe8eda354fdc0469fd497b8590b3bd6f724320ca76ac74"
+          }
+        },
+        {
+          "file": "syndicate_1729_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 12.419,
+          "hhi": 0.3088437704985605,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.2616279069767442,
+          "unit_t": -0.6993626815593948,
+          "sigma": 0.1771968336399043,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 28,
+            "source_sha256": "79eed2b66322786d99358ab73101287020c556a5e56181287a0382e10d746c2d"
+          }
+        },
+        {
+          "file": "syndicate_1796_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 0.02980872733294692,
+          "hhi": 0.9803500797562825,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4941860465116279,
+          "unit_t": -0.015514992664879613,
+          "sigma": 1.6905184733750822,
+          "source_evidence": {
+            "raw_amount_m": 0.036,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 32,
+            "source_sha256": "2c63fb20dfa6c59025213913eaa4e26a76ab60175830d6471d47feea2886b01e"
+          }
+        },
+        {
+          "file": "syndicate_1840_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 0.012,
+          "hhi": 0.8496445194604061,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5988372093023255,
+          "unit_t": 0.26767160966340486,
+          "sigma": 2.380232254569072,
+          "source_evidence": {
+            "raw_amount_m": 0.012,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 38,
+            "source_sha256": "ddda7b0a020f6ccb73f3d5ee9f4446f1a9ce15a4a2c519466763f2ace9736aa2"
+          }
+        },
+        {
+          "file": "syndicate_1856_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 30.16,
+          "hhi": 0.35020495224054915,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8081395348837209,
+          "unit_t": 0.9786721125095323,
+          "sigma": 0.12850860786584073,
+          "source_evidence": {
+            "raw_amount_m": 30.16,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 36,
+            "source_sha256": "ac1c57bb97e03cbc51870574887c7aa61bba57ac51c3497cd0e8653aca4aedbd"
+          }
+        },
+        {
+          "file": "syndicate_1884_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 6.328,
+          "hhi": 0.5663461037775253,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.622093023255814,
+          "unit_t": 0.33330988536548806,
+          "sigma": 0.22713468453816932,
+          "source_evidence": {
+            "raw_amount_m": 6.328,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "9cbac3a19175c613d5018a4d644fa3e334afa4e9e19201e1ff54ac838af1e0c6"
+          }
+        },
+        {
+          "file": "syndicate_1892_2020.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2020,
+          "size_gbp_m": 6.58,
+          "hhi": 1.0,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9709302325581395,
+          "unit_t": 2.6414870410815854,
+          "sigma": 0.22387692748820112,
+          "source_evidence": {
+            "raw_amount_m": 6.58,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 27,
+            "source_sha256": "ce833dfff67ca18c69741926537ec82364d668fc9a44b3c79c17a1a72371361f"
+          }
+        },
+        {
+          "file": "syndicate_1902_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 4.711,
+          "hhi": 0.6150522116920979,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.3546511627906977,
+          "unit_t": -0.4007474266971781,
+          "sigma": 0.2533870656644314,
+          "source_evidence": {
+            "raw_amount_m": 4.711,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "602e0c1ae445b80862851a14b9413ce8d75cea6333117f33a0c612612d221cfe"
+          }
+        },
+        {
+          "file": "syndicate_1947_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 20.974,
+          "hhi": 0.6505576173256493,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.6453488372093024,
+          "unit_t": 0.40074742669717817,
+          "sigma": 0.14642820474298576,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 33,
+            "source_sha256": "6fa15c35758c469cb0524594ef9d576a54d444f258da63620ab454993ec869ad"
+          }
+        },
+        {
+          "file": "syndicate_1971_2020.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2020,
+          "size_gbp_m": 20.521153564631824,
+          "hhi": 0.4263983016931695,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.8546511627906976,
+          "unit_t": 1.218401493026276,
+          "sigma": 0.14758847408175135,
+          "source_evidence": {
+            "raw_amount_m": 28.036,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.3662,
+            "source_page": 40,
+            "source_sha256": "3e26d7256dc1d8ee0e24d7af966b85fae4b6cb4ebe12217fa92a384be967c0b1"
+          }
+        },
+        {
+          "file": "syndicate_1975_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 14.938,
+          "hhi": 1.0,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6104651162790697,
+          "unit_t": 0.3002926338285594,
+          "sigma": 0.16563324557449766,
+          "source_evidence": {
+            "raw_amount_m": 14.938,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "fd09e0212ef00b51a622d4d10d1fe634c640b53c698dc40a348e879f40d806e1"
+          }
+        },
+        {
+          "file": "syndicate_1980_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 127.87980882237719,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "transferred_base_assumed_compatible",
+          "ritc_flag": false,
+          "quantile": 0.8313953488372093,
+          "unit_t": 1.0910022943360875,
+          "sigma": 0.0782577421349793,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 29,
+            "source_sha256": "898e955f8f768594c0694fdf459d713aa73d4502da4f116ca34ef34cadb85fe8"
+          }
+        },
+        {
+          "file": "syndicate_1985_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 14.660170912866386,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4011627906976744,
+          "unit_t": -0.26767160966340503,
+          "sigma": 0.1667713760724015,
+          "source_evidence": {
+            "raw_amount_m": 18.356,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2521,
+            "source_page": 36,
+            "source_sha256": "2fc5cb2d0f91f463f302543c5fd40781bd5457c12c683cf8d8b19adfac6fa28e"
+          }
+        },
+        {
+          "file": "syndicate_1988_2022.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2022,
+          "size_gbp_m": 7.0489359940382545,
+          "hhi": 0.8081053533045746,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4476744186046512,
+          "unit_t": -0.14020033396809262,
+          "sigma": 0.21825100804702244,
+          "source_evidence": {
+            "raw_amount_m": 8.513,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2077,
+            "source_page": 33,
+            "source_sha256": "315503ff950cbd737a16f1116a0c316e2990907145501fd04c35118ebe6aa78d"
+          }
+        },
+        {
+          "file": "syndicate_1991_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 0.396,
+          "hhi": 0.5200207591066163,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.3430232558139535,
+          "unit_t": -0.4352850251675646,
+          "sigma": 0.6395554240260255,
+          "source_evidence": {
+            "raw_amount_m": 0.396,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 16,
+            "source_sha256": "bc42508f889b8bc86ecfb522dc06368619099d7b58f5bbb8c8c244b757e91781"
+          }
+        },
+        {
+          "file": "syndicate_1996_2024.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2024,
+          "size_gbp_m": 0.139,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.22674418604651161,
+          "unit_t": -0.8303837872659114,
+          "sigma": 0.9476623593739696,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": null,
+            "source_sha256": "75769493fdf5f03f54200a718543ee90ed890da13bf47feed4e1baf85a0b98b6"
+          }
+        },
+        {
+          "file": "syndicate_2014_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 18.715,
+          "hhi": 0.41695357840206215,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.05232558139534884,
+          "unit_t": -2.0979778887784573,
+          "sigma": 0.15259623684835721,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 33,
+            "source_sha256": "77854f7037c300c5f8f3772425eeca05b5b97fdc455ff5a01078dd655df34927"
+          }
+        },
+        {
+          "file": "syndicate_2019_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 206.2222222222222,
+          "hhi": 0.8541030044948505,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5290697674418605,
+          "unit_t": 0.07766873431584594,
+          "sigma": 0.06728429553004296,
+          "source_evidence": {
+            "raw_amount_m": 278.4,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.35,
+            "source_page": 32,
+            "source_sha256": "b1acd1bba309d67cebe1cb4a57c4e24786e5ab9522bb743c9fa6f0d2820cf788"
+          }
+        },
+        {
+          "file": "syndicate_2288_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 56.885925925925925,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7732558139534884,
+          "unit_t": 0.8303837872659116,
+          "sigma": 0.1027773978714064,
+          "source_evidence": {
+            "raw_amount_m": 76.796,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.35,
+            "source_page": 37,
+            "source_sha256": "b97c41f60b4875c846280e5fa30a852a7793c8b6d6f8de716a15ab8b1ab13479"
+          }
+        },
+        {
+          "file": "syndicate_2358_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 7.301263438750687,
+          "hhi": 0.2468169798841189,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7848837209302325,
+          "unit_t": 0.8775720775253121,
+          "sigma": 0.21543347167118565,
+          "source_evidence": {
+            "raw_amount_m": 9.304,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 34,
+            "source_sha256": "eafcd6e57ef094de742af04714aa174c673a2cb0541a540f292fabbd75f626eb"
+          }
+        },
+        {
+          "file": "syndicate_2689_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 26.627752095902217,
+          "hhi": 0.8210233393574186,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7383720930232558,
+          "unit_t": 0.6993626815593948,
+          "sigma": 0.1343677472095587,
+          "source_evidence": {
+            "raw_amount_m": 33.985,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2763,
+            "source_page": 31,
+            "source_sha256": "5693fa0ee674e54bdfaf53b911eed4e822623d0c35320c193deb7118f4a545a5"
+          }
+        },
+        {
+          "file": "syndicate_2786_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 20.968,
+          "hhi": 0.4592017930466664,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5058139534883721,
+          "unit_t": 0.015514992664879613,
+          "sigma": 0.146443349463429,
+          "source_evidence": {
+            "raw_amount_m": 20.968,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 28,
+            "source_sha256": "9f3071cf096ce9446825b85a00b667d0324ae30bdbdbb91490e7210b67163a94"
+          }
+        },
+        {
+          "file": "syndicate_2880_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 6.436474927411128,
+          "hhi": 0.48105804468758484,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.11046511627906977,
+          "unit_t": -1.4518598815694397,
+          "sigma": 0.22571076214184638,
+          "source_evidence": {
+            "raw_amount_m": 8.202,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 30,
+            "source_sha256": "e01f948df806d44431be28c686bab1d35b25bfb6a3e7db6dda8ec20e3670ee56"
+          }
+        },
+        {
+          "file": "syndicate_2988_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 52.0931,
+          "hhi": 0.3768526093370518,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9127906976744186,
+          "unit_t": 1.6531833260517421,
+          "sigma": 0.10596739867610744,
+          "source_evidence": {
+            "raw_amount_m": 52.0931,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 43,
+            "source_sha256": "ccac469777e1a8f7fb23a27e75dc3d93f082bf8d7cea652989e4684ff914bbb1"
+          }
+        },
+        {
+          "file": "syndicate_3456_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 0.3829553480342149,
+          "hhi": 0.4024858644302125,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6569767441860465,
+          "unit_t": 0.4352850251675644,
+          "sigma": 0.64764748112783,
+          "source_evidence": {
+            "raw_amount_m": 0.488,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 32,
+            "source_sha256": "449293f167528afa0aecc9396e5541d3fcb7cc1866cd6a5b12d27db27917fd02"
+          }
+        },
+        {
+          "file": "syndicate_3902_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 30.259,
+          "hhi": 0.36537695566820017,
+          "size_proxy_source": "exact_source_opening_replaces_rounded_model",
+          "ritc_flag": false,
+          "quantile": 0.19186046511627908,
+          "unit_t": -0.9786721125095323,
+          "sigma": 0.12835831430375716,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 25,
+            "source_sha256": "d91ee7d7967f7061659583a6d84ede0382afa1d8d20c77456628b821cb928d2b"
+          }
+        },
+        {
+          "file": "syndicate_4321_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 3.5756101388997883,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.5523255813953488,
+          "unit_t": 0.14020033396809262,
+          "sigma": 0.2807376437470969,
+          "source_evidence": {
+            "raw_amount_m": 4.5564,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 33,
+            "source_sha256": "aaab9a1300185e2f60b35b1203aca2aadc259e1450382bfc41b47196d4580a38"
+          }
+        },
+        {
+          "file": "syndicate_4747_2021.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2021,
+          "size_gbp_m": 0.055,
+          "hhi": 0.3709412094325141,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.1686046511627907,
+          "unit_t": -1.0910022943360873,
+          "sigma": 1.3427656904501708,
+          "source_evidence": {
+            "raw_amount_m": 0.055,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 29,
+            "source_sha256": "e2656ba064e300f2d7f6f1c437f94fe9af3da00e38fbb6f2f78e5cf92d3c4863"
+          }
+        },
+        {
+          "file": "syndicate_5183_2023.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2023,
+          "size_gbp_m": 0.003138978262575532,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.563953488372093,
+          "unit_t": 0.17170515469684627,
+          "sigma": 3.9414159043714205,
+          "source_evidence": {
+            "raw_amount_m": 0.004,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2743,
+            "source_page": 31,
+            "source_sha256": "8c228405dad8db09f682eeca51ebef73e78de62b44e9df83d55a11889208800c"
+          }
+        },
+        {
+          "file": "syndicate_5623_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 1.3242896977918457,
+          "hhi": 0.3650500489525392,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6802325581395349,
+          "unit_t": 0.5063290494814673,
+          "sigma": 0.4067567847045117,
+          "source_evidence": {
+            "raw_amount_m": 1.7572,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.3269,
+            "source_page": 30,
+            "source_sha256": "7c639c6239e4c361d4ce8010ea877087135e5ee6197e0b3fa80b6f22fe074835"
+          }
+        },
+        {
+          "file": "syndicate_5886_2018.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2018,
+          "size_gbp_m": 86.626,
+          "hhi": 0.46029036972026627,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.4127906976744186,
+          "unit_t": -0.235397408546426,
+          "sigma": 0.0890219039141934,
+          "source_evidence": {
+            "raw_amount_m": 86.626,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "c3807a788936219f86cca1e4a16eb843c1ab92383eaf5fba2139a16295a97643"
+          }
+        },
+        {
+          "file": "syndicate_6050_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 4.45189268055443,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.436046511627907,
+          "unit_t": -0.17170515469684627,
+          "sigma": 0.25876620914310183,
+          "source_evidence": {
+            "raw_amount_m": 5.4923,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2337,
+            "source_page": 27,
+            "source_sha256": "f97837ff9eb8fc259dbd5c75df265e213d0fd9f25b2d98a366556081ca7a8b6c"
+          }
+        },
+        {
+          "file": "syndicate_6113_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 4.984,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.1569767441860465,
+          "unit_t": -1.152510158265889,
+          "sigma": 0.2481445645753242,
+          "source_evidence": {
+            "raw_amount_m": 4.984,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 14,
+            "source_sha256": "650447c8f89744f06a3e3a19d2c2800e1d89c4399858275ff652542c038dfc8a"
+          }
+        },
+        {
+          "file": "syndicate_6115_2014.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2014,
+          "size_gbp_m": 21.367,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.029069767441860465,
+          "unit_t": -2.6414870410815876,
+          "sigma": 0.14544915627733546,
+          "source_evidence": {
+            "raw_amount_m": 21.367,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 13,
+            "source_sha256": "da927be954b3e81a4b35d17a9316c086fd61059d3b66becf2fa31186cf79f358"
+          }
+        },
+        {
+          "file": "syndicate_6117_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 2.395,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.09883720930232558,
+          "unit_t": -1.5464186051192397,
+          "sigma": 0.3259595656906016,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 22,
+            "source_sha256": "b542b36347d6557938cace1127edcf7757e457a1b533b43571282a70ab8da642"
+          }
+        },
+        {
+          "file": "syndicate_6119_2015.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2015,
+          "size_gbp_m": 4.332,
+          "hhi": 0.3579077160810357,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.01744186046511628,
+          "unit_t": -3.1546444923684653,
+          "sigma": 0.26140383151299107,
+          "source_evidence": {
+            "raw_amount_m": 4.332,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "41afe79231d77862472d2bca497932a6bf60c4aa5126035be61f08d6db5e32ac"
+          }
+        },
+        {
+          "file": "syndicate_6121_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 5.926,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.06395348837209303,
+          "unit_t": -1.9209920738703186,
+          "sigma": 0.2327209424548553,
+          "source_evidence": {
+            "raw_amount_m": 5.926,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "2b7bc34a521928be497a0e9682cc8d4ed7ba58249e721ea15127ee827033e963"
+          }
+        },
+        {
+          "file": "syndicate_6123_2016.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2016,
+          "size_gbp_m": 0.07862527356731783,
+          "hhi": 0.7978778607584446,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.0755813953488372,
+          "unit_t": -1.7760413278964156,
+          "sigma": 1.173969076770424,
+          "source_evidence": {
+            "raw_amount_m": 0.097,
+            "source_currency": "USD",
+            "usd_per_gbp": 1.2337,
+            "source_page": 32,
+            "source_sha256": "17cb988726accac171260355bda9ecc6911a75a9e4e6d2f4a5127c6321c13de9"
+          }
+        },
+        {
+          "file": "syndicate_6125_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 4.571,
+          "hhi": 0.35544894382877884,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.005813953488372093,
+          "unit_t": -4.438762450659934,
+          "sigma": 0.25624123513766817,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 27,
+            "source_sha256": "07baf00e33efeb944b90dbed2e419ba455194eff3c1e45344a98781ded6205b1"
+          }
+        },
+        {
+          "file": "syndicate_6126_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 8.561,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.9476744186046512,
+          "unit_t": 2.0979778887784573,
+          "sigma": 0.20314649278760435,
+          "source_evidence": {
+            "raw_amount_m": 8.561,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 26,
+            "source_sha256": "9a00249589207e89592beaac9d5a0940f2573263fb4570316afca90d8e4430e5"
+          }
+        },
+        {
+          "file": "syndicate_6129_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 14.7,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.31976744186046513,
+          "unit_t": -0.5063290494814673,
+          "sigma": 0.1666063855772863,
+          "source_evidence": {
+            "raw_amount_m": 14.7,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 30,
+            "source_sha256": "e34b3eb50541e0086e2542b2075b56a03c8e60f8fbdea9112f63a8de6be72012"
+          }
+        },
+        {
+          "file": "syndicate_6130_2017.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2017,
+          "size_gbp_m": 0.8455909527681277,
+          "hhi": 0.5615373658315352,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9825581395348837,
+          "unit_t": 3.1546444923684636,
+          "sigma": 0.481170031955567,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 12,
+            "source_sha256": "5b69e253654288e00142d58b2d5b20a47d98aba8aefd21c247d47d1b28a09c51"
+          }
+        },
+        {
+          "file": "syndicate_6131_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 0.934,
+          "hhi": 0.39905215158614243,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.6686046511627907,
+          "unit_t": 0.4704548592448814,
+          "sigma": 0.46357051602194144,
+          "source_evidence": {
+            "raw_amount_m": 0.934,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 25,
+            "source_sha256": "a4ee6ecd94417be2d996eafa6cb6f8c5e6a429c4881a301ead7b66a1b5cb91e7"
+          }
+        },
+        {
+          "file": "syndicate_6132_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 15.992,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "audited_source_opening",
+          "ritc_flag": false,
+          "quantile": 0.7151162790697675,
+          "unit_t": 0.6190130324301739,
+          "sigma": 0.16156894086929377,
+          "source_evidence": {
+            "raw_amount_m": 15.992,
+            "source_currency": "GBP",
+            "usd_per_gbp": null,
+            "source_page": 32,
+            "source_sha256": "46dbac16c4c5274aebcce3cadfd468519db388dea659812d197720fe64feda01"
+          }
+        },
+        {
+          "file": "syndicate_6133_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 51.04378626874671,
+          "hhi": 0.34247585754308096,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.3081395348837209,
+          "unit_t": -0.5429868119443878,
+          "sigma": 0.10672121530853082,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 38,
+            "source_sha256": "56daac8324ae631fa45b627d9a8bb1749b9cf3be22ea4e5fba957af17dda7f84"
+          }
+        },
+        {
+          "file": "syndicate_6134_2019.json",
+          "category": "structural_no_eligible_outcome",
+          "year": 2019,
+          "size_gbp_m": 9.216,
+          "hhi": 0.5787436150743507,
+          "size_proxy_source": "source_checked_model_proxy",
+          "ritc_flag": false,
+          "quantile": 0.9941860465116279,
+          "unit_t": 4.438762450659932,
+          "sigma": 0.19770468868603885,
+          "source_evidence": {
+            "source_currency": "model proxy converted to GBP where applicable",
+            "source_page": 36,
+            "source_sha256": "0a5ffd2fb069e9365f4e478c3edfc3402fad570452c788fd1c7611a943bf4224"
+          }
+        }
+      ],
+      "imputation": {
+        "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
+        "n_size_imputed_working_sample_median": 1,
+        "size_imputed_working_sample_median_records": [
+          "syndicate_6124_2015.json"
+        ],
+        "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
+      },
+      "by_c": {
+        "1.0": {
+          "k": {
+            "mean": 0.6282544525610565,
+            "hdi_2.5": 0.5638781949655477,
+            "hdi_97.5": 0.6948611603338828
+          },
+          "sd_undiv": {
+            "mean": 0.02913443183497108,
+            "hdi_2.5": 0.015691535037188595,
+            "hdi_97.5": 0.04100207534941354
+          },
+          "sd_div": {
+            "mean": 0.04387418413294449,
+            "hdi_2.5": 0.033490122119578386,
+            "hdi_97.5": 0.05385738814018643
+          },
+          "nu_clean": {
+            "mean": 3.9447463743417446,
+            "hdi_2.5": 2.853415494222764,
+            "hdi_97.5": 5.226381967083978
+          },
+          "nu_ritc": {
+            "mean": 6.234285903254765,
+            "hdi_2.5": 1.3855479026472324,
+            "hdi_97.5": 13.932515447749664
+          },
+          "tau_s": {
+            "mean": 0.08398626938337568,
+            "hdi_2.5": 8.400357383297786e-06,
+            "hdi_97.5": 0.18508230999031056
+          },
+          "_diag": {
+            "max_rhat": 1.0020896859690547,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0020896859690547,
+            "min_ess_bulk": 1882.828009812932,
+            "min_ess_tail": 2048.381065483449,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        },
+        "5.0": {
+          "k": {
+            "mean": 0.5172776892539299,
+            "hdi_2.5": 0.5008212310260197,
+            "hdi_97.5": 0.5396014357330999
+          },
+          "sd_undiv": {
+            "mean": 0.02737122260787234,
+            "hdi_2.5": 0.016608307206807997,
+            "hdi_97.5": 0.03889663585707518
+          },
+          "sd_div": {
+            "mean": 0.04895157234582815,
+            "hdi_2.5": 0.036165847272003455,
+            "hdi_97.5": 0.06229022629762042
+          },
+          "nu_clean": {
+            "mean": 2.4435333210428376,
+            "hdi_2.5": 1.9203011175635143,
+            "hdi_97.5": 2.9763597858586737
+          },
+          "nu_ritc": {
+            "mean": 1.9257651506158884,
+            "hdi_2.5": 0.7295601038148388,
+            "hdi_97.5": 3.422839270570221
+          },
+          "tau_s": {
+            "mean": 0.34995150767257555,
+            "hdi_2.5": 0.14855663412109352,
+            "hdi_97.5": 0.5695439012143052
+          },
+          "_diag": {
+            "max_rhat": 1.0019031231696534,
+            "divergences": 0
+          },
+          "_diag_full": {
+            "divergences": 0,
+            "max_rhat": 1.0019031231696534,
+            "min_ess_bulk": 1605.1854213737338,
+            "min_ess_tail": 1650.6615566137268,
+            "parameters": [
+              "k",
+              "sd_undiv",
+              "sd_div",
+              "nu_clean",
+              "nu_ritc",
+              "lambda_ritc",
+              "beta_ritc",
+              "tau_s"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "posterior_draw_hashes": {
+    "690_permuted-c1-draws.npz": "5657ec6965f2829ab1ed64c556950a3fed4248400caec0798b2fa19738062dd5",
+    "690_permuted-c5-draws.npz": "82568d841bcd36e8ad850e84cb74c6923b1276cbb7e7e0f220ce2376fd882dce",
+    "742_original-c1-draws.npz": "7d8802d6efe8e24fabe3fa655fc54c818801aee763f17a3faa20711c98f13a37",
+    "742_original-c5-draws.npz": "fe80ecb53abde604f2b4f8a942ce40426ecaf1556b8223b8321b6a3a2224d191",
+    "742_permuted-c1-draws.npz": "fd9fb3826dc7844cc092b9e666747423b5dffbc785ea9eca86c8b5e0fb8d2570",
+    "742_permuted-c5-draws.npz": "d46cd7d3e1f7c20f335a2423d8934697436ab30f74c5a9d63a18f126553e1e70"
+  }
+}
