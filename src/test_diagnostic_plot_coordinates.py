@@ -67,3 +67,25 @@ def test_zero_severities_remain_plotted(results, monkeypatch):
         assert fig.axes[0].get_yscale() == "symlog"
         assert np.isfinite(fig.axes[0].transData.transform((0, 0))).all()
         plt.close(fig)
+
+
+def test_capital_outputs_identify_concentration_only_and_size_only_operator(monkeypatch):
+    # Deliberately distinct synthetic values expose field swaps that gamma=0 masks.
+    results = {'capital_impact': {'portfolios': [{'name': 'Example',
+        'naive': {'var_995': 0.1}, 'concentration_only': {'var_995': 0.2},
+        'full': {'var_995': 0.5}}]}}
+    written = []
+    monkeypatch.setattr(ra, '_write_tex', lambda name, content: written.append((name, content)))
+    ra._gen_table4(results)
+    name, table = written[0]
+    assert name == 'table4_var_decomposition.tex'
+    assert 'Conc.-adj.' in table and 'Conc. effect' in table
+    assert 'Mix-adj.' not in table and 'Mix effect' not in table
+    assert 'Example & 0.1000 & 0.2000 & 0.5000 & 0.1000 & 0.3000' in table
+    assert r'\gamma=0' in table
+    fig = capture(monkeypatch, ra._gen_fig_capital_decomposition, results)
+    ax = fig.axes[0]
+    assert [bar.get_height() for bar in ax.patches] == pytest.approx([0.1, 0.2, 0.5])
+    assert [t.get_text() for t in ax.get_legend().get_texts()] == ['Naive', 'Concentration-only', 'Fully adjusted']
+    assert r'\gamma=0' in ax.get_title()
+    plt.close(fig)

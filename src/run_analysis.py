@@ -6963,8 +6963,8 @@ def _gen_table3(results):
 
 def _gen_table4(results):
     ports = _safe_get(results, "capital_impact", "portfolios", default=[])
-    body = ("\\textbf{Portfolio} & \\textbf{Raw} & \\textbf{Mix-adj.} & "
-            "\\textbf{Full adj.} & \\textbf{Mix effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
+    body = ("\\textbf{Portfolio} & \\textbf{Raw} & \\textbf{Conc.-adj.} & "
+            "\\textbf{Full adj.} & \\textbf{Conc. effect} & \\textbf{Size effect} \\\\\n\\midrule\n")
     for p in ports:
         raw = _safe_get(p, "naive", "var_995", default=None)
         mix = _safe_get(p, "concentration_only", "var_995", default=None)
@@ -8021,7 +8021,7 @@ def _gen_fig_hhi_adjusted_size(results):
 
 
 def _gen_fig_capital_decomposition(results):
-    """Stacked/grouped bar: naive → mix_adj → full_adj for VaR 99.5%."""
+    """Grouped bar: raw, concentration-only and full adjustment for VaR 99.5%."""
     ports = _safe_get(results, "capital_impact", "portfolios", default=[])
     if not ports:
         return
@@ -8034,11 +8034,11 @@ def _gen_fig_capital_decomposition(results):
     width = 0.25
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.bar(x - width, naive_vals, width, label="Naive", color='#bdbdbd')
-    ax.bar(x, mix_vals, width, label="Mix-adjusted", color=_PP_RAW_COL)
+    ax.bar(x, mix_vals, width, label="Concentration-only", color=_PP_RAW_COL)
     ax.bar(x + width, full_vals, width, label="Fully adjusted", color=_PP_STD_COL)
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=30, ha='right', fontsize=9)
-    _setup_ax(ax, "", "VaR 99.5%", "Capital impact decomposition (VaR 99.5%)")
+    _setup_ax(ax, "", "VaR 99.5%", "Capital decomposition (VaR 99.5%; size-only operator, $\\gamma=0$)")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_capital_decomposition.png")
 
