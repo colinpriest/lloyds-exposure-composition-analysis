@@ -38,7 +38,7 @@ $P(\gamma > 0.05) = 0.928$ against a prior mass of 0.960; 0 divergences, max $\h
 
 | Statement | Posterior | Prior | Status |
 |---|---:|---:|---|
-| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.398 | 0.500 | the data move it below its prior mass, so the RITC tail reads as the lighter; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
+| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.398 | 0.500 | the data move it below its prior mass; the RITC tail leans lighter, but the ordering remains unresolved; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
 | $P(\nu_{\text{RITC}} < 2)$ | 0.052 | 0.036 | posterior probability that the RITC regime lacks a finite variance; within 0.05 of its prior mass, so its size is the prior's, not a finding |
 | $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | the adopted prior restricts $k$ to $[\tfrac12,1]$, the finite-variance benchmarks (independent $\sqrt N$ pooling at $\tfrac12$, comonotonic pooling at $1$); that is a modelling choice, not a universal bound, because heavier-tailed (infinite-variance) blocks can decline outside the bracket. So these are not findings; the endpoints are scored by syndicate as fixed alternatives |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.636 | 0.841 | the data move it below its prior mass; fitted in the likelihood, and the transfer operator omits it, not shown to be zero |

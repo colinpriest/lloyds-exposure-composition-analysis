@@ -91,8 +91,15 @@ def posterior_rows(m0):
     rows = ["| Statement | Posterior | Prior | Status |", "|---|---:|---:|---|"]
     p, q = pair("nu_ritc_lt_nu_clean")
     if moved(p, q):
-        order = ("the data move it %s its prior mass, so the RITC tail reads as the %s"
-                 % ("above" if p > q else "below", "heavier" if p > q else "lighter"))
+        movement = "above" if p > q else "below"
+        if p == 0.5:
+            order = "the data move it %s its prior mass; the tail ordering remains unresolved" % movement
+        else:
+            direction = "heavier" if p > 0.5 else "lighter"
+            resolution = ("but the ordering remains unresolved" if 0.05 < p < 0.95
+                          else "at this posterior probability")
+            order = ("the data move it %s its prior mass; the RITC tail leans %s, %s"
+                     % (movement, direction, resolution))
     else:
         order = ("within %.2f of its prior mass: the data do not settle the order of the two tail indices"
                  % PRIOR_CLOSE)

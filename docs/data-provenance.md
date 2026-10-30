@@ -23,15 +23,19 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Raw filing documents | extraction repository, `syndicate_reports/pdfs/` | **no** (1,065 records: 970 PDF and 95 HTML; source files not committed) | source documents, not redistributed |
 
 The raw source documents are deliberately not committed (volume + redistribution); everything downstream
-is re-runnable from the committed JSON, and what has been demonstrated is the recorded
-clean full-manifest run (`reproduce.py --verify` prints its coverage; see the README). The
+is re-runnable from the committed JSON. The recorded clean full-manifest run demonstrated
+reproduction at historical analysis commit `02390cc`; later changed inputs and outputs require
+separate evidence. Targeted clean-pin and changed-input refits are recorded in
+`results/review_evidence/` (`reproduce.py --verify` prints the historical run's coverage; see the README). The
 extraction itself is reconstructible from the public filings but not re-runnable from
 this repository alone.
 
 ## 2. What changed in this import
 
-The current import is the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026): every
-artefact the table above names holds that commit's content, byte for byte. It replaces `2ee4007e` (1 October 2026)
+The current import is the extraction's commit `15dbb476373bb6ae2658464a52688d08cf244744`. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
+
+An earlier import was the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026).
+That historical import replaced `2ee4007e` (1 October 2026)
 because stage 2 of the fix cycle for the review of 2 October 2026 changed the extraction: the triangle reader's
 report-year diagonal check (M-1), signed class premiums, the calendar-year mix column, the "&P" cohort label and the
 widened run-off statement forms, with 151 record files, both run-off registers, the scans, the audit files and the

@@ -17,7 +17,7 @@
 |---|---:|---:|
 | Filings retrieved | 1065 | — |
 | — No deterministic reading: the parsers found no prior-year figure and the models were not run (eligibility unresolved in the inferential ledger) | | 20 |
-| — Loader skips (structural exclusions or eligible outcome unavailable) | | 107 |
+| — Loader skips (disclosure screen, unresolved eligibility or unavailable eligible outcome) | | 107 |
 | — No development record to parse | | 4 |
 | — In run-off (the filing states run-off for the whole year, with or without a development figure, outside the RITC regime; or GPW = 0, or GPW < 0 where the filing states run-off) | | 28 |
 | — No reserves | | 4 |

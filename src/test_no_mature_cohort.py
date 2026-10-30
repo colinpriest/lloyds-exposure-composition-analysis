@@ -169,13 +169,12 @@ def test_the_boundary_is_t_minus_2(years, caught):
 
 
 def test_the_structural_step_keeps_its_name_and_no_longer_says_no_stated_figure(monkeypatch):
-    """The reconciliation's structural step said "no eligible mature cohort and no stated development figure"; the
-    records the widened rule adds state a figure, so the step now says only what all of its records share. The
-    manuscript's gates find the row by "no eligible mature cohort"."""
+    """The loader-skip label describes the disclosure screen and unresolved/unavailable outcomes without
+    claiming that no eligible mature cohort or stated development figure can exist."""
     from test_runoff_label import _table39
-    rows = [line for line in _table39(monkeypatch, 1).splitlines() if "structural exclusion" in line]
+    rows = [line for line in _table39(monkeypatch, 1).splitlines() if "loader skips (disclosure screen" in line]
     assert len(rows) == 1
-    assert "loader skips (structural exclusions or unavailable eligible outcome)" in rows[0]
+    assert "loader skips (disclosure screen, unresolved eligibility or unavailable eligible outcome)" in rows[0]
     assert "no stated development figure" not in rows[0]
 
 
@@ -186,7 +185,7 @@ def test_the_data_audit_names_the_structural_step_the_same_way(monkeypatch):
     text = gda.md(gda.compute(), gda.mine_raw())
     rows = [line for line in text.splitlines() if "Loader skips" in line]
     assert len(rows) == 1
-    assert "structural exclusions or eligible outcome unavailable" in rows[0]
+    assert "disclosure screen, unresolved eligibility or unavailable eligible outcome" in rows[0]
     assert "no stated development figure" not in rows[0]
 
 

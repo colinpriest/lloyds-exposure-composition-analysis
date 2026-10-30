@@ -184,13 +184,13 @@ python reproduce.py --list      # every script in the manifest, in order, with r
 python reproduce.py             # run everything (no C++ toolchain needed)
 ```
 
-No C++ toolchain is needed, and the committed outputs were produced with none
-present. That second clause matters for bit-for-bit reproduction: with a toolchain on
-the path PyTensor compiles the operations it otherwise runs in Python, and on the
-reference machine that changed every posterior draw from the first one (posterior
-means moved by roughly a fiftieth of a posterior SD, so no conclusion moves).
-`reproduce.py --check` reports a detected toolchain for that reason; remove it from
-PATH to reproduce the committed outputs exactly.
+No C++ toolchain is needed. The recorded full-manifest pass at historical commit
+`02390cc` used none. Toolchain availability matters for bit-for-bit reproduction:
+with a toolchain on the path PyTensor compiles operations it otherwise runs in Python,
+and on the reference machine that changed every posterior draw from the first one
+(posterior means moved by roughly a fiftieth of a posterior SD in that comparison).
+`reproduce.py --check` reports a detected toolchain; removing it matches the recorded
+pass's environment but does not establish reproduction of outputs changed since that pass.
 
 Two parallelism switches exist and neither changes an output. `PYMC_CORES` (default
 1) is the number of chains each fit samples in parallel; round 53 ran the manifest
@@ -249,9 +249,10 @@ workbooks: a workbook is compared on its members' names and contents, in name or
 `docProps/core.xml`, the member that records when it was written, and without the zip entries' own
 metadata. It fails on any changed output that no ran script declared.
 
-The whole manifest has been rerun as a recorded pass from a clean clone of the
-committed analysis (every manifest script, no failures; the posterior-draw `.npz` files and the
-figures reproduced byte for byte). `reproduce-run-report.json` (committed) records the commit, a
+The whole manifest was rerun as a recorded pass from a clean clone of the
+historical analysis commit `02390cc` (every manifest script, no failures; its posterior-draw `.npz` files and
+figures reproduced byte for byte against that commit). This historical pass does not demonstrate reproduction
+of later changed outputs; the separate targeted runs and their records are described below. `reproduce-run-report.json` (committed) records the commit, a
 `worktree_dirty_src` flag, an input attestation, the environment, and per-output hashes --
 canonical SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
 `--verify` VALIDATES that report against history: a dirty recorded run is rejected,
@@ -351,8 +352,8 @@ API access; its output is committed as the record files `pdf_extraction/syndicat
 the registers and scans imported beside them (`docs/data-provenance.md`). Everything
 downstream of those records, `model/exposure_results.json` included (`run_analysis.py` writes it),
 is *re-runnable* from this checkout through the manifest;
-what has been *demonstrated* is the recorded clean full-manifest run described above
-(`--verify` prints its exact coverage).
+what was *demonstrated* is the historical clean full-manifest run at `02390cc` described above;
+later changed outputs require their own rerun evidence (`--verify` prints the recorded coverage).
 
 Individual steps still work on their own:
 

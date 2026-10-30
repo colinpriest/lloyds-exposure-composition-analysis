@@ -787,8 +787,11 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
     beta = [line for line in near.splitlines() if "beta" in line][0]
     assert "| 0.668 | 0.841 |" in beta and "move it below its prior mass" in beta
     far = "\n".join(bcr.posterior_rows(_m0((0.314, 0.20, 0.9), (0.500, 0.036, 0.841))))
-    assert "RITC tail reads as the lighter" in far
-    assert "RITC tail reads as the heavier" in "\n".join(bcr.posterior_rows(_m0((0.70, 0.2, 0.9), (0.5, 0.036, 0.841))))
+    assert "RITC tail leans lighter" in far and "ordering remains unresolved" in far
+    assert "RITC tail leans heavier" in "\n".join(bcr.posterior_rows(_m0((0.70, 0.2, 0.9), (0.5, 0.036, 0.841))))
+    # Direction comes from posterior probability, not merely its movement versus a non-0.5 prior.
+    shifted = "\n".join(bcr.posterior_rows(_m0((0.48, 0.2, 0.9), (0.2, 0.036, 0.841))))
+    assert "RITC tail leans lighter" in shifted and "ordering remains unresolved" in shifted
     with pytest.raises(SystemExit):
         bcr.posterior_rows({"posterior_prob": _m0((0.4, 0.1, 0.5), (0.5, 0.1, 0.5))["posterior_prob"],
                             "prior_prob": {}})
