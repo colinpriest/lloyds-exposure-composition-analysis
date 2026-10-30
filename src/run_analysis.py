@@ -7752,6 +7752,7 @@ def _gen_fig_boxplots(results):
             if not data:
                 continue
         fig, ax = plt.subplots(figsize=(12, 6))
+        summary_medians = False
         if isinstance(data, list) and data:
             if isinstance(data[0], dict):
                 labels = [str(d.get("label", d.get("year", d.get("decile", i)))) for i, d in enumerate(data)]
@@ -7761,13 +7762,17 @@ def _gen_fig_boxplots(results):
                                boxprops=dict(facecolor=_PP_RAW_COL, alpha=0.3))
                 else:
                     # Maybe summary stats format
+                    summary_medians = True
                     medians = [d.get("median", 0) for d in data]
                     ax.bar(range(len(medians)), medians, color=_PP_RAW_COL, alpha=0.6)
                     ax.set_xticks(range(len(labels)))
                     ax.set_xticklabels(labels)
-        _setup_ax(ax, xlabel, "PYD %", f"PYD by {xlabel.lower()}")
-        if len(str(labels[0] if data else "")) <= 4:
-            ax.tick_params(axis='x', rotation=45)
+        ylabel = "Median PYD %" if summary_medians else "PYD %"
+        title = f"Median PYD by {xlabel}" if summary_medians else f"PYD by {xlabel}"
+        _setup_ax(ax, xlabel, ylabel, title)
+        ax.tick_params(axis='x', rotation=45)
+        for tick in ax.get_xticklabels():
+            tick.set_ha("right")
         _save_fig(fig, fname)
 
 
@@ -8014,8 +8019,8 @@ def _gen_fig_hhi_adjusted_size(results):
         by = [p["y"] for p in bp]
         ax.scatter(bx, by, s=50, color='#e74c3c', zorder=5, label="Bin means")
 
-    _setup_ax(ax, "Opening Reserves (£m)", "HHI-adjusted $\\sigma^2$",
-              "HHI-adjusted dispersion vs reserve size")
+    _setup_ax(ax, "Opening Reserves (£m)", "HHI-adjusted squared severity",
+              "HHI-adjusted dispersion: sequential diagnostic")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_hhi_adjusted_size.png")
 
@@ -8039,7 +8044,7 @@ def _gen_fig_capital_decomposition(results):
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=30, ha='right', fontsize=9)
     _setup_ax(ax, "", "VaR 99.5%", "Capital decomposition (VaR 99.5%; size-only operator, $\\gamma=0$)")
-    ax.legend(fontsize=10)
+    ax.legend(fontsize=10, loc="upper left", bbox_to_anchor=(1.01, 1.0))
     _save_fig(fig, "fig_capital_decomposition.png")
 
 

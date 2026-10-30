@@ -88,4 +88,34 @@ def test_capital_outputs_identify_concentration_only_and_size_only_operator(monk
     assert [bar.get_height() for bar in ax.patches] == pytest.approx([0.1, 0.2, 0.5])
     assert [t.get_text() for t in ax.get_legend().get_texts()] == ['Naive', 'Concentration-only', 'Fully adjusted']
     assert r'\gamma=0' in ax.get_title()
+    assert ax.transAxes.inverted().transform(ax.get_legend().get_bbox_to_anchor().get_points()[0])[0] > 1
+    plt.close(fig)
+
+
+def test_median_fallback_labels_and_values_and_raw_boxplot_label(results, monkeypatch):
+    saved = []
+    monkeypatch.setattr(ra, '_save_fig', lambda fig, name: saved.append((fig, name)))
+    ra._gen_fig_boxplots(results)
+    for fig, name in saved:
+        ax = fig.axes[0]
+        assert 'Median' in ax.get_title() and 'Median' in ax.get_ylabel()
+        key = {'fig_boxplot_year.png': 'by_year', 'fig_boxplot_reserves.png': 'by_reserves_decile',
+               'fig_boxplot_hhi.png': 'by_hhi_decile'}[name]
+        data = results['distribution']['boxplots'][key]
+        assert [p.get_height() for p in ax.patches] == pytest.approx([d['median'] for d in data])
+        plt.close(fig)
+    assert len(saved) == 3
+    saved.clear()
+    ra._gen_fig_boxplots({'distribution': {'boxplots': {'by_year': [{'year': 2020, 'values': [1, 2, 3]}]}}})
+    ax = saved[0][0].axes[0]
+    assert 'Median' not in ax.get_ylabel() and 'Median' not in ax.get_title()
+    plt.close(saved[0][0])
+
+
+def test_hhi_first_label_describes_observations(results, monkeypatch):
+    fig = capture(monkeypatch, ra._gen_fig_hhi_adjusted_size, results)
+    ax = fig.axes[0]
+    pts = results['joint_composition']['hhi_first']['scatter_points']
+    np.testing.assert_allclose(ax.collections[0].get_offsets()[:, 1], [p['y_adj_sq'] for p in pts])
+    assert 'squared severity' in ax.get_ylabel() and 'diagnostic' in ax.get_title()
     plt.close(fig)
