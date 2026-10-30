@@ -57,3 +57,23 @@ def test_pseudo_values_keep_case_specific_sizes_and_change_only_placement(monkey
     np.testing.assert_allclose(np.sort(a[5]), np.sort(b[5]))
     np.testing.assert_allclose(a[5], stats.t.ppf(a[4], df=4))
     assert a[6][0] > a[6][-1]  # independently implied by k<1 with a positive floor
+
+
+def test_committed_draw_archives_match_result_hashes():
+    """The recorded draws must be the exact archives that produced the result."""
+    import hashlib
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    result = json.loads((root / "results/check_inherited_history_sensitivity_results.json").read_text(encoding="utf-8"))
+    hashes = result["posterior_draw_hashes"]
+    assert len(hashes) == 6
+    for name, expected in hashes.items():
+        archive = root / "results/inherited_history_draws" / name
+        assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected
+        with np.load(archive, allow_pickle=False) as arrays:
+            assert arrays.files
+            for value in arrays.values():
+                assert value.size > 0
+                assert np.isfinite(value).all()
