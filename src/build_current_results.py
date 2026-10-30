@@ -66,8 +66,7 @@ def f(x, n=3):
     return "--" if x is None else ("%.*f" % (n, x))
 
 
-#: the paper's rule for a posterior probability (review M-4): within this distance of its prior mass it is not read as
-#: evidence either way
+#: descriptive screening distance; it does not attribute a posterior to prior or data
 PRIOR_CLOSE = 0.05
 
 
@@ -106,10 +105,15 @@ def posterior_rows(m0):
     rows.append(r"| $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | %.3f | %.3f | %s; the ordering is not imposed (the "
                 r"prior on $\lambda_{\text{RITC}}$ admits both signs) |" % (p, q, order))
     p, q = pair("nu_ritc_lt_2")
+    if q <= 0.0 or q >= 1.0:
+        odds = "undefined for this prior mass"
+    elif p >= 1.0:
+        odds = "infinite for the sampled posterior mass"
+    else:
+        odds = "%.2f" % ((p / (1.0 - p)) / (q / (1.0 - q)))
     rows.append(r"| $P(\nu_{\text{RITC}} < 2)$ | %.3f | %.3f | posterior probability that the RITC regime lacks a "
-                "finite variance%s |" % (p, q, "" if moved(p, q) else
-                                         "; within %.2f of its prior mass, so its size is the prior's, not a finding"
-                                         % PRIOR_CLOSE))
+                "finite variance; posterior-to-prior odds factor %s under the model; "
+                "this does not apportion the posterior to prior or data |" % (p, q, odds))
     rows.append("| $P(k > \\tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | the adopted prior restricts $k$ to "
                 "$[\\tfrac12,1]$, the finite-variance benchmarks (independent $\\sqrt N$ pooling at $\\tfrac12$, "
                 "comonotonic pooling at $1$); that is a modelling choice, not a universal bound, because heavier-tailed "
@@ -317,9 +321,9 @@ def main():
         if bb:
             A("**By-syndicate cross-validation, Bayesian bootstrap over syndicate "
               "totals** (`results/check_cv_clustered_se_results.json`) --- the "
-              "criterion the manuscript rests on, because observations within a "
-              "syndicate are not independent and a plain SE understates the "
-              "clustering. $\\Delta$ELPD (free $k$ $-$ $k=\\tfrac12$+floor) = %s, "
+              "criterion the manuscript rests on: repeated observations within a "
+              "syndicate may be dependent, and a plain SE can understate uncertainty "
+              "when dependence is present. $\\Delta$ELPD (free $k$ $-$ $k=\\tfrac12$+floor) = %s, "
               "95%% credible interval $[%s, %s]$, $P(\\text{free }k\\text{ predicts "
               "better}) = %s$."
               % (f(bb.get("delta_ELPD"), 2), f(bb.get("bb_2.5"), 1),
@@ -414,7 +418,8 @@ def main():
 
     A("## Open questions")
     A("")
-    A("These are unresolved on public data and nothing downstream rests on them. The "
+    A("These questions are unresolved on public data; downstream results are conditional "
+      "on the adopted assumptions, with relevant sensitivities reported. The "
       "manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps "
       "that list and the register in step.")
     A("")

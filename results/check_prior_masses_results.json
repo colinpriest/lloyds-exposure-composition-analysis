@@ -1,5 +1,5 @@
 {
-  "question": "which of the posterior probabilities the paper quotes did the data inform, and which are mostly the prior",
+  "question": "how the quoted posterior event probabilities and odds compare with their prior values",
   "prior_source": "adopted_model.scale_block, read from the PyMC graph (families and parameters below): the headline model (gamma fixed at 0 in the likelihood) for every event but P(gamma > 0.05), which is the gamma-free fit's (scale_block(gamma_prior='halfnormal'))",
   "priors": {
     "theta": {
@@ -56,8 +56,9 @@
   },
   "posterior_source": "model/dispersion_posterior_draws_ritc.npz (6000 draws)",
   "posterior_source_gamma_free_fit": "model/dispersion_posterior_draws_ritc_gamma_free.npz (6000 draws), for gamma_gt_0.05",
-  "informed_threshold": 0.05,
-  "informed_odds_factor": 3.0,
+  "screening_distance_threshold": 0.05,
+  "screening_odds_factor": 3.0,
+  "screening_note": "Descriptive thresholds only; they do not apportion a posterior between prior and data or decide statistical significance. Odds ratios are conditional on the model; finite posterior draws can give zero observed events.",
   "monte_carlo_check": {
     "draws": 20000,
     "seed": 20260929,
@@ -73,8 +74,8 @@
       "posterior_minus_prior": -0.03178905498992168,
       "bayes_factor": 0.5380086803971528,
       "prior_monte_carlo": 0.96085,
-      "data_informed": false,
-      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+      "exceeds_screening_threshold": false,
+      "reading": "below the descriptive screening thresholds; this does not apportion the posterior to prior or data"
     },
     "nu_ritc_lt_nu_clean": {
       "event": "P(nu_RITC < nu_clean)",
@@ -84,8 +85,8 @@
       "posterior_minus_prior": -0.10249999999999998,
       "bayes_factor": 0.6597510373443983,
       "prior_monte_carlo": 0.50105,
-      "data_informed": true,
-      "reading": "informed by the data: the posterior moved from the prior mass"
+      "exceeds_screening_threshold": true,
+      "reading": "exceeds the descriptive screening threshold; interpret the prior, posterior and odds ratio under the model, not as an attribution to prior or data"
     },
     "nu_ritc_lt_2": {
       "event": "P(nu_RITC < 2)",
@@ -95,8 +96,8 @@
       "posterior_minus_prior": 0.01561661406552766,
       "bayes_factor": 1.4567935457472803,
       "prior_monte_carlo": 0.03575,
-      "data_informed": false,
-      "reading": "mostly the prior: within 0.05 of the prior mass and its odds moved by less than a factor of 3; not a finding about the data"
+      "exceeds_screening_threshold": false,
+      "reading": "below the descriptive screening thresholds; this does not apportion the posterior to prior or data"
     },
     "nu_clean_lt_2": {
       "event": "P(nu_clean < 2)",
@@ -106,8 +107,8 @@
       "posterior_minus_prior": -0.017523096306421772,
       "bayes_factor": 0.0,
       "prior_monte_carlo": 0.0183,
-      "data_informed": true,
-      "reading": "informed by the data: the posterior moved from the prior mass"
+      "exceeds_screening_threshold": true,
+      "reading": "exceeds the descriptive screening threshold; interpret the prior, posterior and odds ratio under the model, not as an attribution to prior or data"
     },
     "sd_undiv_gt_0.005": {
       "event": "P(sigma_undiv > 0.005)",
@@ -117,8 +118,8 @@
       "posterior_minus_prior": 0.05121507637918188,
       "bayes_factor": 11.504878805784287,
       "prior_monte_carlo": 0.94425,
-      "data_informed": true,
-      "reading": "informed by the data: the posterior moved from the prior mass"
+      "exceeds_screening_threshold": true,
+      "reading": "exceeds the descriptive screening threshold; interpret the prior, posterior and odds ratio under the model, not as an attribution to prior or data"
     },
     "beta_ritc_abs_gt_0.1": {
       "event": "P(|beta_RITC| > 0.1)",
@@ -128,8 +129,8 @@
       "posterior_minus_prior": -0.2054805811217939,
       "bayes_factor": 0.3291501863995672,
       "prior_monte_carlo": 0.8379,
-      "data_informed": true,
-      "reading": "informed by the data: the posterior moved from the prior mass"
+      "exceeds_screening_threshold": true,
+      "reading": "exceeds the descriptive screening threshold; interpret the prior, posterior and odds ratio under the model, not as an attribution to prior or data"
     },
     "k_gt_0.5": {
       "event": "P(k > 1/2)",
@@ -139,7 +140,7 @@
       "posterior_minus_prior": 0.0,
       "bayes_factor": null,
       "prior_monte_carlo": 1.0,
-      "data_informed": false,
+      "exceeds_screening_threshold": false,
       "reading": "one by construction on the bracketed support: neither mass is evidence"
     },
     "k_lt_1": {
@@ -150,7 +151,7 @@
       "posterior_minus_prior": 0.0,
       "bayes_factor": null,
       "prior_monte_carlo": 1.0,
-      "data_informed": false,
+      "exceeds_screening_threshold": false,
       "reading": "one by construction on the bracketed support: neither mass is evidence"
     }
   }

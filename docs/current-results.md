@@ -39,7 +39,7 @@ $P(\gamma > 0.05) = 0.928$ against a prior mass of 0.960; 0 divergences, max $\h
 | Statement | Posterior | Prior | Status |
 |---|---:|---:|---|
 | $P(\nu_{\text{RITC}} < \nu_{\text{clean}})$ | 0.398 | 0.500 | the data move it below its prior mass; the RITC tail leans lighter, but the ordering remains unresolved; the ordering is not imposed (the prior on $\lambda_{\text{RITC}}$ admits both signs) |
-| $P(\nu_{\text{RITC}} < 2)$ | 0.052 | 0.036 | posterior probability that the RITC regime lacks a finite variance; within 0.05 of its prior mass, so its size is the prior's, not a finding |
+| $P(\nu_{\text{RITC}} < 2)$ | 0.052 | 0.036 | posterior probability that the RITC regime lacks a finite variance; posterior-to-prior odds factor 1.46 under the model; this does not apportion the posterior to prior or data |
 | $P(k > \tfrac12)$, $P(k < 1)$ | $1$ by construction | $1$ | the adopted prior restricts $k$ to $[\tfrac12,1]$, the finite-variance benchmarks (independent $\sqrt N$ pooling at $\tfrac12$, comonotonic pooling at $1$); that is a modelling choice, not a universal bound, because heavier-tailed (infinite-variance) blocks can decline outside the bracket. So these are not findings; the endpoints are scored by syndicate as fixed alternatives |
 | $P(|\beta_{\text{RITC}}| > 0.1)$ | 0.636 | 0.841 | the data move it below its prior mass; fitted in the likelihood, and the transfer operator omits it, not shown to be zero |
 
@@ -54,7 +54,7 @@ Source: `results/pooling_compare_results.json`.
 
 **Observation-level PSIS-LOO** (`results/pooling_compare_results.json`): $\Delta$elpd (M1 blended $-$ M2 finite-variance independent $\sqrt N$) = 0.71, SE 1.97.
 
-**By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on, because observations within a syndicate are not independent and a plain SE understates the clustering. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = 1.24, 95% credible interval $[-4.0, 6.2]$, $P(\text{free }k\text{ predicts better}) = 0.70$.
+**By-syndicate cross-validation, Bayesian bootstrap over syndicate totals** (`results/check_cv_clustered_se_results.json`) --- the criterion the manuscript rests on: repeated observations within a syndicate may be dependent, and a plain SE can understate uncertainty when dependence is present. $\Delta$ELPD (free $k$ $-$ $k=\tfrac12$+floor) = 1.24, 95% credible interval $[-4.0, 6.2]$, $P(\text{free }k\text{ predicts better}) = 0.70$.
 
 Neither criterion separates the two forms, so the free exponent is **not** separated from $k=\tfrac12$-plus-floor on either. That is why pooling slower than the finite-variance independent $\sqrt N$ benchmark is treated as unresolved (independence alone does not give $k=\tfrac12$ under infinite-variance aggregation).
 
@@ -87,7 +87,7 @@ Three sensitivities are reported instead of resting on it. Bounded inverse-proba
 
 ## Open questions
 
-These are unresolved on public data and nothing downstream rests on them. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
+These questions are unresolved on public data; downstream results are conditional on the adopted assumptions, with relevant sensitivities reported. The manuscript states each where it arises; `paper/audit_numbers.py` gate M keeps that list and the register in step.
 
 - whether pooling is slower than the finite-variance independent $\sqrt N$ benchmark -- a floor-plus-$\sqrt N$ alternative is not predictively separable;
 - the exact value of $k$ inside the adopted prior's support $[\tfrac12, 1]$: fixing $k = \tfrac12$ moves Vignette 1's VaR$_{99.5}$ by -7.9% under the size-only headline operator, and the 100m/2,000m scale ratio from 2.19 to 2.07 under that operator (the same at every $H$: both fits have $\gamma = 0$ in the likelihood);

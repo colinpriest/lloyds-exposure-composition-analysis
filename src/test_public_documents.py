@@ -775,15 +775,20 @@ def _m0(post, prior):
 
 def test_each_posterior_probability_sits_beside_its_prior_mass():
     """N-V-A-6: P(nu_RITC < nu_clean) = 0.496 was printed as "RITC tail lighter in this fit" against a prior mass of
-    0.500, and two more probabilities without their prior masses. Each now has its prior beside it, and a probability
-    within 0.05 of its prior is read as neither direction (the paper's M-4 rule)."""
+    0.500, and two more probabilities without their prior masses. Each now has its prior beside it; the finite-variance
+    row reports the odds update without assigning the posterior to prior or data."""
     near = "\n".join(bcr.posterior_rows(_m0((0.496, 0.037, 0.668), (0.500, 0.036, 0.841))))
     assert "| Statement | Posterior | Prior | Status |" in near
     first = [line for line in near.splitlines() if "nu_{\\text{clean}})$" in line][0]
     assert "| 0.496 | 0.500 |" in first and "lighter" not in first and "heavier" not in first
     assert "do not settle" in first
     finite = [line for line in near.splitlines() if "< 2)$" in line][0]
-    assert "| 0.037 | 0.036 |" in finite and "the prior's, not a finding" in finite
+    assert "| 0.037 | 0.036 |" in finite and "odds factor 1.03" in finite
+    assert "does not apportion" in finite and "the prior's, not a finding" not in finite
+    rare = "\n".join(bcr.posterior_rows(_m0((0.5, 0.01, 0.5), (0.5, 0.0001, 0.5))))
+    assert "odds factor 101.00" in rare and "does not apportion" in rare
+    boundary = "\n".join(bcr.posterior_rows(_m0((0.5, 1.0, 0.5), (0.5, 0.0, 0.5))))
+    assert "undefined for this prior mass" in boundary
     beta = [line for line in near.splitlines() if "beta" in line][0]
     assert "| 0.668 | 0.841 |" in beta and "move it below its prior mass" in beta
     far = "\n".join(bcr.posterior_rows(_m0((0.314, 0.20, 0.9), (0.500, 0.036, 0.841))))
@@ -796,6 +801,9 @@ def test_each_posterior_probability_sits_beside_its_prior_mass():
         bcr.posterior_rows({"posterior_prob": _m0((0.4, 0.1, 0.5), (0.5, 0.1, 0.5))["posterior_prob"],
                             "prior_prob": {}})
     doc = _read("docs", "current-results.md")
+    assert "plain SE can understate uncertainty when dependence is present" in doc
+    assert "downstream results are conditional on the adopted assumptions" in doc
+    assert "nothing downstream rests on them" not in doc
     for line in bcr.posterior_rows(_json("model", "dispersion_calibration_ritc.json")):
         assert line in doc, "docs/current-results.md is stale: run src/build_current_results.py"
 

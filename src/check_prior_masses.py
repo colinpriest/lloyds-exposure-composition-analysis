@@ -1,14 +1,12 @@
 """The prior probability of every event the paper quotes as a posterior probability, beside the posterior.
 
-The review of 29 September 2026 (M-4) found posterior probabilities read as evidence that are mostly
-prior: P(gamma > 0.05) = 0.97 against a prior mass of 0.96, P(nu_RITC < nu_clean) = 0.46 against 0.50,
-P(nu_RITC < 2) = 0.03 against 0.036. A posterior probability says what the data did only beside what
-the prior already said. So each quoted event is written here with both, with their difference and with
-the Bayes factor for the event (posterior odds over prior odds), and flagged as data-informed when the
-two differ by at least INFORMED (0.05) OR the odds moved by at least ODDS_FACTOR (3) either way. The
-distance alone misreads a rare event: P(nu_clean < 2) falls from a prior 0.018 to 0 of 6,000 draws,
-which the data plainly decided, at a distance of only 0.018. (3 is Jeffreys' conventional line for
-"substantial"; it is a reading convention, not a test.)
+The review of 29 September 2026 (M-4) found posterior probabilities presented without their prior masses.
+Each event is written with both probabilities, their difference and the posterior-to-prior odds ratio
+(the Bayes factor for the event, conditional on the model). A descriptive screen flags an absolute
+probability movement of at least SCREEN_DISTANCE (0.05) or an odds change by at least ODDS_FACTOR (3)
+either way. These thresholds are conventions: passing or failing them does not apportion a posterior
+between prior and data, establish statistical significance or decide whether a result is informative.
+In particular, zero observed events in a finite posterior sample is not proof of zero probability.
 
 The priors are READ from adopted_model.scale_block, not retyped: a PyMC model is built with the block and
 each prior's family and parameters are taken from the graph. Each event's prior mass is then the exact
@@ -54,9 +52,8 @@ GAMMA_FREE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc_gamma_free.np
 GAMMA_FREE_CALIBRATION = SD / "model" / "dispersion_calibration_ritc_gamma_free.json"
 #: the events read on the gamma-free fit, not the headline (whose likelihood has no gamma)
 GAMMA_FREE_EVENTS = ("gamma_gt_0.05",)
-#: a posterior probability within this of its prior mass, and whose odds moved by less than ODDS_FACTOR,
-#: is reported as not informed by the data
-INFORMED = 0.05
+#: descriptive thresholds, not thresholds for evidentiary attribution
+SCREEN_DISTANCE = 0.05
 ODDS_FACTOR = 3.0
 MC_DRAWS, MC_SEED = 20000, 20260929
 
@@ -199,11 +196,11 @@ def bayes_factor(prior, post):
     return (post / (1.0 - post)) / (prior / (1.0 - prior))
 
 
-def informed(prior, post):
-    """Did the data move this event's probability: by distance or by odds (module docstring)?"""
+def exceeds_screening_threshold(prior, post):
+    """Does the probability or odds change exceed the descriptive screen?"""
     bf = bayes_factor(prior, post)
     moved_odds = bf is not None and (bf >= ODDS_FACTOR or bf <= 1.0 / ODDS_FACTOR)
-    return bool(abs(post - prior) >= INFORMED or moved_odds)
+    return bool(abs(post - prior) >= SCREEN_DISTANCE or moved_odds)
 
 
 def _fit_masses(gamma_prior, draws_path, calibration_path):
@@ -260,23 +257,23 @@ def compute():
         diff = po[key] - pr[key]
         by_construction = key in ("k_gt_0.5", "k_lt_1")
         bf = bayes_factor(pr[key], po[key])
-        data_informed = informed(pr[key], po[key]) and not by_construction
+        screened = exceeds_screening_threshold(pr[key], po[key]) and not by_construction
         rows[key] = {"event": label, "fit": "gamma_free" if gamma_free else "headline",
                      "prior": pr[key], "posterior": po[key],
                      "posterior_minus_prior": diff, "bayes_factor": bf,
-                     "prior_monte_carlo": mcv[key], "data_informed": data_informed,
+                     "prior_monte_carlo": mcv[key], "exceeds_screening_threshold": screened,
                      "reading": ("one by construction on the bracketed support: neither mass is evidence"
                                  if by_construction else
-                                 "informed by the data: the posterior moved from the prior mass"
-                                 if data_informed else
-                                 "mostly the prior: within %.2f of the prior mass and its odds moved by less "
-                                 "than a factor of %g; not a finding about the data" % (INFORMED, ODDS_FACTOR))}
+                                 "exceeds the descriptive screening threshold; interpret the prior, posterior and "
+                                 "odds ratio under the model, not as an attribution to prior or data"
+                                 if screened else
+                                 "below the descriptive screening thresholds; this does not apportion the "
+                                 "posterior to prior or data")}
     priors = {n: dict(zip(("family", "parameters"), prior_of(m, n)))
               for n in ("theta", "log_tot", "f", "nu_clean", "lambda_ritc", "beta_ritc")}
     priors_gamma_free = {"gamma": dict(zip(("family", "parameters"), prior_of(mg, "gamma")))}
     return {
-        "question": ("which of the posterior probabilities the paper quotes did the data inform, and which are "
-                     "mostly the prior"),
+        "question": "how the quoted posterior event probabilities and odds compare with their prior values",
         "prior_source": ("adopted_model.scale_block, read from the PyMC graph (families and parameters below): the "
                          "headline model (gamma fixed at 0 in the likelihood) for every event but P(gamma > 0.05), "
                          "which is the gamma-free fit's (scale_block(gamma_prior='halfnormal'))"),
@@ -285,8 +282,11 @@ def compute():
         "posterior_source": "model/dispersion_posterior_draws_ritc.npz (%d draws)" % n_draws,
         "posterior_source_gamma_free_fit": ("model/dispersion_posterior_draws_ritc_gamma_free.npz (%d draws), for %s"
                                             % (n_draws_g, ", ".join(GAMMA_FREE_EVENTS))),
-        "informed_threshold": INFORMED,
-        "informed_odds_factor": ODDS_FACTOR,
+        "screening_distance_threshold": SCREEN_DISTANCE,
+        "screening_odds_factor": ODDS_FACTOR,
+        "screening_note": ("Descriptive thresholds only; they do not apportion a posterior between prior and data "
+                           "or decide statistical significance. Odds ratios are conditional on the model; finite "
+                           "posterior draws can give zero observed events."),
         "monte_carlo_check": {"draws": MC_DRAWS, "seed": MC_SEED,
                               "tolerance": "5 binomial standard errors + 0.001"},
         "calibration_prior_prob_checked": recorded_prior is not None and recorded_prior_g is not None,

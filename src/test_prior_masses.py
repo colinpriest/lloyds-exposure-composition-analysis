@@ -4,8 +4,8 @@
 Review of 29 September 2026 (M-4): P(gamma > 0.05) = 0.97 was read as evidence against a prior mass of 0.96.
 These tests hold the producer to what it claims: the priors are read from the adopted model's graph (a
 changed family stops it), every closed form agrees with an independent Monte Carlo draw from that prior,
-the posterior masses are the draws' and the calibration's, and the reading rule (distance 0.05 or odds
-factor 3) classifies the events the way the review found them. Since option B (10 October 2026) the headline has
+the posterior masses are the draws' and the calibration's, and the descriptive screen (distance 0.05 or odds
+factor 3) is kept distinct from evidentiary attribution. Since option B (10 October 2026) the headline has
 gamma fixed at 0 in the likelihood, so P(gamma > 0.05) is read on the gamma-free model and its calibration.
 
 Run:  python -m pytest src/test_prior_masses.py -q
@@ -25,7 +25,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ------------------------------------------------------------------ the reading rule ------
 @pytest.mark.parametrize("prior,post,want", [
-    (0.9601, 0.9693, False),    # P(gamma > 0.05): 0.01 apart, odds x1.3 -- mostly the prior
+    (0.9601, 0.9693, False),    # P(gamma > 0.05): 0.01 apart, odds x1.3
     (0.5, 0.4607, False),       # P(nu_RITC < nu_clean)
     (0.0361, 0.0282, False),    # P(nu_RITC < 2)
     (0.0175, 0.0, True),        # P(nu_clean < 2): 0.018 apart, but the odds went to zero
@@ -33,7 +33,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     (0.9436, 0.9998, True),     # P(sigma_undiv > 0.005): odds x300
 ])
 def test_the_reading_rule(prior, post, want):
-    assert P.informed(prior, post) is want
+    assert P.exceeds_screening_threshold(prior, post) is want
 
 
 def test_the_bayes_factor_is_the_odds_ratio():
@@ -48,9 +48,9 @@ def test_an_odds_move_at_the_line_counts_and_just_inside_it_does_not():
     prior = 0.01
     odds = 3.0 * prior / (1 - prior)
     at = odds / (1 + odds)                                   # the posterior whose odds are exactly three times
-    assert abs(at - prior) < P.INFORMED
-    assert P.informed(prior, at + 1e-12) and not P.informed(prior, at - 1e-3)
-    assert P.informed(prior, prior / 3.5) and not P.informed(prior, prior / 2.5)   # and downwards
+    assert abs(at - prior) < P.SCREEN_DISTANCE
+    assert P.exceeds_screening_threshold(prior, at + 1e-12) and not P.exceeds_screening_threshold(prior, at - 1e-3)
+    assert P.exceeds_screening_threshold(prior, prior / 3.5) and not P.exceeds_screening_threshold(prior, prior / 2.5)
 
 
 # ------------------------------------------------------------------ the priors, from the graph ------
@@ -158,27 +158,14 @@ def test_the_events_read_the_way_the_review_found_them(record):
     """The readings are of each event's own fit: P(gamma > 0.05) the gamma-free fit's, every other the gamma = 0
     headline's (option B, 10 October 2026)."""
     ev = record["events"]
-    # the regenerated headline refit (6 October 2026) moved two events across the rule's line: P(nu_RITC < nu_clean)
-    # fell from 0.486 to 0.341 against a prior mass of 0.5, so it is now informed by the data (it was mostly the
-    # prior); P(|beta_RITC| > 0.1) rose from 0.674 to 0.793 against a prior mass of 0.842, within 0.05 of it, so it is
-    # now mostly the prior (it was informed). The refit's inputs moved: 88 records' composition, 15 records' prior-year
-    # development and 4 records' basis tags, from the extraction imports and the stage-3 P-10 entries.
-    # Option B's regeneration (0912834, committed as 5693622) moved P(|beta_RITC| > 0.1) back across the line: on the
-    # gamma = 0 headline it is 0.769 against a prior mass of 0.842 (it was 0.793 on the gamma-free fit, then the
-    # headline), more than 0.05 from it, so it is informed by the data again. P(nu_RITC < nu_clean) is 0.337 (0.341)
-    # and stays informed; P(gamma > 0.05) is the gamma-free fit's, 0.933 against 0.960, unchanged
-    # the regeneration of 13 October 2026 (465f99a, outputs e627b77: four repairs, 1218/2015 net, 4020/2017 excluded) moved
-    # P(nu_RITC < 2) across the odds line: 0.0112 against a prior mass of 0.036, a Bayes factor of 0.302 (0.421 on
-    # 0.0155 before), so its odds moved by a little more than a factor of 3 and it reads as informed by the data;
-    # it is within 0.05 of the prior mass, so it sits at the rule's edge
-    # the regeneration of 23 October 2026 on the primary sample (649 records; the owner's decision, option c) moved
-    # P(nu_RITC < 2) back across the line: 0.0185 against a prior mass of 0.036, within 0.05 of it, with odds that moved
-    # by a factor of 0.504 (the threshold is 3), so it is mostly the prior again
-    mostly_prior = {"gamma_gt_0.05", "nu_ritc_lt_2"}
-    informed = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean", "beta_ritc_abs_gt_0.1"}
-    assert {k for k, r in ev.items() if r["data_informed"]} == informed
-    for k in mostly_prior:
-        assert "mostly the prior" in ev[k]["reading"], k
+    screened = {"nu_clean_lt_2", "sd_undiv_gt_0.005", "nu_ritc_lt_nu_clean", "beta_ritc_abs_gt_0.1"}
+    assert {k for k, r in ev.items() if r["exceeds_screening_threshold"]} == screened
+    for key in ("gamma_gt_0.05", "nu_ritc_lt_2"):
+        row = ev[key]
+        assert "descriptive screening" in row["reading"]
+        assert "does not apportion" in row["reading"]
+        assert row["bayes_factor"] == pytest.approx(P.bayes_factor(row["prior"], row["posterior"]))
+    assert "do not apportion" in record["screening_note"]
     for k in ("k_gt_0.5", "k_lt_1"):
         assert ev[k]["prior"] == ev[k]["posterior"] == 1.0 and "by construction" in ev[k]["reading"]
     assert record["priors"]["nu_clean"]["family"] == "GammaRV"
@@ -283,5 +270,5 @@ def test_the_recorded_file_is_what_the_producer_computes(record):
         rec = json.load(_fh)
     assert rec["events"].keys() == record["events"].keys()
     for key, row in record["events"].items():
-        for field in ("prior", "posterior", "data_informed", "fit"):
+        for field in ("prior", "posterior", "bayes_factor", "exceeds_screening_threshold", "reading", "fit"):
             assert rec["events"][key][field] == row[field], (key, field)
