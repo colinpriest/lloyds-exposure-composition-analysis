@@ -686,7 +686,7 @@ def md(c, r):
        "This selected scenario is not an exhaustive upper bound: inherited histories of other screened filings "
        "have not all been audited. Disclosure-screened records and scientific exclusions are not treated as "
        "missing outcomes in the primary analysis. The manuscript therefore "
-       "reports inverse-probability weighting for model-sample membership within the supported target "
+       "reports inverse-probability weighting for model-sample membership within the provisional disclosure-defined target "
        "and a high-volatility sensitivity for the provisionally included unavailable outcomes instead "
        f"of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
       f"{f_ipw['k']['mean']:.3f}, and the unavailable-outcome stress moves the conditional bracketed estimate "

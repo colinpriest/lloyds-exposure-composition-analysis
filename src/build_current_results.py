@@ -1938,11 +1938,12 @@ def referee_section_9(tc, mz, ranef, ss, vu):
         "- **Lag-1, raw level** (not de-meaned): Pearson %+.2f, Spearman **%+.2f** — moderate. It may reflect"
         % (raw["pearson"], raw["spearman"]),
         "  persistent per-syndicate level and serial dependence together; the statistic does not separate them.",
-        "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs,"
+        "- **Direction persistence**: **%.1f%%** of consecutive pairs share the sign of PYD (%d pairs)."
         % (100.0 * c["share_same_sign"], c["n_pairs"]),
-        "  binomial $p<0.001$) — releasers keep releasing.",
-        "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f (no positive persistence at two years)."
+        "  This rate is descriptive: pairs overlap and can share syndicate and calendar effects.",
+        "- **Lag-2 de-meaned**: Pearson %+.2f, Spearman %+.2f. These point estimates do not establish"
         % (b["pearson"], b["spearman"]),
+        "  the absence of positive persistence at two years.",
         "",
         "**Decision.** The year-adjusted, base-scaled diagnostic shows positive lag-1 association under the",
         "stated procedure. It does not directly establish the likelihood's conditional dependence,",

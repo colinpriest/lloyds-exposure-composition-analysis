@@ -900,3 +900,18 @@ def test_screened_count_describes_reviewed_or_parsed_triangles_without_claiming_
         text = ' '.join(_read('docs', name).split())
         assert 'no mature underwriting-year diagonal established in' in text
         assert 'nil opening' not in text.lower() or name == 'data-provenance.md'  # other historical cases may mention it
+
+
+def test_serial_direction_rate_is_descriptive_and_lag_two_absence_is_not_claimed():
+    doc = _read("docs", "referee-checks.md")
+    sec = doc[doc.index("- **Direction persistence**:"):doc.index("**Decision.**", doc.index("- **Direction persistence**:"))]
+    assert "rate is descriptive" in sec
+    assert "pairs overlap" in sec
+    assert "do not establish" in sec and "absence of positive persistence" in sec
+    assert "binomial $p" not in sec and "releasers keep releasing" not in sec
+
+
+def test_audit_names_the_provisional_selection_target():
+    doc = _read("docs", "appendix-data-audit.md")
+    assert "membership within the provisional disclosure-defined target" in ' '.join(doc.split())
+    assert "membership within the supported target" not in ' '.join(doc.split())

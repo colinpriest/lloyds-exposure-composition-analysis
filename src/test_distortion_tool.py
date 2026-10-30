@@ -914,3 +914,10 @@ console.log(JSON.stringify(output));
         assert (series['radius'], series['hover'], series['hit'], series['tooltip']) == (0, 0, 0, False)
         assert series['actualRadius'] == 2 and series['actualTooltip'] is True
         assert series['bridge']['x'] > series['actual']['x']
+
+
+def test_donor_rule_describes_the_applicable_base_and_runoff_screen():
+    for text in (_read(TEMPLATE), _read(GENERATED)):
+        assert 'an applicable reserve base above &pound;0.1m' in text
+        assert 'augmented by qualifying take-ons' in text
+        assert 'Run-off filings and records failing' not in text

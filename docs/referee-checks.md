@@ -307,9 +307,10 @@ and motivates the year-adjusted test used below; the script refuses to write thi
   arrangement of the year blocks, gives $p=0.0005$ (1 of 4,000 permutations) on the same residuals.
 - **Lag-1, raw level** (not de-meaned): Pearson +0.55, Spearman **+0.53** — moderate. It may reflect
   persistent per-syndicate level and serial dependence together; the statistic does not separate them.
-- **Direction persistence**: **73.5%** of consecutive pairs share the sign of PYD (468 pairs,
-  binomial $p<0.001$) — releasers keep releasing.
-- **Lag-2 de-meaned**: Pearson -0.24, Spearman -0.12 (no positive persistence at two years).
+- **Direction persistence**: **73.5%** of consecutive pairs share the sign of PYD (468 pairs).
+  This rate is descriptive: pairs overlap and can share syndicate and calendar effects.
+- **Lag-2 de-meaned**: Pearson -0.24, Spearman -0.12. These point estimates do not establish
+  the absence of positive persistence at two years.
 
 **Decision.** The year-adjusted, base-scaled diagnostic shows positive lag-1 association under the
 stated procedure. It does not directly establish the likelihood's conditional dependence,
