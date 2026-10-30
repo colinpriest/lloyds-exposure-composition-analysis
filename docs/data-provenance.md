@@ -11,12 +11,12 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Artefact | Path (in this repo) | In extraction repo's git? | Role here |
 |---|---|---|---|
 | Extracted structured data | `pdf_extraction/syndicate_{N}_{YYYY}.json` | yes | primary input to `run_analysis.py` |
-| RITC flags | `pdf_extraction/ritc_scan.json` | yes | with the transfer register, the assumed-business tail regime (`src/assumed_business.py`) + de-RITC operator |
+| RITC flags | `pdf_extraction/ritc_scan.json` | yes | with the transfer register and `data/opening_reserves_takeon_base.json`, the assumed-business tail regime (`src/assumed_business.py`) + de-RITC operator |
 | Transfer register | `pdf_extraction/audit/portfolio_transfer_adjudication.json` | yes | confirmed inward transfers, placed in the same regime as RITC (PLAN R195) |
 | Run-off register | `pdf_extraction/audit/runoff_register.json` | yes | for each record with a development figure and a gross written premium at or below zero, whether its filing states the syndicate is in run-off that year (page, file hash, quote); a negative-premium year is a run-off year only when it does (the author's decision D1, 30 September 2026) |
 | Corpus-wide run-off register | `pdf_extraction/audit/runoff_corpus_register.json` | yes | what each filing says about the syndicate's own run-off, year by year (page, file hash, quote); a year whose filing states run-off for the whole year, outside the assumed-business regime, is a run-off year, with or without a development figure (the author's decision of 1 October 2026) |
 | Extraction audit | `pdf_extraction/audit/` | yes | per-filing extraction QA |
-| Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | market-coverage denominators |
+| Coverage audit | `syndicate_reports/coverage/coverage_status.{xlsx,json}`, `coverage_report.md` | yes | coverage and retrieval audit; its candidate counts are not the official market denominators |
 | Lloyd's syndicate workbook | `syndicate_reports/Lloyds_Syndicates_2014_2024.xlsx` | yes | open-year report records and annual count summaries; its 2020–2024 official active-list sheets are also held in the analysis's `data/market_active_syndicates.json` |
 | Download ledger | `syndicate_reports/download_status.json` | yes | which filings were retrieved |
 | Portfolio-transfer scan | `pdf_extraction/portfolio_transfer_scan.json` | yes | not read here: kept equal to the extraction's copy so that the two repositories hold one version of it |
@@ -57,7 +57,7 @@ extraction:
   **working sample** (`n_ritc` in `results/check_ritc_scale_term_results.json`).
 <!-- ritc-counts:end -->
 
-- Coverage audit and download ledger added, giving official active-syndicate denominators.
+- The coverage audit and download ledger track candidate filings and retrieval. Official active-syndicate denominators come from annual-report/SFCR counts for 2014–2019 and official active lists for 2020–2024 (see `src/market_active.py`).
 
 After the pipeline's eligibility filters (`run_analysis.py`):
 
@@ -70,8 +70,8 @@ After the pipeline's eligibility filters (`run_analysis.py`):
   from the corpus to the working sample, also disjoint:
     902 - 98 net or unstated basis (82 net, 16 unstated; `data/pyd_basis_register.json`,
      `src/pyd_basis_rule.py`) - 8 take-on, not development
-     (`data/takeon_not_development.json`) - 90 unusable severity - 0 missing opening reserves
-     - 74 without premium weights = 632
+     (`data/takeon_not_development.json`) - 93 unusable severity - 0 missing opening reserves
+     - 71 without premium weights = 632
   117 of the 1065 filings carry no usable dual-model extraction. That is a diagnostic
   of extraction quality and OVERLAPS the stages above; it is not a further subtraction,
   and treating it as one is what made an earlier version of this flow fail to add up.
@@ -298,8 +298,8 @@ The counts at `9c2895f`, before the correction, and now. The change is not the c
 |---|---:|---:|---:|
 | Corpus | 919 | 902 | -17 |
 | Net or unstated basis | 157 | 98 | -59 |
-| Unusable severity | 9 | 90 | +81 |
-| Missing premium weights | 75 | 74 | -1 |
+| Unusable severity | 9 | 93 | +84 |
+| Missing premium weights | 75 | 71 | -4 |
 | **Working sample** | **678** | **632** | **-46** |
 <!-- round-55-correction:end -->
 
@@ -343,17 +343,16 @@ model comparisons were not repeated).
 
 ## 2c. Sample selection: inferential disposition first
 
-The 1065 filings are classified before any selection diagnostic: 106 have no eligible
-outcome structurally, 20 have economic eligibility unresolved because the extraction has no
-deterministic reading of them (its parsers found no prior-year figure and its models were not
-run: nothing is established about those filings), 273 are scientific exclusions, 10 have an eligible but
-unavailable outcome, 24 have an observed eligible outcome but no usable composition,
-and 632 enter the model. The supported disclosure-defined target is therefore 666
-records. If all 20 unresolved filings were economically eligible, the broader potential
-target would be 686; the primary selection analysis does not claim to describe it.
+The 1065 filings are classified before any selection diagnostic: 102 have no separately disclosed usable mature-cohort
+outcome or a nil opening, 24 selected cases have economic eligibility unresolved: 20 have no deterministic
+reading, and four source-reviewed transfers have unresolved mature outcome scope or reserve
+base. A mature inherited cohort is established for 3268/2019; 273 are scientific exclusions, 10 have unavailable outcomes (one source-supported eligible and nine provisionally included), 24 have an observed eligible outcome but no usable composition,
+and 632 enter the model. The provisional disclosure-defined analysis target is therefore 666
+records, assuming the nine provisionally included cases are eligible. If all 24 unresolved filings were economically eligible, the broader potential
+target would be 690; this selected scenario is not an exhaustive upper bound, since the inherited histories of other disclosure-screened filings have not all been audited.
 
 The selection response is membership in the 632-record model sample. Within the
-666-record supported disclosure-defined target, included records have median size £421.5m against £31.2m
+666-record provisional disclosure-defined analysis target, included records have median size £421.5m against £31.2m
 for records not included (filing reserves, or a same-syndicate median where unavailable).
 This shows selection by size within that supported target; missing-at-random cannot be
 established, and selection from the broader economically eligible population is not
@@ -364,8 +363,8 @@ The complete counts and diagnostics are generated in `docs/current-results.md` f
 `missingness_check_results.json`.
 
 Three sensitivities are reported instead of resting on it: bounded IPW with three
-probability floors, a stress for the 10 known eligible unavailable outcomes, and a
-separate broader-potential-target stress that assumes all 20 unresolved cases eligible.
+probability floors, a stress for the 10 unavailable outcomes (one source-supported eligible and nine provisionally included), and a
+separate broader-potential-target stress that assumes all 24 unresolved cases eligible.
 
 <!-- missingness:start -->
 - **Bounded selection weighting (IPW).** Response propensity
@@ -379,15 +378,15 @@ separate broader-potential-target stress that assumes all 20 unresolved cases el
   The likelihood is $\sum_i w_i\log p(S_i\mid\theta)$; weights are fixed, so intervals
   are conditional and omit propensity-model uncertainty. At the primary cap, the floor is 0.025
   against 0.029; $\nu_{\text{clean}}=3.76$ against 3.96.
-- **High-volatility eligible-outcome stress.** Appending only the 10 records whose outcome is
-  eligible but unavailable moves the conditional bracketed estimate from $k=0.627$
+- **High-volatility unavailable-outcome stress.** Appending the 10 records with unavailable outcomes
+  (one source-supported eligible and nine provisionally included) moves the conditional bracketed estimate from $k=0.627$
   at $c=1$ to $0.575$ at $c=5$, between $0.575$ and $0.627$ across the grid. Because the
   construction makes those unavailable outcomes more volatile, it cannot test the
   adverse-to-sub-linearity direction.
   $\nu_{\text{clean}}$ moves 3.98 to 3.50 at $c=5$; this is not a bound.
-- **Eligibility-unresolved stress.** Assuming all 20 filings with no deterministic reading were economically
-  eligible expands the potential target from 666 to 686 and appends them with the 10 known
-  unavailable outcomes. This 30-record stress moves $k=0.593$ at $c=1$ to $0.546$ at $c=5$.
+- **Eligibility-unresolved stress.** Assuming the 24 selected unresolved filings were economically
+  eligible expands the selected scenario from 666 to 690 and appends them with the 10
+  unavailable outcomes (one source-supported eligible and nine provisionally included). This 34-record stress moves $k=0.602$ at $c=1$ to $0.551$ at $c=5$.
   It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.
 <!-- missingness:end -->
 
@@ -413,8 +412,8 @@ extraction repo for prompts and the reconciliation logic.
   `pyd_basis` and `pyd_basis_source`), and writes `exposure_results.json` plus the paper
   tables.
 - `calibrate_dispersion_ritc.py` — reads `exposure_results.json` and the assumed-business regime
-  (`src/assumed_business.py`: the `ritc_scan.json` flags and the transfer register's confirmed
-  inward transfers); fits the dispersion model with that tail regime and the concentration exponent fixed at 0
+  (`src/assumed_business.py`: the `ritc_scan.json` flags, the transfer register's confirmed
+  inward transfers and `data/opening_reserves_takeon_base.json`); fits the dispersion model with that tail regime and the concentration exponent fixed at 0
   in the likelihood (the headline); writes `dispersion_calibration_ritc.json` and
   `dispersion_posterior_draws_ritc.npz`.
 - `calibrate_dispersion_ritc_gamma_free.py` — the same fit with the concentration exponent fitted (the

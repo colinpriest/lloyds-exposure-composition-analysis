@@ -36,8 +36,8 @@ operator** that rescales historical reserve movements onto a user-specified targ
   whichever gamma is in force, so under the overlay it is NOT the gamma = 0 operator: select the mode
   rather than reading that row (frozen review of 25 September 2026, T01).
   All data and dependencies are embedded — open in any browser, no server required.
-- **`pdf_extraction/exposure_analysis.html`** — static dashboard that loads
-  `exposure_results.json` and renders tables/charts (no computation of its own).
+- **`pdf_extraction/exposure_analysis.html`** — historical, superseded static dashboard;
+  its tables and charts should not be used as the current results.
 
 ## The model (summary)
 
@@ -395,7 +395,7 @@ the source PDFs — see [docs/fx-conversion.md](docs/fx-conversion.md), `currenc
 
 ### Dashboard
 
-Open `pdf_extraction/exposure_analysis.html` in a browser and load `exposure_results.json`.
+`pdf_extraction/exposure_analysis.html` is a historical, superseded dashboard. Use the current results and the portfolio basis-transfer tool below.
 
 ### Portfolio basis-transfer tool
 

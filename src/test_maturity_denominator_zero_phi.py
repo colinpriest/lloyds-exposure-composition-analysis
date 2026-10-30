@@ -77,3 +77,12 @@ def test_the_recorded_refits_say_so_at_every_delta():
     assert rec["phi_guard_scope"].startswith("every delta")
     _key, phis = _committed_phis()
     assert rec["n_refit_subsample"] == int(cmd.refit_subsample(phis, TAGS).sum())
+
+
+def test_convergence_requires_finite_bulk_and_tail_ess():
+    good = {"divergences": 0, "max_rhat": 1.0, "min_ess_bulk": 400, "min_ess_tail": 400}
+    cmd.require_converged("test", good)
+    for key, value in (("min_ess_bulk", 399), ("min_ess_tail", float('nan')), ("max_rhat", float('nan'))):
+        bad = dict(good); bad[key] = value
+        with pytest.raises(RuntimeError):
+            cmd.require_converged("test", bad)

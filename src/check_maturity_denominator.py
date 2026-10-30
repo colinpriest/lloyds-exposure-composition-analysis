@@ -96,9 +96,11 @@ def ritc_flag(key):
 
 
 def require_converged(tag, diagnostics):
-    """Refuse to publish a refit with divergent transitions or a bad R-hat."""
+    """Refuse divergent fits, R-hat above 1.01, or bulk/tail ESS below 400."""
     rhat = diagnostics["max_rhat"]
-    if diagnostics["divergences"] or not np.isfinite(rhat) or rhat > 1.01:
+    if (diagnostics["divergences"] or not np.isfinite(rhat) or rhat > 1.01
+            or any(not np.isfinite(diagnostics[k]) or diagnostics[k] < 400
+                   for k in ("min_ess_bulk", "min_ess_tail"))):
         raise RuntimeError("Maturity refit %s failed convergence checks: %s" % (tag, diagnostics))
 
 
@@ -116,6 +118,8 @@ def fit(S, R, H, yidx, n_y, ritc, tag):
     out = {v: {"mean": float(s.loc[v, "mean"]), "hdi_2.5": float(s.loc[v, "hdi_2.5%"]),
                "hdi_97.5": float(s.loc[v, "hdi_97.5%"])} for v in vn}
     out["_diag"] = {"max_rhat": float(s["r_hat"].max()),
+                    "min_ess_bulk": float(s["ess_bulk"].min()),
+                    "min_ess_tail": float(s["ess_tail"].min()),
                     "divergences": int(idata.sample_stats["diverging"].sum())}
     require_converged(tag, out["_diag"])
     print(f"    {tag:34s} k={out['k']['mean']:.3f} "

@@ -1,0 +1,30 @@
+START exclude_3330_2017 n 631
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 45 seconds.
+DONE exclude_3330_2017 k 0.6180289941803424 diagnostics {'divergences': 0, 'max_rhat': 1.001776239820946, 'min_ess_bulk': 1410.2896782146263, 'min_ess_tail': 1437.8911187812605}
+START exclude_1274_2016 n 631
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 46 seconds.
+DONE exclude_1274_2016 k 0.624207404938455 diagnostics {'divergences': 0, 'max_rhat': 1.0032417660540869, 'min_ess_bulk': 1374.3231825407756, 'min_ess_tail': 1405.8810346144076}
+START exclude_both n 630
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 47 seconds.
+DONE exclude_both k 0.617862671514062 diagnostics {'divergences': 0, 'max_rhat': 1.0027256151712083, 'min_ess_bulk': 1691.4734954870908, 'min_ess_tail': 1742.6807875282566}
+START printed_2016_table n 632
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 45 seconds.
+DONE printed_2016_table k 0.6259666680930445 diagnostics {'divergences': 0, 'max_rhat': 1.0019648338510057, 'min_ess_bulk': 1589.524774713554, 'min_ess_tail': 1601.6813355694203}
+START prior_cell_without_retranslation n 632
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 52 seconds.
+DONE prior_cell_without_retranslation k 0.6234035177902091 diagnostics {'divergences': 0, 'max_rhat': 1.0018400772510818, 'min_ess_bulk': 1555.4028211619068, 'min_ess_tail': 1784.221463538948}

@@ -104,7 +104,7 @@ def test_builder_on_a_synthetic_log():
         {"file": "h.json", "status": "INCOMPLETE"},
     ]
     records = [
-        {"data_quality_tag": "RELIABLE", "pyd_basis": "gross", "pyd_pct": 1.0,
+        {"data_quality_tag": "RELIABLE", "pyd_basis": "gross", "pyd_pct": 1.0, "s_raw_a": 0.01,
          "opening_reserves_gbp_m": 10.0, "lob_severity_computed": True, "eligible_for_capital": True},
         {"data_quality_tag": "NET_BASIS", "pyd_basis": "net", "pyd_pct": 1.0,
          "opening_reserves_gbp_m": 10.0, "lob_severity_computed": True, "eligible_for_capital": False},

@@ -1,0 +1,901 @@
+{
+  "n_model_sample": 632,
+  "n_supported_target_population": 666,
+  "n_target_population": 666,
+  "n_eligibility_unresolved": 24,
+  "n_broader_potential_target_if_all_unresolved_eligible": 690,
+  "n_eligible_outcome_unavailable": 10,
+  "seed": 42,
+  "selection_response": "membership in the 632-record model sample",
+  "propensity_model": {
+    "formula": "logit P(model-sample membership) ~ log R + reporting year",
+    "coef_logR": 0.9483978416415793,
+    "p_hat_min": 0.058484810693772794,
+    "p_hat_max": 0.999266952577059,
+    "primary_probability_floor": 0.15,
+    "primary_weight_rule": "w_i = [1/max(p_hat_i, 0.15)] / mean_j[1/max(p_hat_j, 0.15)]",
+    "cap_rationale": "A pragmatic bounded-weight sensitivity, not an identified correction: 0.15 limits domination under poor overlap and is bracketed by 0.10 and 0.20 fits.",
+    "weighted_likelihood": "sum_i w_i log StudentT(S_i | theta); propensity estimates and weights are held fixed, so posterior intervals are conditional and omit propensity-model uncertainty",
+    "primary_diagnostics": {
+      "cap": 0.15,
+      "normalisation": "divide by the model-sample mean so weights average one",
+      "n_below_cap": 1,
+      "weight_min": 0.9464731656579087,
+      "weight_max": 6.305195706286269,
+      "weight_mean": 1.0,
+      "weight_sum": 632.0,
+      "kish_effective_sample_size": 589.8809397998433
+    },
+    "uncapped_diagnostic_not_fitted": {
+      "cap": null,
+      "normalisation": "divide by the model-sample mean so weights average one",
+      "n_below_cap": 0,
+      "weight_min": 0.9319248577919879,
+      "weight_max": 15.922796049603411,
+      "weight_mean": 1.0,
+      "weight_sum": 632.0,
+      "kish_effective_sample_size": 458.33737859452845
+    },
+    "cap_diagnostics": {
+      "0.1": {
+        "cap": 0.1,
+        "normalisation": "divide by the model-sample mean so weights average one",
+        "n_below_cap": 1,
+        "weight_min": 0.9417753193762494,
+        "weight_max": 9.410849534053911,
+        "weight_mean": 1.0000000000000002,
+        "weight_sum": 632.0000000000001,
+        "kish_effective_sample_size": 555.0457569302343
+      },
+      "0.15": {
+        "cap": 0.15,
+        "normalisation": "divide by the model-sample mean so weights average one",
+        "n_below_cap": 1,
+        "weight_min": 0.9464731656579087,
+        "weight_max": 6.305195706286269,
+        "weight_mean": 1.0,
+        "weight_sum": 632.0,
+        "kish_effective_sample_size": 589.8809397998433
+      },
+      "0.2": {
+        "cap": 0.2,
+        "normalisation": "divide by the model-sample mean so weights average one",
+        "n_below_cap": 1,
+        "weight_min": 0.9488397084013289,
+        "weight_max": 4.740720819491506,
+        "weight_mean": 1.0,
+        "weight_sum": 632.0,
+        "kish_effective_sample_size": 602.4160912780943
+      }
+    }
+  },
+  "fits": {
+    "unweighted": {
+      "k": {
+        "mean": 0.6238737606675849,
+        "hdi_2.5": 0.5242135705107246,
+        "hdi_97.5": 0.7345904647455778
+      },
+      "sd_undiv": {
+        "mean": 0.02889828625880412,
+        "hdi_2.5": 0.013281099604484693,
+        "hdi_97.5": 0.043160565916607774
+      },
+      "sd_div": {
+        "mean": 0.04354753264647732,
+        "hdi_2.5": 0.031670478541676136,
+        "hdi_97.5": 0.05566133398173573
+      },
+      "nu_clean": {
+        "mean": 3.9565744487254086,
+        "hdi_2.5": 2.7927796917508085,
+        "hdi_97.5": 5.3024571538415195
+      },
+      "nu_ritc": {
+        "mean": 5.390226997674685,
+        "hdi_2.5": 1.1318185304338226,
+        "hdi_97.5": 11.802597732355226
+      },
+      "tau_s": {
+        "mean": 0.13701536032003367,
+        "hdi_2.5": 0.000285526974571754,
+        "hdi_97.5": 0.26709462675351536
+      },
+      "_diag": {
+        "max_rhat": 1.001456349337279,
+        "divergences": 0
+      }
+    },
+    "ipw_cap_0.10": {
+      "k": {
+        "mean": 0.7112718666329341,
+        "hdi_2.5": 0.6229153945058161,
+        "hdi_97.5": 0.7918774004730837
+      },
+      "sd_undiv": {
+        "mean": 0.021077613793717042,
+        "hdi_2.5": 0.0030943740970055724,
+        "hdi_97.5": 0.035003897439061044
+      },
+      "sd_div": {
+        "mean": 0.048153532983689434,
+        "hdi_2.5": 0.03737188055330714,
+        "hdi_97.5": 0.058758174259399894
+      },
+      "nu_clean": {
+        "mean": 3.5798935404476238,
+        "hdi_2.5": 2.533283853823773,
+        "hdi_97.5": 4.728241342097258
+      },
+      "nu_ritc": {
+        "mean": 5.053121481129271,
+        "hdi_2.5": 1.1546455899851062,
+        "hdi_97.5": 11.215098569779165
+      },
+      "tau_s": {
+        "mean": 0.13799858593765696,
+        "hdi_2.5": 0.0018456248563144236,
+        "hdi_97.5": 0.2720414579202623
+      },
+      "_diag": {
+        "max_rhat": 1.0034497160364368,
+        "divergences": 0
+      }
+    },
+    "ipw_cap_0.15": {
+      "k": {
+        "mean": 0.6715616054137397,
+        "hdi_2.5": 0.5818088514237207,
+        "hdi_97.5": 0.7633595255789078
+      },
+      "sd_undiv": {
+        "mean": 0.024774495878926654,
+        "hdi_2.5": 0.00694451917929595,
+        "hdi_97.5": 0.03861303267435143
+      },
+      "sd_div": {
+        "mean": 0.04625902421023949,
+        "hdi_2.5": 0.0352128797184108,
+        "hdi_97.5": 0.0577950857750845
+      },
+      "nu_clean": {
+        "mean": 3.7645341996113997,
+        "hdi_2.5": 2.6697281617722917,
+        "hdi_97.5": 5.090200240732797
+      },
+      "nu_ritc": {
+        "mean": 5.1736565466488456,
+        "hdi_2.5": 1.188245624646134,
+        "hdi_97.5": 11.779780775947552
+      },
+      "tau_s": {
+        "mean": 0.14047462529556007,
+        "hdi_2.5": 0.00030518406671432516,
+        "hdi_97.5": 0.27171247526306286
+      },
+      "_diag": {
+        "max_rhat": 1.0021905798466548,
+        "divergences": 0
+      }
+    },
+    "ipw_cap_0.20": {
+      "k": {
+        "mean": 0.6500405110349227,
+        "hdi_2.5": 0.5498792666432536,
+        "hdi_97.5": 0.7391431754480715
+      },
+      "sd_undiv": {
+        "mean": 0.02673158287458128,
+        "hdi_2.5": 0.010116432453184965,
+        "hdi_97.5": 0.04117751273509968
+      },
+      "sd_div": {
+        "mean": 0.044997396543181536,
+        "hdi_2.5": 0.03276676862902422,
+        "hdi_97.5": 0.05600901004344555
+      },
+      "nu_clean": {
+        "mean": 3.8366266995192624,
+        "hdi_2.5": 2.6614733433809246,
+        "hdi_97.5": 5.095316741593896
+      },
+      "nu_ritc": {
+        "mean": 5.2552510269204165,
+        "hdi_2.5": 1.2544755894896589,
+        "hdi_97.5": 11.890348600638827
+      },
+      "tau_s": {
+        "mean": 0.14141253788479188,
+        "hdi_2.5": 0.0007836995071974513,
+        "hdi_97.5": 0.27708509126536307
+      },
+      "_diag": {
+        "max_rhat": 1.0025670047334247,
+        "divergences": 0
+      }
+    },
+    "ipw_model_sample": {
+      "k": {
+        "mean": 0.6715616054137397,
+        "hdi_2.5": 0.5818088514237207,
+        "hdi_97.5": 0.7633595255789078
+      },
+      "sd_undiv": {
+        "mean": 0.024774495878926654,
+        "hdi_2.5": 0.00694451917929595,
+        "hdi_97.5": 0.03861303267435143
+      },
+      "sd_div": {
+        "mean": 0.04625902421023949,
+        "hdi_2.5": 0.0352128797184108,
+        "hdi_97.5": 0.0577950857750845
+      },
+      "nu_clean": {
+        "mean": 3.7645341996113997,
+        "hdi_2.5": 2.6697281617722917,
+        "hdi_97.5": 5.090200240732797
+      },
+      "nu_ritc": {
+        "mean": 5.1736565466488456,
+        "hdi_2.5": 1.188245624646134,
+        "hdi_97.5": 11.779780775947552
+      },
+      "tau_s": {
+        "mean": 0.14047462529556007,
+        "hdi_2.5": 0.00030518406671432516,
+        "hdi_97.5": 0.27171247526306286
+      },
+      "_diag": {
+        "max_rhat": 1.0021905798466548,
+        "divergences": 0
+      }
+    }
+  },
+  "stress_under_selection_weights": {
+    "question": "what do the vignette stresses become under the selection-weighted fits?",
+    "seed": 20240704,
+    "B": 4000,
+    "estimator": "check_gamma0_vignette.operator_vignettes under the headline size-only operator: centre on the pool at the fit's posterior means; intervals are the 2.5 and 97.5 percentiles over a cluster bootstrap by syndicate with one posterior draw per replicate (a conditional resampling interval, not a posterior interval), at the seed and B of check_gamma0_vignette.py's record",
+    "pool": {
+      "n_donors": 632,
+      "definition": "the model sample (load_sample) as the vignette donor pool (the shipped tool's donors, in its order, checked equal to the fitted records); unweighted, so each weighting acts through its fit's posterior only"
+    },
+    "pool_weighted_note": "centre_pool_weighted: the same centre with each donor's scenario mass set to its weight (the weighted inverse-CDF VaR), so the pool too stands for the target population; centre only, no interval",
+    "headline": {
+      "source": "results/check_gamma0_vignette_results.json, the headline operator's block (its centre recomputed here and found equal)",
+      "operator": "size_only",
+      "operator_role": "headline",
+      "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+      "gamma_in_force_posterior_mean": 0.0,
+      "centre": {
+        "V1_v99": 0.27603898912667046,
+        "V1_v995": 0.34240782846350193,
+        "V2_old_v995": 0.3049613352310951,
+        "V2_new_v995": 0.32041233767833627,
+        "V2_d995": 0.01545100244724118
+      },
+      "intervals": {
+        "V1_v99": {
+          "mean": 0.2698071148406804,
+          "sd": 0.05553473254942222,
+          "lo": 0.18333491336068947,
+          "hi": 0.3710719712053621
+        },
+        "V1_v995": {
+          "mean": 0.33013879656193745,
+          "sd": 0.06306717744402952,
+          "lo": 0.19739954013896216,
+          "hi": 0.4910822039888939
+        },
+        "V2_d995": {
+          "mean": 0.014161834247660097,
+          "sd": 0.003328417816738168,
+          "lo": 0.007650481146105404,
+          "hi": 0.020515673380621536
+        }
+      }
+    },
+    "by_fit": {
+      "unweighted": {
+        "fit": "unweighted",
+        "probability_floor": null,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.001456349337279,
+          "min_ess_bulk": 1415.7501277886881,
+          "min_ess_tail": 1568.291774539548,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.27603898912667046,
+          "V1_v995": 0.34240782846350193,
+          "V2_old_v995": 0.3049613352310951,
+          "V2_new_v995": 0.32041233767833627,
+          "V2_d995": 0.01545100244724118
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.2698071148406804,
+            "sd": 0.05553473254942222,
+            "lo": 0.18333491336068947,
+            "hi": 0.3710719712053621
+          },
+          "V1_v995": {
+            "mean": 0.33013879656193745,
+            "sd": 0.06306717744402952,
+            "lo": 0.19739954013896216,
+            "hi": 0.4910822039888939
+          },
+          "V2_d995": {
+            "mean": 0.014161834247660097,
+            "sd": 0.003328417816738168,
+            "lo": 0.007650481146105404,
+            "hi": 0.020515673380621536
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.0,
+          "V1_v995": 0.0,
+          "V2_d995": 0.0
+        }
+      },
+      "ipw_cap_0.10": {
+        "fit": "ipw_cap_0.10",
+        "probability_floor": 0.1,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0034497160364368,
+          "min_ess_bulk": 1226.3776229310406,
+          "min_ess_tail": 1506.3445577135328,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.31371444392503217,
+          "V1_v995": 0.3649316656717942,
+          "V2_old_v995": 0.3265119140431197,
+          "V2_new_v995": 0.34272877463620915,
+          "V2_d995": 0.016216860593089466
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.29688830294834634,
+            "sd": 0.0678054670488671,
+            "lo": 0.1870299077288215,
+            "hi": 0.4151360278772617
+          },
+          "V1_v995": {
+            "mean": 0.35895806623665477,
+            "sd": 0.06816636433266879,
+            "lo": 0.20705840397386824,
+            "hi": 0.5195463131958469
+          },
+          "V2_d995": {
+            "mean": 0.015215323554635613,
+            "sd": 0.00322407551082648,
+            "lo": 0.008214308101750757,
+            "hi": 0.020936731688454367
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.1364859903217257,
+          "V1_v995": 0.06578073085935054,
+          "V2_d995": 0.049566890463151214
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.31371444392503217,
+          "V1_v995": 0.3649316656717942,
+          "V2_old_v995": 0.3265119140431197,
+          "V2_new_v995": 0.34272877463620915,
+          "V2_d995": 0.016216860593089466
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.1364859903217257,
+          "V1_v995": 0.06578073085935054,
+          "V2_d995": 0.049566890463151214
+        }
+      },
+      "ipw_cap_0.15": {
+        "fit": "ipw_cap_0.15",
+        "probability_floor": 0.15,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0021905798466548,
+          "min_ess_bulk": 1217.227959448713,
+          "min_ess_tail": 904.5476789604155,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.29281667635065917,
+          "V1_v995": 0.35329213611235755,
+          "V2_old_v995": 0.31472393878727833,
+          "V2_new_v995": 0.3308478338416545,
+          "V2_d995": 0.01612389505437617
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.2829860044847376,
+            "sd": 0.06067883099832063,
+            "lo": 0.1854462734499145,
+            "hi": 0.3881057446135001
+          },
+          "V1_v995": {
+            "mean": 0.343414618578671,
+            "sd": 0.06420714810246198,
+            "lo": 0.20294650520084373,
+            "hi": 0.5138256823522827
+          },
+          "V2_d995": {
+            "mean": 0.014881211915315664,
+            "sd": 0.003265345647319367,
+            "lo": 0.008149583447905524,
+            "hi": 0.020848299804442916
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.060780135723108586,
+          "V1_v995": 0.031787554909877835,
+          "V2_d995": 0.0435500938811344
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.29281667635065917,
+          "V1_v995": 0.35329213611235755,
+          "V2_old_v995": 0.31472393878727833,
+          "V2_new_v995": 0.3308478338416545,
+          "V2_d995": 0.01612389505437617
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.060780135723108586,
+          "V1_v995": 0.031787554909877835,
+          "V2_d995": 0.0435500938811344
+        }
+      },
+      "ipw_cap_0.20": {
+        "fit": "ipw_cap_0.20",
+        "probability_floor": 0.2,
+        "convergence": {
+          "divergences": 0,
+          "max_rhat": 1.0025670047334247,
+          "min_ess_bulk": 1565.975561223318,
+          "min_ess_tail": 1361.943197263789,
+          "parameters": [
+            "k",
+            "sd_undiv",
+            "sd_div",
+            "nu_clean",
+            "nu_ritc",
+            "lambda_ritc",
+            "beta_ritc",
+            "tau_s"
+          ]
+        },
+        "operator": "size_only",
+        "operator_role": "headline",
+        "operator_construction": "size-only operator: gamma fixed at 0 in the likelihood (the headline fit); a refit, not a zeroing: k, sigma_undiv, sigma_div, nu_clean and nu_RITC are that fit's own posterior. sigma does not depend on H, so the concentration channel of any decomposition is exactly zero",
+        "gamma_in_force_posterior_mean": 0.0,
+        "centre": {
+          "V1_v99": 0.28324983707517626,
+          "V1_v995": 0.3518313554969712,
+          "V2_old_v995": 0.3132672627802325,
+          "V2_new_v995": 0.3292964506972499,
+          "V2_d995": 0.016029187917017407
+        },
+        "intervals": {
+          "V1_v99": {
+            "mean": 0.27705893421987643,
+            "sd": 0.0580731437550366,
+            "lo": 0.1845543495534799,
+            "hi": 0.3808222073477826
+          },
+          "V1_v995": {
+            "mean": 0.33699824765199854,
+            "sd": 0.06300236173893081,
+            "lo": 0.19974063450229765,
+            "hi": 0.5012939788475241
+          },
+          "V2_d995": {
+            "mean": 0.014595206972528588,
+            "sd": 0.0033222041753364255,
+            "lo": 0.007819704153509884,
+            "hi": 0.021014059532072527
+          }
+        },
+        "relative_to_headline": {
+          "V1_v99": 0.02612257047933486,
+          "V1_v995": 0.027521353923932734,
+          "V2_d995": 0.03742057978118196
+        },
+        "centre_pool_weighted": {
+          "V1_v99": 0.28324983707517626,
+          "V1_v995": 0.3518313554969712,
+          "V2_old_v995": 0.3132672627802325,
+          "V2_new_v995": 0.3292964506972499,
+          "V2_d995": 0.016029187917017407
+        },
+        "centre_pool_weighted_relative_to_headline": {
+          "V1_v99": 0.02612257047933486,
+          "V1_v995": 0.027521353923932734,
+          "V2_d995": 0.03742057978118196
+        }
+      }
+    }
+  },
+  "eligible_outcome_stress": {
+    "n_pseudo": 10,
+    "records": [
+      "syndicate_1254_2022.json",
+      "syndicate_3330_2014.json",
+      "syndicate_3622_2015.json",
+      "syndicate_4242_2024.json",
+      "syndicate_4711_2014.json",
+      "syndicate_5623_2020.json",
+      "syndicate_6050_2017.json",
+      "syndicate_6107_2017.json",
+      "syndicate_6107_2019.json",
+      "syndicate_6107_2021.json"
+    ],
+    "size_m": {
+      "min": 5.097,
+      "max": 324.3870297899529,
+      "median": 51.56002679388987
+    },
+    "imputation": {
+      "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
+      "n_size_imputed_working_sample_median": 0,
+      "size_imputed_working_sample_median_records": [],
+      "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
+    },
+    "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
+    "interpretation": "one-direction sensitivity within the supported target; not a bound",
+    "by_c": {
+      "1.0": {
+        "k": {
+          "mean": 0.6270440441137132,
+          "hdi_2.5": 0.5233458766691891,
+          "hdi_97.5": 0.7270539845620089
+        },
+        "sd_undiv": {
+          "mean": 0.028382499921519668,
+          "hdi_2.5": 0.012381143650493148,
+          "hdi_97.5": 0.041852657786020056
+        },
+        "sd_div": {
+          "mean": 0.04380225117541853,
+          "hdi_2.5": 0.03219739786124913,
+          "hdi_97.5": 0.055774290698878966
+        },
+        "nu_clean": {
+          "mean": 3.97935509171599,
+          "hdi_2.5": 2.725910561120759,
+          "hdi_97.5": 5.313564694136905
+        },
+        "nu_ritc": {
+          "mean": 6.045286123848513,
+          "hdi_2.5": 1.244038355258085,
+          "hdi_97.5": 13.720566151921028
+        },
+        "tau_s": {
+          "mean": 0.13638568016705765,
+          "hdi_2.5": 8.011382879416682e-05,
+          "hdi_97.5": 0.2695159757895052
+        },
+        "_diag": {
+          "max_rhat": 1.0020002246114494,
+          "divergences": 0
+        }
+      },
+      "1.5": {
+        "k": {
+          "mean": 0.6105374751662237,
+          "hdi_2.5": 0.5098661438376976,
+          "hdi_97.5": 0.7016206020964328
+        },
+        "sd_undiv": {
+          "mean": 0.029184444974324465,
+          "hdi_2.5": 0.013640281211326176,
+          "hdi_97.5": 0.04136305519794932
+        },
+        "sd_div": {
+          "mean": 0.04361071532139715,
+          "hdi_2.5": 0.03270763915852933,
+          "hdi_97.5": 0.05548680067120704
+        },
+        "nu_clean": {
+          "mean": 4.019615307349722,
+          "hdi_2.5": 2.702165360686106,
+          "hdi_97.5": 5.349003013941257
+        },
+        "nu_ritc": {
+          "mean": 5.539717507964163,
+          "hdi_2.5": 1.1850361486019214,
+          "hdi_97.5": 12.786572655874584
+        },
+        "tau_s": {
+          "mean": 0.13342836603956493,
+          "hdi_2.5": 0.00024394594800567483,
+          "hdi_97.5": 0.2592446861143858
+        },
+        "_diag": {
+          "max_rhat": 1.0033400506708492,
+          "divergences": 0
+        }
+      },
+      "2.0": {
+        "k": {
+          "mean": 0.5985275725776862,
+          "hdi_2.5": 0.5094659175869508,
+          "hdi_97.5": 0.6909270486888706
+        },
+        "sd_undiv": {
+          "mean": 0.02959084155642528,
+          "hdi_2.5": 0.014993728890432937,
+          "hdi_97.5": 0.040883515609941086
+        },
+        "sd_div": {
+          "mean": 0.04334712485436893,
+          "hdi_2.5": 0.03267275724715449,
+          "hdi_97.5": 0.05498345603722683
+        },
+        "nu_clean": {
+          "mean": 4.000086388208682,
+          "hdi_2.5": 2.7464499977434964,
+          "hdi_97.5": 5.3782637075819535
+        },
+        "nu_ritc": {
+          "mean": 4.83335477291882,
+          "hdi_2.5": 1.0864446040659896,
+          "hdi_97.5": 10.741869809390893
+        },
+        "tau_s": {
+          "mean": 0.13437239231620315,
+          "hdi_2.5": 4.403656098049098e-05,
+          "hdi_97.5": 0.2608199622330228
+        },
+        "_diag": {
+          "max_rhat": 1.002811097315474,
+          "divergences": 0
+        }
+      },
+      "3.0": {
+        "k": {
+          "mean": 0.5844448774613705,
+          "hdi_2.5": 0.5037493435783746,
+          "hdi_97.5": 0.666225875500229
+        },
+        "sd_undiv": {
+          "mean": 0.029893810578605125,
+          "hdi_2.5": 0.017038530396761918,
+          "hdi_97.5": 0.04109898044884472
+        },
+        "sd_div": {
+          "mean": 0.04274842636798087,
+          "hdi_2.5": 0.03297477783405773,
+          "hdi_97.5": 0.053662538469619075
+        },
+        "nu_clean": {
+          "mean": 3.8293271574463614,
+          "hdi_2.5": 2.6805978113828943,
+          "hdi_97.5": 5.017562277546028
+        },
+        "nu_ritc": {
+          "mean": 3.5372553912757954,
+          "hdi_2.5": 0.8817356724619725,
+          "hdi_97.5": 7.3133269033081465
+        },
+        "tau_s": {
+          "mean": 0.1288272540638271,
+          "hdi_2.5": 0.00027302030112536326,
+          "hdi_97.5": 0.258413872720311
+        },
+        "_diag": {
+          "max_rhat": 1.003127779895065,
+          "divergences": 0
+        }
+      },
+      "5.0": {
+        "k": {
+          "mean": 0.575264857682907,
+          "hdi_2.5": 0.5044835206407903,
+          "hdi_97.5": 0.6591524318474491
+        },
+        "sd_undiv": {
+          "mean": 0.030024289768641615,
+          "hdi_2.5": 0.0187368992742404,
+          "hdi_97.5": 0.04140206447010486
+        },
+        "sd_div": {
+          "mean": 0.041996672409352724,
+          "hdi_2.5": 0.03264403597606354,
+          "hdi_97.5": 0.05287012773435289
+        },
+        "nu_clean": {
+          "mean": 3.5041107796202584,
+          "hdi_2.5": 2.595716132250584,
+          "hdi_97.5": 4.616316701372573
+        },
+        "nu_ritc": {
+          "mean": 2.2828111264978324,
+          "hdi_2.5": 0.882527293063952,
+          "hdi_97.5": 4.111032010792484
+        },
+        "tau_s": {
+          "mean": 0.12039990682383665,
+          "hdi_2.5": 0.0001801458317959756,
+          "hdi_97.5": 0.24824469051953157
+        },
+        "_diag": {
+          "max_rhat": 1.0019052097054597,
+          "divergences": 0
+        }
+      }
+    }
+  },
+  "eligibility_unresolved_stress": {
+    "n_pseudo": 34,
+    "records": [
+      "syndicate_1254_2022.json",
+      "syndicate_3330_2014.json",
+      "syndicate_3622_2015.json",
+      "syndicate_4242_2024.json",
+      "syndicate_4711_2014.json",
+      "syndicate_5623_2020.json",
+      "syndicate_6050_2017.json",
+      "syndicate_6107_2017.json",
+      "syndicate_6107_2019.json",
+      "syndicate_6107_2021.json",
+      "syndicate_1221_2014.json",
+      "syndicate_1225_2014.json",
+      "syndicate_1274_2014.json",
+      "syndicate_1882_2014.json",
+      "syndicate_1897_2014.json",
+      "syndicate_1980_2019.json",
+      "syndicate_2088_2014.json",
+      "syndicate_2232_2024.json",
+      "syndicate_2526_2014.json",
+      "syndicate_2987_2014.json",
+      "syndicate_3002_2014.json",
+      "syndicate_3268_2019.json",
+      "syndicate_3500_2015.json",
+      "syndicate_3622_2014.json",
+      "syndicate_3622_2018.json",
+      "syndicate_3624_2014.json",
+      "syndicate_4020_2015.json",
+      "syndicate_4242_2014.json",
+      "syndicate_44_2014.json",
+      "syndicate_6103_2014.json",
+      "syndicate_6111_2014.json",
+      "syndicate_6112_2014.json",
+      "syndicate_6118_2014.json",
+      "syndicate_6124_2015.json"
+    ],
+    "size_m": {
+      "min": 1.041,
+      "max": 3247.5515633400482,
+      "median": 113.4185
+    },
+    "imputation": {
+      "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
+      "n_size_imputed_working_sample_median": 1,
+      "size_imputed_working_sample_median_records": [
+        "syndicate_6124_2015.json"
+      ],
+      "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
+    },
+    "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
+    "interpretation": "assumes all 24 eligibility-unresolved records were economically eligible, appends them with the 10 known unavailable outcomes, and expands the potential target to 690; not a bound or an estimate of their eligibility",
+    "by_c": {
+      "1.0": {
+        "k": {
+          "mean": 0.6024894132859095,
+          "hdi_2.5": 0.5105241185447019,
+          "hdi_97.5": 0.6925995957086094
+        },
+        "sd_undiv": {
+          "mean": 0.029754636642177982,
+          "hdi_2.5": 0.015142680461314766,
+          "hdi_97.5": 0.04190060655783793
+        },
+        "sd_div": {
+          "mean": 0.04248989417969138,
+          "hdi_2.5": 0.031427409859761966,
+          "hdi_97.5": 0.05351551592376807
+        },
+        "nu_clean": {
+          "mean": 4.076027448178161,
+          "hdi_2.5": 2.890339336610302,
+          "hdi_97.5": 5.489309434434806
+        },
+        "nu_ritc": {
+          "mean": 4.709222338309384,
+          "hdi_2.5": 1.0030049441475806,
+          "hdi_97.5": 10.457842070471738
+        },
+        "tau_s": {
+          "mean": 0.10913697368741704,
+          "hdi_2.5": 0.00024601494898521194,
+          "hdi_97.5": 0.22481736859162207
+        },
+        "_diag": {
+          "max_rhat": 1.001100340192849,
+          "divergences": 0
+        }
+      },
+      "5.0": {
+        "k": {
+          "mean": 0.55073012003921,
+          "hdi_2.5": 0.5024455126604385,
+          "hdi_97.5": 0.6156063034078371
+        },
+        "sd_undiv": {
+          "mean": 0.03217970152648228,
+          "hdi_2.5": 0.01894435243128665,
+          "hdi_97.5": 0.04555706954937002
+        },
+        "sd_div": {
+          "mean": 0.04665575064471642,
+          "hdi_2.5": 0.032903231757227556,
+          "hdi_97.5": 0.0613241572754023
+        },
+        "nu_clean": {
+          "mean": 3.3173140970569728,
+          "hdi_2.5": 2.3870851125829025,
+          "hdi_97.5": 4.27228925834237
+        },
+        "nu_ritc": {
+          "mean": 1.605876650748482,
+          "hdi_2.5": 0.7094055229619677,
+          "hdi_97.5": 2.636341296509871
+        },
+        "tau_s": {
+          "mean": 0.3638169176878223,
+          "hdi_2.5": 0.15609453998759076,
+          "hdi_97.5": 0.5780901980384002
+        },
+        "_diag": {
+          "max_rhat": 1.0030575868611618,
+          "divergences": 0
+        }
+      }
+    },
+    "n_known_eligible_unavailable": 10,
+    "n_eligibility_unresolved": 24
+  }
+}

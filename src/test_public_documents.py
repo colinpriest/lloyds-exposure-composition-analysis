@@ -125,11 +125,11 @@ def test_the_count_clauses_are_the_records_and_a_stale_count_is_rewritten():
     fresh = bcr.provenance_clauses(_read("docs", "data-provenance.md"), ex)
     flat = " ".join(fresh.split())
     for clause in (
-            "The supported disclosure-defined target is therefore %d records." % mc["n_supported_target_population"],
+            "The provisional disclosure-defined analysis target is therefore %d records, assuming the nine provisionally included cases are eligible." % mc["n_supported_target_population"],
             "If all %d unresolved filings were economically eligible, the broader potential target would be %d;"
             % (disp["eligibility_unresolved"], mc["n_broader_potential_target_if_all_unresolved_eligible"]),
             "The selection response is membership in the %d-record model sample." % mc["n_model_sample"],
-            "a stress for the %d known eligible unavailable outcomes, and a separate broader-potential-target "
+            "a stress for the %d unavailable outcomes (one source-supported eligible and nine provisionally included), and a separate broader-potential-target "
             "stress that assumes all %d unresolved cases eligible"
             % (mc["n_eligible_outcome_unavailable"], mc["n_eligibility_unresolved"])):
         assert clause in flat, clause
@@ -156,7 +156,7 @@ def test_referee_vignette2_direction_is_conditional():
 def test_eligible_outcome_stress_excludes_structural_records():
     src = _read("src", "generate_data_audit.py")
     assert 'by_c = miss["eligible_outcome_stress"]["by_c"]' in src
-    assert "Structural stubs and scientific exclusions are not treated as missing" in src
+    assert "missing outcomes in the primary analysis" in src
     assert "within the augmented sample" in src
 
 
@@ -165,7 +165,7 @@ def test_data_audit_separates_operational_and_inferential_states():
     doc = _read("docs", "appendix-data-audit.md")
     assert "inferential_disposition_ledger.csv" in src and "inferential_disposition_ledger.csv" in doc
     assert "economic eligibility, disclosure availability and extraction status" in doc
-    assert "supported disclosure-defined target" in doc
+    assert "provisional disclosure-defined analysis target" in doc
     assert "broader potential target" in doc
     assert "0.15-capped IPW refit" in doc
     assert "blank/failed OCR" not in src and "blank/failed OCR" not in doc
@@ -327,10 +327,10 @@ def test_a_planted_stale_clause_is_rewritten():
     ex = _json("model", "exposure_results.json")
     doc = _read("docs", "data-provenance.md")
     mc = _json("results", "missingness_check_results.json")
-    target = "%d-record supported disclosure-defined target" % mc["n_supported_target_population"]
+    target = "%d-record provisional disclosure-defined analysis target" % mc["n_supported_target_population"]
     median = "median size £%.1fm" % mc["model_sample_selection_by_size"]["median_size_included"]
     fx_move = re.search(r"VaR\$_\{99\.5\}\$ moves [0-9.]+%", doc).group(0)
-    for old, stale in ((target, "999-record supported disclosure-defined target"),
+    for old, stale in ((target, "999-record provisional disclosure-defined analysis target"),
                        (median, "median size £999.9m"),
                        (fx_move, "VaR$_{99.5}$ moves 5.0%")):
         assert old in doc
@@ -478,18 +478,17 @@ def test_no_document_labels_the_unread_records_as_a_fact_about_their_filings():
     assert not found, found[:10]
     miss = _json("results", "missingness_check_results.json")
     assert miss["disposition_detail_counts"].get("no_deterministic_reading") == \
-        miss["disposition_counts"]["eligibility_unresolved"] - miss["disposition_detail_counts"].get(
-            "source_page_audit_unresolved", 0)
+        sum(row["detail"] == "no_deterministic_reading" for row in __import__("missingness_check").classify_filings())
 
 
 def test_the_withdrawn_grouping_counts_the_unresolved_filings():
     """Round 62: the sentence typed "the 58 no-disclosure records", and the sensitivity sentence "all 58 ... the 12
     known", so both stayed 58 when the records at extraction d9f2bdee made the unresolved filings 45 (the old test
     looked for "58" in the text and passed the typed value). Both counts are now the records'."""
-    assert "the 7 records with no deterministic reading" in bcr.withdrawn_grouping_sentence({"eligibility_unresolved": 7})
+    assert "the 7 records with no deterministic reading" in bcr.withdrawn_grouping_sentence({"no_deterministic_reading": 7})
     miss = _json("results", "missingness_check_results.json")
-    sentence = bcr.withdrawn_grouping_sentence(miss["disposition_counts"])
-    assert "the %d records with no deterministic reading" % miss["disposition_counts"]["eligibility_unresolved"] \
+    sentence = bcr.withdrawn_grouping_sentence(miss["disposition_detail_counts"])
+    assert "the %d records with no deterministic reading" % miss["disposition_detail_counts"]["no_deterministic_reading"] \
         in sentence
     assert sentence in _read("docs", "current-results.md"), "docs/current-results.md is stale"
     ms = _json("results", "check_missingness_sensitivity_results.json")
@@ -498,7 +497,7 @@ def test_the_withdrawn_grouping_counts_the_unresolved_filings():
     broad["eligibility_unresolved_stress"].update(n_eligibility_unresolved=7, n_known_eligible_unavailable=3,
                                                   n_pseudo=10)
     text = " ".join(bcr.sensitivity_sentences(broad, m0))
-    assert "assumes all 7 eligibility-unresolved filings" in text and "the 3 known unavailable outcomes" in text
+    assert "assumes the 7 selected eligibility-unresolved filings" in text and "the 3 unavailable outcomes" in text
     broad["eligibility_unresolved_stress"]["n_pseudo"] = 11
     with pytest.raises(SystemExit):
         bcr.sensitivity_sentences(broad, m0)

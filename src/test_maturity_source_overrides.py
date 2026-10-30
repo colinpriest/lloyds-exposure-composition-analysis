@@ -96,10 +96,10 @@ def test_uniform_scale_does_not_change_share():
 
 def test_maturity_refit_convergence_guard_rejects_unreliable_fits():
     from check_maturity_denominator import require_converged
-    require_converged("passing", {"divergences": 0, "max_rhat": 1.001})
-    for diag in ({"divergences": 1, "max_rhat": 1.001},
-                 {"divergences": 0, "max_rhat": 1.02},
-                 {"divergences": 0, "max_rhat": float("nan")}):
+    good = {"divergences": 0, "max_rhat": 1.001, "min_ess_bulk": 500, "min_ess_tail": 500}
+    require_converged("passing", good)
+    for diag in (dict(good, divergences=1), dict(good, max_rhat=1.02),
+                 dict(good, max_rhat=float("nan")), dict(good, min_ess_tail=399)):
         with pytest.raises(RuntimeError, match="failed convergence"):
             require_converged("bad", diag)
 

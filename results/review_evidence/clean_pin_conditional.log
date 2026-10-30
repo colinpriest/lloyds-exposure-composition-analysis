@@ -1,0 +1,6 @@
+START 633-record conditional 1254/2022 refit: {'reserve_base_gbp_m': 75.257, 'gross_movement_gbp_m': -4.7330000000000005, 'severity': -0.06289115962634706, 'hhi': 0.4471842622070249, 'weights': [0.6266453928998803, 0.20063821300358994, 0.09174311926605505, 0.07618667730355005, 0.0, 0.004786597526924611, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'weight_source': 'premium_mix', 'closing_triangle_difference_gbp_m': 0.2979999999999947}
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 45 seconds.
+DONE k= 0.6248846247933925 diagnostics= {'divergences': 0, 'max_rhat': 1.0030444471008897, 'min_ess_bulk': 1883.2403238766642, 'min_ess_tail': 2146.3147160204717} centre= {'V1_v99': 0.27685418381617394, 'V1_v995': 0.34324322816620945, 'V2_old_v995': 0.30583954305061106, 'V2_new_v995': 0.3212752127729675, 'V2_d995': 0.015435669722356438}

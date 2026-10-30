@@ -65,7 +65,8 @@ def test_recorded_result_preserves_provenance_and_scenario():
     assert summary['working_tree_dirty'] and prov['run_working_tree_dirty']
     assert not prov['old_full_reproduction_report_applies_to_this_targeted_run']
     for name, info in prov['new_inputs'].items():
-        blob = subprocess.check_output(['git', '-C', str(root), 'hash-object', name], text=True).strip()
+        # The historical run used these versions; later producer repairs must not rewrite history.
+        blob = subprocess.check_output(['git', '-C', str(root), 'rev-parse', '5fb93672:' + name], text=True).strip()
         assert blob == info['normalized_git_blob']
     assert summary['scenario_source'] == fixture()
     assert summary['scenario'] == scenario_from_fixture(fixture(), ra.build_weight_vector)
@@ -80,3 +81,15 @@ def test_recorded_result_preserves_provenance_and_scenario():
     for key, relative in summary['relative_to_baseline'].items():
         assert relative == pytest.approx(summary['refit_and_rebuilt_pool'][key] / summary['baseline_centre'][key] - 1)
     assert summary['pool_only']['V1_v995'] == summary['baseline_centre']['V1_v995']
+
+
+def test_conditional_sample_appends_exactly_one_1254_observation():
+    import numpy as np
+    from check_1254_2022_inclusion import conditional_sample
+    base = tuple(np.asarray(a) for a in am.load_sample())
+    scenario = scenario_from_fixture(fixture(), ra.build_weight_vector)
+    changed = conditional_sample(base, scenario)
+    assert all(len(a) == 633 for a in changed)
+    for actual, original in zip(changed, base):
+        np.testing.assert_array_equal(actual[:-1], original)
+    assert tuple(a[-1] for a in changed) == pytest.approx((scenario['severity'], scenario['reserve_base_gbp_m'], scenario['hhi'], 2022, 1254, 1))

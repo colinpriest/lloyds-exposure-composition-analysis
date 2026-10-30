@@ -1189,6 +1189,9 @@ FILING_ELIGIBILITY_REGISTER = SCRIPT_DIR / "data" / "eligibility_from_filing.jso
 #: measures development of reserves the syndicate held (the entry's reason says why: a book can hold mature years by
 #: an inwards RITC or a quota share; each case requires source-specific assessment)
 FIRST_YEAR_NIL_OPENING = "first_year_nil_opening"
+FIRST_YEAR_INHERITED_UNRESOLVED = "first_year_inherited_business_unresolved"
+FIRST_YEAR_INHERITED_UNRESOLVED_REASON = ("first-year report with earlier quota-share business; "
+                                          "opening claims reserve and mature outcome unresolved")
 #: a prior-year movement the filing states on a basis the paper excludes, where no model read a figure
 STATED_BASIS_EXCLUDED = "stated_basis_excluded"
 ELIGIBLE_UNAVAILABLE_TAKEON = "eligible_unavailable_takeon"
@@ -1201,8 +1204,8 @@ FIRST_YEAR_FROM_FILING_REASON = ("first-year report with nil opening reserves, r
 def _filing_eligibility_gaps(entry):
     gaps = _evidence_gaps(entry)
     kind = entry.get("kind")
-    if kind not in (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON):
-        gaps.append("a kind (%s, %s or %s)" % (FIRST_YEAR_NIL_OPENING, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON))
+    if kind not in (FIRST_YEAR_NIL_OPENING, FIRST_YEAR_INHERITED_UNRESOLVED, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON):
+        gaps.append("a kind (%s, %s, %s or %s)" % (FIRST_YEAR_NIL_OPENING, FIRST_YEAR_INHERITED_UNRESOLVED, STATED_BASIS_EXCLUDED, ELIGIBLE_UNAVAILABLE_TAKEON))
     if kind == STATED_BASIS_EXCLUDED and entry.get("basis") not in ("net", "unknown"):
         gaps.append("the stated basis (net or unknown)")
     return gaps
@@ -2886,10 +2889,12 @@ def load_and_classify(outcome=None):
         # A first-year report with nil openings, read from its filing, is counted with the first-year reports the
         # extraction skips, before the model resolution that would call it an eligible record without a figure (P-10)
         filing_key = fname[len("syndicate_"):-len(".json")]
-        if (filing_eligibility.get(filing_key) or {}).get("kind") == FIRST_YEAR_NIL_OPENING:
+        if (filing_eligibility.get(filing_key) or {}).get("kind") in (FIRST_YEAR_NIL_OPENING, FIRST_YEAR_INHERITED_UNRESOLVED):
             counters["skipped"] += 1
             counters["first_year_from_filing_skipped"] += 1
-            classification_log.append({"file": fname, "status": "SKIPPED", "reason": FIRST_YEAR_FROM_FILING_REASON})
+            reason = (FIRST_YEAR_INHERITED_UNRESOLVED_REASON if filing_eligibility[filing_key]["kind"] == FIRST_YEAR_INHERITED_UNRESOLVED
+                      else FIRST_YEAR_FROM_FILING_REASON)
+            classification_log.append({"file": fname, "status": "SKIPPED", "reason": reason})
             continue
 
         # The filing establishes a mature take-on and a positive base, but its gross outcome does not reconcile.
@@ -3599,7 +3604,7 @@ def build_disposition_ledger(classification_log, records, out_csv):
     # gross figure, reserves and weights would otherwise carry it through every later step
     gross = [r for r in records if r.get("data_quality_tag") not in ("NET_BASIS", "UNKNOWN_BASIS")]
     development = [r for r in gross if r.get("data_quality_tag") != TAKEON_TAG]
-    sev = [r for r in development if r.get("pyd_pct") is not None and r.get("pyd_basis") == "gross"]
+    sev = [r for r in development if r.get("s_raw_a") is not None and r.get("pyd_basis") == "gross"]
     res = [r for r in sev if r.get("opening_reserves_gbp_m")]
     ws = [r for r in res if r.get("lob_severity_computed")]
     flow = {
@@ -9110,17 +9115,24 @@ def _vig_distribution_plot(out_dir, series, subtitle, basename):
                      f"Underlying data for {basename}", f"{basename}_data")
 
 
+def _vig_survivor_points(values):
+    """Strict full-sample survivor P(S > x) at each positive observed value."""
+    arr = np.sort(np.asarray(values, dtype=float))
+    pos = np.unique(arr[arr > 0])
+    return pos, (len(arr) - np.searchsorted(arr, pos, side="right")) / len(arr)
+
+
 def _vig_tail_plot(out_dir, series, basename):
     """Tail exceedance (empirical survivor) plot on adverse side only."""
     fig, ax = plt.subplots(figsize=(10, 5))
     for label, vals, color in series:
         arr = np.array(vals, dtype=float)
-        pos = np.sort(arr[arr > 0])
+        pos, exceedance = _vig_survivor_points(arr)
         if len(pos) == 0:
             continue
-        n = len(pos)
-        exceedance = np.arange(n, 0, -1) / n
-        ax.step(pos, exceedance, where="post", color=color, lw=2, label=label)
+        # Zero is retained in the accompanying data but cannot appear on a log axis.
+        ax.step(pos, np.where(exceedance > 0, exceedance, np.nan),
+                where="post", color=color, lw=2, label=label)
         # Mark VaR99 and VaR99.5 from full distribution
         full_sorted = np.sort(arr)
         v99 = pool_quantile.var_q(full_sorted, 0.99)
@@ -9141,12 +9153,11 @@ def _vig_tail_plot(out_dir, series, basename):
     plot_data_rows = []
     for label, vals, _ in series:
         arr = np.array(vals, dtype=float)
-        pos = np.sort(arr[arr > 0])
-        n = len(pos)
-        for i, v in enumerate(pos):
+        pos, exceedance = _vig_survivor_points(arr)
+        for v, probability in zip(pos, exceedance):
             plot_data_rows.append({
-                "series": label, "value": round(float(v), 6),
-                "exceedance_probability": round((n - i) / n, 6),
+                "series": label, "value": float(v),
+                "exceedance_probability": float(probability),
             })
     _vig_write_table(out_dir, f"{basename}_data", plot_data_rows,
                      ["series", "value", "exceedance_probability"],
@@ -9162,8 +9173,11 @@ def _vig_waterfall_plot(out_dir, old_val, size_eff, mix_eff, new_val, metric_lab
     bottoms = [0, old_val, old_val + size_eff, 0]
     bar_vals = [old_val, size_eff, mix_eff, new_val]
     ax.bar(labels, bar_vals, bottom=bottoms, color=colors, edgecolor="black", lw=0.5)
-    for i, (lbl, bv, bt) in enumerate(zip(labels, bar_vals, bottoms)):
-        ax.text(i, bt + bv + 0.002, f"{bv:.4f}", ha="center", va="bottom", fontsize=9)
+    endpoints = bottoms + [b + v for b, v in zip(bottoms, bar_vals)]
+    span = max(max(endpoints) - min(endpoints), 0.01)
+    for i, (bv, bt) in enumerate(zip(bar_vals, bottoms)):
+        ax.text(i, bt + bv + 0.025 * span, f"{bv:.4f}", ha="center", va="bottom", fontsize=9)
+    ax.set_ylim(min(endpoints) - 0.08 * span, max(endpoints) + 0.18 * span)
     # Connector lines
     for i in range(2):
         top = bottoms[i] + bar_vals[i]
@@ -9331,7 +9345,7 @@ def _vig_snippet(vignette_id, raw_stats, adj_stats, decomp, pool_n,
     lines = [
         f"Transferring {pool_n} market donor observations onto the target portfolio basis "
         f"{direction} the adverse tail of the signed PYD ratio distribution. ",
-        f"The largest absolute change from the raw market occurs at {biggest} "
+        f"Among Q75, VaR99 and VaR99.5, the largest absolute change from the raw market occurs at {biggest} "
         f"({raw_stats.get(biggest_key, 0):.4f} raw vs "
         f"{adj_stats.get(biggest_key, 0):.4f} adjusted). ",
         contrast,

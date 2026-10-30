@@ -1,6 +1,6 @@
 """What a filing shows about a record whose models read no usable figure (the review of 2 October 2026, P-10).
 
-The 6118/2014 first-year report has nil openings; 1254/2022 has a mature take-on whose gross development is
+The 6118/2014 first-year report has an unresolved opening claims reserve; 1254/2022 has a mature take-on whose gross development is
 unreconciled. 435/2014 states its prior-year movement as a "net release",
 which the settled net-basis rule excludes. data/eligibility_from_filing.json records each from its filing. The page
 readings are the PC's, so the committed entries are marked "_to_complete" and the loader applies none of them; these
@@ -48,7 +48,7 @@ def test_the_committed_entries_are_complete_and_applied():
         assert len([r for r in v["readings"] if r.strip()]) >= 2 and v["quote"].strip(), key
         assert re.fullmatch(r"[0-9a-f]{64}", v["source_sha256"]), key
         assert v["source_file"] == "syndicate_reports/pdfs/syndicate_%s.pdf" % key, key
-    assert (entries["6118_2014"]["kind"], entries["6118_2014"]["pages"]) == ("first_year_nil_opening", [6, 15, 20])
+    assert (entries["6118_2014"]["kind"], entries["6118_2014"]["pages"]) == ("first_year_inherited_business_unresolved", [6, 15, 20])
     # 435/2014's stated basis is unknown, not net: the note never says gross or net of reinsurance
     assert (entries["435_2014"]["kind"], entries["435_2014"]["basis"]) == ("stated_basis_excluded", "unknown")
     assert "42,433" in entries["435_2014"]["quote"] and "98,556" in entries["435_2014"]["quote"]
@@ -113,7 +113,7 @@ def test_a_stated_basis_entry_on_a_record_with_a_figure_stops_the_run(monkeypatc
 
 def test_the_ledger_classifies_a_first_year_report_as_structural():
     got = MC.first_year_disposition(FIRST_YEAR, "syndicate_6118_2014.json")
-    assert (got[0], got[1], got[2]) == ("structural_no_eligible_outcome", "first_year_nil_opening", "ineligible")
+    assert (got[0], got[1], got[2]) == ("structural_no_eligible_outcome", "first_year_nil_opening", "outside_reserve-base_estimand")
     assert got[5] == ('first-year report with nil opening reserves; the filing (pages 6, 17): '
                       '"The Syndicate was set up on 1 January 2022"')
     for held in (None, NET):

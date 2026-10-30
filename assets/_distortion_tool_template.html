@@ -204,8 +204,9 @@ canvas { max-height: 380px; }
           The paper computes every headline figure with the size-only operator, the default here, and
           treats concentration as an optional overlay. On the default, &sigma; does not depend on the
           Herfindahl index at all,
-          so the transfer is a pure size rescaling and the concentration channel of the
-          decomposition is exactly zero: the headline fit has &gamma; fixed at 0 in the likelihood. The
+          so size is the only scale adjustment and the concentration channel of the
+          decomposition is exactly zero. The selected tail-regime map still applies when donor and target
+          regimes differ. The headline fit has &gamma; fixed at 0 in the likelihood. The
           overlay switches to the gamma-free fit, its fitted exponent &gamma; (small and imprecisely
           resolved) with its own k, &sigma; and &nu;. The mode applies to donor
           standardisation and target scaling alike, and is recorded with the results below.
@@ -323,8 +324,8 @@ canvas { max-height: 380px; }
             On the size-only default the concentration channel of the decomposition is exactly
             zero, and two target portfolios of the same size transfer identically however
             differently they are spread across lines of business. That is the default&rsquo;s
-            content, not a limitation of the implementation: concentration does not improve
-            out-of-sample prediction beyond size, and the fitted exponent is small and
+            content, not a limitation of the implementation: an improvement from concentration in
+            out-of-sample prediction beyond size has not been established, and the fitted exponent is small and
             imprecisely resolved. The overlay is kept available because it stops an obviously
             concentrated and an obviously diversified book from being treated as identical.
           </p>
@@ -419,8 +420,8 @@ canvas { max-height: 380px; }
             The donor pool is the paper&rsquo;s working sample, selected by the same
             flag the analysis uses (<code>eligible_for_capital</code>): a
             syndicate-year with a development figure on the gross basis, a computable
-            severity, positive opening reserves and complete line-of-business weights.
-            There is no reserve-size threshold. The pool size and the run that built it
+            severity, opening reserves above &pound;0.1m and complete line-of-business weights.
+            Run-off filings and records failing the primary cohort and source-history restrictions are excluded. The pool size and the run that built it
             are shown under Data &amp; Settings.
           </p>
         </div>
@@ -1015,30 +1016,47 @@ function renderDistributionPlot() {
   });
 }
 
+// Strict P(S > x), with ties grouped and the denominator including all donors.
+function empiricalSurvivor(values) {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const points = [];
+  for (let i = 0; i < sorted.length;) {
+    let j = i + 1;
+    while (j < sorted.length && sorted[j] === sorted[i]) j++;
+    if (sorted[i] > 0) points.push({ x: sorted[i], y: (sorted.length - j) / sorted.length });
+    i = j;
+  }
+  return points;
+}
+
+// Extend the final positive horizontal segment to the sample maximum. The
+// strictly zero value at the maximum is omitted because the axis is logarithmic.
+function logSurvivor(values) {
+  const points = empiricalSurvivor(values);
+  const positive = points.filter(p => p.y > 0);
+  if (positive.length && points[points.length - 1].y === 0) {
+    positive.push({x: points[points.length - 1].x, y: positive[positive.length - 1].y});
+  }
+  return positive;
+}
+
 function renderTailPlot() {
   const r = RESULT;
-  const rawPos = r.raw.filter(v => v > 0).sort((a, b) => a - b);
-  const adjPos = r.adj.filter(v => v > 0).sort((a, b) => a - b);
-
-  function exceedance(sorted) {
-    const n = sorted.length;
-    return sorted.map((v, i) => ({ x: v, y: (n - i) / n }));
-  }
 
   if (charts.tail) charts.tail.destroy();
   charts.tail = new Chart(document.getElementById('tailChart'), {
     type: 'scatter',
     data: {
       datasets: [
-        { label: 'Raw market', data: exceedance(rawPos), borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.3)', pointRadius: 2, showLine: true, borderWidth: 2 },
-        { label: 'Target basis', data: exceedance(adjPos), borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.3)', pointRadius: 2, showLine: true, borderWidth: 2 },
+        { label: 'Raw market', data: logSurvivor(r.raw), borderColor: '#2166ac', backgroundColor: 'rgba(33,102,172,0.3)', pointRadius: 2, showLine: true, stepped: "after", borderWidth: 2 },
+        { label: 'Target basis', data: logSurvivor(r.adj), borderColor: '#b2182b', backgroundColor: 'rgba(178,24,43,0.3)', pointRadius: 2, showLine: true, stepped: "after", borderWidth: 2 },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { position: 'top' },
-        title: { display: true, text: 'Empirical Survivor Function (Adverse Side)' },
+        title: { display: true, text: 'Empirical Survivor Function (zero at maximum omitted on log axis)' },
       },
       scales: {
         x: { title: { display: true, text: 'Signed PYD Ratio (adverse)' }, min: 0 },

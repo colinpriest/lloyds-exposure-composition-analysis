@@ -1,7 +1,7 @@
 """Audit model-sample selection using the inferential disposition of every filing.
 
 The extraction repository contains stubs for reasons that must not be mixed:
-some reports are substantively too new to have an eligible mature cohort, some have
+some reports disclose no usable mature-cohort diagonal, some have
 an eligible outcome that the extraction did not recover, and some have no deterministic
 reading: the extraction's parsers found no prior-year figure and its models were not run.
 The last condition says what the extraction did, and nothing about the filing (which may
@@ -30,8 +30,8 @@ Every other record without a composition is "composition unavailable", with the 
 response for selection diagnostics is membership
 in the current model sample, not availability of one extracted field. The primary
 estimand is deliberately limited to the supported, disclosure-defined population.
-Eligibility-unresolved filings are reported separately and carried into a dedicated
-sensitivity; they are not silently treated as either eligible or ineligible.
+A selected set of eligibility-unresolved filings is reported separately and carried into a dedicated
+sensitivity. Inherited history remains unverified for other disclosure-screened filings.
 
 It also writes two reconciliations the manuscript quotes as counts (review of 29 September 2026, M-8):
 `basis_exclusions_reconciliation`, which ties the loader flow's basis exclusions to this
@@ -52,7 +52,8 @@ import numpy as np
 from scipy import stats
 
 import assumed_business
-from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, FIRST_YEAR_FROM_FILING_REASON, MATURE_LAG,
+from run_analysis import (COMPOSITION_REASONS_OUT_OF_SCOPE, FIRST_YEAR_FROM_FILING_REASON,
+                          FIRST_YEAR_INHERITED_UNRESOLVED, FIRST_YEAR_INHERITED_UNRESOLVED_REASON, MATURE_LAG,
                           ELIGIBLE_UNAVAILABLE_TAKEON, ELIGIBLE_UNAVAILABLE_TAKEON_REASON,
                           NO_MATURE_COHORT_REASON, load_filing_eligibility, load_runoff_corpus_register,
                           triangle_years, whole_year_runoff)
@@ -144,11 +145,16 @@ def first_year_disposition(held, name):
     """(category, detail, economic, disclosure, extraction, evidence) for a filing the loader skipped as a first-year
     report with nil openings (P-10), from its entry in data/eligibility_from_filing.json; a filing without one stops
     the classification."""
-    if held is None or held.get("kind") != "first_year_nil_opening":
+    if held is None or held.get("kind") not in ("first_year_nil_opening", FIRST_YEAR_INHERITED_UNRESOLVED):
         raise AssertionError(f"a filing the loader skipped as a first-year report has no entry of that kind in "
                              f"data/eligibility_from_filing.json: {name}")
+    if held.get("reserve_base_evidence") == "unresolved_members_balance_is_not_claims_outstanding":
+        return ("eligibility_unresolved", "first_year_inherited_business_opening_unresolved",
+                "unresolved", "no_mature_development_disclosed", "source_page_review",
+                "quota share includes earlier business; members' opening balance is not an opening gross claims reserve; "
+                "mature outcome and applicable reserve base remain unresolved: " + held["quote"])
     return ("structural_no_eligible_outcome", "first_year_nil_opening",
-            "ineligible", "not_applicable", "filing_read_first_year_nil_opening",
+            "outside_reserve-base_estimand", "not_applicable", "filing_read_first_year_nil_opening",
             "first-year report with nil opening reserves; the filing (pages %s): \"%s\""
             % (", ".join(str(p) for p in held["pages"]), held["quote"]))
 
@@ -176,11 +182,14 @@ def _structural_decisions():
 
 
 def unresolved_filings_from_sources():
-    """The filings whose eligibility is unresolved, read from the records and the audit, not from the loader: the
+    """The selected sensitivity filings with unresolved eligibility, from the records and audit: the
     records the extraction left unread (their own status, no_deterministic_reading) and the stubs the filing-page
     audit left unresolved. The partition's eligibility-unresolved filings must be exactly these (FIX3 A4)."""
     out = {name for name, decision in _structural_decisions().items()
-           if decision["economic_eligibility"] == "unresolved"}
+           if decision["economic_eligibility"] == "unresolved"
+           and decision.get("decision") != "no_disclosed_mature_diagonal_inherited_history_unresolved"}
+    out.update("syndicate_%s.json" % key for key, item in load_filing_eligibility().items()
+               if item.get("reserve_base_evidence") == "unresolved_members_balance_is_not_claims_outstanding")
     for path in sorted((SD / "pdf_extraction").glob("syndicate_*.json")):
         with io.open(path, encoding="utf-8") as fh:
             if json.load(fh).get("status") == "no_deterministic_reading":
@@ -235,6 +244,12 @@ def classify_filings():
     structural = _structural_decisions()
     m01 = no_mature_cohort_records()
     filing = load_filing_eligibility()
+    review_path = SD / "data" / "unavailable_outcome_source_review.json"
+    if review_path.exists():
+        with io.open(review_path, encoding="utf-8") as fh:
+            unavailable_reviews = json.load(fh)["records"]
+    else:
+        unavailable_reviews = {}
     rows = []
     for entry in ledger:
         key = _key_from_file(entry["file"])
@@ -255,13 +270,13 @@ def classify_filings():
                                      f"register's {held['triangle_years']}")
             category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
             economic, disclosure, extraction = (
-                "ineligible", "development_record_present", "parsed_then_loader_rule_m01"
+                "unresolved", "no_mature_diagonal_disclosed", "parsed_then_loader_rule_m01"
             )
             first = held["start_statements"][0]
-            evidence = ("no underwriting year up to %d: the record's triangles hold %s; the filing (page %s): "
+            evidence = ("no disclosed triangle underwriting year up to %d: the record's triangles hold %s; inherited history is not established; the filing (page %s): "
                         "\"%s\"" % (key[1] - MATURE_LAG, ", ".join(str(y) for y in years), first["page"],
                                     first["quote"]))
-        elif disposition == "SKIPPED" and entry.get("reason") == FIRST_YEAR_FROM_FILING_REASON:
+        elif disposition == "SKIPPED" and entry.get("reason") in (FIRST_YEAR_FROM_FILING_REASON, FIRST_YEAR_INHERITED_UNRESOLVED_REASON):
             # a first-year report with nil openings, read from its filing (P-10): the register's evidence
             category, detail, economic, disclosure, extraction, evidence = first_year_disposition(
                 filing.get("%d_%d" % key), entry["file"])
@@ -277,10 +292,11 @@ def classify_filings():
             if reviewed is None:
                 raise AssertionError(
                     f"SKIPPED filing lacks an independent source-page eligibility decision: {entry['file']}")
-            if reviewed["economic_eligibility"] == "ineligible":
-                category, detail = "structural_no_eligible_outcome", "no_mature_cohort"
+            if (reviewed.get("decision") == "no_disclosed_mature_diagonal_inherited_history_unresolved"
+                    or reviewed["economic_eligibility"] == "ineligible"):
+                category, detail = "structural_no_eligible_outcome", "no_disclosed_mature_diagonal"
                 economic, disclosure, extraction = (
-                    "ineligible", "not_applicable", "source_page_audit_after_pre_model_skip"
+                    "unresolved", "no_mature_diagonal_disclosed", "source_page_audit_after_pre_model_skip"
                 )
                 evidence = reviewed["mature_cohort_calculation"]
             elif reviewed["economic_eligibility"] == "unresolved":
@@ -288,6 +304,11 @@ def classify_filings():
                 economic, disclosure, extraction = (
                     "unresolved", "reviewed_but_indeterminate", "pre_model_skip"
                 )
+                if reviewed.get("inherited_mature_cohort"):
+                    # The inherited cohort is established, but whether its outcome and
+                    # opening base meet the target definition is not established.
+                    detail = "inherited_mature_cohort_outcome_scope_unresolved"
+                    disclosure = reviewed.get("outcome_availability", disclosure)
                 evidence = reviewed["review_note"] or reviewed["mature_cohort_calculation"]
             else:
                 raise AssertionError(
@@ -436,6 +457,16 @@ def classify_filings():
             economic, disclosure, extraction = "eligible", "development_observed", "complete"
             evidence = "eligible gross development, positive reserve and composition observed"
 
+        if category == "eligible_outcome_unavailable" and detail != "unreconciled_mature_takeon":
+            # The legacy category is retained for result compatibility. Inclusion is an
+            # assumption until cohort scope and the applicable reserve base are established.
+            economic = "unresolved"
+            review = unavailable_reviews.get("%d_%d" % key)
+            if review is not None:
+                evidence += "; provisional target inclusion: " + review["evidence"]
+            else:
+                evidence += "; provisional target inclusion: eligibility not established from the extraction failure"
+
         rows.append({
             "file": entry["file"],
             "syndicate": key[0],
@@ -481,10 +512,22 @@ def add_size_proxies(rows):
 
     by_syndicate = defaultdict(list)
     direct = {}
+    audited = _structural_decisions()
+    audited_positive = set()
     for row in rows:
         obs = row["observation"]
         value = (float(obs["opening_reserves_gbp_m"])
                  if obs and obs.get("opening_reserves_gbp_m") else None)
+        decision = audited.get(row["file"], {})
+        if (value is None and decision.get("decision") in
+                ("inherited_mature_cohort_outcome_unavailable", "inherited_business_cohort_and_outcome_unresolved")):
+            amount = decision.get("opening_gross_reserve_gbp_m")
+            if isinstance(amount, (int, float)) and amount > 0:
+                currency = decision.get("opening_gross_reserve_currency")
+                if currency not in ("GBP", "USD"):
+                    raise ValueError("unsupported audited reserve currency for " + row["file"])
+                value = float(amount) / rates[row["year"]] if currency == "USD" else float(amount)
+                audited_positive.add(row["file"])
         if value is None:
             value = _model_reserve(row["file"], currencies, rates)
         direct[row["file"]] = value
@@ -494,7 +537,8 @@ def add_size_proxies(rows):
     for row in rows:
         row["size_proxy"] = direct[row["file"]]
         row["size_proxy_source"] = (
-            "filing" if row["size_proxy"] is not None else "unavailable"
+            ("source_audit_filing" if row["file"] in audited_positive else "filing")
+            if row["size_proxy"] is not None else "unavailable"
         )
         if row["size_proxy"] is None and row["syndicate"] in medians:
             row["size_proxy"] = medians[row["syndicate"]]
@@ -535,7 +579,8 @@ def basis_exclusions_reconciliation(rows, ledger, flow):
                              "records at that step (%d; %d elsewhere)"
                              % (tows["net_or_unstated_basis"], len(at_basis_step), len(other)))
     severity = [r for r in rows
-                if (disp[r["file"]] == "CORPUS:INCOMPLETE" and r["detail"] not in COMPOSITION_DETAILS)
+                if (disp[r["file"]] == "CORPUS:INCOMPLETE" and
+                    (r.get("observation") or {}).get("s_raw_a") is None)
                 or disp[r["file"]] in ("CORPUS:PROVISION_MOVEMENT_NOT_DEVELOPMENT",
                                        "CORPUS:GROSS_TRIANGLE_DOES_NOT_RECONCILE",
                                        "CORPUS:NO_MATURE_COHORT_FIGURE", "CORPUS:FX_UNTRANSLATED_TABLE",
@@ -660,7 +705,7 @@ def main():
     result = {
         "definition": {
             "supported_disclosure_defined_target": (
-                "gross prior-year development on an eligible mature cohort with a positive "
+                "a provisional target assuming eligibility for nine unavailable outcomes: gross prior-year development on a mature cohort with a positive "
                 "opening-reserve base, among filings for which the ledger supports economic "
                 "eligibility; no-development-disclosure filings are outside this primary "
                 "target because their eligibility is unresolved. A year the filing states was whole-year run-off, "
@@ -677,9 +722,14 @@ def main():
                 "unavailable and gets no weights"
             ),
             "broader_potential_target": (
-                "the supported target plus every eligibility-unresolved filing, under the "
-                "sensitivity assumption that all such filings were economically eligible"
+                "the supported target plus unread and specifically identified transfer-related "
+                "unresolved filings, under the sensitivity assumption they were eligible; this is "
+                "a selected scenario, not an exhaustive upper bound on economic eligibility"
             ),
+            "unavailable_outcome_category": (
+                "legacy eligible_outcome_unavailable category: one source-supported mature take-on and "
+                "nine records provisionally included under an eligibility assumption; see "
+                "data/unavailable_outcome_source_review.json"),
             "selection_response": f"membership in the {len(included)}-record model sample",
             "size_proxy": "filing reserve where available; otherwise same-syndicate median",
         },
@@ -709,7 +759,7 @@ def main():
         "eligible_unavailable_records": [r["file"] for r in unavailable],
         "eligibility_unresolved_audit": {
             "classification_rule": (
-                "Eligibility remains unresolved where no usable source evidence establishes it; "
+                "Eligibility remains unresolved where source evidence does not establish the target scope; "
                 "the mature RITC take-on whose gross outcome is unreconciled is separately "
                 "classified as eligible outcome unavailable."
             ),

@@ -1,0 +1,94 @@
+{
+  "purpose": "Source triage of nine unavailable-outcome records provisionally included in the analysis target; extraction failure alone does not establish eligibility. PDF page numbers are one-based.",
+  "scope": "Review evidence supports mature business and positive whole-account openings where stated; it does not establish the required mature outcome or its applicable denominator. These records remain assumptions in the 666-record target.",
+  "records": {
+    "3330_2014": {
+      "pages": [
+        5,
+        16
+      ],
+      "evidence": "Older-book reinsurance is described, including a 2007-year RITC and 2011-year business; gross prior-year-end claims outstanding are £7.578m. The applicable opening may require an in-year take-on, and mature monetary movement remains unresolved. The filing says all business is discontinued; the adopted whole-year run-off rule excludes only records outside the assumed-business regime. This year is in that regime from strong inward-RITC evidence, so the exception applies even if whole-year run-off is confirmed.",
+      "source_file": "syndicate_reports/pdfs/syndicate_3330_2014.pdf",
+      "source_sha256": "decc495f511a4a7dd862dfc0e8441f6069b7c7aba17a4fc93688a04fae25c6fa"
+    },
+    "3622_2015": {
+      "pages": [
+        29,
+        30
+      ],
+      "evidence": "Gross opening claims outstanding £5.0967m; gross development disclosures include 2012/2013 underwriting years. The whole-account base does not itself establish the mature outcome or its precise scope.",
+      "source_file": "syndicate_reports/pdfs/syndicate_3622_2015.pdf",
+      "source_sha256": "bbf19bd08a78db004a1cd9a5a09c97d24b99f8c323077a0662bed1c1b451babf"
+    },
+    "4242_2024": {
+      "pages": [
+        35,
+        47
+      ],
+      "evidence": "Gross opening USD 406.165m and a gross development disclosure for mature 2019–2022 underwriting years. The grouped older-year cells require reconciliation before a primary aggregate movement can be substituted.",
+      "source_file": "syndicate_reports/pdfs/syndicate_4242_2024.html",
+      "source_sha256": "d28f10da0238ecd809d9349c6e62853f898d0e20e20874ef1ff42edb9c8f3a7e",
+      "page_note": "Pages refer to the PDF converted from the source HTML; the hash identifies the HTML.",
+      "conversion_sha256": "8b6efd88b2a690d39ca2642297d39b9a6fda30f8adae2607326c9f3a0d45317c"
+    },
+    "4711_2014": {
+      "pages": [
+        24,
+        27
+      ],
+      "evidence": "Scanned report p24 was visually checked: gross opening £288.174m. p27 discusses 2009–2014 quota and 2008 reserve protection. The mature opening allocation and gross movement remain unresolved; the rest of the filing was not fully visually reviewed.",
+      "source_file": "syndicate_reports/pdfs/syndicate_4711_2014.pdf",
+      "source_sha256": "55ac6ba532ae7e838afe7e73ee22d4426660f1042e605b7d201086a1efffb8b"
+    },
+    "5623_2020": {
+      "pages": [
+        31
+      ],
+      "evidence": "Gross opening USD 16.2896m and a development triangle including 2018; the gross mature movement in comparable money terms has not been verified.",
+      "source_file": "syndicate_reports/pdfs/syndicate_5623_2020.pdf",
+      "source_sha256": "9a87924f1fbd5785f528380e5f5092f7dc1f1088d6942fdb2a4b05d0b9a40f0e"
+    },
+    "6050_2017": {
+      "pages": [
+        29,
+        30
+      ],
+      "evidence": "Gross opening USD 13.269m and a loss-ratio triangle including 2015; the prior 2016 filing p28 reports USD 7.9782m gross claims liability for that cohort at end-2016, although its end-2017 liability is nil. Gross development remains unverified.",
+      "source_file": "syndicate_reports/pdfs/syndicate_6050_2017.pdf",
+      "source_sha256": "cb5bf997b35b466c8898808f8c88032f774842bff402151994cc4c59a9e7952a",
+      "additional_source": {
+        "source_file": "syndicate_reports/pdfs/syndicate_6050_2016.pdf",
+        "source_sha256": "f97837ff9eb8fc259dbd5c75df265e213d0fd9f25b2d98a366556081ca7a8b6c",
+        "page": 28
+      }
+    },
+    "6107_2017": {
+      "pages": [
+        27,
+        28
+      ],
+      "evidence": "Gross opening USD 39.9158m and a loss-ratio triangle including older underwriting years; gross movement and mature reserve allocation remain unverified.",
+      "source_file": "syndicate_reports/pdfs/syndicate_6107_2017.pdf",
+      "source_sha256": "e9de6de65a61ae97955727de426441af2515b05ff1795b1d7fdae7a148d49bf3"
+    },
+    "6107_2019": {
+      "pages": [
+        30,
+        31
+      ],
+      "evidence": "Gross opening USD 97.6813m and an older-year development disclosure; gross movement and mature reserve allocation remain unverified.",
+      "source_file": "syndicate_reports/pdfs/syndicate_6107_2019.pdf",
+      "source_sha256": "b82bbc96bf81a7280bb13587dc6d64a192dda2166b5d27976b3774a16e3b7d16"
+    },
+    "6107_2021": {
+      "pages": [
+        34,
+        35
+      ],
+      "evidence": "Gross opening USD 124.6196m and a loss-ratio triangle including older underwriting years; gross movement and mature reserve allocation remain unverified.",
+      "source_file": "syndicate_reports/pdfs/syndicate_6107_2021.pdf",
+      "source_sha256": "60e7ba2d7972da1f61bccf5e1c6476e88fc8595cc30b8db7e1e7cbb5464f5eff"
+    }
+  },
+  "review_note": "docs/source-review-unavailable-outcomes.md"
+}

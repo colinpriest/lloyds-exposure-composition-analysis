@@ -193,7 +193,7 @@ def long_tail_question(c, lt):
                 "improvement in prediction of unseen syndicates is not established; %s"
                 % (slope, delta, r["bb_2.5"], r["bb_97.5"], r["P_first_better"], choice))
     return ("whether the long-tail share matters for transfer: its slope is resolved in sample (%s), positive, but it "
-            "does not improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ "
+            "has not been shown to improve prediction of unseen syndicates (the composition model without the share scores $%+.1f$ "
             "higher by-syndicate held-out ELPD than with it, Bayesian-bootstrap 95%% credible interval $[%+.1f, "
             "%+.1f]$, $P = %.2f$ that the model without it scores the higher); %s"
             % (slope, -delta, -r["bb_97.5"], -r["bb_2.5"], 1.0 - r["P_first_better"], choice))
@@ -379,10 +379,10 @@ def main():
           "one inferential disposition before any selection diagnostic is calculated.")
         A("")
         disp = miss["disposition_counts"]
-        A("- Of %s filings: **%s** have no eligible outcome structurally, **%s** have "
-          "economic eligibility unresolved because the extraction has no deterministic reading of them "
-          "(its parsers found no prior-year figure and its models were not run, which says nothing about "
-          "the filings), **%s** are scientific exclusions, **%s** have an eligible but unavailable outcome, "
+        A("- Of %s filings: **%s** have no separately disclosed usable mature-cohort outcome or a nil opening; "
+          "**%s** selected filings have unresolved eligibility (20 unread and four with source-reviewed transfers); "
+          "inherited history has not been established for all disclosure-screened filings. "
+          "**%s** are scientific exclusions, **%s** have unavailable outcomes (one source-supported eligible and nine provisionally included), "
           "**%s** have the outcome but no usable composition, and **%s** enter the model."
           % (miss["n_filings"], disp["structural_no_eligible_outcome"],
              disp["eligibility_unresolved"], disp["scientific_exclusion"],
@@ -390,15 +390,15 @@ def main():
              disp["eligible_observed_composition_unavailable"], disp["working_sample"]))
         sel = miss["model_sample_selection_by_size"]
         A("- The response is membership in the %s-record model sample within the "
-          "%s-record supported disclosure-defined target. The broader potential target is "
-          "%s if all unresolved filings were eligible. Included records have median size "
+          "%s-record provisional disclosure-defined analysis target, assuming nine unavailable outcomes are eligible. The broader potential target is "
+          "%s if the selected unresolved filings were eligible; this scenario is not an exhaustive upper bound. Included records have median size "
           "£%sm, against £%sm for target-population records not included (%s)."
           % (miss["n_model_sample"], miss["n_supported_target_population"],
              miss["n_broader_potential_target_if_all_unresolved_eligible"],
              f(sel["median_size_included"], 1),
              f(sel["median_size_not_included"], 1), rank_test_text(sel["mann_whitney_p"])))
         A(scientific_exclusion_sentence(miss))
-        A(withdrawn_grouping_sentence(disp))
+        A(withdrawn_grouping_sentence(miss["disposition_detail_counts"]))
         A("")
         sens = load(RESULTS, "check_missingness_sensitivity_results.json")
         A("Three sensitivities are reported instead of resting on it. %s See the manuscript for all three."
@@ -819,7 +819,7 @@ def withdrawn_grouping_sentence(disp):
     return ("- The former 128-case structural grouping is withdrawn: the %d records with no deterministic reading "
             "(the extraction's parsers found no prior-year figure and its models were not run) establish only that "
             "the extraction did not read them, not economic ineligibility. Missing-at-random cannot be established."
-            % disp["eligibility_unresolved"])
+            % disp["no_deterministic_reading"])
 
 
 def sensitivity_sentences(ms, m0):
@@ -849,15 +849,15 @@ def sensitivity_sentences(ms, m0):
         "Bounded inverse-probability weighting with the disclosed 0.15 probability floor %s and leaves "
         "the concentration exponent and the floor within %.3f of the adopted fit; 0.10 and 0.20 cap "
         "fits report the cap sensitivity, and intervals condition on the fitted weights." % (move, within),
-        "The high-volatility eligible-outcome stress moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
+        "The high-volatility unavailable-outcome stress (one source-supported eligible and nine provisionally included) moves the conditional bracketed estimate from $k = %.3f$ at $c=%g$ to "
         "$%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid --- a construction that makes the "
         "predominantly small missing books more volatile, so it cannot test the adverse-to-sub-linearity "
         "direction. The clean-regime tail index moves from %.2f to %.2f; the concentration exponent is fixed "
         "at zero." % (lo["k"]["mean"], float(cs[0]), hi["k"]["mean"], float(cs[-1]), min(ks), max(ks),
                        lo["nu_clean"]["mean"], hi["nu_clean"]["mean"]),
-        "A separate broader-potential-target stress assumes all %d eligibility-unresolved filings were "
-        "eligible, appends them with the %d known unavailable outcomes, and moves $k$ from $%.3f$ at "
-        "$c=%g$ to $%.3f$ at $c=%g$; it is not a bound or an eligibility estimate."
+        "A separate broader-potential-target stress assumes the %d selected eligibility-unresolved filings were "
+        "eligible, appends them with the %d unavailable outcomes (one source-supported eligible and nine provisional), and moves $k$ from $%.3f$ at "
+        "$c=%g$ to $%.3f$ at $c=%g$; this selected scenario is not a bound or an eligibility estimate."
         % (stress["n_eligibility_unresolved"], stress["n_known_eligible_unavailable"],
            broad[bc[0]]["k"]["mean"], float(bc[0]), broad[bc[-1]]["k"]["mean"], float(bc[-1])),
     ]
@@ -894,9 +894,9 @@ def _missingness_lines_legacy():
         "  $%.3f$) within $%.3f$ of the unweighted fit;"
         % (m(un, "sd_undiv"), within),
         "  $\\nu_{\\text{clean}}=%.2f$ against $%.2f$." % (m(ipw, "nu_clean"), m(un, "nu_clean")),
-        "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
+        "- **High-volatility unavailable-outcome stress.** Appending the %d records with unavailable outcomes"
         % ms["eligible_outcome_stress"]["n_pseudo"],
-        "  eligible but unavailable moves the conditional bracketed estimate from $k=%.3f$"
+        "  (one source-supported eligible and nine provisionally included) moves the conditional bracketed estimate from $k=%.3f$"
         % m(lo, "k"),
         "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
         % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
@@ -952,9 +952,9 @@ def missingness_lines():
         % m(ipw, "sd_undiv"),
         "  against %.3f; $\\nu_{\\text{clean}}=%.2f$ against %.2f."
         % (m(un, "sd_undiv"), m(ipw, "nu_clean"), m(un, "nu_clean")),
-        "- **High-volatility eligible-outcome stress.** Appending only the %d records whose outcome is"
+        "- **High-volatility unavailable-outcome stress.** Appending the %d records with unavailable outcomes"
         % ms["eligible_outcome_stress"]["n_pseudo"],
-        "  eligible but unavailable moves the conditional bracketed estimate from $k=%.3f$"
+        "  (one source-supported eligible and nine provisionally included) moves the conditional bracketed estimate from $k=%.3f$"
         % m(lo, "k"),
         "  at $c=%g$ to $%.3f$ at $c=%g$, between $%.3f$ and $%.3f$ across the grid. Because the"
         % (float(cs[0]), m(hi, "k"), float(cs[-1]), min(ks), max(ks)),
@@ -962,13 +962,13 @@ def missingness_lines():
         "  adverse-to-sub-linearity direction.",
         "  $\\nu_{\\text{clean}}$ moves %.2f to %.2f at $c=%g$; this is not a bound."
         % (m(lo, "nu_clean"), m(hi, "nu_clean"), float(cs[-1])),
-        "- **Eligibility-unresolved stress.** Assuming all %d filings with no deterministic reading were economically"
+        "- **Eligibility-unresolved stress.** Assuming the %d selected unresolved filings were economically"
         % ms["n_eligibility_unresolved"],
-        "  eligible expands the potential target from %d to %d and appends them with the %d known"
+        "  eligible expands the selected scenario from %d to %d and appends them with the %d"
         % (ms["n_supported_target_population"],
            ms["n_broader_potential_target_if_all_unresolved_eligible"],
            ms["n_eligible_outcome_unavailable"]),
-        "  unavailable outcomes. This %d-record stress moves $k=%.3f$ at $c=1$ to $%.3f$ at $c=5$."
+        "  unavailable outcomes (one source-supported eligible and nine provisionally included). This %d-record stress moves $k=%.3f$ at $c=1$ to $%.3f$ at $c=5$."
         % (ms["eligibility_unresolved_stress"]["n_pseudo"],
            m(broad["1.0"], "k"), m(broad["5.0"], "k")),
         "  It is not a bound, not an estimate that those filings were eligible, and does not repair poor overlap.",
@@ -1112,9 +1112,9 @@ def provenance_clauses(t, ex, records=None):
     t = _numbers(
         t,
         r"The (?P<files>[0-9,]+) filings are classified before any selection diagnostic: "
-        r"(?P<struct>[0-9,]+) have no eligible\s+outcome structurally, (?P<unresolved>[0-9,]+) have "
-        r"economic eligibility unresolved.*?, (?P<sci>[0-9,]+) are scientific "
-        r"exclusions, (?P<unavail>[0-9,]+) have an eligible but\s+unavailable outcome, (?P<comp>[0-9,]+) have an "
+        r"(?P<struct>[0-9,]+) have no separately disclosed usable mature-cohort\s+outcome or a nil opening, (?P<unresolved>[0-9,]+) selected cases have "
+        r"economic eligibility unresolved.*?; (?P<sci>[0-9,]+) are scientific "
+        r"exclusions, (?P<unavail>[0-9,]+) have unavailable outcomes \(one source-supported eligible and nine provisionally included\), (?P<comp>[0-9,]+) have an "
         r"observed eligible outcome but no usable composition,\s+and (?P<sample>[0-9,]+) enter the model",
         {"files": mc["n_filings"], "struct": disp["structural_no_eligible_outcome"],
          "unresolved": disp["eligibility_unresolved"],
@@ -1133,7 +1133,7 @@ def provenance_clauses(t, ex, records=None):
     broader = mc["n_broader_potential_target_if_all_unresolved_eligible"]
     if broader != mc["n_supported_target_population"] + disp["eligibility_unresolved"]:
         raise SystemExit("the broader potential target is not the supported target plus the unresolved filings")
-    t = _numbers(t, r"The supported disclosure-defined target is therefore (?P<target>[0-9,]+)\s+records\.",
+    t = _numbers(t, r"The provisional disclosure-defined analysis target is therefore (?P<target>[0-9,]+)\s+records, assuming the nine provisionally included cases are eligible\.",
                  {"target": mc["n_supported_target_population"]}, "the supported target's size")
     t = _numbers(t, r"If all (?P<unresolved>[0-9,]+) unresolved filings were economically eligible, the "
                     r"broader potential\s+target would be (?P<broader>[0-9,]+);",
@@ -1144,14 +1144,14 @@ def provenance_clauses(t, ex, records=None):
     if (mc["n_eligible_outcome_unavailable"] != disp["eligible_outcome_unavailable"]
             or mc["n_eligibility_unresolved"] != disp["eligibility_unresolved"]):
         raise SystemExit("the stresses' populations are not the disposition counts")
-    t = _numbers(t, r"a stress for the (?P<unavail>[0-9,]+) known eligible unavailable outcomes, and a\s+"
+    t = _numbers(t, r"a stress for the (?P<unavail>[0-9,]+) unavailable outcomes \(one source-supported eligible and nine provisionally included\), and a\s+"
                     r"separate broader-potential-target stress that assumes all (?P<unresolved>[0-9,]+) "
                     r"unresolved cases eligible",
                  {"unavail": mc["n_eligible_outcome_unavailable"],
                   "unresolved": mc["n_eligibility_unresolved"]}, "the three sensitivities' populations")
     t = _numbers(
         t,
-        r"Within the\s+(?P<target>[0-9,]+)-record supported disclosure-defined target, included records have median size £(?P<inside>[0-9.]+)m "
+        r"Within the\s+(?P<target>[0-9,]+)-record provisional disclosure-defined analysis target, included records have median size £(?P<inside>[0-9.]+)m "
         r"against £(?P<outside>[0-9.]+)m",
         {"target": mc["n_supported_target_population"], "inside": "%.1f" % sel["median_size_included"],
          "outside": "%.1f" % sel["median_size_not_included"]},

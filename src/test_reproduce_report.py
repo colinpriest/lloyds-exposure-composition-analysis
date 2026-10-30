@@ -550,3 +550,17 @@ def test_a_forged_inputs_digest_is_rejected():
                       "outputs_excluded": rp.declared_outputs()}}
     ok, msgs = rp.validate_report(rep)
     assert not ok and any("inputs digest" in m for m in msgs)
+
+
+def test_partial_verifier_detects_changed_unrun_vignette_and_untracked_output(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
+    monkeypatch.setattr(rp, "REPORT", str(tmp_path / "no-report.json"))
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",),
+                                        "other.py": ("vignettes/vignette-1/summary_snippet.md",)})
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert rp.verify()
+    for changed in ("vignettes/vignette-1/summary_snippet.md", "results/new-output.json"):
+        monkeypatch.setattr(rp, "changed_paths", lambda root, path=changed: [path])
+        assert not rp.verify()
+        assert changed in capsys.readouterr().out

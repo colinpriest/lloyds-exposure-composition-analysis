@@ -128,7 +128,8 @@ def run(outdir):
                 "max_rhat": float(summary.r_hat.max()),
                 "min_ess_bulk": float(summary.ess_bulk.min()),
                 "min_ess_tail": float(summary.ess_tail.min())}
-        if diag["divergences"] or diag["max_rhat"] > 1.01:
+        if (diag["divergences"] or not np.isfinite(diag["max_rhat"]) or diag["max_rhat"] > 1.01
+                or any(not np.isfinite(diag[k]) or diag[k] < 400 for k in ("min_ess_bulk", "min_ess_tail"))):
             raise SystemExit("nonconverged fit for %s: %s" % (label, diag))
         saved = outdir / (label + ".npz")
         np.savez_compressed(saved,
@@ -167,8 +168,8 @@ def run(outdir):
             "pool_only": pool_only, "fit_only": fit_only, "refit_and_rebuilt_pool": combined,
             "relative_to_baseline": rv.relative(combined, baseline), "V1_thresholds": thresholds,
         }
-        (outdir / "results.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         print("DONE", label, "k", params["k"]["mean"], "diagnostics", diag, flush=True)
+    (outdir / "results.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result
 
 

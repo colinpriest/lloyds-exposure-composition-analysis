@@ -79,13 +79,15 @@ def test_the_quoted_counts(inputs):
     assert r["unusable_severity_components"] == {"fx_untranslated_table": 5,
                                                  "gross_development_unavailable": 5,
                                                  "gross_triangle_does_not_reconcile": 1,
+                                                 "life_book": 2,
+                                                 "missing_lob_composition": 1,
                                                  "no_mature_cohort_figure": 56,
                                                  "non_gross_or_unstated_development": 6,
                                                  "provision_movement_not_development": 1,
                                                  "restated_base_table": 4,
                                                  "source_history_set_aside": 11,
                                                  "takeon_base_unmeasurable": 1}
-    assert r["identity_unusable_severity"] == "5 + 5 + 1 + 56 + 6 + 1 + 4 + 11 + 1 = 90"
+    assert r["identity_unusable_severity"] == "5 + 5 + 1 + 2 + 1 + 56 + 6 + 1 + 4 + 11 + 1 = 93"
     g = MC.regime_composition(rows)
     # round 62 (the records at extraction d9f2bdee): the working sample's regime rows 30 + 4 + 2 of 36 -> 31 + 5 + 2
     # of 38 and the corpus's 53 -> 55; the scanned filings' 60 and the basis identities above are unchanged
@@ -363,7 +365,7 @@ def test_an_audited_first_year_stub_is_structural_with_its_audit_decision(tmp_pa
     rows = _classify(tmp_path, monkeypatch, [(STUB, "SKIPPED")], structural={STUB: _decision(STUB)})
     row = rows[STUB]
     assert (row["category"], row["detail"], row["economic_eligibility"]) == (
-        "structural_no_eligible_outcome", "no_mature_cohort", "ineligible")
+        "structural_no_eligible_outcome", "no_disclosed_mature_diagonal", "unresolved")
     assert row["classification_evidence"] == _decision(STUB)["mature_cohort_calculation"]
 
 
@@ -424,10 +426,10 @@ def _m01(tmp_path, monkeypatch, entries, ledger_rows=None):
 def test_a_filing_skipped_under_m01_is_structural_with_its_entry(tmp_path, monkeypatch):
     row = _m01(tmp_path, monkeypatch, {"3902_2018": YOUNG_ENTRY})[YOUNG]
     assert (row["category"], row["detail"], row["economic_eligibility"]) == (
-        "structural_no_eligible_outcome", "no_mature_cohort", "ineligible")
+        "structural_no_eligible_outcome", "no_mature_cohort", "unresolved")
     assert row["extraction_status"] == "parsed_then_loader_rule_m01"
     assert row["classification_evidence"] == (
-        "no underwriting year up to 2016: the record's triangles hold 2017, 2018; the filing (page 6): \"The "
+        "no disclosed triangle underwriting year up to 2016: the record's triangles hold 2017, 2018; inherited history is not established; the filing (page 6): \"The "
         "Syndicate began underwriting on the 2017 YOA, replacing the Incidental Syndicate that previously operated "
         "within Syndicate 4020.\"")
 

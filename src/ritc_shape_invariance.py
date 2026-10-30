@@ -16,8 +16,8 @@ The reporting-year effects and the separate RITC regime of the adopted fit are p
 that baseline; this script asks whether an RITC year still standardises like a clean one
 once the operator's own scale has been divided out.
 
-RITC (reinsurance-to-close of another syndicate's account) injects a lumpy step change
-into PYD that is NOT a function of (R, HHI).  It could therefore break invariance in two
+RITC (reinsurance-to-close of another syndicate's account) can introduce a step in
+observed PYD or change the cohort mix and subsequent development. It could break invariance in two
 distinct ways, and we test each separately:
 
   (A) SCALE invariance under the operator.  z = s / sigma(R,HHI).  If RITC years have a

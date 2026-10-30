@@ -1,30 +1,33 @@
 {
   "definition": {
-    "supported_disclosure_defined_target": "gross prior-year development on an eligible mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved. A year the filing states was whole-year run-off, with or without a development figure, unless in the assumed-business regime, is a run-off scientific exclusion. A record whose extracted premium mix names no line of business (only a contract form or distribution channels) and a life record are outside a non-life line-of-business composition model and are scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for a record no page has been read for, another model reads a line with a positive amount (readers_disagree), the extraction lost the lines: the record stays in the target as composition unavailable and gets no weights",
-    "broader_potential_target": "the supported target plus every eligibility-unresolved filing, under the sensitivity assumption that all such filings were economically eligible",
+    "supported_disclosure_defined_target": "a provisional target assuming eligibility for nine unavailable outcomes: gross prior-year development on a mature cohort with a positive opening-reserve base, among filings for which the ledger supports economic eligibility; no-development-disclosure filings are outside this primary target because their eligibility is unresolved. A year the filing states was whole-year run-off, with or without a development figure, unless in the assumed-business regime, is a run-off scientific exclusion. A record whose extracted premium mix names no line of business (only a contract form or distribution channels) and a life record are outside a non-life line-of-business composition model and are scientific exclusions (D3-1) only if the filing prints no premium amount for any non-life line of business (life books are out of scope as life business); a page reading of the filing decides, and outranks the models' readings in both directions. Where the filing prints premium by line although every model's mix names none (extraction_lost_lines), or, for a record no page has been read for, another model reads a line with a positive amount (readers_disagree), the extraction lost the lines: the record stays in the target as composition unavailable and gets no weights",
+    "broader_potential_target": "the supported target plus unread and specifically identified transfer-related unresolved filings, under the sensitivity assumption they were eligible; this is a selected scenario, not an exhaustive upper bound on economic eligibility",
+    "unavailable_outcome_category": "legacy eligible_outcome_unavailable category: one source-supported mature take-on and nine records provisionally included under an eligibility assumption; see data/unavailable_outcome_source_review.json",
     "selection_response": "membership in the 632-record model sample",
     "size_proxy": "filing reserve where available; otherwise same-syndicate median"
   },
   "n_filings": 1065,
   "disposition_counts": {
-    "eligibility_unresolved": 20,
+    "eligibility_unresolved": 24,
     "eligible_observed_composition_unavailable": 24,
     "eligible_outcome_unavailable": 10,
     "scientific_exclusion": 273,
-    "structural_no_eligible_outcome": 106,
+    "structural_no_eligible_outcome": 102,
     "working_sample": 632
   },
   "disposition_detail_counts": {
-    "first_year_nil_opening": 1,
+    "first_year_inherited_business_opening_unresolved": 1,
     "fx_untranslated_table": 5,
     "gross_development_unavailable": 5,
     "gross_triangle_does_not_reconcile": 1,
     "in_runoff": 28,
+    "inherited_mature_cohort_outcome_scope_unresolved": 1,
     "life_book": 13,
     "missing_lob_composition": 24,
     "mix_names_no_line_of_business": 37,
     "no_deterministic_reading": 20,
-    "no_mature_cohort": 105,
+    "no_disclosed_mature_diagonal": 91,
+    "no_mature_cohort": 11,
     "no_mature_cohort_figure": 56,
     "no_positive_reserve_base": 4,
     "no_usable_development_reading": 4,
@@ -33,6 +36,7 @@
     "provision_movement_not_development": 1,
     "restated_base_table": 4,
     "source_history_set_aside": 11,
+    "source_page_audit_unresolved": 2,
     "takeon_base_unmeasurable": 1,
     "takeon_not_development": 8,
     "unreconciled_mature_takeon": 1
@@ -69,8 +73,8 @@
   },
   "n_supported_target_population": 666,
   "n_target_population": 666,
-  "n_eligibility_unresolved": 20,
-  "n_broader_potential_target_if_all_unresolved_eligible": 686,
+  "n_eligibility_unresolved": 24,
+  "n_broader_potential_target_if_all_unresolved_eligible": 690,
   "n_model_sample": 632,
   "n_eligible_outcome_unavailable": 10,
   "n_distinct_syndicates_with_unavailable_outcome": 8,
@@ -148,10 +152,10 @@
     "syndicate_6107_2021.json"
   ],
   "eligibility_unresolved_audit": {
-    "classification_rule": "Eligibility remains unresolved where no usable source evidence establishes it; the mature RITC take-on whose gross outcome is unreconciled is separately classified as eligible outcome unavailable.",
-    "n_records": 20,
-    "n_with_size_proxy": 20,
-    "n_without_size_proxy": 0,
+    "classification_rule": "Eligibility remains unresolved where source evidence does not establish the target scope; the mature RITC take-on whose gross outcome is unreconciled is separately classified as eligible outcome unavailable.",
+    "n_records": 24,
+    "n_with_size_proxy": 23,
+    "n_without_size_proxy": 1,
     "records": [
       {
         "file": "syndicate_1221_2014.json",
@@ -209,6 +213,17 @@
         "size_proxy_source": "same_syndicate_median"
       },
       {
+        "file": "syndicate_1980_2019.json",
+        "syndicate": 1980,
+        "year": 2019,
+        "economic_eligibility": "unresolved",
+        "disclosure_availability": "reviewed_but_indeterminate",
+        "extraction_status": "pre_model_skip",
+        "evidence": "PDF page 30 records a USD 163.213m prior-year portfolio transfer into the 2018 opening and USD 221.625m gross claims outstanding at the 2019 opening. The underlying underwriting years and development scope have not been established; neither a mature cohort nor model inclusion follows from the transfer alone.",
+        "size_proxy_gbp_m": 167.02464390685057,
+        "size_proxy_source": "source_audit_filing"
+      },
+      {
         "file": "syndicate_2088_2014.json",
         "syndicate": 2088,
         "year": 2014,
@@ -262,6 +277,17 @@
         "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 25.9565,
         "size_proxy_source": "same_syndicate_median"
+      },
+      {
+        "file": "syndicate_3268_2019.json",
+        "syndicate": 3268,
+        "year": 2019,
+        "economic_eligibility": "unresolved",
+        "disclosure_availability": "inherited_2016_development_not_disclosed_in_triangle",
+        "extraction_status": "pre_model_skip",
+        "evidence": "The filing confirms acceptance of SPA 6126 UW2016 effective 1 January 2019 (PDF pages 27 and 33); UW2016 is economically mature under the cutoff. Page 29 prints a GBP 44.829m gross opening and a GBP 8.428m RITC take-on. The page 37 triangle prints only UW2018 and UW2019; the UW2016 movement, its outcome scope and the applicable denominator are not established. The 2016 cohort must not be treated as zero or added to the model on this evidence.",
+        "size_proxy_gbp_m": 44.829,
+        "size_proxy_source": "source_audit_filing"
       },
       {
         "file": "syndicate_3500_2015.json",
@@ -372,6 +398,28 @@
         "evidence": "No deterministic reading: the table, page-text and narrative parsers found no prior-year figure, no reserve-movement text and no loss-ratio triangle they could use. This describes the parsers, not the filing, which may still print a claims development table they could not read. The models were not run, so no figure was obtained and the report is not in the analysis.",
         "size_proxy_gbp_m": 45.1005,
         "size_proxy_source": "same_syndicate_median"
+      },
+      {
+        "file": "syndicate_6118_2014.json",
+        "syndicate": 6118,
+        "year": 2014,
+        "economic_eligibility": "unresolved",
+        "disclosure_availability": "no_mature_development_disclosed",
+        "extraction_status": "source_page_review",
+        "evidence": "quota share includes earlier business; members' opening balance is not an opening gross claims reserve; mature outcome and applicable reserve base remain unresolved: PDF p6 (printed 4): 'Syndicate 6118 (\u201cthe Syndicate\u201d) was established for the 2014 Year of Account to provide a dedicated vehicle for external investors to participate on Syndicate 1955 via quota share reinsurance, net of quota share cession to Syndicate 6113.' PDF p15 (printed 13), 'Balance Sheet 31 December 2014': a 2014 column only. PDF p20 (printed 18), note 9 'Reconciliation of members\u2019 balance': 'Members\u2019 balance brought forward at 1 January -'. No claims development table and no amount of prior-year development is printed.",
+        "size_proxy_gbp_m": 86.0745,
+        "size_proxy_source": "same_syndicate_median"
+      },
+      {
+        "file": "syndicate_6124_2015.json",
+        "syndicate": 6124,
+        "year": 2015,
+        "economic_eligibility": "unresolved",
+        "disclosure_availability": "reviewed_but_indeterminate",
+        "extraction_status": "pre_model_skip",
+        "evidence": "PDF page 4 records a 100% quota share from Syndicate 1084 including prior claim liabilities. Their underlying underwriting years and movement scope are not established. The opening at inception is nil; whether take-on belongs in any denominator depends on the adopted outcome scope. A mature cohort and model inclusion are not established.",
+        "size_proxy_gbp_m": null,
+        "size_proxy_source": "unavailable"
       }
     ]
   },
@@ -391,11 +439,13 @@
     ],
     "inferential_basis_exclusions": 104,
     "identity_basis": "98 + 6 = 104",
-    "flow_unusable_severity_step": 90,
+    "flow_unusable_severity_step": 93,
     "unusable_severity_components": {
       "fx_untranslated_table": 5,
       "gross_development_unavailable": 5,
       "gross_triangle_does_not_reconcile": 1,
+      "life_book": 2,
+      "missing_lob_composition": 1,
       "no_mature_cohort_figure": 56,
       "non_gross_or_unstated_development": 6,
       "provision_movement_not_development": 1,
@@ -403,7 +453,7 @@
       "source_history_set_aside": 11,
       "takeon_base_unmeasurable": 1
     },
-    "identity_unusable_severity": "5 + 5 + 1 + 56 + 6 + 1 + 4 + 11 + 1 = 90"
+    "identity_unusable_severity": "5 + 5 + 1 + 2 + 1 + 56 + 6 + 1 + 4 + 11 + 1 = 93"
   },
   "assumed_business_regime": {
     "note": "composition counts each regime row once: RITC-flagged first, then a confirmed inward transfer the scan did not flag, then a confirmed take-on in neither",

@@ -246,10 +246,20 @@ def test_on_the_committed_records_no_scope_exclusion_has_a_reader_that_reads_a_l
 def test_a_scope_exclusion_is_not_counted_at_the_unusable_severity_step():
     """The loader's flow removes a record without weights at its own step, not the unusable-severity one; the
     ledger's reconciliation of that step leaves out every composition detail, the scope exclusions' included."""
-    rows = [{"file": "a", "detail": "life_book"}, {"file": "b", "detail": "mix_names_no_line_of_business"},
-            {"file": "c", "detail": "missing_lob_composition"}, {"file": "d", "detail": "gross_development_unavailable"}]
+    rows = [{"file": "a", "detail": "life_book", "observation": {"s_raw_a": 0.1}},
+            {"file": "b", "detail": "mix_names_no_line_of_business", "observation": {"s_raw_a": 0.1}},
+            {"file": "c", "detail": "missing_lob_composition", "observation": {"s_raw_a": 0.1}},
+            {"file": "d", "detail": "gross_development_unavailable", "observation": {"s_raw_a": None}}]
     ledger = [{"file": f, "disposition": "CORPUS:INCOMPLETE"} for f in "abcd"]
     flow = {"to_working_sample": {"net_or_unstated_basis": 0, "unusable_severity": 1}}
     out = MC.basis_exclusions_reconciliation(rows, ledger, flow)
     assert out["flow_unusable_severity_step"] == 1
     assert out["unusable_severity_components"] == {"gross_development_unavailable": 1}
+
+
+def test_composition_exclusion_with_missing_primary_severity_leaves_at_severity_step():
+    rows = [{"file": "a", "detail": "life_book", "observation": {"s_raw_a": None}}]
+    ledger = [{"file": "a", "disposition": "CORPUS:INCOMPLETE"}]
+    flow = {"to_working_sample": {"net_or_unstated_basis": 0, "unusable_severity": 1}}
+    out = MC.basis_exclusions_reconciliation(rows, ledger, flow)
+    assert out["unusable_severity_components"] == {"life_book": 1}

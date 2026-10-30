@@ -1,8 +1,7 @@
 """RITC robustness: does external RITC drive the heavy tail / move the operator?
 
-External RITC (reinsurance-to-close of another syndicate's account) injects large,
-lumpy step-changes into prior-year development that are NOT a portfolio-composition
-effect. If those observations are inflating the heavy tail (nu) or distorting the
+External RITC (reinsurance-to-close of another syndicate's account) can introduce
+a step into observed development, or change the cohort mix and its subsequent development. If those observations are inflating the heavy tail (nu) or distorting the
 pooling operator (k, gamma, floor), that matters for how we treat RITC flags.
 
 We re-fit the *identical* calibration model (calibrate_dispersion.py) on three nested

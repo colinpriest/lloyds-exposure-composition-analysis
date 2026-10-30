@@ -1,0 +1,168 @@
+{
+  "purpose": "Independent targeted clean-pin reruns; neither these nor the later changed-input selection run are a full manifest reproduction.",
+  "date": "2026-10-30",
+  "environment": {
+    "python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "packages": {
+      "pymc": "5.25.1",
+      "pytensor": "2.31.7",
+      "arviz": "0.22.0",
+      "numpy": "2.1.3",
+      "scipy": "1.14.1",
+      "numba": "0.61.2",
+      "typing_extensions": "4.14.0"
+    },
+    "variables": {
+      "LLOYDS_EXTRACTION_OFFLINE": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "PYTENSOR_FLAGS": "cxx=,base_compiledir=<case-specific>",
+      "sampler_cores": "default adopted_model.SAMPLE_CORES; output logs record sequential chains"
+    }
+  },
+  "runs": {
+    "conditional": {
+      "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
+      "checkout_initial_status": "clean",
+      "command": "python -u src/check_1254_2022_inclusion.py --output-dir D:\\tmp\\baj-rerun-output-conditional-20261030",
+      "output_hashes_sha256": {
+        "posterior.npz": "b0d3cccd806eeccfbc49e5c1967167170f5188450002deb716c1db760d9e9e16",
+        "results.json": "08e1447eeda0eccffe73c12fec3784dd01b254b43593bc4cc05b3e71ba2c4570"
+      },
+      "log_sha256": "d2444f42d84eea5697d724f3173a731b123b4e13b44f2da05af31202a571a52c",
+      "preserved_summary_files": [
+        "results/review_evidence/clean_pin_conditional_results.json"
+      ],
+      "preserved_log": "results/review_evidence/clean_pin_conditional.log",
+      "diagnostics": {
+        "divergences": 0,
+        "max_rhat": 1.0030444471008897,
+        "min_ess_bulk": 1883.2403238766642,
+        "min_ess_tail": 2146.3147160204717
+      },
+      "comparison": "All reported numerical summaries, diagnostics and vignette centres match the deposited result exactly."
+    },
+    "source": {
+      "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
+      "checkout_initial_status": "clean",
+      "command": "python -u src/check_source_numerator_sensitivity.py --output-dir D:\\tmp\\baj-rerun-output-source-20261030",
+      "output_hashes_sha256": {
+        "exclude_1274_2016.npz": "f9a0aed62c81f83c301b78c1241453f1c402bb2087c12e05f413f62cde099006",
+        "exclude_3330_2017.npz": "861810ee6059d6215671d7a37823257984ce2f6e3987d33cb7609ea249534989",
+        "exclude_both.npz": "a8be89fc9bb36cf291a647e3b349f3fa84b11ed0bcab41f8907f39722c5afe51",
+        "printed_2016_table.npz": "525685f257080c4664d29f536e2e42f914a73e781552beed66dfc1b872947f79",
+        "prior_cell_without_retranslation.npz": "4da968ae0c9d0890cda3da998d65004377ea1cfe18cce26c8a13410e30f67e9d",
+        "results.json": "2e98446eb37faf1c20ae9c15dc8dbdd5f438bbd345b139478ecef4f16611b9eb"
+      },
+      "log_sha256": "f1cd90ef92c12b8f593b7be45cf6a8398189dbc6657c4f2f5dd7bbb43c4ac15d",
+      "preserved_summary_files": [
+        "results/review_evidence/clean_pin_source_results.json"
+      ],
+      "preserved_log": "results/review_evidence/clean_pin_source.log",
+      "diagnostics": {
+        "exclude_3330_2017": {
+          "divergences": 0,
+          "max_rhat": 1.001776239820946,
+          "min_ess_bulk": 1410.2896782146263,
+          "min_ess_tail": 1437.8911187812605
+        },
+        "exclude_1274_2016": {
+          "divergences": 0,
+          "max_rhat": 1.0032417660540869,
+          "min_ess_bulk": 1374.3231825407756,
+          "min_ess_tail": 1405.8810346144076
+        },
+        "exclude_both": {
+          "divergences": 0,
+          "max_rhat": 1.0027256151712083,
+          "min_ess_bulk": 1691.4734954870908,
+          "min_ess_tail": 1742.6807875282566
+        },
+        "printed_2016_table": {
+          "divergences": 0,
+          "max_rhat": 1.0019648338510057,
+          "min_ess_bulk": 1589.524774713554,
+          "min_ess_tail": 1601.6813355694203
+        },
+        "prior_cell_without_retranslation": {
+          "divergences": 0,
+          "max_rhat": 1.0018400772510818,
+          "min_ess_bulk": 1555.4028211619068,
+          "min_ess_tail": 1784.221463538948
+        }
+      },
+      "comparison": "All reported numeric summaries and diagnostics match the deposited result exactly; posterior archive hashes differ and arrays were not compared."
+    },
+    "maturity-nogroups": {
+      "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
+      "checkout_initial_status": "clean",
+      "command": "python -u src/targeted_maturity_refit.py --case no-groups --output-dir D:\\tmp\\baj-rerun-output-maturity-nogroups-20261030",
+      "output_hashes_sha256": {
+        "candidate.json": "87a93ee038ed6845f991007728efe24ebe9c73127d9d85138f1c561100a8e2bd",
+        "diagnostics.json": "b880b25d2c74d5f1642300a38631e7fb9595f2544a9f318a1c90ad11ecaf0fb0",
+        "inputs.json": "26762ab5df964ea6ea77effa853061e9af6cdbece5f7f345d8137b9120625ee3",
+        "results.json": "965616de2096a813934433b053826bd595979333c7dd474d494baecccf297d17"
+      },
+      "log_sha256": "d9a12e0e72e9ea76452bc7857b2d75ba2ea0a0f4de1b8c3b8d6069b41671e9ec",
+      "preserved_summary_files": [
+        "results/review_evidence/clean_pin_maturity-nogroups_diagnostics.json",
+        "results/review_evidence/clean_pin_maturity-nogroups_results.json"
+      ],
+      "preserved_log": "results/review_evidence/clean_pin_maturity-nogroups.log",
+      "diagnostics": {
+        "fit_count": 7,
+        "max_rhat": 1.0075390245843587,
+        "min_ess_bulk": 1154.2693597381226,
+        "min_ess_tail": 1456.2780483149118,
+        "zero_divergences_all_fits": true
+      },
+      "comparison": "Result JSON equals the deposited result as parsed JSON."
+    },
+    "maturity-exclude": {
+      "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
+      "checkout_initial_status": "clean",
+      "command": "python -u src/targeted_maturity_refit.py --case exclude-457 --output-dir D:\\tmp\\baj-rerun-output-maturity-exclude-20261030",
+      "output_hashes_sha256": {
+        "candidate.json": "87962101ddf0d8a96bb24b4c1cbf4a448a347998b968bf823c54a7afb45d5c97",
+        "diagnostics.json": "3f839a1534ffa871332404a4d67d25ff6786e71440d6f6ccb00c8a6326d8947f",
+        "inputs.json": "05387ad60aaee6b53fe9fd4f6e8d99e7988cb29e26f07a840afb74093921f681",
+        "results.json": "d2c0ee5e3f8212e570af6185fa6d7f00af2787f2f3f5fb83d72beacefac010f8"
+      },
+      "log_sha256": "1d8079ef9bd1fc3432aebafc2ead8dc9cc53af62a9bfae36f6493d6194d37e7e",
+      "preserved_summary_files": [
+        "results/review_evidence/clean_pin_maturity-exclude_diagnostics.json",
+        "results/review_evidence/clean_pin_maturity-exclude_results.json"
+      ],
+      "preserved_log": "results/review_evidence/clean_pin_maturity-exclude.log",
+      "diagnostics": {
+        "fit_count": 7,
+        "max_rhat": 1.0043929562826153,
+        "min_ess_bulk": 1320.6415018443133,
+        "min_ess_tail": 1687.5817932820914,
+        "zero_divergences_all_fits": true
+      },
+      "comparison": "Result JSON equals the deposited result as parsed JSON."
+    },
+    "selection": {
+      "checkout_head": "c4afe6c98f1e548f4695f276609de921c70931d5",
+      "checkout_initial_status": "clean",
+      "command": "python -u src/check_missingness_sensitivity.py",
+      "result_file": "results/review_evidence/clean_pin_selection_results.json",
+      "result_sha256": "268641213b5786fdd8f9ac978fae462b162261e7ea250be174a389236ab4cd54",
+      "log_file": "results/review_evidence/clean_pin_selection.log",
+      "log_sha256": "d2eac61e75e679db95f781af8589c2074d8d46456075f8a874bfb457eda2ef9b",
+      "diagnostics": {
+        "fit_count": 11,
+        "max_rhat": 1.0034497160364368,
+        "divergences_total": 0,
+        "ess_note": "This historical producer did not record ESS."
+      },
+      "comparison": "The entire parsed result JSON exactly equals the result deposited at c4afe6c.",
+      "n_selected_unresolved": 20
+    }
+  },
+  "selection_note": "The clean-pin selection reproduction and changed-input selection sensitivity are separate runs; their records must identify their own inputs, outputs, and diagnostics. No claim about the changed-input run is made by this clean-pin addendum."
+}

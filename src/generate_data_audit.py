@@ -482,10 +482,10 @@ def md(c, r):
       "operational loader stages, not mutually interchangeable statements about economic eligibility, "
       "disclosure availability or extraction success.")
     labels = {
-        "structural_no_eligible_outcome": "Structural no eligible outcome (no mature cohort)",
-        "eligibility_unresolved": "Eligibility unresolved (no deterministic reading; the filing was not read)",
+        "structural_no_eligible_outcome": "Disclosure screen: no separately disclosed usable mature-cohort outcome or nil opening",
+        "eligibility_unresolved": "Selected eligibility-unresolved cases (unread or transferred-liability scope unresolved)",
         "scientific_exclusion": "Scientific exclusion",
-        "eligible_outcome_unavailable": "Eligible outcome unavailable",
+        "eligible_outcome_unavailable": "Outcome unavailable (one source-supported eligible; nine provisional)",
         "eligible_observed_composition_unavailable": "Eligible outcome observed; composition unavailable",
         "working_sample": "Working sample",
     }
@@ -500,8 +500,8 @@ def md(c, r):
     A(f"| **Total** | **{inf['rows']}** |")
     for line in scientific_exclusion_lines(inf):
         A(line)
-    A(f"\nThe supported disclosure-defined target contains **{inf['supported']}** records: "
-      f"the {inf['categories']['eligible_outcome_unavailable']} eligible outcomes unavailable, "
+    A(f"\nThe provisional disclosure-defined analysis target contains **{inf['supported']}** records: "
+      f"the {inf['categories']['eligible_outcome_unavailable']} unavailable outcomes (one source-supported eligible and nine provisionally included), "
       f"the {inf['categories']['eligible_observed_composition_unavailable']} observed eligible outcomes "
       f"without composition and the {inf['model']} model records. If all "
       f"{inf['categories']['eligibility_unresolved']} unresolved filings were economically eligible, "
@@ -678,17 +678,18 @@ def md(c, r):
       f"by year; the 2014 working sample has {c['sample_by_year'].get(2014, 0)} records and no coverage can be "
       "measured for 2014–2019. The working sample's shortfall is size-biased toward smaller and older-scanned "
       "syndicates (docs/data-provenance.md, section 2c), so these data cannot establish missing-at-random. "
-       f"The supported disclosure-defined target has {miss['n_supported_target_population']} records, of which "
-       f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have an eligible "
-       f"but unavailable outcome. The {miss['n_eligibility_unresolved']} filings with no deterministic reading (the "
-       "parsers found no prior-year figure and the models were not run, which says nothing about the filings) remain "
-       "eligibility-unresolved; "
+       f"The provisional disclosure-defined analysis target has {miss['n_supported_target_population']} records, of which "
+       f"{miss['n_model_sample']} enter the model and {miss['n_eligible_outcome_unavailable']} have unavailable outcomes "
+       f"(one source-supported eligible and nine provisionally included). The {miss['n_eligibility_unresolved']} selected eligibility-unresolved filings include "
+       "unread filings and source-reviewed transfers whose mature outcome scope or reserve base is unresolved; "
        f"if all were eligible the broader potential target would be {miss['n_broader_potential_target_if_all_unresolved_eligible']}. "
-       "Structural stubs and scientific exclusions are not treated as missing outcomes. The manuscript therefore "
+       "This selected scenario is not an exhaustive upper bound: inherited histories of other screened filings "
+       "have not all been audited. Disclosure-screened records and scientific exclusions are not treated as "
+       "missing outcomes in the primary analysis. The manuscript therefore "
        "reports inverse-probability weighting for model-sample membership within the supported target "
-       "and a high-volatility sensitivity for the eligible unavailable outcomes instead "
+       "and a high-volatility sensitivity for the provisionally included unavailable outcomes instead "
        f"of resting on ignorability: the disclosed 0.15-capped IPW refit moves $k$ from {f_unw['k']['mean']:.3f} to "
-      f"{f_ipw['k']['mean']:.3f}, and the eligible-outcome stress moves the conditional bracketed estimate "
+      f"{f_ipw['k']['mean']:.3f}, and the unavailable-outcome stress moves the conditional bracketed estimate "
       f"from {f_base['k']['mean']:.3f} at $c={float(c_min):.0f}$ to {f_stress['k']['mean']:.3f} at a "
        f"{float(c_max):.0f}-fold inflation within the augmented sample --- a construction that makes the "
        "unavailable outcomes more volatile, so it cannot test the adverse-to-sub-linearity direction --- while the "
@@ -726,13 +727,13 @@ def md(c, r):
     sens = json.loads(SCALE_TERM.read_text(encoding="utf-8"))["operator_sensitivity"]
     costs = sorted(100 * sens[k]["difference"]["mean"] / sens[k]["as_published"]["mean"]
                    for k in ("V1_VaR995", "V2_change995"))
-    cost = ("about %.0f%%" % costs[1]) if "%.0f" % costs[0] == "%.0f" % costs[1] \
-        else "%.0f--%.0f%%" % (costs[0], costs[1])
-    A("- **RITC handling.** External RITC injects a lumpy, non-recurring step into prior-year "
-      "development that is not a portfolio-composition property. Because the extraction records a "
+    cost = ("about %.1f%%" % costs[1]) if "%.1f" % costs[0] == "%.1f" % costs[1] \
+        else "%.1f--%.1f%%" % (costs[0], costs[1])
+    A("- **RITC handling.** External RITC can introduce a step into observed prior-year "
+      "development, or alter the cohort mix and its subsequent development. Because the extraction records a "
       "**flag and no transfer amount** (some filings disclose an RITC premium or a take-on "
       "reserve, but none discloses the transaction's contribution to the gross mature-cohort "
-      "development figure), the step cannot be backed out of $M_{i,t}$ arithmetically. "
+      "development figure), its contribution cannot be backed out of $M_{i,t}$ arithmetically. "
       "Instead RITC is modelled as a **separate Student-$t$ tail regime**: RITC-affected years take "
       "their own tail index $\\nu_{\\text{RITC}}=\\nu_{\\text{clean}}\\,e^{-\\lambda_{\\text{RITC}}}$, "
       f"{'heavier' if p_order >= 0.5 else 'lighter'} in the adopted fit ($P(\\nu_{{\\text{{RITC}}}}<\\nu_{{\\text{{clean}}}})={p_order:.2f}$; "
@@ -759,8 +760,8 @@ def md(c, r):
       f"syndicate numbers, only **{c['present_all']} appear in all 11 years**, while {c['year_dist'].get(1,0)} "
       f"appear once (distribution of years-present: {c['year_dist']}). Syndicate numbers are Lloyd's "
       "stable identifiers and are used as the panel key; mergers, transfers of business and "
-      "renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Entry/exit is "
-      "thus genuine (syndicates opening, closing, or going into run-off), and the reporting-year "
+      "renumberings are **not** explicitly reconciled beyond what the RITC notes reveal. Appearance and "
+      "disappearance in this panel can reflect economic entry or exit, coverage, or identity changes. The reporting-year "
       "shared-shock and any within-syndicate clustering treat each number as one entity across the "
       "window.")
 

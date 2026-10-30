@@ -30,6 +30,15 @@ INPUTS = ('model/exposure_results.json', 'model/dispersion_calibration_ritc.json
           'vignettes/vignette-2/target_transition.json')
 
 
+def conditional_sample(sample, scenario):
+    """Append exactly the source-backed 1254/2022 scenario to the headline sample."""
+    import numpy as np
+    S, R, H, yr, synd, ritc = sample
+    return (np.append(S, scenario['severity']), np.append(R, scenario['reserve_base_gbp_m']),
+            np.append(H, scenario['hhi']), np.append(yr, 2022),
+            np.append(synd, 1254), np.append(ritc, 1.0))
+
+
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -90,12 +99,7 @@ def run(output):
     baseline = rv.centre_only(head_draws, pool, pool_ritc, cfg)
     if baseline != published['centre']:
         raise SystemExit('headline centre did not reproduce')
-    newS = np.append(S, scenario['severity'])
-    newR = np.append(R, scenario['reserve_base_gbp_m'])
-    newH = np.append(H, scenario['hhi'])
-    newyr = np.append(yr, 2022)
-    newsyn = np.append(synd, 1254)
-    newritc = np.append(ritc, 1.0)
+    newS, newR, newH, newyr, newsyn, newritc = conditional_sample(sample, scenario)
     print('START 633-record conditional 1254/2022 refit:', scenario, flush=True)
     params, idata = fit(newS, newR, newH, newyr, newritc)
     summary = az.summary(idata, hdi_prob=.95, round_to='none')
@@ -103,7 +107,8 @@ def run(output):
             'max_rhat': float(summary.r_hat.max()),
             'min_ess_bulk': float(summary.ess_bulk.min()),
             'min_ess_tail': float(summary.ess_tail.min())}
-    if diag['divergences'] or diag['max_rhat'] > 1.01:
+    if (diag['divergences'] or not np.isfinite(diag['max_rhat']) or diag['max_rhat'] > 1.01
+            or any(not np.isfinite(diag[k]) or diag[k] < 400 for k in ('min_ess_bulk', 'min_ess_tail'))):
         raise SystemExit('nonconverged conditional fit: %s' % diag)
     saved = output / 'posterior.npz'
     np.savez_compressed(saved, **{str(k): v.values for k, v in idata.posterior.data_vars.items()},

@@ -1,7 +1,7 @@
 # Currency Determination and FX Conversion to GBP
 
 All monetary amounts in the analysis dataset are expressed in **GBP millions**.
-Syndicate annual reports are presented in either GBP or USD; USD-presented reports
+The reports read for the analysis are presented in either GBP or USD; USD-presented reports
 are converted to GBP at the **reporting-date spot rate**. This note documents (1) how
 each report's currency was determined, with provenance; (2) where the exchange rates
 come from and exactly which rates are used; and (3) how and where the conversion is

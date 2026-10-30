@@ -1185,8 +1185,8 @@ DEPTH_CELLS = {
         (2019, "372,154", "377,617"), (2020, "279,086", "260,195")],
         "the gross table (the RAG grid is the net table of the next page)"),
     "1609_2023": ("000", "USD", "cumulative", 41, None, [(2021, "57,866", "66,700")],
-                  "the table is printed transposed: read by rows UY2021 is 16,028, 57,866, 66,700; no underwriting year "
-                  "up to 2020 exists (inception 2021), so there is no figure on u <= t-3"),
+                  "the table is printed transposed: read by rows UY2021 is 16,028, 57,866, 66,700; the displayed table "
+                  "contains no underwriting year up to 2020 (inception 2021); inherited underlying history is not established by the display, so no figure on u <= t-3 is disclosed"),
     "1991_2018": ("000", "GBP", "cumulative", 30, None, [
         (2013, "25,912", "28,621"), (2014, "42,715", "44,725"), (2015, "60,761", "60,127"), (2016, "39,226", "77,816")],
         "the 'After six years' row's extra cells (16,410, 17,235, 8,583, 16) are not staircase cells and are not used"),

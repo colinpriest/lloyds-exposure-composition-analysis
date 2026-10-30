@@ -1,0 +1,53 @@
+working sample n=632; matched to a usable triangle: 613 (97.0%)
+  phi(delta=inf) vs log R: Spearman +0.494 (p=0.000); tercile means ['0.681', '0.807', '0.847']
+  phi(delta=  4) vs log R: Spearman +0.466 (p=0.000); tercile means ['0.580', '0.690', '0.724']
+  phi(delta=  2) vs log R: Spearman +0.421 (p=0.000); tercile means ['0.480', '0.564', '0.590']
+  phi(delta=  1) vs log R: Spearman +0.337 (p=0.000); tercile means ['0.313', '0.359', '0.370']
+  |z| by phi tercile (delta=inf): ['0.893', '0.987', '1.188']  Kruskal p=0.008; control coef_logR=-0.113 (t=-2.95), coef_logphi=+0.711 (t=+4.00)
+  |z| by phi tercile (delta=  4): ['0.878', '0.962', '1.229']  Kruskal p=0.012; control coef_logR=-0.118 (t=-3.10), coef_logphi=+0.724 (t=+4.35)
+  |z| by phi tercile (delta=  2): ['0.920', '0.934', '1.214']  Kruskal p=0.076; control coef_logR=-0.121 (t=-3.24), coef_logphi=+0.759 (t=+4.83)
+  |z| by phi tercile (delta=  1): ['0.912', '0.871', '1.285']  Kruskal p=0.049; control coef_logR=-0.118 (t=-3.32), coef_logphi=+0.799 (t=+5.69)
+
+mixed-scope denominator refits (primary V2 = rebased denominator and size covariate):
+  refit subsample n=607 (dropped 6 matched records with phi<0.1 at some delta)
+    delta=inf: min phi 0.2439, 3 matched record(s) below the guard
+    delta=  4: min phi 0.2008, 3 matched record(s) below the guard
+    delta=  2: min phi 0.1637, 4 matched record(s) below the guard
+    delta=  1: min phi 0.1061, 6 matched record(s) below the guard
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 70 seconds.
+    baseline (original S, same n)      k=0.582 [0.504,0.678]  floor=0.0311  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 72 seconds.
+    V2 mixed-scope denominator (delta=inf) k=0.551 [0.503,0.613]  floor=0.0357  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 74 seconds.
+    V2 mixed-scope denominator (delta=4) k=0.550 [0.503,0.610]  floor=0.0417  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 81 seconds.
+    V2 mixed-scope denominator (delta=2) k=0.552 [0.502,0.614]  floor=0.0509  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 90 seconds.
+    V2 mixed-scope denominator (delta=1) k=0.554 [0.503,0.616]  floor=0.0818  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 84 seconds.
+    V1 severity only (delta=inf)       k=0.539 [0.502,0.591]  floor=0.0332  div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 89 seconds.
+    V1 severity only (delta=2)         k=0.535 [0.502,0.583]  floor=0.0484  div=0
+
+Wrote D:\tmp\baj-rerun-output-maturity-exclude-20261030\results.json

@@ -874,3 +874,16 @@ def test_the_about_text_describes_one_operator_and_what_the_pool_carries():
     assert "would have looked like" not in about and "two sequential adjustments" not in about
     assert "applies one transfer operator" in about
     assert "neither identifies nor removes" in about and "market-wide movement" in about
+
+
+def test_survivor_uses_full_pool_and_strict_inequality_with_ties():
+    points = harness('console.log(JSON.stringify(empiricalSurvivor([-1, 0, 1, 1, 2])));', extra=('empiricalSurvivor',))
+    assert points == [{'x': 1, 'y': 0.2}, {'x': 2, 'y': 0}]
+
+
+def test_log_survivor_extends_to_maximum_while_omitting_zero_endpoint():
+    points = harness('console.log(JSON.stringify(logSurvivor([-1, 0, 1, 1, 2])));',
+                     extra=('empiricalSurvivor', 'logSurvivor'))
+    assert points == [{'x': 1, 'y': 0.2}, {'x': 2, 'y': 0.2}]
+    template = _read(TEMPLATE)
+    assert 'zero at maximum omitted on log axis' in template

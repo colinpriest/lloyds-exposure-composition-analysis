@@ -1,0 +1,67 @@
+target=666 model-sample=632 unavailable outcomes=10; coef(log R)=+0.948; p range [0.058,0.999]; weight range [0.95,6.31]
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 51 seconds.
+    unweighted headline                k=0.624 [0.524,0.735] floor=0.0289 nu=3.96 div=0
+Initializing NUTS using jitter+adapt_diag...
+C:\Users\colin\AppData\Roaming\Python\Python312\site-packages\pytensor\tensor\rewriting\elemwise.py:954: UserWarning: Loop fusion failed because the resulting node would exceed the kernel argument limit.
+  warn(
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 39 seconds.
+    bounded IPW cap 0.10               k=0.711 [0.623,0.792] floor=0.0211 nu=3.58 div=0
+Initializing NUTS using jitter+adapt_diag...
+C:\Users\colin\AppData\Roaming\Python\Python312\site-packages\pytensor\tensor\rewriting\elemwise.py:954: UserWarning: Loop fusion failed because the resulting node would exceed the kernel argument limit.
+  warn(
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 39 seconds.
+    bounded IPW cap 0.15               k=0.672 [0.582,0.763] floor=0.0248 nu=3.76 div=0
+Initializing NUTS using jitter+adapt_diag...
+C:\Users\colin\AppData\Roaming\Python\Python312\site-packages\pytensor\tensor\rewriting\elemwise.py:954: UserWarning: Loop fusion failed because the resulting node would exceed the kernel argument limit.
+  warn(
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 39 seconds.
+    bounded IPW cap 0.20               k=0.650 [0.550,0.739] floor=0.0267 nu=3.84 div=0
+    stresses under unweighted       V1 VaR99.5 0.3424 (+0.00%)  V2 change 0.0155 (+0.00%)  [size_only]
+    stresses under ipw_cap_0.10     V1 VaR99.5 0.3649 (+6.58%)  V2 change 0.0162 (+4.96%)  [size_only]
+    stresses under ipw_cap_0.15     V1 VaR99.5 0.3533 (+3.18%)  V2 change 0.0161 (+4.36%)  [size_only]
+    stresses under ipw_cap_0.20     V1 VaR99.5 0.3518 (+2.75%)  V2 change 0.0160 (+3.74%)  [size_only]
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 43 seconds.
+    eligible unavailable x1            k=0.627 [0.523,0.727] floor=0.0284 nu=3.98 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 42 seconds.
+    eligible unavailable x1.5          k=0.611 [0.510,0.702] floor=0.0292 nu=4.02 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 42 seconds.
+    eligible unavailable x2            k=0.599 [0.509,0.691] floor=0.0296 nu=4.00 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 41 seconds.
+    eligible unavailable x3            k=0.584 [0.504,0.666] floor=0.0299 nu=3.83 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 40 seconds.
+    eligible unavailable x5            k=0.575 [0.504,0.659] floor=0.0300 nu=3.50 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 42 seconds.
+    known unavailable plus unresolved x1 k=0.602 [0.511,0.693] floor=0.0298 nu=4.08 div=0
+Initializing NUTS using jitter+adapt_diag...
+Sequential sampling (4 chains in 1 job)
+NUTS: [theta, log_tot, f, tau_s, z_s, nu_clean, lambda_ritc, beta_ritc]
+Sampling 4 chains for 1_500 tune and 1_500 draw iterations (6_000 + 6_000 draws total) took 38 seconds.
+    known unavailable plus unresolved x5 k=0.551 [0.502,0.616] floor=0.0322 nu=3.32 div=0
+Wrote D:\tmp\baj-rerun-20261030-selection-690\results\check_missingness_sensitivity_results.json

@@ -236,6 +236,7 @@ def test_a_confirmed_stated_figure_is_disclosed_whatever_the_annotation_says():
 
 def _parsed(tag, basis="gross", pct=1.0, opening=10.0, lob=True, eligible=False):
     return {"data_quality_tag": tag, "pyd_basis": basis, "pyd_pct": pct,
+            "s_raw_a": None if pct is None else pct / 100,
             "opening_reserves_gbp_m": opening, "lob_severity_computed": lob,
             "eligible_for_capital": eligible}
 

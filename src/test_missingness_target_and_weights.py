@@ -37,7 +37,7 @@ def sources():
             "m01": MC.no_mature_cohort_records(),
             # the first-year reports with nil openings the PC read from their filings (data/eligibility_from_filing.json)
             "first_year": {"syndicate_%s.json" % k for k, e in ra.load_filing_eligibility().items()
-                           if e["kind"] == ra.FIRST_YEAR_NIL_OPENING},
+                           if e["kind"] == ra.FIRST_YEAR_NIL_OPENING and not e.get("reserve_base_evidence")},
             "records": sorted(p.name for p in (ROOT / "pdf_extraction").glob("syndicate_*.json"))}
 
 
@@ -55,7 +55,7 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
     # the structural filings are the audit's ineligible stubs and the records the loader's rule M01 skips (the
     # decision of 1 October 2026), each with its entry in data/no_mature_cohort_records.json
     assert {row["file"] for row in rows if row["category"] == "structural_no_eligible_outcome"} == {
-        name for name, decision in sources["audit"].items() if decision["economic_eligibility"] == "ineligible"
+        name for name, decision in sources["audit"].items() if decision.get("decision") == "no_disclosed_mature_diagonal_inherited_history_unresolved"
     } | set(sources["m01"]) | sources["first_year"]
     # the loader's decisions on the corpus, as measured. The author's decision D1 (30 September 2026) made six
     # negative-premium years whose filings state run-off scientific exclusions: four had been composition-unavailable
@@ -103,9 +103,9 @@ def test_dispositions_separate_structural_and_unresolved_cases(sources):
 def test_source_audited_skips_carry_substantive_evidence(sources):
     rows = _ledger()
     skipped = [row for row in rows if row["category"] == "structural_no_eligible_outcome"]
-    assert len(skipped) == (sum(d["economic_eligibility"] == "ineligible" for d in sources["audit"].values())
+    assert len(skipped) == (sum(d.get("decision") == "no_disclosed_mature_diagonal_inherited_history_unresolved" for d in sources["audit"].values())
                             + len(sources["m01"]) + len(sources["first_year"]))
-    assert all(row["economic_eligibility"] == "ineligible" for row in skipped)
+    assert all(row["economic_eligibility"] in {"unresolved", "outside_reserve-base_estimand"} for row in skipped)
     assert all("year" in row["classification_evidence"].lower()
                or "cohort" in row["classification_evidence"].lower()
                for row in skipped)
@@ -195,6 +195,7 @@ def test_the_unresolved_filings_are_read_from_the_records_and_the_audit(tmp_path
                          ("syndicate_3_2016.json", {"models": {}})):
         (tmp_path / "pdf_extraction" / name).write_text(json.dumps(record), encoding="utf-8")
     monkeypatch.setattr(MC, "SD", tmp_path)
+    monkeypatch.setattr(MC, "load_filing_eligibility", lambda: {})
     monkeypatch.setattr(MC, "_structural_decisions", lambda: {
         "syndicate_2_2015.json": {"economic_eligibility": "unresolved"},
         "syndicate_4_2017.json": {"economic_eligibility": "ineligible"}})
@@ -246,3 +247,30 @@ def test_the_recorded_fits_are_stored_unrounded():
     assert len(means) >= len(cms.VARIABLES) * 12
     rounded = sorted(key for key, v in means.items() if abs(v * 1000 - round(v * 1000)) < 1e-9)
     assert not rounded, "rounded means stored: %s" % rounded[:5]
+
+
+def test_source_reviewed_inherited_cases_remain_unresolved_and_use_audited_proxies():
+    import missingness_check as MC
+    rows = {r['file']: r for r in MC.add_size_proxies(MC.classify_filings())}
+    for key in ('1980_2019', '3268_2019', '6124_2015', '6118_2014'):
+        row = rows['syndicate_' + key + '.json']
+        assert row['category'] == 'eligibility_unresolved'
+        assert row['economic_eligibility'] == 'unresolved'
+    assert rows['syndicate_3268_2019.json']['size_proxy'] == pytest.approx(44.829)
+    assert rows['syndicate_1980_2019.json']['size_proxy'] == pytest.approx(167.024643907)
+    assert rows['syndicate_6124_2015.json']['size_proxy'] is None
+    assert rows['syndicate_6118_2014.json']['size_proxy_source'] == 'same_syndicate_median'
+    no_diagonal = [r for r in rows.values() if r['detail'] == 'no_disclosed_mature_diagonal']
+    assert len(no_diagonal) == 91
+    assert all(r['economic_eligibility'] == 'unresolved' for r in no_diagonal)
+
+
+def test_unavailable_outcome_target_labels_nine_as_provisional():
+    import missingness_check as MC
+    rows = [r for r in MC.classify_filings() if r['category'] == 'eligible_outcome_unavailable']
+    assert len(rows) == 10
+    supported = [r for r in rows if r['economic_eligibility'] == 'eligible']
+    provisional = [r for r in rows if r['economic_eligibility'] == 'unresolved']
+    assert [r['file'] for r in supported] == ['syndicate_1254_2022.json']
+    assert len(provisional) == 9
+    assert all('provisional target inclusion' in r['classification_evidence'] for r in provisional)

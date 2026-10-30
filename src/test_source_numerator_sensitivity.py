@@ -56,3 +56,11 @@ def test_frozen_sample_contains_one_each_and_adopted_figure_matches():
     assert keys.count("3330_2017") == keys.count("1274_2016") == 1
     data = json.loads((ROOT / "data/mature_cohort_figures.json").read_text(encoding="utf-8"))
     assert data["1274_2016"]["figure_m"] == SOURCE_BASE_USD_M
+
+
+def test_case_mapping_is_the_intended_source_record_not_just_a_self_consistent_key():
+    from check_source_numerator_sensitivity import EXCLUSIONS, SOURCE_KEY
+    assert SOURCE_KEY == "1274_2016"
+    assert EXCLUSIONS == {"exclude_3330_2017": ("3330_2017",),
+                          "exclude_1274_2016": ("1274_2016",),
+                          "exclude_both": ("3330_2017", "1274_2016")}

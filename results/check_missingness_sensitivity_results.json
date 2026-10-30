@@ -2,8 +2,8 @@
   "n_model_sample": 632,
   "n_supported_target_population": 666,
   "n_target_population": 666,
-  "n_eligibility_unresolved": 20,
-  "n_broader_potential_target_if_all_unresolved_eligible": 686,
+  "n_eligibility_unresolved": 24,
+  "n_broader_potential_target_if_all_unresolved_eligible": 690,
   "n_eligible_outcome_unavailable": 10,
   "seed": 42,
   "selection_response": "membership in the 632-record model sample",
@@ -580,10 +580,11 @@
     "imputation": {
       "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
       "n_size_imputed_working_sample_median": 0,
+      "size_imputed_working_sample_median_records": [],
       "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
     },
     "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
-    "interpretation": "one-direction sensitivity within the supported target; not a bound",
+    "interpretation": "one-direction sensitivity within the provisional target; one unavailable outcome is source-supported eligible and nine are provisionally included; not a bound",
     "by_c": {
       "1.0": {
         "k": {
@@ -768,7 +769,7 @@
     }
   },
   "eligibility_unresolved_stress": {
-    "n_pseudo": 30,
+    "n_pseudo": 34,
     "records": [
       "syndicate_1254_2022.json",
       "syndicate_3330_2014.json",
@@ -785,11 +786,13 @@
       "syndicate_1274_2014.json",
       "syndicate_1882_2014.json",
       "syndicate_1897_2014.json",
+      "syndicate_1980_2019.json",
       "syndicate_2088_2014.json",
       "syndicate_2232_2024.json",
       "syndicate_2526_2014.json",
       "syndicate_2987_2014.json",
       "syndicate_3002_2014.json",
+      "syndicate_3268_2019.json",
       "syndicate_3500_2015.json",
       "syndicate_3622_2014.json",
       "syndicate_3622_2018.json",
@@ -799,7 +802,9 @@
       "syndicate_44_2014.json",
       "syndicate_6103_2014.json",
       "syndicate_6111_2014.json",
-      "syndicate_6112_2014.json"
+      "syndicate_6112_2014.json",
+      "syndicate_6118_2014.json",
+      "syndicate_6124_2015.json"
     ],
     "size_m": {
       "min": 1.041,
@@ -808,86 +813,91 @@
     },
     "imputation": {
       "size": "filing or same-syndicate proxy where available; otherwise working-sample median",
-      "n_size_imputed_working_sample_median": 0,
+      "n_size_imputed_working_sample_median": 1,
+      "size_imputed_working_sample_median_records": [
+        "syndicate_6124_2015.json"
+      ],
       "hhi": "record HHI where available, otherwise same-syndicate median, otherwise working-sample median"
     },
     "placement": "equally spaced Student-t quantiles scaled by c*sigma(R,H)",
-    "interpretation": "assumes all 20 records with no deterministic reading were economically eligible, appends them with the 10 known unavailable outcomes, and expands the potential target to 686; not a bound or an estimate of their eligibility",
+    "interpretation": "assumes the 24 selected eligibility-unresolved records were economically eligible, appends them with the 10 unavailable outcomes (one source-supported eligible and nine provisionally included), and expands the selected scenario to 690; not an exhaustive upper bound or an estimate of their eligibility; other disclosure-screened histories remain unverified",
     "by_c": {
       "1.0": {
         "k": {
-          "mean": 0.5928583253299768,
-          "hdi_2.5": 0.5128954490562411,
-          "hdi_97.5": 0.6805169122601036
+          "mean": 0.6024894132859095,
+          "hdi_2.5": 0.5105241185447019,
+          "hdi_97.5": 0.6925995957086094
         },
         "sd_undiv": {
-          "mean": 0.030140130140617723,
-          "hdi_2.5": 0.016478910353639995,
-          "hdi_97.5": 0.04126482566523577
+          "mean": 0.029754636642177982,
+          "hdi_2.5": 0.015142680461314766,
+          "hdi_97.5": 0.04190060655783793
         },
         "sd_div": {
-          "mean": 0.04212486513536066,
-          "hdi_2.5": 0.032107668205958076,
-          "hdi_97.5": 0.053019120758814424
+          "mean": 0.04248989417969138,
+          "hdi_2.5": 0.031427409859761966,
+          "hdi_97.5": 0.05351551592376807
         },
         "nu_clean": {
-          "mean": 4.073925924991758,
-          "hdi_2.5": 2.8479646424181797,
-          "hdi_97.5": 5.456423383291999
+          "mean": 4.076027448178161,
+          "hdi_2.5": 2.890339336610302,
+          "hdi_97.5": 5.489309434434806
         },
         "nu_ritc": {
-          "mean": 5.492486608203413,
-          "hdi_2.5": 1.2980363739433438,
-          "hdi_97.5": 12.278977966862795
+          "mean": 4.709222338309384,
+          "hdi_2.5": 1.0030049441475806,
+          "hdi_97.5": 10.457842070471738
         },
         "tau_s": {
-          "mean": 0.12707057197420604,
-          "hdi_2.5": 0.00011037532026631298,
-          "hdi_97.5": 0.24471459277240631
+          "mean": 0.10913697368741704,
+          "hdi_2.5": 0.00024601494898521194,
+          "hdi_97.5": 0.22481736859162207
         },
         "_diag": {
-          "max_rhat": 1.0016001368481717,
+          "max_rhat": 1.001100340192849,
           "divergences": 0
         }
       },
       "5.0": {
         "k": {
-          "mean": 0.5459004173696369,
-          "hdi_2.5": 0.501926143946343,
-          "hdi_97.5": 0.6054607371032106
+          "mean": 0.55073012003921,
+          "hdi_2.5": 0.5024455126604385,
+          "hdi_97.5": 0.6156063034078371
         },
         "sd_undiv": {
-          "mean": 0.03254963789760115,
-          "hdi_2.5": 0.020298367950964374,
-          "hdi_97.5": 0.045422354516001344
+          "mean": 0.03217970152648228,
+          "hdi_2.5": 0.01894435243128665,
+          "hdi_97.5": 0.04555706954937002
         },
         "sd_div": {
-          "mean": 0.04614784728149112,
-          "hdi_2.5": 0.03262507997500647,
-          "hdi_97.5": 0.06067290838132797
+          "mean": 0.04665575064471642,
+          "hdi_2.5": 0.032903231757227556,
+          "hdi_97.5": 0.0613241572754023
         },
         "nu_clean": {
-          "mean": 3.3376552786239264,
-          "hdi_2.5": 2.4024164077811547,
-          "hdi_97.5": 4.344047958053654
+          "mean": 3.3173140970569728,
+          "hdi_2.5": 2.3870851125829025,
+          "hdi_97.5": 4.27228925834237
         },
         "nu_ritc": {
-          "mean": 2.231457846351618,
-          "hdi_2.5": 0.865240894486246,
-          "hdi_97.5": 4.141563911771343
+          "mean": 1.605876650748482,
+          "hdi_2.5": 0.7094055229619677,
+          "hdi_97.5": 2.636341296509871
         },
         "tau_s": {
-          "mean": 0.36858991062769064,
-          "hdi_2.5": 0.1610865481826101,
-          "hdi_97.5": 0.6083688058499355
+          "mean": 0.3638169176878223,
+          "hdi_2.5": 0.15609453998759076,
+          "hdi_97.5": 0.5780901980384002
         },
         "_diag": {
-          "max_rhat": 1.0023041320963602,
+          "max_rhat": 1.0030575868611618,
           "divergences": 0
         }
       }
     },
     "n_known_eligible_unavailable": 10,
-    "n_eligibility_unresolved": 20
+    "n_eligibility_unresolved": 24,
+    "n_source_supported_eligible_unavailable": 1,
+    "n_provisionally_assumed_unavailable": 9
   }
 }

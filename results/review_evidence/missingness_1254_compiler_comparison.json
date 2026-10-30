@@ -1,0 +1,25 @@
+{
+  "purpose": "Preserve the two review reruns independently of the original 1254 provenance record and the subsequent corrected selection analysis.",
+  "review_date": "2026-10-30",
+  "environment": "Windows, Python 3.12.6, 4 NUTS chains, seed 42; with g++ available on PATH versus without g++ on PATH. Exact compiler version was not recorded.",
+  "provenance_limits": "The review reported that each compiler setting reproduced its own digits; the archives below preserve one output per setting. They do not themselves establish a clean-tree execution or replace the original run record.",
+  "runs": {
+    "compiler_available": {
+      "result_file": "results/review_evidence/missingness_1254_compiler_available.json",
+      "result_sha256_normalized_lf": "d1240d15418010e28bd6bf42422037b3ee5d879df17365ea8fb2e92f7e3e13c1",
+      "script_sha256_normalized_lf": "f462d1a1fa1da56ad4fd359ebc16bd397abdab2f0576c13506f69d9a5fc4158a",
+      "exposure_sha256_normalized_lf": "6e70c087129512f142d8bae0ef298e1b5768c67f8c8a2f46fd9f749993bd77ac",
+      "unweighted_k": 0.6238737606675849,
+      "ipw_015_k": 0.6716128147765442
+    },
+    "compiler_unavailable": {
+      "result_file": "results/review_evidence/missingness_1254_compiler_unavailable.json",
+      "result_sha256_normalized_lf": "268641213b5786fdd8f9ac978fae462b162261e7ea250be174a389236ab4cd54",
+      "script_sha256_normalized_lf": "f462d1a1fa1da56ad4fd359ebc16bd397abdab2f0576c13506f69d9a5fc4158a",
+      "exposure_sha256_normalized_lf": "6e70c087129512f142d8bae0ef298e1b5768c67f8c8a2f46fd9f749993bd77ac",
+      "unweighted_k": 0.6238737606675849,
+      "ipw_015_k": 0.6715616054137397
+    }
+  },
+  "observed": "The unweighted k mean agrees exactly; the 0.15 capped weighted k mean changes with compiler availability."
+}

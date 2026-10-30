@@ -1380,8 +1380,8 @@ def verify():
 
     Fails on: no recorded run; a declared output missing, untracked, or differing
     (canonical JSON with only VOLATILE fields excluded; byte comparison otherwise);
-    or any OTHER tracked file under model/ or results/ changed without a ran script
-    declaring it. The old verifier filtered to .json and could not see a changed
+    or a changed known output or file under a generated-only directory without a
+    ran script declaring it. The old verifier filtered to .json and could not see a changed
     .npz; this one checks exactly what the manifest declares, and nothing passes by
     being outside the filter.
     """
@@ -1453,11 +1453,13 @@ def verify():
     print("verify: of the unique files, %d byte-identical; %d identical after "
           "excluding the documented\n        volatile field(s)" % (n_byte, n_canon))
 
-    r = subprocess.run(["git", "-C", HERE, "status", "--porcelain", "--",
-                        "model", "results"], capture_output=True, text=True)
-    for line in r.stdout.splitlines():
-        rel = line[3:].strip().replace("\\", "/")
-        if rel and rel not in declared:
+    # Include every declared output, and generated-only directories where a new
+    # undeclared output would otherwise escape a partial run's coverage check.
+    known_outputs = set(declared_outputs())
+    generated_roots = ("model/", "results/", "vignettes/", "paper_pack/", "figures/")
+    for path in changed_paths(HERE):
+        rel = path.replace("\\", "/")
+        if (rel in known_outputs or rel.startswith(generated_roots)) and rel not in declared:
             ok = False
             print("verify: *** %-48s changed but not declared by any ran script"
                   % rel)

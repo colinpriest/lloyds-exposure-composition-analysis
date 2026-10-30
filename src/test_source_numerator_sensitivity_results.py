@@ -18,7 +18,8 @@ def test_result_matches_targeted_run_and_normalized_producer():
     provenance = read(PROVENANCE)
     assert hashlib.sha256(RESULT.read_bytes().replace(b'\r\n', b'\n')).hexdigest() == provenance["result_sha256"]
     script = ROOT / "src/check_source_numerator_sensitivity.py"
-    blob = subprocess.check_output(["git", "-C", str(ROOT), "hash-object", str(script)], text=True).strip()
+    # The deposited run used this historical producer; later repairs do not rewrite that provenance.
+    blob = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "4816e079:src/check_source_numerator_sensitivity.py"], text=True).strip()
     assert blob == provenance["producer"]["normalized_git_blob"]
     assert result["code_commit"] == provenance["run_code_commit"]
     assert result["working_tree_dirty"]

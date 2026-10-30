@@ -1,0 +1,39 @@
+{
+  "purpose": "Changed-input provisional-target sensitivity; separate from the clean-pin reproduction and not a full manifest run.",
+  "date": "2026-10-30",
+  "base_commit": "c4afe6c98f1e548f4695f276609de921c70931d5",
+  "command": "python -u src/check_missingness_sensitivity.py",
+  "environment_record": "results/review_evidence/clean_pin_targeted_refits_20261030.json",
+  "input_patch": "results/review_evidence/selection_690_input.patch.gz",
+  "input_patch_sha256": "edde3dbe217da0c8e1ab4c9e0f442cecce6efed02dfb0803ff0b9ce0c3f7286d",
+  "raw_result": "results/review_evidence/selection_690_raw_results.json",
+  "raw_result_sha256": "ffbfdd56a3c0c36025b0d9fd3fb621ea94ef060b9c4547a99671bc7b24e4ad24",
+  "run_log": "results/review_evidence/selection_690_run.log",
+  "run_log_sha256": "e4137b3b468814a82621a3233fb27de7475ca037e00ba8e7f059eb86c454cc3f",
+  "published_result": "results/check_missingness_sensitivity_results.json",
+  "published_result_sha256": "e8d3cf1ce6e375bace78147adf2ea2d7e1341d853adcd5dd472243ba2055ceba",
+  "post_run_adaptations": "Updated interpretation strings to name the 24 selected cases and the nine provisional eligibility assumptions; added names for existing median imputations and explicit one-plus-nine counts. No numerical fit, propensity, pool or stress values changed. Subsequent source-audit wording, loader reason, input line ending normalisation and review metadata changes preserve the same sampler inputs; the patch records the exact run state.",
+  "diagnostics": {
+    "fit_count": 11,
+    "max_rhat": 1.0034497160364368,
+    "divergences_total": 0,
+    "ess": "The run producer recorded R-hat and divergences but did not save ESS."
+  },
+  "population": {
+    "model": 632,
+    "provisional_target": 666,
+    "selected_unresolved": 24,
+    "selected_scenario": 690
+  },
+  "independent_input_comparison": {
+    "script": "results/review_evidence/baj-compare-selection-inputs.py",
+    "files": {
+      "baj-compare-selection-inputs.py": "36b682042b5b60cee5ad453094bd79fa84ad722397b11f36129cf9a360859ac2",
+      "baj-selection-run-inputs.json": "c316c33c0db64bfafbc3b5c1e3284d44839afa870284e54e223b173e36971303",
+      "baj-selection-current-inputs.json": "c316c33c0db64bfafbc3b5c1e3284d44839afa870284e54e223b173e36971303"
+    },
+    "result": "All sample arrays, target keys and sizes, unavailable and selected unresolved keys, pseudo-reserve, HHI, year and regime arrays match exactly between the run snapshot and the current implementation."
+  },
+  "input_patch_uncompressed_sha256": "6f3f1485045954cd21485f99bbf7dc7daed3b3c025b0678aa6744124914dd969",
+  "input_patch_recovery": "Decompress the gzip file byte for byte, then apply to a clean checkout of the base commit with git apply --ignore-whitespace <decompressed-patch-path>. The patch has CRLF context, so plain git apply may fail on an LF checkout."
+}

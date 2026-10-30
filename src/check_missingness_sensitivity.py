@@ -1,7 +1,7 @@
 """Selection weighting and two missing-outcome sensitivities.
 
-``missingness_check.py`` first separates structural absence of an outcome,
-scientific exclusions, eligible but unavailable outcomes, observed outcomes with
+``missingness_check.py`` first separates the disclosure-based outcome screen,
+scientific exclusions, unavailable outcomes (with eligibility provisional for nine), observed outcomes with
 missing composition, and the complete model records. This script then:
 
 1. fits ``P(model-sample membership)`` over the supported disclosure-defined
@@ -258,6 +258,9 @@ def _pseudo_inputs(records, dispositions, R, H):
         "n_size_imputed_working_sample_median": int(sum(
             row["size_proxy"] is None for row in records
         )),
+        "size_imputed_working_sample_median_records": [
+            row["file"] for row in records if row["size_proxy"] is None
+        ],
         "hhi": (
             "record HHI where available, otherwise same-syndicate median, otherwise "
             "working-sample median"
@@ -421,16 +424,16 @@ def main():
     result["eligible_outcome_stress"] = _stress_fit(
         unavailable, dispositions, S, R, H, year, ritc, calibration, C_GRID,
         "eligible unavailable",
-        "one-direction sensitivity within the supported target; not a bound",
+        "one-direction sensitivity within the provisional target; one unavailable outcome is source-supported eligible and nine are provisionally included; not a bound",
     )
     broader_missing = unavailable + unresolved
     result["eligibility_unresolved_stress"] = _stress_fit(
         broader_missing, dispositions, S, R, H, year, ritc, calibration,
         UNRESOLVED_C_GRID, "known unavailable plus unresolved",
-        f"assumes all {len(unresolved)} records with no deterministic reading were economically eligible, "
-        f"appends them with the {len(unavailable)} known unavailable outcomes, and expands "
+        f"assumes the {len(unresolved)} selected eligibility-unresolved records were economically eligible, "
+        f"appends them with the {len(unavailable)} unavailable outcomes (one source-supported eligible and nine provisionally included), and expands "
         f"the potential target to {len(target) + len(unresolved)}; "
-        "not a bound or an estimate of their eligibility",
+        "not an exhaustive upper bound or an estimate of their eligibility; other disclosure-screened histories remain unverified",
     )
     result["eligibility_unresolved_stress"]["n_known_eligible_unavailable"] = len(unavailable)
     result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
