@@ -7876,15 +7876,17 @@ def _gen_fig_power_law_size(results):
     # Overlay scatter if available
     scatter_pts = _safe_get(results, "joint_composition", "scatter_points", default=[])
     if scatter_pts:
-        rx = [p.get("reserves", p.get("x", 0)) for p in scatter_pts]
-        ry = [p.get("var_sq", p.get("y", 0)) for p in scatter_pts]
-        ax.scatter(rx, ry, alpha=0.3, s=15, color=_PP_RAW_COL, label="Observations")
+        valid = [p for p in scatter_pts if p.get("reserves") is not None and p.get("y_raw_sq") is not None]
+        rx = [p["reserves"] for p in valid]
+        ry = [p["y_raw_sq"] for p in valid]
+        ax.scatter(rx, ry, alpha=0.3, s=15, color=_PP_RAW_COL, label="Squared severities")
 
     r_range = np.linspace(50, 5000, 200)
     s2 = float(A) + float(B) * r_range ** float(C)
     ax.plot(r_range, s2, '-', color=_PP_ADV_COL, linewidth=2,
             label=f"$\\sigma^2 = {A:.4f} + {B:.4f} \\cdot R^{{{C:.4f}}}$")
-    _setup_ax(ax, "Reserves (£m)", "$\\sigma^2$", "Power-law size dispersion")
+    ax.set_yscale("symlog", linthresh=1e-9)
+    _setup_ax(ax, "Reserves (£m)", "Squared severity (symmetric log scale)", "Size dispersion: sequential diagnostic")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_power_law_size.png")
 
@@ -7927,18 +7929,19 @@ def _gen_fig_power_law_hhi(results):
         return
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Overlay quantile bins if available
-    qb = _safe_get(results, "exposure_composition", "hhi_scatter", "quantile_bins", default=[])
-    if qb:
-        bx = [b.get("hhi_mid", b.get("x", 0)) for b in qb]
-        by = [b.get("var_sq", b.get("y", 0)) for b in qb]
-        ax.scatter(bx, by, s=60, color=_PP_RAW_COL, zorder=5, label="Quantile bins")
+    # The fitted model records means of winsorised squared severity in HHI bins.
+    bins = sh.get("bin_points", [])
+    if bins:
+        bx = [b["x"] for b in bins]
+        by = [b["y"] for b in bins]
+        ax.scatter(bx, by, s=60, color=_PP_RAW_COL, zorder=5,
+                   label="Binned mean squared severity (winsorised)")
 
     hhi_range = np.linspace(0.05, 1.0, 200)
     s2 = float(A) + float(B) * hhi_range ** float(C)
     ax.plot(hhi_range, s2, '-', color=_PP_ADV_COL, linewidth=2,
             label=f"$\\sigma^2 = {A:.4f} + {B:.4f} \\cdot \\mathrm{{HHI}}^{{{C:.4f}}}$")
-    _setup_ax(ax, "HHI", "$\\sigma^2$", "Power-law HHI dispersion")
+    _setup_ax(ax, "HHI", "Mean squared severity", "HHI dispersion: single-factor diagnostic")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_power_law_hhi.png")
 
@@ -7963,20 +7966,22 @@ def _gen_fig_size_adjusted_hhi(results):
 
     fig, ax = plt.subplots(figsize=(10, 6))
     if pts:
-        xs = [p.get("diversification", p.get("x", 0)) for p in pts]
-        ys = [p.get("adj_var_sq", p.get("y", 0)) for p in pts]
-        ax.scatter(xs, ys, alpha=0.3, s=15, color=_PP_RAW_COL, label="Observations")
+        valid = [p for p in pts if p.get("x") is not None and p.get("y_adj_sq") is not None]
+        xs = [p["x"] for p in valid]
+        ys = [p["y_adj_sq"] for p in valid]
+        ax.scatter(xs, ys, alpha=0.3, s=15, color=_PP_RAW_COL, label="Adjusted squared severities")
 
     A = dh.get("A")
     B = dh.get("B")
     C = dh.get("C")
     if A is not None and B is not None and C is not None:
-        hhi_range = np.linspace(0.05, 1.0, 200)
-        s2 = float(A) + float(B) * hhi_range ** float(C)
-        ax.plot(hhi_range, s2, '-', color=_PP_ADV_COL, linewidth=2, label="Adjusted model")
+        diversification = np.linspace(0.0, 0.95, 200)
+        s2 = float(A) + float(B) * (1.0 - diversification) ** float(C)
+        ax.plot(diversification, s2, '-', color=_PP_ADV_COL, linewidth=2, label="Sequential diagnostic fit")
 
-    _setup_ax(ax, "Diversification", "Size-adjusted $\\sigma^2$",
-              "Size-adjusted dispersion vs diversification")
+    ax.set_yscale("symlog", linthresh=1e-9)
+    _setup_ax(ax, "Diversification (1 - HHI)", "Size-adjusted squared severity (symmetric log scale)",
+              "Size-adjusted dispersion: sequential diagnostic")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_size_adjusted_hhi.png")
 
@@ -8332,7 +8337,7 @@ def _gen_table39(results):
         return f"{n:,}".replace(",", "{,}")
 
     run = fl["files_retrieved"]
-    rows = [f"Filing PDFs retrieved & -- & {f(run)} \\\\"]
+    rows = [f"Filings retrieved & -- & {f(run)} \\\\"]
     for label, key in (("no deterministic reading (the parsers found no prior-year figure; the models were not run)",
                         "excluded"),
                        ("loader skips (disclosure screen, unresolved eligibility or unavailable eligible outcome)",

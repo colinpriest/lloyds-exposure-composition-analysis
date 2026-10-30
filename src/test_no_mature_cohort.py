@@ -174,6 +174,7 @@ def test_the_structural_step_keeps_its_name_and_no_longer_says_no_stated_figure(
     from test_runoff_label import _table39
     rows = [line for line in _table39(monkeypatch, 1).splitlines() if "loader skips (disclosure screen" in line]
     assert len(rows) == 1
+    assert "Filings retrieved" in _table39(monkeypatch, 1)
     assert "loader skips (disclosure screen, unresolved eligibility or unavailable eligible outcome)" in rows[0]
     assert "no stated development figure" not in rows[0]
 
