@@ -100,6 +100,55 @@ def pseudo_inputs(dispositions, unavailable, unresolved, selected, R, H, calibra
     return records, size, hhi, year, q, unit_t, sigma, flags, imputation
 
 
+def all_parameter_diagnostics(idata, free_parameters, years):
+    """Record each free variable element; never hide missing or non-finite metrics."""
+    rows = []
+    errors = []
+    for name in free_parameters:
+        if name not in idata.posterior:
+            indices = [(i,) for i in range(len(years))] if name == "z_s" else [()]
+            for index in indices:
+                rows.append({"parameter": name, "index": list(index),
+                             "reporting_year": int(years[index[0]]) if index else None,
+                             "rhat": None, "ess_bulk": None, "ess_tail": None})
+            errors.append(f"missing posterior variable: {name}; scalar shape assumed unless z_s")
+            continue
+        values = idata.posterior[name]
+        dims = [d for d in values.dims if d not in ("chain", "draw")]
+        shape = tuple(values.sizes[d] for d in dims)
+        metrics = {}
+        for metric, operation in (("rhat", lambda: arviz.rhat(idata, var_names=[name])),
+                                  ("ess_bulk", lambda: arviz.ess(idata, var_names=[name], method="bulk")),
+                                  ("ess_tail", lambda: arviz.ess(idata, var_names=[name], method="tail"))):
+            try:
+                arr = np.asarray(operation()[name].values)
+                if arr.shape != shape:
+                    raise ValueError(f"expected shape {shape}, got {arr.shape}")
+                metrics[metric] = arr
+            except Exception as exc:
+                metrics[metric] = None
+                errors.append(f"{name} {metric}: {type(exc).__name__}: {exc}")
+        for index in np.ndindex(shape):
+            record = {"parameter": name, "index": list(index), "reporting_year": None}
+            if name == "z_s" and len(index) == 1 and len(years) == shape[0]:
+                record["reporting_year"] = int(years[index[0]])
+            for metric, arr in metrics.items():
+                value = None if arr is None else float(arr[index])
+                record[metric] = value if value is not None and np.isfinite(value) else None
+            rows.append(record)
+    extrema = {}
+    counts = {}
+    for metric, choose in (("rhat", max), ("ess_bulk", min), ("ess_tail", min)):
+        valid = [r for r in rows if r[metric] is not None]
+        counts[metric] = {"finite": len(valid), "missing_or_nonfinite": len(rows) - len(valid)}
+        selected = choose(valid, key=lambda r: r[metric]) if valid else None
+        extrema[metric] = ({k: selected[k] for k in ("parameter", "index", "reporting_year", metric)}
+                           if selected else None)
+    return {"free_parameters": list(free_parameters), "element_count": len(rows), "elements": rows,
+            "metric_counts": counts, "extrema": extrema, "errors": errors,
+            "divergences": int(idata.sample_stats["diverging"].sum())}
+
+
 def calculate(dispositions, unavailable, unresolved, selected, S, R, H, year, keys,
               calibration, allocation, tag, outdir):
     records, rm, hm, ym, qs, unit_t, sigma, flags, imputation = pseudo_inputs(
@@ -133,8 +182,9 @@ def calculate(dispositions, unavailable, unresolved, selected, S, R, H, year, ke
         years = np.sort(np.unique(yy)); yidx = np.searchsorted(years, yy)
         keep = {}
         fit = original.fit(sy, rs, hs, yidx, len(years), ritc,
-                           f'{tag} c={c:g}', keep=keep, keep_as='fit')
+                           f'{tag} c={c:g}', keep=keep, keep_as='fit', keep_idata=True)
         fit['_diag_full'] = keep['fit']['convergence']
+        fit['_diag_all_free'] = all_parameter_diagnostics(keep['fit']['idata'], keep['fit']['free_parameters'], years)
         result['by_c'][str(c)] = fit
         np.savez_compressed(outdir / f'{tag}-c{c:g}-draws.npz', **keep['fit']['draws'])
     return result
@@ -180,7 +230,7 @@ def main():
                                  'one predetermined permutation is not an exhaustive allocation analysis',
                                  'these fits exclude 24 target observations with unavailable composition, as in the historical scenario'],
               'historical_690_original_order_k': historical, 'scenarios': {}}
-    specs = [('690_permuted', [], 'permuted'), ('742_original', selected, 'original'),
+    specs = [('690_original_clean', [], 'original'), ('690_permuted', [], 'permuted'), ('742_original', selected, 'original'),
              ('742_permuted', selected, 'permuted')]
     for name, extra, allocation in specs:
         print('Running', name, flush=True)

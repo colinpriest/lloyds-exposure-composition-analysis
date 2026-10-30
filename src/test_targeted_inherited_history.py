@@ -77,3 +77,28 @@ def test_committed_draw_archives_match_result_hashes():
             for value in arrays.values():
                 assert value.size > 0
                 assert np.isfinite(value).all()
+
+
+def test_all_free_diagnostics_record_each_element_and_missing_nonfinite(monkeypatch):
+    import arviz as az
+    import xarray as xr
+    rng = np.random.default_rng(17)
+    idata = az.from_dict(posterior={"theta": rng.normal(size=(4, 120)),
+                                    "z_s": rng.normal(size=(4, 120, 2))},
+                         sample_stats={"diverging": np.zeros((4, 120), dtype=bool)})
+    years = np.array([2017, 2019])
+    actual = s.all_parameter_diagnostics(idata, ["theta", "z_s"], years)
+    assert actual["element_count"] == 3
+    assert [x["reporting_year"] for x in actual["elements"]] == [None, 2017, 2019]
+    assert all(x["missing_or_nonfinite"] == 0 for x in actual["metric_counts"].values())
+    assert actual["extrema"]["rhat"]["parameter"] in ("theta", "z_s")
+    monkeypatch.setattr(s.arviz, "rhat", lambda data, var_names: xr.Dataset({
+        var_names[0]: ([], float("nan")) if var_names[0] == "theta"
+        else (["z_s_dim_0"], [1.03, 1.01])}))
+    impaired = s.all_parameter_diagnostics(idata, ["theta", "z_s", "missing"], years)
+    assert impaired["element_count"] == 4
+    assert impaired["metric_counts"]["rhat"] == {"finite": 2, "missing_or_nonfinite": 2}
+    assert impaired["metric_counts"]["ess_bulk"]["missing_or_nonfinite"] == 1
+    assert impaired["extrema"]["rhat"]["reporting_year"] == 2017
+    assert impaired["extrema"]["rhat"]["rhat"] == pytest.approx(1.03)
+    assert impaired["errors"] and "missing posterior variable" in impaired["errors"][0]
