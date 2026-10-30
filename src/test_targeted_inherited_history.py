@@ -83,3 +83,62 @@ def test_committed_draw_archives_match_result_hashes():
             diagnostic = fit["_diag_full"]
             assert diagnostic["parameters"] == named
             assert all(np.isfinite(diagnostic[key]) for key in ("max_rhat", "min_ess_bulk", "min_ess_tail"))
+
+
+def test_all_free_diagnostics_record_each_element_and_missing_nonfinite(monkeypatch):
+    import arviz as az
+    import xarray as xr
+    rng = np.random.default_rng(17)
+    idata = az.from_dict(posterior={"theta": rng.normal(size=(4, 120)),
+                                    "z_s": rng.normal(size=(4, 120, 2))},
+                         sample_stats={"diverging": np.zeros((4, 120), dtype=bool)})
+    years = np.array([2017, 2019])
+    actual = s.all_parameter_diagnostics(idata, ["theta", "z_s"], years)
+    assert actual["element_count"] == 3
+    assert [x["reporting_year"] for x in actual["elements"]] == [None, 2017, 2019]
+    assert all(x["missing_or_nonfinite"] == 0 for x in actual["metric_counts"].values())
+    assert actual["extrema"]["rhat"]["parameter"] in ("theta", "z_s")
+    monkeypatch.setattr(s.arviz, "rhat", lambda data, var_names: xr.Dataset({
+        var_names[0]: ([], float("nan")) if var_names[0] == "theta"
+        else (["z_s_dim_0"], [1.03, 1.01])}))
+    impaired = s.all_parameter_diagnostics(idata, ["theta", "z_s", "missing"], years)
+    assert impaired["element_count"] == 4
+    assert impaired["metric_counts"]["rhat"] == {"finite": 2, "missing_or_nonfinite": 2}
+    assert impaired["metric_counts"]["ess_bulk"]["missing_or_nonfinite"] == 1
+    assert impaired["extrema"]["rhat"]["reporting_year"] == 2017
+    assert impaired["extrema"]["rhat"]["rhat"] == pytest.approx(1.03)
+    assert impaired["errors"] and "missing posterior variable" in impaired["errors"][0]
+
+
+def test_recorded_all_free_diagnostics_match_draws_and_historical_results():
+    import hashlib
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    result = json.loads((root / "results/check_inherited_history_allfree_diagnostics_results.json").read_text(encoding="utf-8"))
+    previous = json.loads((root / "results/check_inherited_history_sensitivity_results.json").read_text(encoding="utf-8"))
+    historic = json.loads((root / "results/check_missingness_sensitivity_results.json").read_text(encoding="utf-8"))["eligibility_unresolved_stress"]
+    assert len(result["scenarios"]) == 4
+    for scenario, current in result["scenarios"].items():
+        old = historic if scenario == "690_original_clean" else previous["scenarios"][scenario]
+        if scenario != "690_original_clean":
+            for key in ("pseudo_inputs", "imputation", "allocation", "n_fit", "n_pseudo"):
+                assert current[key] == old[key]
+        for c, fit in current["by_c"].items():
+            for key in ("k", "sd_undiv", "sd_div", "nu_clean", "nu_ritc", "tau_s", "_diag"):
+                assert fit[key] == old["by_c"][c][key]
+            diag = fit["_diag_all_free"]
+            assert diag["free_parameters"] == ["theta", "log_tot", "f", "tau_s", "z_s", "nu_clean", "lambda_ritc", "beta_ritc"]
+            assert diag["element_count"] == len(diag["elements"]) == 18
+            assert len([x for x in diag["elements"] if x["parameter"] == "z_s" and x["reporting_year"] is not None]) == 11
+            assert diag["divergences"] == 0 and not diag["errors"]
+            for metric, select in (("rhat", max), ("ess_bulk", min), ("ess_tail", min)):
+                assert diag["metric_counts"][metric] == {"finite": 18, "missing_or_nonfinite": 0}
+                extreme = select(diag["elements"], key=lambda x: x[metric])
+                assert diag["extrema"][metric] == {k: extreme[k] for k in ("parameter", "index", "reporting_year", metric)}
+            name = f"{scenario}-c{float(c):g}-draws.npz"
+            digest = hashlib.sha256((root / "results/inherited_history_draws" / name).read_bytes()).hexdigest()
+            assert digest == result["posterior_draw_hashes"][name]
+            if scenario != "690_original_clean":
+                assert digest == previous["posterior_draw_hashes"][name]

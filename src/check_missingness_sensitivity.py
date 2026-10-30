@@ -112,11 +112,11 @@ def summarise(idata, variables=VARIABLES):
     return out
 
 
-def fit(S, R, H, yidx, n_y, ritc, tag, weights=None, keep=None, keep_as=None):
+def fit(S, R, H, yidx, n_y, ritc, tag, weights=None, keep=None, keep_as=None, keep_idata=False):
     """Adopted model, with an optional observation-weighted likelihood. With `keep` (a dict), the fit's operator
     draws and convergence are stored in it under `keep_as`, for the stresses under the weights."""
     logR, logH = np.log(R / REF), np.log(H)
-    with pm.Model():
+    with pm.Model() as model:
         block = scale_block(
             ritc=ritc, logR=logR, logH=logH, yidx=yidx, n_y=n_y
         )
@@ -139,6 +139,9 @@ def fit(S, R, H, yidx, n_y, ritc, tag, weights=None, keep=None, keep_as=None):
     )
     if keep is not None:
         keep[keep_as] = {"draws": RV.operator_draws(idata), "convergence": RV.convergence(idata)}
+        if keep_idata:
+            keep[keep_as]["idata"] = idata
+            keep[keep_as]["free_parameters"] = [rv.name for rv in model.free_RVs]
     return out
 
 
