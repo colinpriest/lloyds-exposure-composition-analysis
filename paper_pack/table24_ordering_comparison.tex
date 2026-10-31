@@ -1,6 +1,6 @@
 \begin{table}[htbp]
 \centering
-\caption{Pipeline ordering comparison}
+\caption{Historical sequential-transformation diagnostic (not the adopted model)}
 \label{tab:ordering_comparison}
 \begin{tabular}{lrrr}
 \toprule
@@ -10,8 +10,8 @@ Size $\to$ HHI & 89.8\% & 0.4\% & 89.9\% \\
 HHI $\to$ Size & 41.8\% & 2.4\% & 43.2\% \\
 \midrule
 \multicolumn{4}{l}{Difference: 46.7 pp} \\
-\multicolumn{4}{l}{Recommendation: \textbf{size_first}} \\
-\multicolumn{4}{p{12cm}}{Size-first explains more total variance, suggesting size is the dominant effect and should be removed first for cleaner HHI estimation.} \\
+\multicolumn{4}{l}{No ordering recommendation} \\
+\multicolumn{4}{p{12cm}}{Exploratory historical sequential transformations rescale the outcome differently; their variance reductions do not establish causal dominance or a preferred ordering.} \\
 \bottomrule
 \end{tabular}
 \end{table}

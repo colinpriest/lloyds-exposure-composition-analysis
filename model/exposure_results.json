@@ -1,10 +1,10 @@
 {
   "spec_version": "2.0",
-  "analysis_run_id": "ceae56da-7746-588c-a947-e0ab966895a2",
-  "analysis_run_id_without_calibration": "989c6e57-2eb2-5ada-a0cd-0a7c37221836",
-  "analysis_timestamp": "2026-10-31T08:18:48.396862+00:00",
-  "source_data_hash": "f21280efa6ac6fa7",
-  "analysis_code_hash": "b4d122cbf8a02f8d",
+  "analysis_run_id": "7343e912-7655-5f3d-b8d2-0387c2329757",
+  "analysis_run_id_without_calibration": "4abdc479-c4f4-5223-8d55-2303f94937c7",
+  "analysis_timestamp": "2026-10-31T11:02:31.347155+00:00",
+  "source_data_hash": "486ef76c0715ced9",
+  "analysis_code_hash": "a7efe496cdf845a1",
   "analysis_config": {
     "lob_weight_floor": 0.01,
     "lob_severity_cap": 5.0,
@@ -56936,6 +56936,7 @@
     }
   },
   "joint_composition": {
+    "scope_note": "historical sequential transformation diagnostic, not the adopted model; variance reductions do not identify causal contributions",
     "hhi_r_correlation": {
       "pearson_r": 0.18164263359170182,
       "p_pearson": 0.001124012700126631,
@@ -62271,7 +62272,8 @@
       "hhi_aic": -2904.4786077283484,
       "hhi_p_C": 0.05169775609595928,
       "better_univariate": "size",
-      "r2_difference": 0.07854510188369734
+      "r2_difference": 0.07854510188369734,
+      "comparison_scope": "historical in-sample diagnostic; R-squared differences do not establish causal dominance or out-of-sample superiority"
     },
     "hhi_first": {
       "disp_h_raw": {
@@ -65667,8 +65669,8 @@
       "total_explained_size_first": 89.87735288653882,
       "total_explained_hhi_first": 43.177141591352395,
       "difference_pp": 46.70021129518642,
-      "recommendation": "size_first",
-      "recommendation_reason": "Size-first explains more total variance, suggesting size is the dominant effect and should be removed first for cleaner HHI estimation.",
+      "recommendation": null,
+      "recommendation_reason": "Exploratory historical sequential transformations rescale the outcome differently; their variance reductions do not establish causal dominance or a preferred ordering.",
       "size_first_incremental_size": 89.83332488056551,
       "size_first_incremental_hhi": 0.4330619937794933,
       "hhi_first_incremental_hhi": 41.78414846813256,
