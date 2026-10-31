@@ -322,7 +322,7 @@ class TestTheHeadlineSource:
 
 
 # ----------------------------------------------------- the tool at its own defaults ------
-TOOL_FUNCTIONS = NEEDED + ("invalidateResults", "closeModal", "validWeight", "computeDistributions", "percentile", "distStats", "applyPreset",
+TOOL_FUNCTIONS = NEEDED + ("escapeHtml", "invalidateResults", "closeModal", "validWeight", "computeDistributions", "percentile", "distStats", "applyPreset",
                            "getTargetWeights", "updateWeightTotal", "currentRegime", "compute",
                            "workedExampleHtml", "fmt", "fmtPct")
 RENDERERS = ("renderSummary", "renderDistributionPlot", "renderTailPlot", "renderStatsTable",

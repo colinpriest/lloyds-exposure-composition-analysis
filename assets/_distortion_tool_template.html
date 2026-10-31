@@ -192,11 +192,11 @@ canvas { max-height: 380px; }
         <div id="lobInputs"></div>
         <div id="weightTotal" class="weight-total ok">Total: 100.0%</div>
         <div class="reserve-input">
-          <label>Outstanding claims (&pound;m):</label>
+          <label for="reserveSize">Outstanding claims (&pound;m):</label>
           <input type="number" id="reserveSize" value="500" min="1" max="50000" step="any">
         </div>
         <div class="reserve-input choice-input" style="margin-top:10px;">
-          <label>Target tail regime:</label>
+          <label for="targetRegime">Target tail regime:</label>
           <select id="targetRegime">
             <option value="clean" selected>Clean (no accepted RITC, inward portfolio transfer or take-on)</option>
             <option value="ritc">Assumed-business target (accepted RITC, inward transfer or take-on)</option>
@@ -210,7 +210,7 @@ canvas { max-height: 380px; }
           tail-regime channel is exactly zero.
         </div>
         <div class="reserve-input choice-input" style="margin-top:10px;">
-          <label>Operator:</label>
+          <label for="gammaMode">Operator:</label>
           <select id="gammaMode">
             <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's headline operator</option>
             <option value="overlay">With the concentration overlay (the gamma-free fit)</option>
@@ -524,15 +524,36 @@ function validToolData(data) {
       fit.nu_clean > 0 && fit.nu_ritc > 0 && fit.sd_undiv >= 0 && fit.sd_div >= 0 &&
       (fit.sd_undiv > 0 || fit.sd_div > 0) &&
       fit.reference_size > 0 && fit.hhi_floor > 0 && fit.hhi_ceil >= fit.hhi_floor;
-  if (!validFit(data.pooling_model) || !validFit(data.pooling_model_overlay)) return false;
-  const eligible = data.donors.filter(d => d && d.opening_reserves_gbp_m > 0 && d.s_raw_a != null);
-  return eligible.length >= 10 && eligible.every(d =>
-    Number.isFinite(d.opening_reserves_gbp_m) && Number.isFinite(d.s_raw_a) &&
-    (d.hhi == null || (Number.isFinite(d.hhi) && d.hhi >= 0)) && Array.isArray(d.weights) &&
-    d.weights.length === data.lob_names.length &&
-    d.weights.every(w => Number.isFinite(w) && w >= 0) && d.weights.some(w => w > 0) &&
-    Array.isArray(d.lob_severity) && d.lob_severity.length === data.lob_names.length &&
-    d.lob_severity.every(Number.isFinite));
+  if (!validFit(data.pooling_model) || data.pooling_model.gamma !== 0 ||
+      !validFit(data.pooling_model_overlay)) return false;
+  if (data.eligibility != null && (typeof data.eligibility !== 'object' ||
+      (data.eligibility.additional_filters != null &&
+       (!Array.isArray(data.eligibility.additional_filters) ||
+        !data.eligibility.additional_filters.every(x => typeof x === 'string'))))) return false;
+  if (!data.donors.every(d => d && typeof d === 'object' && !Array.isArray(d))) return false;
+  // Use the same skip predicate as computeDistributions: malformed processed donors must not escape validation.
+  const eligible = data.donors.filter(d => !(d.opening_reserves_gbp_m <= 0 || d.s_raw_a == null));
+  const ids = new Set();
+  if (eligible.length < 10) return false;
+  return eligible.every(d => {
+    if (!Number.isSafeInteger(d.syndicate) || !Number.isSafeInteger(d.year)) return false;
+    const id = `${d.syndicate}_${d.year}`;
+    if (ids.has(id)) return false;
+    ids.add(id);
+    if (!Number.isFinite(d.opening_reserves_gbp_m) || d.opening_reserves_gbp_m <= 0 ||
+        !Number.isFinite(d.s_raw_a) || !Number.isFinite(d.pyd_gbp_m) ||
+        !(d.ritc === 0 || d.ritc === 1 || typeof d.ritc === 'boolean') ||
+        !(d.direction == null || typeof d.direction === 'string') ||
+        !Array.isArray(d.weights) || d.weights.length !== data.lob_names.length ||
+        !d.weights.every(w => Number.isFinite(w) && w >= 0)) return false;
+    const total = d.weights.reduce((sum, w) => sum + w, 0);
+    const derivedHhi = d.weights.reduce((sum, w) => sum + w * w, 0);
+    if (Math.abs(total - 1) > 0.0001 ||
+        !(d.hhi == null || (Number.isFinite(d.hhi) && d.hhi >= 0 && d.hhi <= 1 &&
+          (d.hhi === 0 || Math.abs(d.hhi - derivedHhi) <= 0.0001)))) return false;
+    return Array.isArray(d.lob_severity) && d.lob_severity.length === data.lob_names.length &&
+        d.lob_severity.every(Number.isFinite);
+  });
 }
 
 function loadFile(file) {
@@ -578,6 +599,12 @@ function initTool() {
   applyPreset('diversified');
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
 function buildLobInputs() {
   const container = document.getElementById('lobInputs');
   container.innerHTML = '';
@@ -585,9 +612,9 @@ function buildLobInputs() {
     const row = document.createElement('div');
     row.className = 'lob-input-row';
     row.innerHTML = `
-      <label title="${name}">${name.length > 22 ? name.slice(0,20)+'\u2026' : name}</label>
+      <label for="lob_num_${i}" title="${escapeHtml(name)}">${escapeHtml(name.length > 22 ? name.slice(0,20)+'\u2026' : name)}</label>
       <input type="range" min="0" max="100" step="1" value="0"
-             id="lob_slider_${i}" oninput="syncSlider(${i},'slider')">
+             id="lob_slider_${i}" aria-label="${escapeHtml(name)} weight slider" oninput="syncSlider(${i},'slider')">
       <input type="number" min="0" max="100" step="1" value="0"
              id="lob_num_${i}" oninput="syncSlider(${i},'num')" style="width:50px;">
       <span class="lob-val" id="lob_pct_${i}">0%</span>
@@ -986,8 +1013,22 @@ function compute() {
   if (modeEl && GAMMA_MODES[modeEl.value]) GAMMA_MODE = modeEl.value;
 
   const regime = currentRegime();
+  const targetHhi = hhi(tw);
+  for (const d of DATA.donors) {
+    if (d.opening_reserves_gbp_m <= 0 || d.s_raw_a == null) continue;
+    const donorHhi = d.hhi || hhi(d.weights);
+    const scales = [sigmaSys(d.opening_reserves_gbp_m, donorHhi), sigmaSys(tSize, donorHhi),
+                    sigmaSys(d.opening_reserves_gbp_m, targetHhi), sigmaSys(tSize, targetHhi)];
+    if (!scales.every(x => Number.isFinite(x) && x > 0)) {
+      alert('The selected data and portfolio produce an invalid transfer scale.'); return;
+    }
+  }
   const donors = computeDistributions(tw, tSize, regime);
   if (donors.length < 10) { alert('Insufficient eligible donors.'); return; }
+  if (!donors.every(d => Number.isFinite(d.lam) && Number.isFinite(d.hellingerDist) &&
+      Object.values(d.coalition).every(Number.isFinite))) {
+    alert('The selected data and portfolio produce a non-finite transfer.'); return;
+  }
 
   // one pool per coalition of {tail regime, size, concentration}
   const COALITION_LABELS = {
@@ -999,6 +1040,9 @@ function compute() {
   for (let mask = 0; mask < 8; mask++) {
     pools[mask] = donors.map(d => d.coalition[mask]);
     statsBy[mask] = distStats(pools[mask], COALITION_LABELS[mask]);
+    if (!Object.values(statsBy[mask]).every(value => typeof value !== 'number' || Number.isFinite(value))) {
+      alert('The selected data and portfolio produce non-finite statistics.'); return;
+    }
   }
 
   const raw = pools[0];
@@ -1022,6 +1066,9 @@ function compute() {
   const shapley = {};
   for (const stat of ['q75', 'var99', 'var995', 'mean', 'std']) {
     shapley[stat] = shapleyFor(stat);
+    if (!Object.values(shapley[stat]).every(Number.isFinite)) {
+      alert('The selected data and portfolio produce a non-finite decomposition.'); return;
+    }
   }
 
   RESULT = { donors, regime, gammaMode: GAMMA_MODE, gammaInForce: activeGamma(),
@@ -1369,7 +1416,7 @@ function renderMetaGrid() {
   ];
 
   document.getElementById('metaGrid').innerHTML = items
-    .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
+    .map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`)
     .join('');
 }
 
@@ -1405,7 +1452,7 @@ function workedExampleHtml(d, r, pm) {
       <table>
         <tr><td>Reserve size</td><td>\u00a3${d.reserves.toFixed(1)}m</td></tr>
         <tr><td>Donor HHI</td><td>${d.donorHhi.toFixed(4)}</td></tr>
-        <tr><td>PYD amount</td><td>\u00a3${d.pyd_gbp_m.toFixed(1)}m (${d.direction || '\u2014'})</td></tr>
+        <tr><td>PYD amount</td><td>\u00a3${d.pyd_gbp_m.toFixed(1)}m (${escapeHtml(d.direction || '\u2014')})</td></tr>
         <tr><td>S<sub>raw</sub> = PYD / Reserves</td><td><strong>${fmtPct(d.sRaw)}</strong></td></tr>
       </table>
     </div>

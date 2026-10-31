@@ -535,9 +535,9 @@ const REGIME_LABELS = {clean: 'clean target', ritc: 'assumed-business target'};
 function sizeLambda() { return 1; }
 function activeGamma() { return 0; }
 function fmtPct(x) { return String(x); }
-""" + extract_function(js, "workedExampleHtml") + """
+""" + extract_function(js, "escapeHtml") + "\n" + extract_function(js, "workedExampleHtml") + """
 const d = {syndicate: 1980, year: 2018, reserves: 100, donorHhi: .4,
-           pyd_gbp_m: 2, sRaw: .02, sTail: .02, sSizeOnly: .02, sAdj: .02,
+           direction: '<img src=x onerror=alert(1)>', pyd_gbp_m: 2, sRaw: .02, sTail: .02, sSizeOnly: .02, sAdj: .02,
            lam: 1, nuSrc: 4, nuTgt: 4};
 const r = {regime: 'clean', tSize: 500, tHhi: .4, gammaMode: 'size_only', gammaInForce: 0};
 const pm = {k: .6, sd_undiv: .03};
@@ -547,6 +547,8 @@ console.log(JSON.stringify([workedExampleHtml({...d, isRitc: true}, r, pm),
         run = subprocess.run([NODE, "-e", program], capture_output=True, text=True)
         assert run.returncode == 0, run.stderr
         assumed, clean = json.loads(run.stdout)
+        assert "<img src=x onerror=alert(1)>" not in assumed
+        assert "&lt;img src=x onerror=alert(1)&gt;" in assumed
         assert "assumed-business donor" in assumed and "RITC donor" not in assumed
         assert "clean donor" in clean and "assumed-business donor" not in clean
 
@@ -1006,12 +1008,12 @@ def test_failed_computes_and_file_loads_hide_old_results(tool_path):
         pytest.skip("node is not available")
     html = _read(tool_path)
     functions = "\n".join(extract_function(html, name) for name in
-                          ("invalidateResults", "closeModal", "validWeight", "compute", "validToolData", "loadFile"))
+                          ("invalidateResults", "closeModal", "validWeight", "percentile", "distStats", "compute", "validToolData", "loadFile"))
     program = r'''
       const fit = {k: .6, gamma: 0, nu_clean: 4, nu_ritc: 5, sd_undiv: .02, sd_div: .04,
                    reference_size: 500, hhi_floor: .01, hhi_ceil: 1};
-      const donor = {opening_reserves_gbp_m: 1, s_raw_a: .1, hhi: 1, weights: [1], lob_severity: [.1]};
-      let RESULT, DATA = {lob_names: ["Property"], donors: Array(10).fill(donor),
+      const donor = {syndicate: 123, year: 2016, opening_reserves_gbp_m: 1, s_raw_a: .1, pyd_gbp_m: .1, ritc: 0, hhi: 1, weights: [1], lob_severity: [.1]};
+      let RESULT, DATA = {lob_names: ["Property"], donors: Array.from({length: 10}, (_, i) => ({...donor, syndicate: 123 + i})),
                          pooling_model: fit, pooling_model_overlay: fit};
       let loadGeneration = 0;
       let GAMMA_MODE = "size_only", alertText = "", reader;
@@ -1025,7 +1027,15 @@ def test_failed_computes_and_file_loads_hide_old_results(tool_path):
       function alert(s) {alertText = s;}
       function getTargetWeights() {return [Number(els.lob_num_0.value)];}
       function currentRegime() {return "clean";}
-      function computeDistributions() {return [];}
+      function hhi(w) {return w.reduce((s, x) => s + x*x, 0);}
+      let scaleBad = false, transferKind = "empty";
+      function sigmaSys() {return scaleBad ? Infinity : 1;}
+      function computeDistributions() {
+        if (transferKind === "empty") return [];
+        const x = transferKind === "infinite" ? Infinity : 1e308;
+        return Array.from({length: 10}, () => ({lam: 1, hellingerDist: 0,
+          coalition: Object.fromEntries(Array.from({length: 8}, (_, i) => [i, x]))}));
+      }
       function initTool() {}
       class FileReader {constructor() {reader = this;} readAsText() {}}
     ''' + functions + r'''
@@ -1053,12 +1063,34 @@ def test_failed_computes_and_file_loads_hide_old_results(tool_path):
         if (!alertText.includes("between")) throw Error("invalid reserve accepted: " + bad);
       }
       els.reserveSize.value = "500"; reset(); compute(); check("insufficient donors");
+      scaleBad = true; reset(); compute(); check("invalid scale");
+      if (!alertText.includes("invalid transfer scale")) throw Error("invalid scale accepted");
+      scaleBad = false; transferKind = "infinite"; reset(); compute(); check("infinite transfer");
+      if (!alertText.includes("non-finite transfer")) throw Error("infinite transfer accepted");
+      transferKind = "huge"; reset(); compute(); check("infinite statistics");
+      if (!alertText.includes("non-finite statistics")) throw Error("infinite statistics accepted");
+      transferKind = "empty";
       const previous = DATA;
       if (!validToolData(previous)) throw Error("valid data rejected");
-      if (!validToolData({...previous, donors: Array(10).fill({...donor, hhi: 0})}))
+      if (!validToolData({...previous, donors: previous.donors.map(d => ({...d, hhi: 0}))}))
         throw Error("zero HHI should fall back to weights");
-      if (!validToolData({...previous, donors: Array(10).fill({...donor, hhi: null})}))
+      if (!validToolData({...previous, donors: previous.donors.map(d => ({...d, hhi: null}))}))
         throw Error("missing HHI should fall back to weights");
+      const malformed = [null, {...donor, syndicate: 999, opening_reserves_gbp_m: undefined},
+        {...donor, syndicate: 999, opening_reserves_gbp_m: "not-a-number"},
+        {...donor, syndicate: 999, pyd_gbp_m: undefined},
+        {...donor, syndicate: 999, ritc: "false"},
+        {...donor, syndicate: "1');alert(1);//"},
+        {...donor, syndicate: 999, weights: [99]},
+        {...donor, syndicate: 999, hhi: .5}, donor];
+      for (const bad of malformed) {
+        if (validToolData({...previous, donors: [...previous.donors, bad]}))
+          throw Error("accepted malformed donor " + JSON.stringify(bad));
+      }
+      if (validToolData({...previous, eligibility: {additional_filters: "not an array"}}))
+        throw Error("accepted malformed eligibility");
+      if (validToolData({...previous, pooling_model: {...fit, gamma: 1}}))
+        throw Error("accepted nonzero headline gamma");
       reset(); loadFile({}); check("load start");
       reset(); reader.onload({target: {result: "not json"}}); check("late invalid JSON");
       if (DATA !== previous) throw Error("invalid JSON replaced DATA");
