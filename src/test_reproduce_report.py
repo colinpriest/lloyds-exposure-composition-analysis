@@ -986,3 +986,28 @@ def test_interruption_after_report_before_success_stamp_fails_closed(monkeypatch
         "sample.py": {"status": "ok"}}
     assert rp.validate_stamp(rp.read_stamp())
     assert not rp.verify()
+
+
+def test_interruption_during_preflight_invalidates_previous_stamp(monkeypatch, tmp_path):
+    _, report = _setup_interruption_probe(monkeypatch, tmp_path)
+
+    def interrupt():
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(rp, "check_environment", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        rp.main()
+    assert report.read_text(encoding="utf-8") == "old report\n"
+    assert rp.validate_stamp(rp.read_stamp())
+    assert not rp.verify()
+
+
+@pytest.mark.parametrize("inspection", ["--check", "--list"])
+def test_inspection_modes_do_not_invalidate_prior_stamp(monkeypatch, tmp_path, inspection):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    original_stamp = stamp.read_bytes()
+    original_report = report.read_bytes()
+    monkeypatch.setattr(rp.sys, "argv", ["reproduce.py", inspection])
+    assert rp.main() == 0
+    assert stamp.read_bytes() == original_stamp
+    assert report.read_bytes() == original_report

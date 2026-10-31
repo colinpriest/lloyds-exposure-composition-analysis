@@ -1798,6 +1798,12 @@ def main():
         # means to anyone reading the help text.
         return 0 if verify() else 1
 
+    # Mark an attempted run before preflight as well as before its scripts: an
+    # interruption at either point must not revive an earlier successful stamp.
+    # The --check and --list inspection modes remain read-only.
+    if not a.check:
+        write_stamp([], ["run in progress or interrupted"])
+
     print("environment and inputs:")
     ok = check_environment()
     for msg in check_manifest_completeness():
@@ -1824,9 +1830,6 @@ def main():
 
     print()
     # the input attestation is taken BEFORE any script runs, and checked again after
-    # A previous success must not survive an interrupted new run as evidence
-    # for that run.  The marker also prevents fallback to an older report.
-    write_stamp([], ["run in progress or interrupted"])
     tree_before = capture_inputs()
     failed = run(steps)
     tree_state = check_inputs_after(tree_before)
