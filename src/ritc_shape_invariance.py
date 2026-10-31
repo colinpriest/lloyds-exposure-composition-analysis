@@ -1,38 +1,27 @@
-"""Does external RITC break the operator's invariance assumptions?
+"""Compare clean and assumed-business observations after base-scale standardisation.
 
-The baseline being diagnosed is the adopted two-regime operator: severity
-s = signed_pyd / opening_reserves is taken as a scale family whose location is fixed at
-zero, whose scale is the fitted pooling/concentration/floor model, and whose
-standardised shape is a Student-t with its own degrees of freedom in each regime.
-
-    location = 0                      a fixed LOCATION parameter, not an asserted mean:
-                                      it is the mean only where nu > 1, and the fitted
-                                      RITC posterior extends below one
-    scale    = sigma(R, HHI)          the fitted pooling/concentration/floor model
-    SHAPE    = invariant              the hypothesis under test here: the same
-                                      standardised distribution in both regimes
-
-The reporting-year effects and the separate RITC regime of the adopted fit are part of
-that baseline; this script asks whether an RITC year still standardises like a clean one
-once the operator's own scale has been divided out.
+Severity s = signed_pyd / reserve base is divided by the posterior-mean size,
+concentration and floor scale from model/dispersion_calibration.json: the older
+single-regime, gamma-free calibration, not the adopted two-regime headline fit.
+Neither a reporting-year multiplier nor a separate assumed-business multiplier is
+divided out, so both can remain in z. RITC is the historical shorthand here for the
+broader assumed-business flag, including confirmed inward transfers and take-ons.
 
 RITC (reinsurance-to-close of another syndicate's account) can introduce a step in
 observed PYD or change the cohort mix and subsequent development. It could break invariance in two
 distinct ways, and we test each separately:
 
-  (A) SCALE invariance under the operator.  z = s / sigma(R,HHI).  If RITC years have a
-      larger spread in z than clean years, the (R,HHI) model under-scales them -- RITC
-      carries extra variance the operator cannot see.  (Robust: Fligner-Killeen + a
-      cluster-bootstrap IQR ratio.)
+  (A) SPREAD of z = s / sigma(R,HHI). The group contrast describes spread after
+      this standardisation; retained year and regime effects prevent attributing it
+      uniquely to the fitted base scale. (Fligner-Killeen + cluster-bootstrap IQR ratio.)
 
   (B) SHAPE invariance.  Remove location AND scale (each group standardised by its own
       median / IQR) and compare the standardised SHAPE (Bowley skew, tail-skew ratio,
       Moors kurtosis, k-sample Anderson-Darling).  If RITC has a different standardised
-      shape, transporting an RITC donor's shape to a clean target is unjustified even
-      after correct scaling.
+      shape, a common standardised-shape assumption would be challenged.
 
-  (C) OMNIBUS.  k-sample Anderson-Darling on the operator-standardised z itself (clean vs
-      RITC) -- the joint scale+shape test of "is the operator-standardised residual the
+  (C) OMNIBUS.  k-sample Anderson-Darling on the base-standardised z itself (clean vs
+      RITC) -- a joint scale+shape comparison of "is the base-standardised residual the
       same distribution regardless of RITC?".
 
 Calibration, stated exactly because it differs between the numbers printed here.
@@ -41,7 +30,7 @@ bootstrap resampling *syndicates*, so they carry the within-syndicate dependence
 panel in which one syndicate contributes several years. The Fligner-Killeen, Levene,
 k-sample Anderson-Darling, KS and Fisher exact figures are ordinary library tests on
 rows: they assume independent observations, which this panel does not satisfy, so they
-are anti-conservative here and are reported as descriptive rather than calibrated.
+may be miscalibrated or anti-conservative here and are descriptive rather than calibrated.
 Shape stats reuse test_shape_invariance.py so the methodology is identical to the
 size/HHI axes.
 
@@ -61,6 +50,8 @@ import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
 CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
+CALIBRATION_SOURCE = "model/dispersion_calibration.json (single-regime, gamma-free)"
+STANDARDISATION_NOTE = "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
 RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
 OUT = SCRIPT_DIR / "results" / "ritc_shape_invariance_results.json"
 SEED = 12345
@@ -70,7 +61,7 @@ SHAPE_STATS = {"Bowley skew": bowley_skew, "Tail skew ratio": tail_skew_ratio,
 
 
 def sigma_op(R, HHI, cal):
-    """Operator dispersion sigma(R,HHI) at the posterior-mean parameters (no year shock)."""
+    """Single-regime base dispersion at posterior means; no year or regime multiplier."""
     ref = cal["reference_size"]; k = cal["k"]; g = cal["gamma"]
     su = cal["sd_undiv"]; sd = cal["sd_div"]
     hh = np.clip(HHI, cal.get("hhi_floor", 0.01), cal.get("hhi_ceil", 1.0))
@@ -80,6 +71,13 @@ def sigma_op(R, HHI, cal):
 
 def mad(a):
     return float(np.median(np.abs(a - np.median(a))))
+
+
+def spread_direction(lo, hi):
+    """Describe the interval's direction without attributing it to a model scale."""
+    return ("RITC spread wider after base standardisation (interval above 1)" if lo > 1
+            else "RITC spread narrower after base standardisation (interval below 1)" if hi < 1
+            else "unresolved (interval straddles 1)")
 
 
 def cluster_bootstrap_ratio(vals, cluster, group, scale_fn, g_num, g_den, rng, n=N_BOOT):
@@ -125,7 +123,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     isS = np.array([k in strong for k in key])
     isW = np.array([k in weak for k in key])
     ritc = isS | isW
-    z = s / sigma_op(R, HHI, cal)   # operator-standardised residual
+    z = s / sigma_op(R, HHI, cal)   # single-regime base-standardised residual
 
     g3 = np.where(isS, 2, np.where(isW, 1, 0))
     gb = ritc.astype(int)
@@ -145,17 +143,19 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
               f"z_med={_q(zz,50):+.3f}  IQR(z)={robust_scale(zz):.3f}  MAD(z)={mad(zz):.3f}  "
               f"sd(z)={zz.std():.3f}  |  Bowley={bowley_skew(a):+.3f}  tailR={tail_skew_ratio(a):.2f}  "
               f"Moors={moors_kurt(a):.3f}")
-    print("  DESCRIPTIVE (z = s / sigma_operator):")
+    print("  DESCRIPTIVE (z = s / single-regime base sigma):")
     desc("clean", ~ritc); desc("weak", isW); desc("strong", isS)
     desc("all RITC", ritc); desc("ALL", np.ones(len(s), bool))
 
     res = {"meta": {"n": int(len(s)), "n_syndicates": int(n_syn),
                     "clean": int((~ritc).sum()), "weak": int(isW.sum()), "strong": int(isS.sum()),
                     "operator": {kk: cal[kk] for kk in ("k", "gamma", "sd_undiv", "sd_div", "reference_size")},
+                    "calibration_source": CALIBRATION_SOURCE,
+                    "standardisation": STANDARDISATION_NOTE,
                     "seed": SEED, "n_boot": N_BOOT}}
 
-    # ── (A) SCALE invariance under the operator ──────────────────────────────
-    print(f"\n{'='*74}\n  (A) SCALE INVARIANCE under the operator:  spread of z = s/sigma(R,HHI)\n{'='*74}")
+    # ── (A) Spread after single-regime base-scale standardisation ────────────
+    print(f"\n{'='*74}\n  (A) SPREAD after base standardisation: z = s/sigma(R,HHI)\n{'='*74}")
     fk = stats.fligner(z[~ritc], z[ritc])
     lev = stats.levene(z[~ritc], z[ritc], center="median")
     print(f"  Fligner-Killeen (clean vs RITC equal scale?):  chi2={fk.statistic:.2f}  p={fk.pvalue:.3f}")
@@ -164,13 +164,10 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     for lab, fn in [("IQR(z)", robust_scale), ("MAD(z)", mad), ("SD(z)", lambda a: float(np.std(a)))]:
         rr = cluster_bootstrap_ratio(z, cluster, gb, fn, 1, 0, rng)
         if rr:
-            # Which side of one the interval lies on is the whole direction of the
-            # finding, and reading any excluding interval as under-scaling reversed it
-            # for every population whose RITC residuals are the narrower ones (R155).
+            # The side of one describes the spread contrast; retained effects
+            # prevent attribution of that contrast solely to the base scale.
             lo, hi = rr["ci"]
-            rr["direction"] = ("under-scales RITC (interval above 1)" if lo > 1
-                               else "over-scales RITC (interval below 1)" if hi < 1
-                               else "unresolved (interval straddles 1)")
+            rr["direction"] = spread_direction(lo, hi)
             sig = "  *** " if rr["p"] < 0.05 else "      "
             print(f"    {lab:<8} RITC/clean ratio = {rr['ratio']:.3f}  "
                   f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  p={rr['p']:.3f}{sig}")
@@ -189,7 +186,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     # ── (B) SHAPE invariance (location+scale removed) ────────────────────────
     print(f"\n{'='*74}\n  (B) SHAPE INVARIANCE:  standardised skew / kurtosis / tail asymmetry\n{'='*74}")
     ad_shape = anderson_ksample_shape(s, gb)
-    verdict = "SHAPE DIFFERS" if ad_shape["p"] < 0.05 else "no shape difference"
+    verdict = "SHAPE DIFFERS" if ad_shape["p"] < 0.05 else "no shape difference detected"
     print(f"  Anderson-Darling k-sample (group-standardised, clean vs RITC): "
           f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  -> {verdict}")
     ad_shape3 = anderson_ksample_shape(s, g3)
@@ -205,8 +202,8 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
                   f"95% CI [{rr['ci'][0]:+.3f}, {rr['ci'][1]:+.3f}]  p={rr['p']:.3f}{sig}")
             res["shape"]["diffs"][lab] = rr
 
-    # ── (C) OMNIBUS on operator-standardised z ───────────────────────────────
-    print(f"\n{'='*74}\n  (C) OMNIBUS:  is operator-standardised z the same distribution?  (scale+shape)\n{'='*74}")
+    # ── (C) OMNIBUS on base-standardised z ───────────────────────────────────
+    print(f"\n{'='*74}\n  (C) OMNIBUS:  is base-standardised z the same distribution?  (scale+shape)\n{'='*74}")
     with np.errstate(all="ignore"):
         adz = stats.anderson_ksamp([z[~ritc], z[ritc]])
     pz = getattr(adz, "pvalue", None) or adz.significance_level
@@ -248,7 +245,7 @@ def main():
 
     print("RITC shape/scale-invariance tests")
     print(f"(cluster bootstrap: {N_BOOT} resamples of syndicates; seed={SEED})")
-    print(f"operator: k={cal['k']:.4f} gamma={cal['gamma']:.4f} "
+    print(f"single-regime base scale: k={cal['k']:.4f} gamma={cal['gamma']:.4f} "
           f"sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")
 
     store = {}
@@ -262,16 +259,15 @@ def main():
         _fh.write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
     print("\nRead-out:  (A) a scale ratio interval is read by WHICH SIDE of one it lies:")
-    print("               entirely ABOVE 1 => RITC residuals are the wider ones, so the")
-    print("                 (R,HHI) scale UNDER-scales RITC;")
-    print("               entirely BELOW 1 => RITC residuals are the narrower ones, so it")
-    print("                 OVER-scales RITC;")
+    print("               entirely ABOVE 1 => RITC residuals have the wider spread;")
+    print("               entirely BELOW 1 => RITC residuals have the narrower spread;")
+    print("               retained year and regime effects preclude attributing this solely to base scale;")
     print("               STRADDLING 1 => the comparison is unresolved at this resolution.")
     print("               Each population's own direction is printed with its ratio above")
     print("               and recorded in the result file; these intervals are the")
     print("               cluster-bootstrapped ones.")
     print("           (B) AD p<0.05 or shape-diff CI excluding 0 => RITC has a different standardised SHAPE.")
-    print("           (C) omnibus: is the operator-standardised residual the same law regardless of RITC?")
+    print("           (C) omnibus: is the base-standardised residual the same law regardless of RITC?")
     print("           (D) Fisher OR>1 => RITC over-represented in the standardised tail (the nu channel).")
 
 

@@ -13,8 +13,37 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ritc_tail_shape as rts  # noqa: E402
+import ritc_shape_invariance as rsi  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def test_base_scale_is_the_single_regime_calibration_and_retains_other_effects():
+    with io.open(rsi.CAL, encoding="utf-8") as fh:
+        cal = json.load(fh)
+    size, hhi = np.array([100.0, 500.0]), np.array([0.3, 0.5])
+    expected = np.sqrt(cal["sd_undiv"] ** 2 + cal["sd_div"] ** 2 *
+                       ((size / cal["reference_size"]) * hhi ** (-cal["gamma"])) ** (2 * (cal["k"] - 1)))
+    np.testing.assert_allclose(rsi.sigma_op(size, hhi, cal), expected)
+    for filename in ("ritc_shape_invariance_results.json", "ritc_tail_shape_results.json"):
+        with io.open(os.path.join(ROOT, "results", filename), encoding="utf-8") as fh:
+            record = json.load(fh)
+        for population in record.values():
+            assert population["meta"]["calibration_source"] == rsi.CALIBRATION_SOURCE
+            assert population["meta"]["standardisation"] == rsi.STANDARDISATION_NOTE
+            assert "reporting-year and assumed-business scale effects remain" in population["meta"]["standardisation"]
+
+
+def test_spread_direction_describes_contrast_without_attributing_its_cause():
+    assert "wider" in rsi.spread_direction(1.1, 1.4)
+    assert "narrower" in rsi.spread_direction(0.5, 0.9)
+    assert "unresolved" in rsi.spread_direction(0.5, 1.2)
+    with io.open(os.path.join(ROOT, "results", "ritc_shape_invariance_results.json"), encoding="utf-8") as fh:
+        record = json.load(fh)
+    for pop in record.values():
+        for result in pop["scale"]["ratios"].values():
+            if "direction" in result:
+                assert result["direction"] == rsi.spread_direction(*result["ci"])
 
 
 def _sample():

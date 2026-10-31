@@ -14,7 +14,9 @@
         "reference_size": 500.0
       },
       "seed": 12345,
-      "n_boot": 4000
+      "n_boot": 4000,
+      "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
     },
     "scale": {
       "fligner_p": 0.2875846893619103,
@@ -143,7 +145,9 @@
         "reference_size": 500.0
       },
       "seed": 12345,
-      "n_boot": 4000
+      "n_boot": 4000,
+      "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
     },
     "scale": {
       "fligner_p": 0.015202130412187943,
@@ -157,7 +161,7 @@
           ],
           "p": 0.019436345966958212,
           "n_boot": 3087,
-          "direction": "over-scales RITC (interval below 1)"
+          "direction": "RITC spread narrower after base standardisation (interval below 1)"
         },
         "MAD(z)": {
           "ratio": 0.4132805936934363,
@@ -167,7 +171,7 @@
           ],
           "p": 0.005778491171749599,
           "n_boot": 3115,
-          "direction": "over-scales RITC (interval below 1)"
+          "direction": "RITC spread narrower after base standardisation (interval below 1)"
         },
         "SD(z)": {
           "ratio": 0.35515295893703386,
@@ -177,7 +181,7 @@
           ],
           "p": 0.0,
           "n_boot": 3113,
-          "direction": "over-scales RITC (interval below 1)"
+          "direction": "RITC spread narrower after base standardisation (interval below 1)"
         },
         "IQR_strong": {
           "ratio": 0.3734881604534946,

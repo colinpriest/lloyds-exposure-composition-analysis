@@ -6,7 +6,9 @@
       "ritc": 27,
       "thr_p90_absz": 2.0966984777480246,
       "seed": 12345,
-      "n_boot": 4000
+      "n_boot": 4000,
+      "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
     },
     "tests": {
       "Student-t nu (MLE)": {
@@ -94,7 +96,9 @@
       "ritc": 11,
       "thr_p90_absz": 2.089088347972358,
       "seed": 12345,
-      "n_boot": 4000
+      "n_boot": 4000,
+      "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
     },
     "tests": {
       "Student-t nu (MLE)": {

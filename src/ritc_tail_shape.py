@@ -1,10 +1,11 @@
-"""Does RITC change the TAIL SHAPE of the operator-standardised residual?
+"""Compare the TAIL SHAPE of the single-regime base-standardised residual.
 
 Correction to ritc_shape_invariance.py: the robust shape statistics there (Bowley
 skew, Moors kurtosis, tail-skew ratio) are built from quantiles at/inside the 10th-90th
-percentiles, and KS is body-dominated -- all three are BLIND to the extreme tail.  So
-their "no shape difference" verdict only covers the central shape.  The tail is part of
-the shape, and the nu robustness fit (nu 2.14 -> 2.43 when RITC is dropped) says it moves.
+percentiles, and KS is body-dominated -- all three have limited sensitivity to the
+extreme tail. A failure to detect central shape differences does not settle tail shape.
+The current robustness fits give similar point estimates with and without the
+assumed-business records; their point difference does not establish a tail-shape change.
 
 This script tests the tail shape of z = s / sigma(R,HHI) directly, clean vs RITC, with
 tail-SENSITIVE estimators and a cluster (by-syndicate) bootstrap:
@@ -43,7 +44,7 @@ from scipy import stats
 
 import run_analysis as ra
 from test_shape_invariance import build_population, select, _q
-from ritc_shape_invariance import sigma_op, load_calib_population
+from ritc_shape_invariance import sigma_op, load_calib_population, CALIBRATION_SOURCE, STANDARDISATION_NOTE
 import assumed_business
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
@@ -189,6 +190,7 @@ def run(label, rows, strong, weak, cal, rng, store):
         ("far spread (q99-q50)/(q90-q50)", far_spread, "diff", None, "upper-tail stretch >p90"),
     ]
     res = {"meta": {"n": len(z), "clean": int((~ritc).sum()), "ritc": int(ritc.sum()),
+                    "calibration_source": CALIBRATION_SOURCE, "standardisation": STANDARDISATION_NOTE,
                     "thr_p90_absz": thr, "seed": SEED, "n_boot": N_BOOT}, "tests": {}}
     print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'p':>8}")
     print("  " + "-" * 92)
@@ -218,9 +220,9 @@ def main():
     with io.open(CAL, encoding="utf-8") as _fh:
         cal = json.load(_fh)
     strong, weak = assumed_business.strong_weak()
-    print("RITC TAIL-SHAPE comparison of operator-standardised z = s/sigma(R,HHI)")
+    print("RITC TAIL-SHAPE comparison of single-regime base-standardised z = s/sigma(R,HHI)")
     print(f"(cluster bootstrap {N_BOOT} resamples of syndicates; seed={SEED})")
-    print(f"operator: k={cal['k']:.4f} gamma={cal['gamma']:.4f} sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")
+    print(f"single-regime base scale: k={cal['k']:.4f} gamma={cal['gamma']:.4f} sd_undiv={cal['sd_undiv']:.4f} sd_div={cal['sd_div']:.4f}")
     store = {}
     run("CALIB (working sample)", load_calib_population(), strong, weak, cal, rng, store)
     run("N5 (rescaling pop)", select(build_population(), "N5"), strong, weak, cal, rng, store)
