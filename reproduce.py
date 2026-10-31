@@ -1472,7 +1472,7 @@ def verify():
             report = json.load(_fh, parse_constant=reject_nonfinite_constant)
     except FileNotFoundError:
         report_missing = True
-    except (OSError, UnicodeError, ValueError) as exc:
+    except Exception as exc:
         report_error = "run report is unreadable: %s" % exc
     if not stamp and report_missing:
         print("\nverify: nothing to verify -- no run is recorded in this checkout"

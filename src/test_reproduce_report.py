@@ -609,7 +609,7 @@ def test_local_run_report_is_validated_without_being_misclassified_as_a_script_o
 @pytest.mark.parametrize("contents", [
     "{}", "[]", "null", "false", "0", '""', "[1]", '"text"',
     '{"schema": "not-an-integer"}', "not json", "NaN", "Infinity", "-Infinity",
-    '{"schema": 4, "unexpected": NaN}',
+    '{"schema": 4, "unexpected": NaN}', "[" * 1200 + "0" + "]" * 1200,
 ])
 def test_verify_rejects_invalid_or_unreadable_present_reports_even_if_not_marked_changed(
         monkeypatch, tmp_path, with_stamp, contents):
