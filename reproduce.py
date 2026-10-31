@@ -583,6 +583,8 @@ def check_manifest_completeness():
     (EVIDENCE_ARCHIVES)."""
     bad = []
     for sc, _, _ in STEPS:
+        if not os.path.isfile(os.path.join(SRC, sc)):
+            bad.append("step %s is missing or is not a regular file" % sc)
         if sc not in OUTPUTS:
             bad.append("step %s declares no outputs" % sc)
     produced = {rel for outs in OUTPUTS.values() for rel in outs}
@@ -804,8 +806,9 @@ def run(steps):
     failed = []
     for i, (script, stage, mins) in enumerate(steps, 1):
         path = os.path.join(SRC, script)
-        if not os.path.exists(path):
-            print("[%2d/%2d] %-42s SKIP (not present)" % (i, len(steps), script))
+        if not os.path.isfile(path):
+            failed.append(script)
+            print("[%2d/%2d] %-42s FAIL (missing or not a regular file)" % (i, len(steps), script))
             continue
         t0 = time.time()
         # PyTensor's NUMBA backend writes about a thousand temporary source files per
@@ -1496,7 +1499,7 @@ def validate_stamp(stamp):
     return []
 
 
-def validate_report(rep):
+def validate_report(rep, allow_pending=False):
     """Check the committed run report AGAINST HISTORY, not the worktree against
     itself. Returns (ok, messages).
 
@@ -1507,6 +1510,10 @@ def validate_report(rep):
     exact output set, and each output hash must match the blob at the recorded commit.
     """
     msgs = []
+    if rep.get("schema", 1) >= 5:
+        state = rep.get("verification")
+        if state != "passed" and not (allow_pending and state == "pending"):
+            return False, ["the run report does not record a completed passing output verification"]
     if rep.get("schema", 1) < 4:
         return False, ["report schema %s predates the whole-tree input attestation; rerun the "
                        "recorded pass" % rep.get("schema")]
@@ -1682,7 +1689,7 @@ def validate_report(rep):
     return ok, msgs
 
 
-def verify():
+def verify(stamp_override=None):
     """Compare every output DECLARED by the recorded run against the committed tree.
 
     Fails on: no recorded run; a declared output missing, untracked, or differing
@@ -1692,7 +1699,9 @@ def verify():
     .npz; this one checks exactly what the manifest declares, and nothing passes by
     being outside the filter.
     """
-    stamp = read_stamp()
+    # The runner supplies its completed script list in memory. The on-disk
+    # stamp stays failed/in-progress until verification itself has passed.
+    stamp = read_stamp() if stamp_override is None else stamp_override
     if stamp is not None:
         stamp_errors = validate_stamp(stamp)
         if stamp_errors:
@@ -1723,7 +1732,10 @@ def verify():
             report_ok, rmsgs = False, ["run report must be a JSON object"]
         else:
             try:
-                report_ok, rmsgs = validate_report(report)
+                if stamp_override is None:
+                    report_ok, rmsgs = validate_report(report)
+                else:
+                    report_ok, rmsgs = validate_report(report, allow_pending=True)
             except Exception as exc:
                 report_ok, rmsgs = False, ["run report validation failed: %s" % exc]
         print("\nverify: committed run report:")
@@ -1890,8 +1902,9 @@ def main():
             env[pkg] = _md.version(pkg)
         except Exception:
             env[pkg] = "absent"
-    _atomic_write_json(REPORT, {
-            "schema": 4,
+    report_data = {
+            "schema": 5,
+            "verification": "pending",
             "environment": env,
             "commit": rc.stdout.strip(),
             "worktree_dirty_src": bool(dirty),
@@ -1907,20 +1920,28 @@ def main():
                         for sc, _, _ in steps},
             "outputs": outs,
             "volatile_json_fields_excluded_by_verify": list(VOLATILE),
-        })
-    # Publish success only after the complete new report is safely in place.
-    write_stamp(ran_ok, failed)
+        }
+    _atomic_write_json(REPORT, report_data)
     print("\nrun report written to reproduce-run-report.json (commit this file: it "
           "is the\ndurable record --verify and the cover letter refer to)")
     n_json = len([f for f in os.listdir(os.path.join(HERE, "results"))
                   if f.endswith(".json")])
     print("\nresults/*.json now present: %d" % n_json)
     if failed:
+        write_stamp(ran_ok, failed)
         print("failed: %s" % ", ".join(failed))
         return 1
-    if verify() and not failed:
-        print("done. Outputs match the committed files.")
-    return 1 if failed else 0
+    # Verify with an in-memory stamp; an interruption or exception leaves the
+    # already-written on-disk stamp marked in progress, never successful.
+    local_run = {"ran": ran_ok, "failed": [], "manifest_size": len(STEPS)}
+    if not verify(stamp_override=local_run):
+        write_stamp(ran_ok, ["output verification failed"])
+        return 1
+    report_data["verification"] = "passed"
+    _atomic_write_json(REPORT, report_data)
+    write_stamp(ran_ok, [])
+    print("done. Outputs match the committed files.")
+    return 0
 
 
 if __name__ == "__main__":

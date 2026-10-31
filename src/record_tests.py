@@ -146,6 +146,8 @@ def stamped_readme_text(text, rec):
     if os.path.exists(REPORT):
         with io.open(REPORT, encoding="utf-8") as _fh:
             rep = json.load(_fh)
+        if rep.get("schema", 1) >= 5 and rep.get("verification") != "passed":
+            raise ValueError("cannot stamp README from a run without passing output verification")
         d = datetime.datetime.strptime(rep["finished_utc"][:10], "%Y-%m-%d")
         # the tree state travels with the date. Stamping the date alone is how the
         # sentence came to claim a clean tree for a run the report records as dirty

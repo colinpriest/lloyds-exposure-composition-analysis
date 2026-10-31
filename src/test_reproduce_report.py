@@ -990,7 +990,7 @@ def test_report_write_interruption_keeps_old_report_and_fails_closed(monkeypatch
 def test_success_stamp_is_published_only_after_complete_report(monkeypatch, tmp_path):
     stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
     monkeypatch.setattr(rp, "run", lambda _steps: [])
-    monkeypatch.setattr(rp, "verify", lambda: True)
+    monkeypatch.setattr(rp, "verify", lambda **kwargs: True)
     original_write = rp._atomic_write_json
     writes = []
 
@@ -1003,13 +1003,16 @@ def test_success_stamp_is_published_only_after_complete_report(monkeypatch, tmp_
 
     monkeypatch.setattr(rp, "_atomic_write_json", observe)
     assert rp.main() == 0
-    assert writes == [stamp.name, report.name, stamp.name]
+    assert writes == [stamp.name, report.name, report.name, stamp.name]
+    assert json.loads(report.read_text(encoding="utf-8"))["verification"] == "passed"
     assert rp.validate_stamp(rp.read_stamp()) == []
 
 
 def test_interruption_after_report_before_success_stamp_fails_closed(monkeypatch, tmp_path):
     stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
     monkeypatch.setattr(rp, "run", lambda _steps: [])
+    actual_verify = rp.verify
+    monkeypatch.setattr(rp, "verify", lambda **kwargs: True)
     original_write = rp._atomic_write_json
 
     def interrupt_success(path, value):
@@ -1023,7 +1026,7 @@ def test_interruption_after_report_before_success_stamp_fails_closed(monkeypatch
     assert json.loads(report.read_text(encoding="utf-8"))["scripts"] == {
         "sample.py": {"status": "ok"}}
     assert rp.validate_stamp(rp.read_stamp())
-    assert not rp.verify()
+    assert not actual_verify()
 
 
 def test_interruption_during_preflight_invalidates_previous_stamp(monkeypatch, tmp_path):
@@ -1049,3 +1052,163 @@ def test_inspection_modes_do_not_invalidate_prior_stamp(monkeypatch, tmp_path, i
     assert rp.main() == 0
     assert stamp.read_bytes() == original_stamp
     assert report.read_bytes() == original_report
+
+@pytest.mark.parametrize("producer_kind", ["missing", "directory"])
+def test_manifest_preflight_rejects_missing_or_nonfile_producer(tmp_path, monkeypatch, producer_kind):
+    script = "build_maturity_share.py"
+    if producer_kind == "directory":
+        (tmp_path / script).mkdir()
+    monkeypatch.setattr(rp, "SRC", str(tmp_path))
+    monkeypatch.setattr(rp, "STEPS", [(script, "inputs", 1)])
+    findings = rp.check_manifest_completeness()
+    assert any(script in finding and "not a regular file" in finding for finding in findings)
+
+
+@pytest.mark.parametrize("producer_kind", ["missing", "directory"])
+def test_missing_producer_is_a_failed_execution(tmp_path, monkeypatch, producer_kind, capsys):
+    script = "build_maturity_share.py"
+    if producer_kind == "directory":
+        (tmp_path / script).mkdir()
+    monkeypatch.setattr(rp, "SRC", str(tmp_path))
+    assert rp.run([(script, "inputs", 1)]) == [script]
+    assert "FAIL" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("producer_kind", ["missing", "directory"])
+def test_disappearing_producer_is_recorded_failed_not_run(tmp_path, monkeypatch, producer_kind):
+    """A file lost after preflight must not turn its retained output into evidence."""
+    import sys
+    from types import SimpleNamespace
+
+    script = "build_maturity_share.py"
+    src = tmp_path / "src"
+    src.mkdir()
+    (tmp_path / "results").mkdir()
+    if producer_kind == "directory":
+        (src / script).mkdir()
+    (tmp_path / "results" / "old.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(rp, "HERE", str(tmp_path))
+    monkeypatch.setattr(rp, "SRC", str(src))
+    monkeypatch.setattr(rp, "REPORT", str(tmp_path / "reproduce-run-report.json"))
+    monkeypatch.setattr(rp, "STAMP", str(tmp_path / ".reproduce-run.json"))
+    monkeypatch.setattr(rp, "STEPS", [(script, "inputs", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {script: ("results/old.json",)})
+    monkeypatch.setattr(rp, "REQUIRED", ())
+    monkeypatch.setattr(sys, "argv", ["reproduce.py"])
+    monkeypatch.setattr(rp, "check_environment", lambda: True)
+    for name in ("check_extraction_prerequisite", "check_manifest_completeness",
+                 "check_environment_lock", "check_readme_counts", "check_test_counts"):
+        monkeypatch.setattr(rp, name, lambda *args: [])
+    monkeypatch.setattr(rp, "capture_inputs", lambda: {})
+    monkeypatch.setattr(rp, "check_inputs_after", lambda before: before)
+    monkeypatch.setattr(rp.subprocess, "run", lambda args, **kwargs: SimpleNamespace(
+        stdout="" if "--porcelain" in args else "a" * 40, returncode=0))
+    monkeypatch.setattr(rp, "verify", lambda: pytest.fail("failed run must not be verified as successful"))
+    assert rp.main() == 1
+    report = json.loads((tmp_path / "reproduce-run-report.json").read_text(encoding="utf-8"))
+    stamp = json.loads((tmp_path / ".reproduce-run.json").read_text(encoding="utf-8"))
+    assert report["scripts"][script]["status"] == "failed"
+    assert "results/old.json" not in report["outputs"]
+    assert stamp["ran"] == []
+    assert stamp["failed"] == [script]
+
+
+def test_failed_output_verification_sets_nonzero_exit_and_failed_stamp(monkeypatch, tmp_path):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+
+    def mismatch(*, stamp_override):
+        assert stamp_override["failed"] == []
+        assert rp.validate_stamp(rp.read_stamp()), "on-disk stamp must remain in progress"
+        assert json.loads(report.read_text(encoding="utf-8"))["scripts"]["sample.py"]["status"] == "ok"
+        return False
+
+    monkeypatch.setattr(rp, "verify", mismatch)
+    assert rp.main() == 1
+    assert json.loads(stamp.read_text(encoding="utf-8"))["failed"] == ["output verification failed"]
+    assert rp.validate_stamp(rp.read_stamp())
+    durable = json.loads(report.read_text(encoding="utf-8"))
+    assert durable["verification"] == "pending"
+    assert not rp.validate_report(durable)[0]
+
+
+def test_interrupted_output_verification_never_publishes_success_stamp(monkeypatch, tmp_path):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+
+    def interrupt(*, stamp_override):
+        assert stamp_override["failed"] == []
+        assert rp.validate_stamp(rp.read_stamp())
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(rp, "verify", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        rp.main()
+    assert json.loads(stamp.read_text(encoding="utf-8"))["failed"]
+    assert rp.validate_stamp(rp.read_stamp())
+    durable = json.loads(report.read_text(encoding="utf-8"))
+    assert durable["verification"] == "pending"
+    assert not rp.validate_report(durable)[0]
+
+
+def test_in_memory_run_stamp_still_checks_outputs_and_report(monkeypatch, tmp_path):
+    """The runner can verify before publishing its success stamp, without skipping checks."""
+    report = tmp_path / "reproduce-run-report.json"
+    report.write_text('{"marker": 42}\n', encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "STEPS", [("sample.py", "inputs", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"sample.py": ("results/known.json",)})
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": [], "failed": ["in progress"], "manifest_size": 1})
+    monkeypatch.setattr(rp, "validate_report", lambda record, **kwargs: (record == {"marker": 42}, []))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    stamp = {"ran": ["sample.py"], "failed": [], "manifest_size": 1}
+    assert not rp.verify()
+    assert rp.verify(stamp_override=stamp)
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("DIFFERS", "changed"))
+    assert not rp.verify(stamp_override=stamp)
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("MISSING", "missing"))
+    assert not rp.verify(stamp_override=stamp)
+    monkeypatch.setattr(rp, "validate_report", lambda record: (False, ["bad attestation"]))
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    assert not rp.verify(stamp_override=stamp)
+
+
+def test_interruption_committing_verification_leaves_pending_report_and_failed_stamp(monkeypatch, tmp_path):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+    monkeypatch.setattr(rp, "verify", lambda **kwargs: True)
+    original_write = rp._atomic_write_json
+
+    def interrupt_verified_report(path, value):
+        if os.path.abspath(path) == os.path.abspath(report) and value.get("verification") == "passed":
+            raise OSError("interrupted verified report")
+        original_write(path, value)
+
+    monkeypatch.setattr(rp, "_atomic_write_json", interrupt_verified_report)
+    with pytest.raises(OSError, match="interrupted verified report"):
+        rp.main()
+    assert rp.validate_stamp(rp.read_stamp())
+    durable = json.loads(report.read_text(encoding="utf-8"))
+    assert durable["verification"] == "pending"
+    assert not rp.validate_report(durable)[0]
+
+
+def test_schema5_pending_report_is_never_a_durable_passing_record():
+    ok, messages = rp.validate_report({"schema": 5, "verification": "pending"})
+    assert not ok and any("passing output verification" in m for m in messages)
+    for value in (None, "failed", "PASS", True):
+        ok, _ = rp.validate_report({"schema": 5, "verification": value})
+        assert not ok
+
+
+def test_schema5_transition_preserves_historical_report_validation():
+    record = copy.deepcopy(_report())
+    record["schema"] = 5
+    record["verification"] = "pending"
+    assert not rp.validate_report(record)[0]
+    ok, messages = rp.validate_report(record, allow_pending=True)
+    assert ok, messages
+    record["verification"] = "passed"
+    ok, messages = rp.validate_report(record)
+    assert ok, messages

@@ -82,3 +82,22 @@ def test_the_committed_readme_carries_the_unrounded_headline_fit():
         assert "`%s ≈ %s`" % (label, fmt % cal[key]) in readme, (label, cal[key])
     assert "`P(nu_ritc < nu_clean) = %.2f`" % cal["posterior_prob"]["nu_ritc_lt_nu_clean"] in readme
     assert "Headline fit (n=%d gross-basis" % cal["n"] in readme
+
+
+def test_readme_stamp_rejects_an_unverified_schema5_run(tmp_path, monkeypatch):
+    import pytest
+    report = tmp_path / "reproduce-run-report.json"
+    monkeypatch.setattr(RT, "REPORT", str(report))
+    monkeypatch.setattr(RT, "CALIBRATION", str(tmp_path / "absent_cal.json"))
+    monkeypatch.setattr(RT, "SCALE_TERM", str(tmp_path / "absent_scale.json"))
+    rec = {"passed": 1, "skipped": 0}
+    text = "The run was made on 1 January 2020 on a source tree with no uncommitted change."
+    base = {"schema": 5, "finished_utc": "2026-10-31T09:00:00Z", "worktree_dirty_src": False}
+    for state in (None, "pending", "failed"):
+        report.write_text(json.dumps(dict(base, verification=state)), encoding="utf-8")
+        with pytest.raises(ValueError, match="without passing output verification"):
+            RT.stamped_readme_text(text, rec)
+    report.write_text(json.dumps(dict(base, verification="passed")), encoding="utf-8")
+    assert "31 October 2026" in RT.stamped_readme_text(text, rec)
+    report.write_text(json.dumps(dict(base, schema=4)), encoding="utf-8")
+    assert "31 October 2026" in RT.stamped_readme_text(text, rec)

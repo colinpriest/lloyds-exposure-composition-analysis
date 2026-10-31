@@ -291,7 +291,10 @@ def _run_report():
     if not os.path.exists(q):
         pytest.skip("no manifest run report in this tree")
     with io.open(q, encoding="utf-8") as _fh:
-        return json.load(_fh)
+        record = json.load(_fh)
+    assert record.get("schema", 1) < 5 or record.get("verification") == "passed", (
+        "the run report lacks passing output verification")
+    return record
 
 
 def test_the_readme_states_the_tree_state_the_run_report_records():

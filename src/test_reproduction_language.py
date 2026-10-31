@@ -48,7 +48,10 @@ def _read(rel):
 def _record():
     with io.open(os.path.join(HERE, "reproduce-run-report.json"),
                              encoding="utf-8") as _fh:
-        return json.load(_fh)
+        record = json.load(_fh)
+    assert record.get("schema", 1) < 5 or record.get("verification") == "passed", (
+        "the run report lacks passing output verification")
+    return record
 
 
 def unscoped_reproduction_claims(text):
