@@ -111,7 +111,7 @@ def test_recorded_targeted_refits_have_matching_results_and_pass_diagnostics():
     additional = json.loads((root / "results/check_maturity_additional_sensitivities_provenance.json").read_text(encoding="utf-8"))
     assert not primary["old_full_reproduction_report_applies"]
     assert primary["sampler"]["target_accept"] == 0.995
-    checks = [("results/check_maturity_denominator_results.json", primary["result_sha256"])]
+    checks = [("results/check_maturity_denominator_results.json", primary["augmented_result_sha256"])]
     checks.extend((entry["result_file"], entry["result_sha256"]) for entry in additional.values())
     assert len(checks) == 3
     for filename, expected in checks:
@@ -121,6 +121,29 @@ def test_recorded_targeted_refits_have_matching_results_and_pass_diagnostics():
         assert len(result["refits"]) == 7
         assert all(v["_diag"]["divergences"] == 0 and v["_diag"]["max_rhat"] <= 1.01
                    for v in result["refits"].values())
+
+
+def test_primary_ess_is_derived_from_the_original_detailed_diagnostics():
+    import hashlib
+    prov = json.loads((ROOT / 'results/check_maturity_denominator_provenance.json').read_text(encoding='utf-8'))
+    augmentation = prov['ess_diagnostics_augmentation']
+    old_bytes = (ROOT / augmentation['original_result_file']).read_bytes().replace(b'\r\n', b'\n')
+    details_bytes = (ROOT / augmentation['source_diagnostics_file']).read_bytes().replace(b'\r\n', b'\n')
+    assert hashlib.sha256(old_bytes).hexdigest() == prov['result_sha256']
+    assert hashlib.sha256(details_bytes).hexdigest() == augmentation['source_diagnostics_sha256_normalized_lf']
+    old, details = json.loads(old_bytes), json.loads(details_bytes)
+    current = json.loads((ROOT / 'results/check_maturity_denominator_results.json').read_text(encoding='utf-8'))
+    assert len(details['fit_summaries']) == len(current['refits']) == 7
+    for fit in details['fit_summaries']:
+        name = fit['fit'].replace('V2_delta_', 'V2_mixed_scope_denominator_delta_')
+        name = name.replace('V1_delta_', 'V1_severity_only_delta_')
+        diag = current['refits'][name]['_diag']
+        values = fit['parameters'].values()
+        assert diag['min_ess_bulk'] == min(row['ess_bulk'] for row in values)
+        assert diag['min_ess_tail'] == min(row['ess_tail'] for row in values)
+        assert diag['max_rhat'] == max(row['r_hat'] for row in values)
+        del diag['min_ess_bulk'], diag['min_ess_tail']
+    assert current == old
 
 
 def test_recovered_group_sensitivity_is_reproducible_from_primary():

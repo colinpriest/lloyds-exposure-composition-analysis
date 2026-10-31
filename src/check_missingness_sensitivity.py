@@ -335,6 +335,47 @@ def check_populations(S, dispositions, unresolved):
                                 sorted(expected - found)[:5]))
 
 
+def unavailable_eligibility_counts(unavailable):
+    """Separate source-supported eligibility from assumptions in the target."""
+    counts = {"eligible": 0, "unresolved": 0}
+    for row in unavailable:
+        status = row.get("economic_eligibility")
+        if status not in counts:
+            raise ValueError("unavailable outcome has unknown eligibility: %r" % status)
+        counts[status] += 1
+    return counts["eligible"], counts["unresolved"]
+
+
+def _count_word(n):
+    words = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+    return words[n] if 0 <= n < len(words) else str(n)
+
+
+def unavailable_stress_metadata(unavailable, target_count, unresolved_count):
+    """Build the published interpretation and counts from classified records."""
+    supported, provisional = unavailable_eligibility_counts(unavailable)
+    supported_word, provisional_word = _count_word(supported), _count_word(provisional)
+    interpretation = (
+        f"one-direction sensitivity within the provisional target; {supported_word} "
+        f"unavailable outcome{' is' if supported == 1 else 's are'} source-supported eligible and "
+        f"{provisional_word} {'is' if provisional == 1 else 'are'} provisionally included; not a bound"
+    )
+    broad = {
+        "interpretation": (
+            f"assumes the {unresolved_count} selected eligibility-unresolved records were economically eligible, "
+            f"appends them with the {len(unavailable)} unavailable outcomes "
+            f"({supported_word} source-supported eligible and {provisional_word} provisionally included), "
+            f"and expands the selected scenario to {target_count + unresolved_count}; "
+            "not an exhaustive upper bound or an estimate of their eligibility; other disclosure-screened histories remain unverified"
+        ),
+        "n_unavailable_outcomes": len(unavailable),
+        "n_eligibility_unresolved": unresolved_count,
+        "n_source_supported_eligible_unavailable": supported,
+        "n_provisionally_assumed_unavailable": provisional,
+    }
+    return interpretation, broad
+
+
 def main():
     S, R, H, year, key, syndicate = load_sample()
     ritc = ritc_flag(key).astype(float)
@@ -424,22 +465,21 @@ def main():
         SD / "model" / "dispersion_calibration_ritc.json", encoding="utf-8"
     ) as _fh:
         calibration = json.load(_fh)
+    unavailable_interpretation, broad_metadata = unavailable_stress_metadata(
+        unavailable, len(target), len(unresolved)
+    )
     result["eligible_outcome_stress"] = _stress_fit(
         unavailable, dispositions, S, R, H, year, ritc, calibration, C_GRID,
         "eligible unavailable",
-        "one-direction sensitivity within the provisional target; one unavailable outcome is source-supported eligible and nine are provisionally included; not a bound",
+        unavailable_interpretation,
     )
     broader_missing = unavailable + unresolved
     result["eligibility_unresolved_stress"] = _stress_fit(
         broader_missing, dispositions, S, R, H, year, ritc, calibration,
         UNRESOLVED_C_GRID, "known unavailable plus unresolved",
-        f"assumes the {len(unresolved)} selected eligibility-unresolved records were economically eligible, "
-        f"appends them with the {len(unavailable)} unavailable outcomes (one source-supported eligible and nine provisionally included), and expands "
-        f"the potential target to {len(target) + len(unresolved)}; "
-        "not an exhaustive upper bound or an estimate of their eligibility; other disclosure-screened histories remain unverified",
+        broad_metadata["interpretation"],
     )
-    result["eligibility_unresolved_stress"]["n_unavailable_outcomes"] = len(unavailable)
-    result["eligibility_unresolved_stress"]["n_eligibility_unresolved"] = len(unresolved)
+    result["eligibility_unresolved_stress"].update(broad_metadata)
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
         _fh.write(json.dumps(result, indent=2) + "\n")
     print(f"Wrote {OUT}")

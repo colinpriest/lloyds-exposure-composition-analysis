@@ -282,3 +282,25 @@ def test_unavailable_outcome_count_does_not_claim_all_cases_are_known_eligible()
     assert result['n_source_supported_eligible_unavailable'] == 1
     assert result['n_provisionally_assumed_unavailable'] == 9
     assert 'n_known_eligible_unavailable' not in result
+
+
+def test_producer_recreates_unavailable_eligibility_metadata_from_ledger():
+    rows = _ledger()
+    unavailable = [r for r in rows if r['category'] == 'eligible_outcome_unavailable']
+    old = _sensitivity()
+    text, broad = cms.unavailable_stress_metadata(unavailable, old['n_target_population'],
+                                                  old['n_eligibility_unresolved'])
+    assert text == old['eligible_outcome_stress']['interpretation']
+    for name, value in broad.items():
+        assert value == old['eligibility_unresolved_stress'][name]
+
+    changed = [dict(r) for r in unavailable]
+    changed[0]['economic_eligibility'] = ('unresolved' if changed[0]['economic_eligibility'] == 'eligible'
+                                          else 'eligible')
+    _, changed_broad = cms.unavailable_stress_metadata(changed, old['n_target_population'],
+                                                       old['n_eligibility_unresolved'])
+    assert changed_broad['n_source_supported_eligible_unavailable'] != broad['n_source_supported_eligible_unavailable']
+    assert changed_broad['interpretation'] != broad['interpretation']
+    changed[0]['economic_eligibility'] = 'unknown-status'
+    with pytest.raises(ValueError, match='unknown eligibility'):
+        cms.unavailable_stress_metadata(changed, old['n_target_population'], old['n_eligibility_unresolved'])

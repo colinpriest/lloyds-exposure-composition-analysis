@@ -35,5 +35,16 @@
     "description": "1254/2022 classification changed exposure-result loader counters only; the 632 observations and stored dispersion calibration were compared recursively and are unchanged. The sensitivity was run on the earlier exact exposure file identified above.",
     "current_exposure_sha256_at_update": "5849618cfeb7eca294222f4d4fd7af996748c986dbe252fbb52a8bd7b5935694",
     "classification_commit": "85b0637c"
-  }
+  },
+  "ess_diagnostics_augmentation": {
+    "description": "The historical result identified by result_sha256 omitted ESS fields even though the producer emits them. Fourteen minimum bulk/tail ESS values were restored from the original detailed diagnostic record, whose values exactly match the clean b12b664 manifest rerun; all other parsed result fields match that rerun. The historical result is preserved separately and the current augmented result is identified by augmented_result_sha256.",
+    "source_commit": "b12b664782e2fb47d40560eaa42abb6326a1a298",
+    "source_diagnostics_file": "results/check_maturity_denominator_diagnostics.json",
+    "source_diagnostics_sha256_normalized_lf": "df6e97b36b8096ad5d9e834777ec2353120fd14eaa30e40e42594e0897f228fc",
+    "rerun_result_sha256_normalized_lf": "056ba6d5e424411a17405cd30fc5bf66aabf5d9a07f2f877fe940d50d6c3d716",
+    "original_result_sha256_normalized_lf": "3ea08912b68310d7fa89b6768137d892c8634676ff1aba931dd6e5384277f0af",
+    "minimum_bulk_and_tail_ess_values_added": 14,
+    "original_result_file": "results/review_evidence/maturity_pre_ess_results.json"
+  },
+  "augmented_result_sha256": "056ba6d5e424411a17405cd30fc5bf66aabf5d9a07f2f877fe940d50d6c3d716"
 }
