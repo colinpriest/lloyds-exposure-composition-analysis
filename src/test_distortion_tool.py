@@ -1054,6 +1054,11 @@ def test_failed_computes_and_file_loads_hide_old_results(tool_path):
       }
       els.reserveSize.value = "500"; reset(); compute(); check("insufficient donors");
       const previous = DATA;
+      if (!validToolData(previous)) throw Error("valid data rejected");
+      if (!validToolData({...previous, donors: Array(10).fill({...donor, hhi: 0})}))
+        throw Error("zero HHI should fall back to weights");
+      if (!validToolData({...previous, donors: Array(10).fill({...donor, hhi: null})}))
+        throw Error("missing HHI should fall back to weights");
       reset(); loadFile({}); check("load start");
       reset(); reader.onload({target: {result: "not json"}}); check("late invalid JSON");
       if (DATA !== previous) throw Error("invalid JSON replaced DATA");

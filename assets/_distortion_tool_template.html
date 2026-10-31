@@ -528,7 +528,7 @@ function validToolData(data) {
   const eligible = data.donors.filter(d => d && d.opening_reserves_gbp_m > 0 && d.s_raw_a != null);
   return eligible.length >= 10 && eligible.every(d =>
     Number.isFinite(d.opening_reserves_gbp_m) && Number.isFinite(d.s_raw_a) &&
-    (d.hhi == null || (Number.isFinite(d.hhi) && d.hhi > 0)) && Array.isArray(d.weights) &&
+    (d.hhi == null || (Number.isFinite(d.hhi) && d.hhi >= 0)) && Array.isArray(d.weights) &&
     d.weights.length === data.lob_names.length &&
     d.weights.every(w => Number.isFinite(w) && w >= 0) && d.weights.some(w => w > 0) &&
     Array.isArray(d.lob_severity) && d.lob_severity.length === data.lob_names.length &&
