@@ -1,9 +1,9 @@
 """Fast maximum-likelihood fit of the dispersion model (shared by the stress-test scripts).
 
-Same structural form as calibrate_dispersion_ritc.py but fitted by L-BFGS instead of NUTS, so
-it can be re-run thousands of times (proxy-error stress, adversarial concentration). No year
-shock (dropped for speed / identifiability under perturbation). Recovers the Bayesian posterior
-means closely on the unperturbed data.
+Fast Nelder-Mead maximum-likelihood approximation for proxy-error and adversarial-concentration
+checks. Unlike the headline Bayesian fit, it estimates gamma, omits the reporting-year shock
+and the RITC scale multiplier, and has no posterior or priors. Its estimates need not recover
+the headline posterior means.
 
   S ~ StudentT(nu_it, 0, sigma_it)
   sigma = sqrt( sd_undiv^2 + sd_div^2 * [ (R/ref)(1/H)^gamma ]^{2(k-1)} )

@@ -16,10 +16,10 @@ The adopted specification is the two-regime fit of calibrate_dispersion_ritc.py:
                * sqrt(sd_undiv^2 + sd_div^2 * [(R/500)(1/H)^gamma]^{2(k-1)})
     s_t      ~ Normal(0, tau_s)
 
-where 1[RITC] marks the assumed-business regime: an accepted reinsurance to close or a
-confirmed inward transfer (assumed_business.py, PLAN R195),
-with mu_it = 0 in the headline. Callers supply their own mu, which is the only thing
-they are allowed to vary; everything else comes from scale_block().
+where 1[RITC] marks the assumed-business regime: an accepted reinsurance to close,
+confirmed inward transfer or confirmed take-on (assumed_business.py, PLAN R195),
+with mu_it = 0 in the headline. Callers supply their own mu; declared sensitivities
+can also alter the documented scale-block options or their own likelihood.
 
 The headline fits it with the concentration exponent gamma FIXED AT 0 in the likelihood (the author's
 decision of 10 October 2026, option B): sigma_it does not depend on H, and the headline transfer operator
@@ -40,7 +40,7 @@ Two guards come with it:
 Import this; do not copy the block.
 
 Current status, so that "defined once" is a fact and not an aspiration:
-every fitting script builds from scale_block(). The headline calibration calls it
+scripts claiming this adopted specification build from scale_block(). The headline calibration calls it
 with (R, H, yr, ritc) and nothing else; each sensitivity script departs from the
 adopted model only through the block's keyword options (the support of k, a fitted
 gamma, a loading on the scale shock, an extra log-scale term) or through its own likelihood (a
@@ -89,8 +89,8 @@ SAMPLE_CORES = int(os.environ.get("PYMC_CORES", "1"))
 def load_sample():
     """The gross-basis working sample (its size is whatever the loader retains; read it
     from exposure_results.json, never from prose), with syndicate
-    identifiers and the assumed-business flag: RITC or a confirmed inward transfer
-    (assumed_business.py, PLAN R195)."""
+    identifiers and the assumed-business flag: RITC, confirmed inward transfer or
+    confirmed take-on (assumed_business.py, PLAN R195)."""
     with io.open(RESULTS, encoding="utf-8") as _fh:
         d = json.load(_fh)
     recs = [o for o in d["observations"]
@@ -286,7 +286,8 @@ def check_against_headline(post, tol_sd=TOL_SD, reference=HEADLINE_JSON):
 
     `post` maps parameter name -> posterior draws. Returns (ok, rows) where each row
     records the refit mean, the reference mean and the gap in reference posterior SDs.
-    A location term should barely move these; a different likelihood moves them a lot.
+    The comparison can flag a shift for review; its size alone cannot establish whether
+    the model, inputs or sampling caused it.
     The reference is the gamma = 0 headline (SHARED); with reference=GAMMA_FREE_JSON a refit of the
     gamma-free model is compared with that fit, gamma included (GAMMA_FREE_SHARED). A parameter whose
     reference posterior SD is 0 passes only at the reference value exactly: a gap from a point mass is
@@ -314,7 +315,7 @@ def report(rows, ok, label=""):
     print("  shared parameters vs the published fit%s:"
           % ((" (%s)" % label) if label else ""))
     for r in rows:
-        flag = "" if r["gap_in_sd"] <= TOL_SD else "   <-- DIFFERENT MODEL?"
+        flag = "" if r["gap_in_sd"] <= TOL_SD else "   <-- ABOVE REVIEW THRESHOLD"
         print("    %-11s refit %8.4f   headline %8.4f   gap %.2f sd%s"
               % (r["param"], r["refit"], r["headline"], r["gap_in_sd"], flag))
-    print("  consistent with the adopted model: %s" % ("yes" if ok else "NO"))
+    print("  shared-parameter gaps within review threshold: %s" % ("yes" if ok else "NO"))
