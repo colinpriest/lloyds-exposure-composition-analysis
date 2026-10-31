@@ -91,6 +91,28 @@ def test_the_systemic_share_note_counts_the_active_years():
     assert css.N_ACTIVE == market_active.active_total()
 
 
+def test_systemic_share_distinguishes_extension_draws_from_headline_scale():
+    """The result describes which fitted variant supplies each part of the diagnostic."""
+    import check_systemic_share as css
+    with open(css.OUT, encoding="utf-8") as fh:
+        record = json.load(fh)
+    with open(css.CALIB, encoding="utf-8") as fh:
+        headline = json.load(fh)
+    for key in ("k", "gamma", "sd_undiv", "sd_div"):
+        assert record["params"][key] == headline[key]
+    assert os.path.basename(css.DRAWS) == "dispersion_posterior_draws_systemic.npz"
+    with np.load(css.DRAWS) as draws:
+        assert "m_y" in draws
+    assert record["correction"] == css.CORRECTION
+    assert record["conclusion"] == css.CONCLUSION
+    assert record["raw_profile_key_note"] == css.RAW_KEY_NOTE
+    assert "does not establish" in record["raw_profile_key_note"]
+    assert "does not establish that the factor explains" in record["conclusion"]
+    aggregate = record["working_sample_aggregate_descriptive_only"]
+    assert aggregate["note"] == css.aggregate_note(sum(aggregate["n_records_per_year"]), css.N_ACTIVE)
+    assert "may reflect common-year" in aggregate["note"]
+
+
 # ---- scope item 3: the off-list records' account ---------------------------------------------------------------
 
 REGISTER = {"1884_2022": {"category": "WHOLE"}, "1110_2024": {"category": "PART"}, "780_2020": {"category": "AFTER"},

@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""The correlation-by-size profile, residualised on the fitted year factor.
+"""Correlation by size, residualised on a separately fitted directional-year factor.
 
 CORRECTION -- read this before the numbers. The first version of this check estimated a
 "shared fraction of floor variance" phi = 0.50 from the raw correlation-by-size profile
 and reported that the independent floor was "rejected". Review found the analysis
 invalid, for a reason that generalises:
 
-    ITS NULL WAS NOT THE FITTED MODEL. The adopted analysis already fits a common
-    directional year factor m_t (tau_m ~ 2.2% of reserves, credibly non-zero). ANY
-    common additive component induces a rising correlation-by-size profile, because
-    large syndicates' diversifiable noise is smaller, so the common part is a larger
-    share of their standardised severity. The raw profile against a flat-zero null
-    therefore re-measures m_t and mislabels it as a shared floor.
+    ITS FLAT-ZERO NULL omitted a possible directional common-year component. The
+    adopted headline has zero location and a year-scale shock; a separate directional-
+    shock extension fits m_t (its draws are in dispersion_posterior_draws_systemic.npz).
+    Under that extension's uniform loading and other assumptions a common additive
+    component tends to raise correlation as diversifiable noise falls, but the observed
+    profile need not follow that tendency. A flat-zero comparison does not isolate a
+    shared floor.
 
-Residualising on the fitted m_t confirms it: the profile collapses (raw tercile means
-about +0.02/+0.06/+0.08 become about -0.01/-0.01/-0.00) and the regression diagnostic
-falls from +0.50 to about -0.06, with a partial sensitivity range that still admits
-positive values (about [-0.05, +0.25]). That supplies no positive evidence for an
-additional market-shared floor beyond the year factor already in the model; it does
-NOT establish that no residual component exists.
+Residualising on the extension's fitted m_t changes the diagnostic. This is conditional
+on that extension and does not establish that its year factor explains the observed
+profile. The remaining point diagnostic supplies no positive evidence for an additional
+market-shared floor; its partial sensitivity range still admits positive values, so
+absence is not established.
 
 The second defect was labelling: the old output called a syndicate-subsampling interval
 an "hdi" and its resampling frequencies "P(...)", which are posterior-language labels
@@ -31,16 +31,16 @@ regression diagnostic.
 
 What remains true and useful:
 
-  * the raw profile is the EXPECTED signature of the fitted year factor -- a systemic
-    component whose variance share rises with size as diversifiable noise shrinks;
-  * after removing that factor, this diagnostic supplies no positive evidence of
+  * a uniform-loading directional factor can contribute a size-dependent correlation,
+    but this diagnostic does not establish that it explains the raw profile;
+  * after subtracting the extension's fitted factor, this diagnostic supplies no positive evidence of
     an additional market-shared floor (and cannot establish absence);
   * pair-specific (shared-slip) dependence is not fitted anywhere and stays open;
   * nothing here bears on the floor, which remains a structural extrapolation choice.
 
 The reserve-weighted working-sample aggregate is reported as DESCRIPTIVE volatility
 only. It covers the modelling sample (the working sample, whose coverage of active
-syndicate-years is stated in the generated provenance note under docs/), embeds the year factor and composition changes, and a scale
+syndicate-years is stated in the generated provenance note under docs/), may reflect common-year and composition changes, and a scale
 interval can never contain zero -- so it cannot evidence a floor and is not offered as
 evidence of one.
 
@@ -135,6 +135,29 @@ def profile(D, severities):
 #: until the fourth cycle of round 62, when the official lists regained Syndicate 33
 N_ACTIVE = market_active.active_total()
 
+CORRECTION = ("the first version estimated phi=0.50 against a flat-zero null and reported the "
+              "independent floor rejected. That comparison omitted a possible common-year component; "
+              "the adopted headline has a year-scale shock and zero location, while a separate "
+              "directional-shock extension fits m_t. Under its uniform-loading assumptions a "
+              "common additive component tends to raise correlation with size, but need not explain "
+              "the observed profile. The phi estimate and floor-rejection language are withdrawn.")
+CONCLUSION = ("residualising on the directional-shock extension's fitted year factor changes the "
+              "profile; this conditional diagnostic does not establish that the factor explains "
+              "the observed profile. The point diagnostic supplies no positive evidence for an "
+              "additional market-shared floor; its partial sensitivity range still admits positive "
+              "values, so absence is not established. Pair-specific (shared-slip) dependence "
+              "remains unmodelled. The floor remains a structural extrapolation choice.")
+RAW_KEY_NOTE = ("raw_embeds_year_factor is a legacy key for the observed unadjusted profile; "
+                "it does not establish that the extension's fitted latent factor is present in the data")
+
+
+def aggregate_note(n_records, n_active):
+    return ("reserve-weighted severity of the %d-record modelling sample (a different population "
+            "from the %d active syndicate-years, not a subset of them; unbalanced membership), "
+            "not the whole market; it may reflect common-year and composition changes; a scale "
+            "interval cannot contain zero, so this is descriptive volatility, not floor evidence"
+            % (n_records, n_active))
+
 
 def main():
     S, R, HHI, yr, key, W, gpw = load_sample()
@@ -163,20 +186,20 @@ def main():
         top[i] = b[2]
     lo, hi = np.percentile(coefs, [5, 95])
 
-    print("correlation-by-size profile, against the FITTED model rather than zero\n")
-    print("  the adopted analysis fits a common directional year factor m_t; any such")
-    print("  factor produces a rising profile, so the raw profile is not evidence of")
-    print("  a shared floor. residualising on the fitted m_t:\n")
+    print("correlation-by-size profile, conditional on a directional-shock extension\n")
+    print("  the extension fits a common directional year factor m_t; under uniform")
+    print("  loading it can produce a rising profile, but the observed profile need not")
+    print("  have that form. residualising on the extension's fitted m_t:\n")
     print("  tercile means               small     mid    large")
-    print("  raw (embeds m_t)          %+7.3f %+7.3f %+7.3f" % tuple(bins_raw))
+    print("  observed raw profile      %+7.3f %+7.3f %+7.3f" % tuple(bins_raw))
     print("  minus posterior-mean m_t  %+7.3f %+7.3f %+7.3f" % tuple(bins_res))
     print("\n  regression diagnostic (rho on share predictor, through origin):")
     print("  raw %+0.3f  ->  residualised %+0.3f, range [%+0.3f, %+0.3f] across %d"
           % (coef_raw, coef_res, lo, hi, len(pick)))
     print("  posterior draws of m_t: a partial posterior-sensitivity range (other fitted")
     print("  quantities held fixed), not a joint posterior interval")
-    print("\n  conclusion: the raw profile is the expected signature of the fitted")
-    print("  year factor. residualised on it, the point diagnostic supplies no")
+    print("\n  conclusion: residualising on the extension's year factor does not establish")
+    print("  that it explains the observed profile. The point diagnostic supplies no")
     print("  positive evidence for an additional market-shared floor; its partial")
     print("  sensitivity range still admits positive values, so absence is not")
     print("  established. nothing here bears on the floor, which stays a structural")
@@ -188,21 +211,15 @@ def main():
     mkt = np.array([M_obs[yr == y].sum() / R[yr == y].sum() for y in years])
     n_per = [int((yr == y).sum()) for y in years]
     print("\n  descriptive only: reserve-weighted WORKING-SAMPLE aggregate severity")
-    print("  (%d records, not a subset of the %d active syndicate-years; %d-%d records/yr; embeds m_t and"
+    print("  (%d records, not a subset of the %d active syndicate-years; %d-%d records/yr; may reflect common years and"
           % (len(yr), N_ACTIVE, min(n_per), max(n_per)))
     print("  composition changes; a scale interval cannot contain zero, so this")
     print("  cannot evidence a floor):  year-to-year SD = %.4f"
           % float(mkt.std(ddof=1)))
 
     out = {
-        "correction": "the first version estimated phi=0.50 against a flat-zero null "
-                      "and reported the independent floor rejected. That null was "
-                      "false: the fitted model already contains a common directional "
-                      "year factor m_t, and any common additive component produces a "
-                      "rising correlation-by-size profile. Residualised on the fitted "
-                      "m_t the profile collapses. The phi estimate, its rejection "
-                      "language, and the market-aggregate floor-existence argument "
-                      "are withdrawn.",
+        "correction": CORRECTION,
+        "raw_profile_key_note": RAW_KEY_NOTE,
         "labels": "the coefficient is an OLS-through-origin regression diagnostic. "
                   "The range is the 5th-95th percentile range induced by 500 "
                   "posterior draws of the fitted m_t with all other fitted "
@@ -223,22 +240,9 @@ def main():
             "residualised": float(coef_res),
             "range_5_95_across_mt_draws": [float(lo), float(hi)],
         },
-        "conclusion": "the correlation-by-size profile is the expected signature of "
-                      "the fitted directional year factor. Residualised on it, the "
-                      "point diagnostic is close to zero and supplies no positive "
-                      "evidence for an additional market-shared floor; its partial "
-                      "sensitivity range still admits positive values, so it does "
-                      "not establish absence. Pair-specific (shared-slip) dependence "
-                      "remains unmodelled. Nothing here bears on the floor, which "
-                      "remains a structural extrapolation choice.",
+        "conclusion": CONCLUSION,
         "working_sample_aggregate_descriptive_only": {
-            "note": "reserve-weighted severity of the %d-record modelling sample "
-                    "(a different population from the %d active syndicate-years, not a subset of "
-                    "them; unbalanced membership), NOT the "
-                    % (len(yr), N_ACTIVE) +
-                    "whole market; embeds the year factor and composition changes; a "
-                    "scale interval cannot contain zero, so this is not evidence "
-                    "about the floor and is recorded only as descriptive volatility",
+            "note": aggregate_note(len(yr), N_ACTIVE),
             "n_records_per_year": n_per,
             "by_year": [float(v) for v in mkt],
             "sd": float(mkt.std(ddof=1)),
