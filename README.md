@@ -284,7 +284,7 @@ This setup was validated on 31 August 2026 in a newly created Python 3.12.6 virt
 environment: installation from `requirements.lock`, `reproduce.py --check`, clean-clone
 `--verify`, and the test suite all passed. The suite has grown since; its current
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
-(3525 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
+(3532 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
 and maximum R-hat 1.000. The full-manifest run described above began on 29 October 2026 and finished at
 01:53 on 30 October 2026 Brisbane time (UTC+10), on a source tree with no uncommitted change; the distinction between re-runnable and
