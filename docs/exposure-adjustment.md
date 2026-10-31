@@ -1012,7 +1012,7 @@ For each JSON file in pdf_extraction/:
 | **Reliable** | `.badge.reliable` | Green | PYD% extracted successfully AND either (a) premium mix with GPW > 0 available, or (b) syndicate is in run-off with GPW = 0. Full data available for downstream analysis. |
 | **In Runoff** | `.badge.runoff` | Blue | PYD% available and GPW = 0, whether or not a premium mix is listed (the dashboard's rule) — run-off syndicate with no new business but valid reserve development data. Counted separately from active reliable reports. |
 | **Incomplete** | `.badge.unreliable` | Red | Models were extracted but either PYD% is missing or premium mix is incomplete. May lack key fields for downstream analysis. |
-| **Skipped** | `.badge.skipped` | Yellow | No model block and at least one of `first_year_syndicate`, `reason`, or `no_triangle_data` is present. These extraction-record fields alone do not establish whether a filing has an eligible mature cohort; consult the source audit for each case. |
+| **Skipped** | `.badge.skipped` | Yellow | Not excluded, no model block, and at least one of `first_year_syndicate`, `reason`, or `no_triangle_data` is present. These extraction-record fields alone do not establish whether a filing has an eligible mature cohort; consult the source audit for each case. |
 | **Excluded** | `.badge.excluded` | Purple | Manually excluded from analysis via `manual_override_status: 'excluded'`, or post-extraction exclusion (`excluded: true` with models present). Reason recorded in `manual_override_reason` or `exclusion_reason`. |
 
 ### 14.3  Additional row annotations
