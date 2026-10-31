@@ -552,8 +552,71 @@ def test_a_forged_inputs_digest_is_rejected():
     assert not ok and any("inputs digest" in m for m in msgs)
 
 
+@pytest.mark.parametrize("mutation", ["add_source", "remove_output", "duplicate_output"])
+def test_report_rejects_altered_exclusions_even_with_recomputed_digest(mutation):
+    """A self-consistent digest must not let the report choose its own inputs."""
+    rep = copy.deepcopy(_report())
+    excluded = rep["inputs"]["outputs_excluded"]
+    if mutation == "add_source":
+        assert "src/run_analysis.py" not in excluded
+        excluded.append("src/run_analysis.py")
+        excluded.sort()
+    elif mutation == "remove_output":
+        excluded.pop(0)
+    else:
+        excluded.insert(0, excluded[0])
+    rep["inputs"]["inputs_sha256"], rep["inputs"]["n_inputs"] = rp.inputs_digest(
+        HERE, rep["commit"], excluded)
+    ok, msgs = rp.validate_report(rep)
+    assert not ok and any("excluded outputs differ" in m for m in msgs)
+
+
+@pytest.mark.parametrize("command", ["", " ", "\t\n"])
+def test_report_rejects_empty_command(command):
+    rep = copy.deepcopy(_report())
+    rep["command"] = command
+    ok, msgs = rp.validate_report(rep)
+    assert not ok and any("command must identify" in m for m in msgs)
+
+
+def test_historical_and_current_manifest_output_sets_are_read_from_git():
+    rep = _report()
+    historical = rp.recorded_declared_outputs(HERE, rep["commit"])
+    assert historical == rep["inputs"]["outputs_excluded"]
+    head = rp._git(HERE, "rev-parse", "HEAD").stdout.strip()
+    assert rp.recorded_declared_outputs(HERE, head) == rp.declared_outputs()
+
+
+def test_partial_report_uses_recorded_manifest_not_current_unrun_outputs(tmp_path, monkeypatch):
+    rep = _partial_variant(_report(), tmp_path, monkeypatch)
+    outputs = dict(rp.OUTPUTS)
+    outputs["later-unrun.py"] = ("results/later-output.json",)
+    monkeypatch.setattr(rp, "OUTPUTS", outputs)
+    assert "results/later-output.json" not in rep["inputs"]["outputs_excluded"]
+    ok, msgs = rp.validate_report(rep)
+    assert ok, msgs
+
+
+@pytest.mark.parametrize("source", [
+    'OUTPUTS = __import__("pathlib").Path(SENTINEL).touch()\nALWAYS_WRITTEN = ()\n',
+    'OUTPUTS = {"x": ("x.json",)}\nOUTPUTS = get_outputs()\nALWAYS_WRITTEN = ()\n',
+    'OUTPUTS = {"x": ("x.json",)}\nif True:\n OUTPUTS = {}\nALWAYS_WRITTEN = ()\n',
+    'OUTPUTS = {"x": ("x.json",)}\nOUTPUTS.clear()\nALWAYS_WRITTEN = ()\n',
+    'OUTPUTS = {"x": ("x.json",)}\nREF = OUTPUTS\nREF.clear()\nALWAYS_WRITTEN = ()\n',
+])
+def test_recorded_manifest_parser_fails_closed_without_executing(source, tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    sentinel = tmp_path / "must-not-exist"
+    monkeypatch.setattr(rp, "_git", lambda *args: SimpleNamespace(
+        returncode=0, stdout='SENTINEL = %r\n' % str(sentinel) + source))
+    with pytest.raises(ValueError):
+        rp.recorded_declared_outputs(str(tmp_path), "a" * 40)
+    assert not sentinel.exists()
+
+
 def test_partial_verifier_detects_changed_unrun_vignette_and_untracked_output(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"], "failed": [], "manifest_size": 2})
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1), ("other.py", "b", 1)])
     monkeypatch.setattr(rp, "REPORT", str(tmp_path / "no-report.json"))
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",),
                                         "other.py": ("vignettes/vignette-1/summary_snippet.md",)})
@@ -573,8 +636,10 @@ def test_local_run_report_is_validated_without_being_misclassified_as_a_script_o
     report = tmp_path / "reproduce-run-report.json"
     report.write_text('{"marker": 42}\n', encoding="utf-8")
     monkeypatch.setattr(rp, "REPORT", str(report))
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
-    monkeypatch.setattr(rp, "STEPS", [None, None] if partial else [None])
+    monkeypatch.setattr(rp, "read_stamp", lambda: {
+        "ran": ["dummy.py"], "failed": [], "manifest_size": 2 if partial else 1})
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1), ("other.py", "b", 1)] if partial
+                        else [("dummy.py", "a", 1)])
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",),
                                         "other.py": ("vignettes/vignette-1/summary_snippet.md",)})
     monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
@@ -617,8 +682,9 @@ def test_verify_rejects_invalid_or_unreadable_present_reports_even_if_not_marked
     report = tmp_path / "report.json"
     report.write_text(contents, encoding="utf-8")
     monkeypatch.setattr(rp, "REPORT", str(report))
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]} if with_stamp else None)
-    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "read_stamp", lambda: {
+        "ran": ["dummy.py"], "failed": [], "manifest_size": 1} if with_stamp else None)
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1)])
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
     monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
     monkeypatch.setattr(rp, "changed_paths", lambda root: [])
@@ -658,7 +724,8 @@ def test_verify_rejects_malformed_nested_report_fields_without_raising(
     path = tmp_path / "report.json"
     path.write_text(json.dumps(report), encoding="utf-8")
     monkeypatch.setattr(rp, "REPORT", str(path))
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": []} if with_stamp else None)
+    monkeypatch.setattr(rp, "read_stamp", lambda: {
+        "ran": ["dummy.py"], "failed": [], "manifest_size": 1} if with_stamp else None)
     monkeypatch.setattr(rp, "STEPS", [("dummy.py", "test", "dummy")])
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ()})
     monkeypatch.setattr(rp, "inputs_digest", lambda *args: ("digest", 0))
@@ -673,8 +740,9 @@ def test_verify_still_accepts_valid_report_after_validation(monkeypatch, tmp_pat
     content = {"scripts": {"dummy.py": {"status": "ok"}}}
     report.write_text(json.dumps(content), encoding="utf-8")
     monkeypatch.setattr(rp, "REPORT", str(report))
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]} if with_stamp else None)
-    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "read_stamp", lambda: {
+        "ran": ["dummy.py"], "failed": [], "manifest_size": 1} if with_stamp else None)
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1)])
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
     monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
     monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json"])
@@ -687,8 +755,8 @@ def test_verify_still_accepts_valid_report_after_validation(monkeypatch, tmp_pat
 def test_verify_missing_report_distinguishes_local_stamp_from_deleted_output(monkeypatch, tmp_path):
     """Legacy local stamps can verify without a report, but a deleted tracked report cannot."""
     monkeypatch.setattr(rp, "REPORT", str(tmp_path / "missing.json"))
-    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
-    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"], "failed": [], "manifest_size": 1})
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1)])
     monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
     monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
     monkeypatch.setattr(rp, "changed_paths", lambda root: [])
@@ -697,6 +765,104 @@ def test_verify_missing_report_distinguishes_local_stamp_from_deleted_output(mon
     assert not rp.verify()
     monkeypatch.setattr(rp, "read_stamp", lambda: None)
     assert not rp.verify()
+
+
+@pytest.mark.parametrize("stamp", [
+    {"ran": ["dummy.py"], "failed": ["other.py"], "manifest_size": 2},
+    {"ran": ["dummy.py"], "failed": None, "manifest_size": 2},
+    {"ran": ["dummy.py"], "manifest_size": 2},
+    {"ran": [], "failed": [], "manifest_size": 2},
+    {"ran": "dummy.py", "failed": [], "manifest_size": 2},
+    {"ran": [None], "failed": [], "manifest_size": 2},
+    {"ran": ["dummy.py", "dummy.py"], "failed": [], "manifest_size": 2},
+    {"ran": ["unknown.py", "other-unknown.py"], "failed": [], "manifest_size": 2},
+    {"ran": ["dummy.py"], "failed": [], "manifest_size": 1},
+    {"ran": ["dummy.py"], "failed": [], "manifest_size": True},
+    {"ran": ["dummy.py"], "failed": []},
+])
+def test_local_stamp_rejects_failed_or_impossible_coverage(stamp, monkeypatch, tmp_path, capsys):
+    """Failed runs and fabricated coverage cannot turn a valid old report into a PASS."""
+    p = tmp_path / ".reproduce-run.json"
+    p.write_text(json.dumps(stamp), encoding="utf-8")
+    report = tmp_path / "report.json"
+    report.write_text('{"previous": "valid"}', encoding="utf-8")
+    monkeypatch.setattr(rp, "STAMP", str(p))
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1), ("other.py", "b", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",), "other.py": ()})
+    monkeypatch.setattr(rp, "validate_report", lambda report: (True, []))
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert not rp.verify()
+    assert "invalid local run stamp" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("contents", ["", "[]", "null", "false", '"text"', "NaN", "{not-json"])
+def test_present_unreadable_stamp_does_not_fall_back_to_previous_report(
+        contents, monkeypatch, tmp_path, capsys):
+    stamp = tmp_path / ".reproduce-run.json"
+    stamp.write_text(contents, encoding="utf-8")
+    report = tmp_path / "report.json"
+    report.write_text('{"previous": "valid"}', encoding="utf-8")
+    monkeypatch.setattr(rp, "STAMP", str(stamp))
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "validate_report", lambda report: (True, []))
+    assert not rp.verify()
+    assert "invalid local run stamp" in capsys.readouterr().out
+
+
+def test_dangling_stamp_link_is_unreadable_not_absent(monkeypatch, tmp_path):
+    stamp = tmp_path / ".reproduce-run.json"
+    monkeypatch.setattr(rp, "STAMP", str(stamp))
+    assert rp.read_stamp() is None
+    # Some Windows accounts cannot create symlinks; simulate the directory
+    # entry while using a genuinely missing file for the open failure.
+    monkeypatch.setattr(rp.os.path, "lexists", lambda path: path == str(stamp))
+    assert "_read_error" in rp.read_stamp()
+
+
+def test_valid_partial_local_stamp_can_coexist_with_older_full_report(monkeypatch, tmp_path, capsys):
+    stamp = tmp_path / ".reproduce-run.json"
+    stamp.write_text(json.dumps({"ran": ["dummy.py"], "failed": [], "manifest_size": 2}),
+                     encoding="utf-8")
+    report = tmp_path / "report.json"
+    report.write_text('{"scripts": {"dummy.py": {}, "other.py": {}}}', encoding="utf-8")
+    monkeypatch.setattr(rp, "STAMP", str(stamp))
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1), ("other.py", "b", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",), "other.py": ()})
+    monkeypatch.setattr(rp, "validate_report", lambda report: (True, []))
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert rp.verify()
+    assert "PASS (PARTIAL run)" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("ran", [["dummy.py"], ["other.py", "dummy.py"]])
+def test_local_stamp_rejects_incomplete_stage_or_reordered_full_run(ran, monkeypatch):
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "same-stage", 1),
+                                     ("other.py", "same-stage", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/a.json",),
+                                        "other.py": ("results/b.json",)})
+    problems = rp.validate_stamp({"ran": ran, "failed": [], "manifest_size": 2})
+    assert any("full run or one complete stage" in item for item in problems)
+
+
+def test_local_stamp_rejects_script_without_declared_outputs(monkeypatch):
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "a", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ()})
+    assert any("without declared outputs" in x for x in rp.validate_stamp(
+        {"ran": ["dummy.py"], "failed": [], "manifest_size": 1}))
+
+
+def test_current_manifest_accepts_full_and_each_stage_local_stamp():
+    """Actual full and partial invocations remain valid after the integrity checks."""
+    full = [script for script, _, _ in rp.STEPS]
+    stages = {stage for _, stage, _ in rp.STEPS}
+    runs = [full] + [[script for script, group, _ in rp.STEPS if group == stage]
+                     for stage in stages]
+    for ran in runs:
+        assert rp.validate_stamp({"ran": ran, "failed": [], "manifest_size": len(full)}) == []
 
 
 def test_review_evidence_requires_its_exact_tracked_content_and_does_not_exempt_the_directory(tmp_path, monkeypatch):

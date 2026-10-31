@@ -38,6 +38,7 @@ is identical. --verify compares the outputs ignoring that field, so the check re
 what actually matters rather than sending a reader chasing a timing difference.
 """
 import argparse
+import ast
 import importlib
 import io
 import json
@@ -1203,6 +1204,111 @@ def declared_outputs():
                   | set(ALWAYS_WRITTEN))
 
 
+def recorded_declared_outputs(root, commit):
+    """Read the recorded commit's output declaration without executing its code.
+
+    Input attestation excludes every manifest output even for a partial run.  The
+    set must be derived from the version that ran, not trusted from the report or
+    guessed from today's manifest. Only literals, references to earlier literal
+    declarations and sequence concatenation are interpreted; unfamiliar syntax is
+    rejected rather than executing historical source or weakening the check.
+    """
+    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", commit):
+        raise ValueError("recorded commit is not a full hexadecimal object ID")
+    result = _git(root, "show", commit + ":reproduce.py")
+    if result.returncode:
+        raise ValueError("recorded commit's reproduce.py is unavailable")
+    tree = ast.parse(result.stdout)
+    definitions = {}
+    unsupported = set()
+
+    class ModuleWrites(ast.NodeVisitor):
+        """Find conditional/module-scope writes without descending into functions."""
+        def visit_FunctionDef(self, node):
+            pass
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+        visit_ClassDef = visit_FunctionDef
+        visit_Lambda = visit_FunctionDef
+
+        def visit_Name(self, node):
+            if isinstance(node.ctx, (ast.Store, ast.Del)):
+                unsupported.add(node.id)
+
+    for node in tree.body:
+        if (isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                isinstance(node.targets[0], ast.Name)):
+            definitions.setdefault(node.targets[0].id, []).append(node.value)
+        else:
+            ModuleWrites().visit(node)
+
+    env = {}
+    resolving = set()
+
+    def resolve(name):
+        if name in env:
+            return env[name]
+        if name in resolving or name in unsupported or len(definitions.get(name, ())) != 1:
+            raise ValueError("manifest declaration %s is missing or reassigned" % name)
+        resolving.add(name)
+        value = constant(definitions[name][0])
+        resolving.remove(name)
+        env[name] = value
+        return value
+
+    def constant(node):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        if isinstance(node, ast.Name):
+            return resolve(node.id)
+        if isinstance(node, (ast.Tuple, ast.List)):
+            return tuple(constant(x) for x in node.elts)
+        if isinstance(node, ast.Dict):
+            return {constant(k): constant(v) for k, v in zip(node.keys, node.values)}
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+            left, right = constant(node.left), constant(node.right)
+            if isinstance(left, tuple) and isinstance(right, tuple):
+                return left + right
+        raise ValueError("non-literal manifest declaration")
+
+    outputs, always = resolve("OUTPUTS"), resolve("ALWAYS_WRITTEN")
+    # A later module-scope use can mutate a declaration (for example
+    # OUTPUTS.clear() or an alias followed by mutation). Refuse such historical
+    # code instead of trusting an incomplete static interpretation. Loads inside
+    # the literal declarations themselves, such as tuple concatenation, are safe.
+    class ExternalUse(ast.NodeVisitor):
+        def __init__(self):
+            self.names = set()
+
+        def visit_FunctionDef(self, node):
+            pass
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+        visit_ClassDef = visit_FunctionDef
+        visit_Lambda = visit_FunctionDef
+
+        def visit_Name(self, node):
+            if node.id in env:
+                self.names.add(node.id)
+
+    for node in tree.body:
+        if (isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                isinstance(node.targets[0], ast.Name) and node.targets[0].id in env):
+            continue
+        uses = ExternalUse()
+        uses.visit(node)
+        if uses.names:
+            raise ValueError("recorded manifest declarations have non-literal module uses")
+    if not isinstance(outputs, dict) or not isinstance(always, tuple):
+        raise ValueError("recorded output declarations are missing or non-literal")
+    if (not all(isinstance(k, str) and isinstance(v, tuple) and
+                all(isinstance(path, str) for path in v) for k, v in outputs.items()) or
+            not all(isinstance(path, str) for path in always)):
+        raise ValueError("recorded output declarations have invalid types")
+    return sorted({path.replace("\\", "/") for values in outputs.values() for path in values}
+                  | set(always))
+
+
 def changed_paths(root):
     """Every path git reports as modified, staged, deleted or untracked (both ends of a rename)."""
     toks = _git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all").stdout.split("\0")
@@ -1264,12 +1370,51 @@ def write_stamp(ran, failed):
             {"ran": ran, "failed": failed, "manifest_size": len(STEPS)}, indent=2))
 
 
+def _reject_nonfinite_json_constant(value):
+    raise ValueError("non-finite JSON constant %s" % value)
+
+
 def read_stamp():
     try:
         with io.open(STAMP, encoding="utf-8") as _fh:
-            return json.load(_fh)
-    except Exception:
+            stamp = json.load(_fh, parse_constant=_reject_nonfinite_json_constant)
+        return stamp if isinstance(stamp, dict) else {"_read_error": "stamp must be an object"}
+    except FileNotFoundError as exc:
+        # A broken link has a directory entry but cannot be opened; it is an
+        # unreadable stamp, not permission to fall back to an old report.
+        if os.path.lexists(STAMP):
+            return {"_read_error": "stamp is unreadable: %s" % exc}
         return None
+    except Exception as exc:
+        return {"_read_error": "stamp is unreadable: %s" % exc}
+
+
+def validate_stamp(stamp):
+    """Reject failed or impossible local coverage before comparing outputs."""
+    if not isinstance(stamp, dict):
+        return ["stamp must be an object"]
+    if "_read_error" in stamp:
+        return [str(stamp["_read_error"])]
+    if type(stamp.get("manifest_size")) is not int or stamp["manifest_size"] != len(STEPS):
+        return ["stamp manifest size does not match the current manifest"]
+    ran, failed = stamp.get("ran"), stamp.get("failed")
+    if not isinstance(failed, list) or failed:
+        return ["stamp records failed scripts or has no valid failed list"]
+    if not isinstance(ran, list) or not ran or not all(isinstance(sc, str) for sc in ran):
+        return ["stamp must name at least one successfully run script"]
+    if len(ran) != len(set(ran)):
+        return ["stamp contains duplicate script names"]
+    known = {sc for sc, _, _ in STEPS}
+    if set(ran) - known:
+        return ["stamp contains unknown scripts: %s" % ", ".join(sorted(set(ran) - known))]
+    if any(not OUTPUTS.get(sc) for sc in ran):
+        return ["stamp names scripts without declared outputs"]
+    full = [sc for sc, _, _ in STEPS]
+    stages = {stage for _, stage, _ in STEPS}
+    choices = [full] + [[sc for sc, group, _ in STEPS if group == stage] for stage in stages]
+    if ran not in choices:
+        return ["stamp script order does not match a full run or one complete stage"]
+    return []
 
 
 def validate_report(rep):
@@ -1305,16 +1450,21 @@ def validate_report(rep):
         ok = False
         msgs.append("the run began at %s but records commit %s"
                     % (str(inp.get("head_before"))[:12], str(rep.get("commit"))[:12]))
-    if not isinstance(inp.get("outputs_excluded"), list):
+    excluded = inp.get("outputs_excluded")
+    if not isinstance(excluded, list):
+        return False, ["the input attestation does not record the output set it excluded"]
+    try:
+        recorded_outputs = recorded_declared_outputs(HERE, rep.get("commit", ""))
+    except (OSError, ValueError, TypeError, SyntaxError, RecursionError) as exc:
+        return False, ["the recorded output declaration cannot be verified: %s" % exc]
+    if excluded != recorded_outputs:
+        return False, ["the excluded outputs differ from the recorded commit's declared outputs"]
+    digest, n = inputs_digest(HERE, rep.get("commit", ""), excluded)
+    if digest != inp.get("inputs_sha256") or n != inp.get("n_inputs"):
         ok = False
-        msgs.append("the input attestation does not record the output set it excluded")
-    else:
-        digest, n = inputs_digest(HERE, rep.get("commit", ""), inp["outputs_excluded"])
-        if digest != inp.get("inputs_sha256") or n != inp.get("n_inputs"):
-            ok = False
-            msgs.append("the recorded inputs digest (%s, %s files) is not the recorded "
-                        "commit's (%s, %d files)" % (str(inp.get("inputs_sha256"))[:12],
-                                                    inp.get("n_inputs"), digest[:12], n))
+        msgs.append("the recorded inputs digest (%s, %s files) is not the recorded "
+                    "commit's (%s, %d files)" % (str(inp.get("inputs_sha256"))[:12],
+                                                inp.get("n_inputs"), digest[:12], n))
     if rep.get("manifest_size") != len(STEPS):
         ok = False
         msgs.append("manifest_size is %r, expected %d" %
@@ -1332,6 +1482,8 @@ def validate_report(rep):
             command_parts = []
             ok = False
             msgs.append("command is invalid: %s" % exc)
+        if not command_parts:
+            return False, msgs + ["command must identify reproduce.py and its arguments"]
         if command_parts and os.path.basename(command_parts[0]).lower() == "reproduce.py":
             arguments = command_parts[1:]
             if not arguments:
@@ -1462,19 +1614,24 @@ def verify():
     being outside the filter.
     """
     stamp = read_stamp()
+    if stamp is not None:
+        stamp_errors = validate_stamp(stamp)
+        if stamp_errors:
+            for problem in stamp_errors:
+                print("verify: *** invalid local run stamp: %s" % problem)
+            print("verify: FAIL")
+            return False
     report = None
     report_missing = False
     report_error = None
-    def reject_nonfinite_constant(value):
-        raise ValueError("non-finite JSON constant %s" % value)
     try:
         with io.open(REPORT, encoding="utf-8") as _fh:
-            report = json.load(_fh, parse_constant=reject_nonfinite_constant)
+            report = json.load(_fh, parse_constant=_reject_nonfinite_json_constant)
     except FileNotFoundError:
         report_missing = True
     except Exception as exc:
         report_error = "run report is unreadable: %s" % exc
-    if not stamp and report_missing:
+    if stamp is None and report_missing:
         print("\nverify: nothing to verify -- no run is recorded in this checkout"
               " (no local stamp and no committed reproduce-run-report.json).\n"
               "         Run `python reproduce.py` (or --only <stage>) first.")
@@ -1500,7 +1657,7 @@ def verify():
     # "identifies it as partial". A verdict without its coverage is the same
     # over-claim as a reproduction claim without its scope.
     total = len(STEPS)
-    if stamp:
+    if stamp is not None:
         ran = stamp.get("ran") or []
         src_of = "local stamp"
     else:
@@ -1515,7 +1672,7 @@ def verify():
               "committed ones\n        and are not evidence of reproduction."
               % (total - len(ran)))
 
-    if not stamp:
+    if stamp is None:
         # a clean clone: the ONLY evidence is the report, validated against history
         # above. Comparing this untouched tree with its own HEAD would prove nothing,
         # so no output comparison is run here.
