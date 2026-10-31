@@ -273,7 +273,7 @@ def classify_filings():
                 "unresolved", "no_mature_diagonal_disclosed", "parsed_then_loader_rule_m01"
             )
             first = held["start_statements"][0]
-            evidence = ("no disclosed triangle underwriting year up to %d: the record's triangles hold %s; inherited history is not established; the filing (page %s): "
+            evidence = ("no disclosed triangle underwriting year up to %d: the record's triangles hold %s; complete inherited history and a compatible mature outcome are not established; the filing (page %s): "
                         "\"%s\"" % (key[1] - MATURE_LAG, ", ".join(str(y) for y in years), first["page"],
                                     first["quote"]))
         elif disposition == "SKIPPED" and entry.get("reason") in (FIRST_YEAR_FROM_FILING_REASON, FIRST_YEAR_INHERITED_UNRESOLVED_REASON):

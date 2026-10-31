@@ -38,8 +38,8 @@ def select_positive_screened(dispositions, audit, m01, rates):
 
     A positive whole-account amount does not prove original-year eligibility or
     compatibility with the unavailable mature outcome. For 1980/2018 the amount
-    is a January transfer, not a pre-transfer opening. The current regime flag
-    is retained because the transferor is not proven under the registry rule.
+    is a January transfer, not a pre-transfer opening. The donor filing establishes an inward 2018 LPT, so the existing
+    assumed-business regime applies; this is not labelled an RITC.
     """
     selected = []
     for entry in dispositions:
@@ -188,6 +188,7 @@ def calculate(dispositions, unavailable, unresolved, selected, S, R, H, year, ke
         # latent reporting-year effects. Divergences cover the sampler transitions.
         fit['_diag_full'] = keep['fit']['convergence']
         fit['_diag_all_free'] = all_parameter_diagnostics(keep['fit']['idata'], keep['fit']['free_parameters'], years)
+        fit['model_input_sha256'] = {name: hashlib.sha256(np.ascontiguousarray(array).tobytes()).hexdigest() for name, array in (('outcomes', sy), ('size', rs), ('hhi', hs), ('year', yy), ('assumed_business_flag', ritc))}
         result['by_c'][str(c)] = fit
         np.savez_compressed(outdir / f'{tag}-c{c:g}-draws.npz', **keep['fit']['draws'])
     return result
@@ -196,6 +197,7 @@ def calculate(dispositions, unavailable, unresolved, selected, S, R, H, year, ke
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir', required=True, type=Path)
+    parser.add_argument('--scenarios', nargs='+', choices=('690_original_clean', '690_permuted', '742_original', '742_permuted'), help='Only run these named scenarios; default is all four.')
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=False)
     S, R, H, year, keys, _ = original.load_sample()
@@ -217,7 +219,7 @@ def main():
     if len(selected) != 52 or len({v['file'] for v in selected}) != 52:
         raise ValueError('the 52 source-positive candidates changed; re-audit selection')
     calibration = json.loads((ROOT / 'model/dispersion_calibration_ritc.json').read_text(encoding='utf8'))
-    old = json.loads((ROOT / 'results/check_missingness_sensitivity_results.json').read_text(encoding='utf8'))
+    old = json.loads((ROOT / 'results/check_missingness_sensitivity_results.json', 'model/exposure_results.json', 'pdf_extraction/ritc_scan.json', 'data/opening_reserves_takeon_base.json', 'results/disposition_ledger.csv').read_text(encoding='utf8'))
     old_stress = old['eligibility_unresolved_stress']
     if [v['file'] for v in unavailable + unresolved] != old_stress['records']:
         raise ValueError('historical selected-case order changed; revalidate comparison')
@@ -235,6 +237,10 @@ def main():
               'historical_690_original_order_k': historical, 'scenarios': {}}
     specs = [('690_original_clean', [], 'original'), ('690_permuted', [], 'permuted'), ('742_original', selected, 'original'),
              ('742_permuted', selected, 'permuted')]
+    if args.scenarios:
+        specs = [spec for spec in specs if spec[0] in args.scenarios]
+    input_paths = ('pdf_extraction/audit/portfolio_transfer_adjudication.json', 'data/no_mature_cohort_records.json', 'pdf_extraction/audit/structural_eligibility_audit.json', 'model/fx_rates_h10.json', 'model/dispersion_calibration_ritc.json', 'results/check_missingness_sensitivity_results.json', 'model/exposure_results.json', 'pdf_extraction/ritc_scan.json', 'data/opening_reserves_takeon_base.json', 'results/disposition_ledger.csv')
+    result['input_sha256'] = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in input_paths}
     for name, extra, allocation in specs:
         print('Running', name, flush=True)
         result['scenarios'][name] = calculate(dispositions, unavailable, unresolved, extra, S, R, H, year, keys,

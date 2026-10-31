@@ -141,3 +141,10 @@ class TestNoScriptAssignsTheRegimeAnotherWay:
                 and n.args and isinstance(n.args[0], ast.Constant)
                 and n.args[0].value == "ritc_occurred"]
         assert len(hits) == 1
+
+
+def test_1980_2018_donor_lpt_sets_assumed_business_without_relabelling_ritc():
+    """4472's 2018 filing confirms an inward LPT; it is not an RITC."""
+    sources = ab.sources()['1980_2018']
+    assert 'transfer_inward' in sources
+    assert not any(source.startswith('ritc_') for source in sources)
