@@ -79,6 +79,11 @@ def inherited_history_sentence(record):
         raise SystemExit("the inherited-history targets or allocations differ")
     if original["n_pseudo"] - earlier["n_pseudo"] != target - previous:
         raise SystemExit("the added proxy and pseudo-outcome counts differ")
+    for scenario in (original, permuted):
+        transfer = [row for row in scenario["pseudo_inputs"]
+                    if row["file"] == "syndicate_1980_2018.json"]
+        if len(transfer) != 1 or transfer[0]["ritc_flag"] is not True:
+            raise SystemExit("the 742 fit must use the source-confirmed 1980/2018 transfer flag")
     def k(scenario, c):
         return scenario["by_c"][c]["k"]["mean"]
     return ("A wider hypothetical target of %d adds %d source-positive whole-account or transferred-base proxies "
@@ -87,7 +92,7 @@ def inherited_history_sentence(record):
             "does not isolate the added cases. At $c=1$ and $c=5$, ledger-order fits give $k=%.3f$ and $%.3f$; "
             "one fixed permutation gives $%.3f$ and $%.3f$. These separate conditional scenarios are not an "
             "eligibility estimate or a bound; no posterior interval for between-fit differences was computed. "
-            "Source: `results/check_inherited_history_sensitivity_results.json`; see Supplement S6."
+            "Source: `results/check_inherited_history_corrected_results.json`; see Supplement S6."
             % (target, target - previous, previous, original["n_pseudo"], earlier["n_pseudo"],
                k(original, "1.0"), k(original, "5.0"), k(permuted, "1.0"), k(permuted, "5.0")))
 
@@ -440,7 +445,7 @@ def main():
         A("The following sensitivities address that concern. %s"
           % " ".join(sensitivity_sentences(sens, m0)))
         A("")
-        A(inherited_history_sentence(load(RESULTS, "check_inherited_history_sensitivity_results.json")))
+        A(inherited_history_sentence(load(RESULTS, "check_inherited_history_corrected_results.json")))
         A("")
 
     A("## Open questions")

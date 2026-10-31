@@ -177,7 +177,9 @@ def main():
     for t in tags:
         p = phis[t]
         # A genuine mature-cohort movement can be observed even when the triangle-based
-        # mature-reserve proxy is zero (1840/2022 is the audited example). Retain that
+        # mature-reserve proxy is zero. In the audited 1840/2022 example the later
+        # cumulative estimates are dashes treated as nil, supported by paid/reserve
+        # totals; no explicit dash legend was found, so the zero is inferred. Retain the
         # outcome in the headline model, but do not send log(0) into this descriptive
         # control regression. The refits below apply their stronger documented 0.10 guard,
         # at every delta (refit_subsample).
