@@ -1463,19 +1463,33 @@ def verify():
     """
     stamp = read_stamp()
     report = None
+    report_missing = False
+    report_error = None
+    def reject_nonfinite_constant(value):
+        raise ValueError("non-finite JSON constant %s" % value)
     try:
         with io.open(REPORT, encoding="utf-8") as _fh:
-            report = json.load(_fh)
-    except Exception:
-        pass
-    if not stamp and not report:
+            report = json.load(_fh, parse_constant=reject_nonfinite_constant)
+    except FileNotFoundError:
+        report_missing = True
+    except (OSError, UnicodeError, ValueError) as exc:
+        report_error = "run report is unreadable: %s" % exc
+    if not stamp and report_missing:
         print("\nverify: nothing to verify -- no run is recorded in this checkout"
               " (no local stamp and no committed reproduce-run-report.json).\n"
               "         Run `python reproduce.py` (or --only <stage>) first.")
         return False
     report_ok = True
-    if report:
-        report_ok, rmsgs = validate_report(report)
+    if not report_missing:
+        if report_error:
+            report_ok, rmsgs = False, [report_error]
+        elif not isinstance(report, dict):
+            report_ok, rmsgs = False, ["run report must be a JSON object"]
+        else:
+            try:
+                report_ok, rmsgs = validate_report(report)
+            except Exception as exc:
+                report_ok, rmsgs = False, ["run report validation failed: %s" % exc]
         print("\nverify: committed run report:")
         for m in rmsgs:
             print("verify:   %s%s" % ("" if report_ok else "*** ", m))
@@ -1490,7 +1504,8 @@ def verify():
         ran = stamp.get("ran") or []
         src_of = "local stamp"
     else:
-        ran = sorted((report or {}).get("scripts") or {})
+        scripts = report.get("scripts") if isinstance(report, dict) else None
+        ran = sorted(scripts) if isinstance(scripts, dict) else []
         src_of = "committed run report"
     partial = len(ran) < total
     print("\nverify: %d of %d manifest scripts recorded as run (%s)"
@@ -1538,7 +1553,7 @@ def verify():
         # The orchestrator writes this report after every run; it is validated
         # above rather than declared as an individual script's output. A missing
         # or unreadable report is not exempted from the changed-output check.
-        if rel == "reproduce-run-report.json" and report is not None:
+        if rel == "reproduce-run-report.json" and isinstance(report, dict):
             continue
         if (rel in known_outputs or rel.startswith(generated_roots)) and rel not in declared:
             ok = False

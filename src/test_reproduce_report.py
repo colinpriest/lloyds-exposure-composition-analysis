@@ -605,6 +605,100 @@ def test_local_run_report_is_validated_without_being_misclassified_as_a_script_o
     assert "reproduce-run-report.json" in capsys.readouterr().out
 
 
+@pytest.mark.parametrize("with_stamp", [False, True], ids=["committed", "local"])
+@pytest.mark.parametrize("contents", [
+    "{}", "[]", "null", "false", "0", '""', "[1]", '"text"',
+    '{"schema": "not-an-integer"}', "not json", "NaN", "Infinity", "-Infinity",
+    '{"schema": 4, "unexpected": NaN}',
+])
+def test_verify_rejects_invalid_or_unreadable_present_reports_even_if_not_marked_changed(
+        monkeypatch, tmp_path, with_stamp, contents):
+    """A parseable falsey value must never bypass report validation."""
+    report = tmp_path / "report.json"
+    report.write_text(contents, encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]} if with_stamp else None)
+    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert not rp.verify()
+
+    # A directory cannot be read as a report, including when a local stamp exists.
+    monkeypatch.setattr(rp, "REPORT", str(tmp_path))
+    assert not rp.verify()
+
+
+@pytest.mark.parametrize("with_stamp", [False, True], ids=["committed", "local"])
+@pytest.mark.parametrize("field,value", [
+    ("inputs", None), ("inputs", "not-an-object"),
+    ("inputs", {"clean_before": True, "unchanged_after": True, "outputs_excluded": 7}),
+    ("scripts", None), ("scripts", ["dummy.py"]),
+    ("outputs", None), ("outputs", ["results/known.json"]),
+    ("commit", None), ("commit", []), ("commit", 42),
+])
+def test_verify_rejects_malformed_nested_report_fields_without_raising(
+        monkeypatch, tmp_path, with_stamp, field, value, capsys):
+    """Broken nested objects and commit types must not become errors or a PASS."""
+    commit = "1234567890abcdef1234567890abcdef12345678"
+    environment = {name: "installed" for name in rp.REQUIRED}
+    environment["python"] = rp.SUPPORTED_PYTHON
+    report = {
+        "schema": 4, "worktree_dirty_src": False, "commit": commit,
+        "inputs": {"clean_before": True, "unchanged_after": True,
+                   "head_before": commit, "outputs_excluded": [],
+                   "inputs_sha256": "digest", "n_inputs": 0},
+        "manifest_size": 1, "command": "reproduce.py",
+        "scripts": {"dummy.py": {"status": "ok"}}, "outputs": {}, "partial": False,
+        "environment": environment, "python": rp.SUPPORTED_PYTHON,
+        "platform": "test", "finished_utc": "2026-10-31T00:00:00Z",
+        "volatile_json_fields_excluded_by_verify": list(rp.VOLATILE),
+    }
+    report[field] = value
+    path = tmp_path / "report.json"
+    path.write_text(json.dumps(report), encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(path))
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": []} if with_stamp else None)
+    monkeypatch.setattr(rp, "STEPS", [("dummy.py", "test", "dummy")])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ()})
+    monkeypatch.setattr(rp, "inputs_digest", lambda *args: ("digest", 0))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert not rp.verify()
+    assert "FAIL" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("with_stamp", [False, True], ids=["committed", "local"])
+def test_verify_still_accepts_valid_report_after_validation(monkeypatch, tmp_path, with_stamp):
+    report = tmp_path / "report.json"
+    content = {"scripts": {"dummy.py": {"status": "ok"}}}
+    report.write_text(json.dumps(content), encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]} if with_stamp else None)
+    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json"])
+    seen = []
+    monkeypatch.setattr(rp, "validate_report", lambda value: (seen.append(value) or True, []))
+    assert rp.verify()
+    assert seen == [content]
+
+
+def test_verify_missing_report_distinguishes_local_stamp_from_deleted_output(monkeypatch, tmp_path):
+    """Legacy local stamps can verify without a report, but a deleted tracked report cannot."""
+    monkeypatch.setattr(rp, "REPORT", str(tmp_path / "missing.json"))
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
+    monkeypatch.setattr(rp, "STEPS", [None])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",)})
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: [])
+    assert rp.verify()
+    monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json"])
+    assert not rp.verify()
+    monkeypatch.setattr(rp, "read_stamp", lambda: None)
+    assert not rp.verify()
+
+
 def test_review_evidence_requires_its_exact_tracked_content_and_does_not_exempt_the_directory(tmp_path, monkeypatch):
     import hashlib
     import subprocess
