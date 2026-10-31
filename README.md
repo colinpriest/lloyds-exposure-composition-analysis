@@ -332,17 +332,17 @@ behind, not a fault in the test. Without a manuscript at either location they sk
 and say in their skip reason what to set. The suite record (`tests-run-report.json`) names the
 manuscript checkout and commit the run read.
 
-One test reads the extraction repository's source. `src/test_unreconciled_triangle_rule.py` runs the
-extraction's `_rag_veto` from its `test_gemini.py` and checks that the note it writes holds the words the
-loader's guard looks for (`VETO_OVERRIDE_NOTE`), and that the extraction writes that note into the blocks'
-`data_quality_notes`. It looks for the extraction in `D:\dev\lloyds_reserve_stress_testing`; set
-`LLOYDS_EXTRACTION_REPO` to point it elsewhere. Without a checkout there, that test skips and says what to set.
-With one, it reads only the pinned state: the location must be the top level of a git checkout whose history
-holds the extraction commit this analysis pins (the import named in `docs/data-provenance.md`, section 2), and
-the `test_gemini.py` in its working tree must be, line endings aside, byte for byte that commit's and HEAD's;
-otherwise the test fails. A recorded suite therefore needs the pinned extraction checkout: without one the test
-skips, and `src/record_tests.py` refuses to record a run that skipped anything. The suite record names the
-extraction checkout, its top level, its commit, the pin and whether the file read is modified and is the pin's.
+Several tests read extraction source. `src/test_unreconciled_triangle_rule.py` runs the extraction's
+`_rag_veto` from `test_gemini.py`, checking the note consumed by the loader guard and written into
+`data_quality_notes`. Tests in `src/test_mature_cohort_outcome.py` and `src/test_cohort_depth_sensitivity.py`
+also use the pinned extraction estimator and its table constants to check reconstructed outcomes and the
+cohort-depth sensitivity. Set `LLOYDS_EXTRACTION_REPO` to the extraction checkout; the default is
+`D:\dev\lloyds_reserve_stress_testing`. The estimator checks read `test_gemini.py` and
+`table_extraction.py` as blobs at the pinned commit, which must exist in that checkout's history. The veto
+test reads the working-tree `test_gemini.py` and requires it to match both HEAD and the pin apart from
+line endings. The relevant checks skip with a reason when their required checkout is absent;
+`src/record_tests.py` refuses to record a run that skipped anything. The suite record names the extraction
+checkout, its top level, its commit, the pin and whether the recorded file is modified and matches the pin.
 
 That test count is not typed. `python src/record_tests.py` runs the suite, writes
 `tests-run-report.json` (counts, collected total, commit, dirty flag, environment)
