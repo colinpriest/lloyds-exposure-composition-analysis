@@ -53,9 +53,9 @@ extraction:
   It scans all **1065** collected filings and flags **47** (47 strong).
 - **Confirmed inward transfers join the same regime** (PLAN R195): the hand-adjudicated
   register `pdf_extraction/audit/portfolio_transfer_adjudication.json` and the take-ons
-  two readings confirmed (`data/opening_reserves_takeon_base.json`, R221) confirm **31**
+  two readings confirmed (`data/opening_reserves_takeon_base.json`, R221) confirm **32**
   syndicate-years that take on another syndicate's liabilities by transfer; **18** of them
-  also accept RITC and **13** enter the regime by transfer alone, so it holds **60**.
+  also accept RITC and **14** enter the regime by transfer alone, so it holds **61**.
   Those syndicate-years fall in three different populations, and the counts are not
   interchangeable: **55** are in the **902-record corpus**, and **27** are in the
   **working sample** (`n_ritc` in `results/check_ritc_scale_term_results.json`).

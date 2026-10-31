@@ -46,6 +46,30 @@ def test_provenance_note_carries_the_generated_waterfall():
         assert line in doc, "docs/data-provenance.md is stale: run src/build_current_results.py"
 
 
+def test_transfer_regime_counts_follow_the_reviewed_1980_source(monkeypatch):
+    """The generated provenance must respond to the added inward-transfer record."""
+    ex = _json("model", "exposure_results.json")
+    regime = bcr.assumed_business.sources()
+    assert "1980_2018" in regime
+    generated = "\n".join(bcr.ritc_lines(ex))
+    doc = _read("docs", "data-provenance.md")
+    assert generated in doc
+    assert "confirm **32**" in generated
+    assert "**14** enter the regime by transfer alone, so it holds **61**" in generated
+    reduced = dict(regime)
+    reduced.pop("1980_2018")
+    monkeypatch.setattr(bcr.assumed_business, "sources", lambda: reduced)
+    without_transfer = "\n".join(bcr.ritc_lines(ex))
+    assert "confirm **31**" in without_transfer
+    assert "**13** enter the regime by transfer alone, so it holds **60**" in without_transfer
+    assert "**55** are in the **902-record corpus**, and **27**" in generated
+    assert "**55** are in the **902-record corpus**, and **27**" in without_transfer
+    appendix = _read("docs", "appendix-data-audit.md")
+    assert "19 + 18 - 5 = 32 syndicate-years" in appendix
+    assert "14 of them not RITC-flagged" in appendix
+    assert "**61 syndicate-years**" in appendix
+
+
 def test_referee_tail_block_lists_the_current_at_or_beyond_sets():
     ts = _json("results", "check_tail_support_syndicate_results.json")
     doc = _read("docs", "referee-checks.md")

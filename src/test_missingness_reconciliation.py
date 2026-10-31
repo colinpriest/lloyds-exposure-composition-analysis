@@ -101,7 +101,8 @@ def test_the_quoted_counts(inputs):
     # rule 8); the scanned filings' 60 and the corpus's 55 are unchanged
     assert g["working_sample"]["composition"] == {"ritc_flagged": 20, "confirmed_transfer_not_flagged": 5,
                                                   "takeon_only": 2}
-    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (27, 60, 55)
+    # The source-reviewed 1980/2018 inward LPT adds one scanned regime year outside the corpus and sample.
+    assert (g["working_sample"]["n_regime"], g["scanned_filings"]["n_regime"], g["corpus"]["n_regime"]) == (27, 61, 55)
 
 
 def test_a_flow_that_disagrees_is_refused(inputs):
@@ -429,7 +430,7 @@ def test_a_filing_skipped_under_m01_is_structural_with_its_entry(tmp_path, monke
         "structural_no_eligible_outcome", "no_mature_cohort", "unresolved")
     assert row["extraction_status"] == "parsed_then_loader_rule_m01"
     assert row["classification_evidence"] == (
-        "no disclosed triangle underwriting year up to 2016: the record's triangles hold 2017, 2018; inherited history is not established; the filing (page 6): \"The "
+        "no disclosed triangle underwriting year up to 2016: the record's triangles hold 2017, 2018; complete inherited history and a compatible mature outcome are not established; the filing (page 6): \"The "
         "Syndicate began underwriting on the 2017 YOA, replacing the Incidental Syndicate that previously operated "
         "within Syndicate 4020.\"")
 
