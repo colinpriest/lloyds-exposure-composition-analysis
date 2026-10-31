@@ -1,0 +1,18 @@
+from pathlib import Path
+import argparse,hashlib,json,subprocess,sys
+import numpy as np
+p=argparse.ArgumentParser();p.add_argument('root');p.add_argument('out');args=p.parse_args();root=Path(args.root);sys.path.insert(0,str(root/'src'));import targeted_inherited_history as t
+orig=t.original
+S,R,H,year,keys,_=orig.load_sample(); rows=t.add_size_proxies(t.classify_filings());target=[x for x in rows if x['category'] in ('working_sample','eligible_outcome_unavailable','eligible_observed_composition_unavailable')];unavailable=[x for x in rows if x['category']=='eligible_outcome_unavailable'];unresolved=[x for x in rows if x['category']=='eligibility_unresolved'];screened=[x for x in rows if x['category']=='structural_no_eligible_outcome']
+assert (len(S),len(target),len(unavailable),len(unresolved),len(screened))==(632,666,10,24,102)
+audit={v['file']:v for v in json.loads((root/'pdf_extraction/audit/structural_eligibility_audit.json').read_text(encoding='utf8'))['records']};m=json.loads((root/'data/no_mature_cohort_records.json').read_text(encoding='utf8'));m01={'syndicate_'+k+'.json':v for k,v in m.items() if not k.startswith('_')};rr=json.loads((root/'model/fx_rates_h10.json').read_text(encoding='utf8'))['year_end_rates'];rates={int(y):v['usd_per_gbp'] for y,v in rr.items()};selected=t.select_positive_screened(rows,audit,m01,rates);assert len(selected)==52
+calibration=json.loads((root/'model/dispersion_calibration_ritc.json').read_text(encoding='utf8')); old=json.loads((root/'results/check_missingness_sensitivity_results.json').read_text(encoding='utf8'));assert [v['file'] for v in unavailable+unresolved]==old['eligibility_unresolved_stress']['records']
+arrays={};summary={};sha=lambda a:hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()
+for allocation in ('original','permuted'):
+ records,rm,hm,ym,qs,unit_t,sigma,flags,imputation=t.pseudo_inputs(rows,unavailable,unresolved,selected,R,H,calibration,allocation);names=[r['file'] for r in records];assert len(names)==86 and names.count('syndicate_1980_2018.json')==1;ix=names.index('syndicate_1980_2018.json');assert bool(flags[ix]);summary[allocation]={'pseudo_count':len(names),'1980_index':ix,'1980_assumed_business_flag':bool(flags[ix]),'pseudo_files':names,'imputation':imputation,'fits':{}}
+ for c in (1,5):
+  sy=np.concatenate([S,c*sigma*unit_t]);rs=np.concatenate([R,rm]);hs=np.concatenate([H,hm]);yy=np.concatenate([year,ym]);ritc=np.concatenate([orig.ritc_flag(keys).astype(float),flags]);years=np.sort(np.unique(yy));yidx=np.searchsorted(years,yy)
+  vectors={'outcomes':sy,'size':rs,'hhi':hs,'year':yy,'assumed_business_flag':ritc,'year_index':yidx,'years':years,'pseudo_quantile':qs,'pseudo_unit_t':unit_t,'pseudo_sigma':sigma}
+  summary[allocation]['fits'][str(c)]={n:{'sha256':sha(v),'length':len(v),'dtype':str(v.dtype)} for n,v in vectors.items()}
+  arrays.update({f'{allocation}_c{c}_{n}':v for n,v in vectors.items()})
+commit=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip();path=root/'pdf_extraction/audit/portfolio_transfer_adjudication.json';summary={'commit':commit,'register_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'scenarios':summary};out=Path(args.out);out.mkdir(parents=True,exist_ok=True);(out/'summary.json').write_text(json.dumps(summary,indent=2),encoding='utf8');np.savez_compressed(out/'vectors.npz',**arrays);print(json.dumps({'commit':commit,'register_sha256':summary['register_sha256'],'scenarios':{k:{'1980_index':v['1980_index'],'1980_flag':v['1980_assumed_business_flag'],'pseudo_count':v['pseudo_count']} for k,v in summary['scenarios'].items()}},indent=2))

@@ -407,6 +407,8 @@ TARGETED_RUN_EVIDENCE = {
 # Text is hashed after CRLF-to-LF normalization; the compressed patch is hashed as bytes.
 # Every tracked file still needs its own explicit entry: this is not a directory exemption.
 REVIEW_EVIDENCE_SHA256 = {
+    'results/review_evidence/transfer_correction_1980_2018_20261031/reconstruct-742-model-inputs.py': 'c8660beb27d0105a2d450c965497205d014c42d954d931eade93094c7d6be293',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/corrected-742-model-input-lf-equivalence.json': '2b4567d69f0f08ea7f29176bb73af84458986fb2de4b6a7fe2bbe0c1cd4bceae',
     'results/review_evidence/source_correction_1980_2357_20261031/manifest.json': '5ff1e951ead17a9fd96b9e2afaf6da58b162b86b5c8d3821e67b3513f754a132',
     'results/review_evidence/source_correction_1980_2357_20261031/source-correction-connected-provenance-test-20261031.log': '1a66abe03b6728e6f464afeaafc29f0b4ee7a563d2b6a2dc77c82c9c357a9fe3',
     'results/review_evidence/source_correction_1980_2357_20261031/source-correction-exclusion-influence-comparison-20261031.json': '9d550b2bfdb4778854464a1ffee0e56794eaea3d09e18329f3719683119aa532',
