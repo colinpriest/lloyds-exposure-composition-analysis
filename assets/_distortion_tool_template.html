@@ -183,13 +183,13 @@ canvas { max-height: 380px; }
           <label>Target tail regime:</label>
           <select id="targetRegime">
             <option value="clean" selected>Clean (no accepted RITC, inward portfolio transfer or take-on)</option>
-            <option value="ritc">RITC-affected target (accepted RITC, inward transfer or take-on)</option>
+            <option value="ritc">Assumed-business target (accepted RITC, inward transfer or take-on)</option>
             <option value="preserve">Preserve each donor's regime (diagnostic)</option>
           </select>
         </div>
         <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
           The tail index of the target: donors are quantile-mapped from their own regime
-          (&nu;<sub>RITC</sub> for an RITC donor, &nu;<sub>clean</sub> otherwise) onto the
+          (&nu;<sub>RITC</sub> for an assumed-business donor, &nu;<sub>clean</sub> otherwise) onto the
           target's. The diagnostic option leaves each donor in its own regime, so the
           tail-regime channel is exactly zero.
         </div>
@@ -360,9 +360,11 @@ canvas { max-height: 380px; }
             n<sub>eff</sub>&nbsp;=&nbsp;1/H enter the diversifiable term.
             F<sub>&nu;</sub> is the Student-t CDF: each donor is standardised in its own
             tail regime &mdash; &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>RITC</sub> when the donor is a
-            <strong>reinsurance-to-close (RITC)</strong> year, &nu;<sub>clean</sub> otherwise &mdash; and
+            <strong>assumed-business</strong> year (accepted reinsurance to close, confirmed inward
+            portfolio transfer or take-on), &nu;<sub>clean</sub> otherwise &mdash; and
             quantile-mapped onto the <em>selected</em> target regime &nu;<sub>t</sub>: clean (the
-            default; for RITC donors this is &ldquo;de-RITC-ing&rdquo;), RITC-affected, or a
+            default; for assumed-business donors this is the &ldquo;de-RITC-ing&rdquo; map),
+            assumed-business, or a
             diagnostic that preserves each donor&rsquo;s own regime. Whenever
             &nu;<sub>s</sub>&nbsp;=&nbsp;&nu;<sub>t</sub> the map is the identity and the operator
             reduces to the pure rescale &lambda;&nbsp;=&nbsp;&sigma;(target)/&sigma;(donor). There is no
@@ -376,7 +378,7 @@ canvas { max-height: 380px; }
             The result is a pool of S<sub>adj</sub> values: each donor&rsquo;s own movement, rescaled to the
             target&rsquo;s dispersion and mapped onto the selected tail regime. Each value still carries what was
             the donor&rsquo;s own: its level of reserving, its reporting year&rsquo;s market-wide movement, and any
-            residual of a reinsurance-to-close transaction, which the operator neither identifies nor removes.
+            residual of an assumed-business transaction, which the operator neither identifies nor removes.
           </p>
 
           <h4>What the tool does not do</h4>
@@ -716,7 +718,7 @@ function currentRegime() {
 
 const REGIME_LABELS = {
   clean: 'clean target',
-  ritc: 'RITC-affected target',
+  ritc: 'assumed-business target',
   preserve: "preserve each donor's regime (diagnostic)",
 };
 
@@ -1318,7 +1320,7 @@ function workedExampleHtml(d, r, pm) {
     </div>
 
     <div class="step-box">
-      <h4>Step 1 \u2014 Tail regime (${d.isRitc ? 'RITC donor' : 'clean donor'} \u2192 ${REGIME_LABELS[r.regime] || r.regime})</h4>
+      <h4>Step 1 \u2014 Tail regime (${d.isRitc ? 'assumed-business donor' : 'clean donor'} \u2192 ${REGIME_LABELS[r.regime] || r.regime})</h4>
       <div class="formula">S<sub>tail</sub> = \u03c3<sub>donor</sub> \u00b7 F<sup>\u22121</sup><sub>\u03bd<sub>t</sub></sub>( F<sub>\u03bd<sub>s</sub></sub>( S<sub>raw</sub>/\u03c3<sub>donor</sub> ) )</div>
       <table>
         <tr><td>\u03bd<sub>s</sub> (donor regime)</td><td>${nuFmt(d.nuSrc)}</td></tr>

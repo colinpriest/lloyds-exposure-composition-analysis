@@ -524,6 +524,32 @@ class TestDisplayedProse:
     two-factor version in its note and help. The prose a reader sees is part of the
     shipped artifact; test the specific display sections, not word presence."""
 
+    def test_worked_example_names_the_broader_regime_for_both_donor_classes(self):
+        if NODE is None:
+            pytest.skip("node is not available")
+        js = _read(TEMPLATE)
+        program = """
+const GAMMA_MODE = 'size_only';
+const GAMMA_MODES = {size_only: {label: 'size only'}};
+const REGIME_LABELS = {clean: 'clean target', ritc: 'assumed-business target'};
+function sizeLambda() { return 1; }
+function activeGamma() { return 0; }
+function fmtPct(x) { return String(x); }
+""" + extract_function(js, "workedExampleHtml") + """
+const d = {syndicate: 1980, year: 2018, reserves: 100, donorHhi: .4,
+           pyd_gbp_m: 2, sRaw: .02, sTail: .02, sSizeOnly: .02, sAdj: .02,
+           lam: 1, nuSrc: 4, nuTgt: 4};
+const r = {regime: 'clean', tSize: 500, tHhi: .4, gammaMode: 'size_only', gammaInForce: 0};
+const pm = {k: .6, sd_undiv: .03};
+console.log(JSON.stringify([workedExampleHtml({...d, isRitc: true}, r, pm),
+                            workedExampleHtml({...d, isRitc: false}, r, pm)]));
+"""
+        run = subprocess.run([NODE, "-e", program], capture_output=True, text=True)
+        assert run.returncode == 0, run.stderr
+        assumed, clean = json.loads(run.stdout)
+        assert "assumed-business donor" in assumed and "RITC donor" not in assumed
+        assert "clean donor" in clean and "assumed-business donor" not in clean
+
     @pytest.mark.parametrize("which,path", _prose_paths())
     def test_the_help_describes_three_players_over_eight_coalitions(self, which, path):
         html = _read(path)
@@ -558,7 +584,8 @@ class TestDisplayedProse:
         b = html.index("<h4>What the tool does not do</h4>")
         about = html[a:b]
         assert "<em>selected</em> target regime" in about, which
-        assert "RITC-affected" in about, which
+        assert "assumed-business" in about, which
+        assert "portfolio transfer or take-on" in about, which
         assert "preserves each donor" in about, which
         assert "clean-composition tail" not in about, \
             "the About text still says every donor is mapped to the clean tail"

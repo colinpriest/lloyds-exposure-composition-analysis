@@ -9769,7 +9769,8 @@ def generate_distortion_tool(records, run_id):
     exported operator is the shape-aware dispersion transfer (size,
     concentration, floor, and the tail regime): each donor is quantile-mapped
     from its own Student-t index onto the user-selected target regime (clean
-    by default -- de-RITC-ing RITC donors -- or RITC-affected, or a diagnostic
+    by default -- the de-RITC map for assumed-business donors -- or assumed-business,
+    the RITC-labelled regime covering accepted RITC, inward transfers and take-ons, or a diagnostic
     that preserves each donor's regime), then rescaled.  The tool's Shapley
     decomposition treats tail regime, size and concentration as three players
     over all eight coalitions.
@@ -9828,8 +9829,8 @@ def generate_distortion_tool(records, run_id):
             **_pooling(COMBINED_MODEL),
             "formula": ("S_adj = sigma(R_t,H_t) * Finv_nu_t( F_nu_s( S_raw/sigma(R_o,H_o) ) ); "
                         "sigma=sqrt(sd_undiv^2 + sd_div^2*[(R/ref)(1/H)^gamma]^{2(k-1)}); "
-                        "nu_s=nu_ritc if donor is RITC else nu_clean; nu_t is the "
-                        "user-selected target regime (clean default, RITC-affected, or "
+                        "nu_s=nu_ritc if donor is assumed-business else nu_clean; nu_t is the "
+                        "user-selected target regime (clean default, assumed-business, or "
                         "preserve-donor-regime diagnostic). The identity when nu_s=nu_t."),
             "decomposition": ("three-factor Shapley over tail regime, reserve size and "
                               "concentration; all eight coalitions; contributions sum "

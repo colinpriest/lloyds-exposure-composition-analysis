@@ -53,7 +53,7 @@ S_it ~ Student-t(nu_it, 0, sigma_it)
 sigma_it = exp( s_t + beta_RITC * 1[RITC] )
            * sqrt( sigma_undiv^2 + sigma_div^2 * [ (R/R_ref)(1/H)^gamma ]^{2(k-1)} )
 nu_it    = nu_clean                      (clean years)
-         = nu_clean * exp(-lambda_RITC)  (RITC years: a separate regime; its ordering
+         = nu_clean * exp(-lambda_RITC)  (assumed-business years: a separate regime; its ordering
                                            against the clean one is not imposed)
 ```
 
@@ -64,8 +64,9 @@ blocks can decline outside it), concentration via the effective line count
 `n_eff = 1/H` with its exponent `gamma` fixed at 0 in the headline fit (the author's decision of
 10 October 2026; the gamma-free fit, with `gamma ~ HalfNormal(1)`, is the concentration overlay's
 source), a positive undiversifiable floor `sigma_undiv`, a reporting-year shared shock
-`s_t`, and a Student-t tail split into a **clean** and an **RITC** regime (external
-reinsurance-to-close is a separate regime with its own tail index and a fitted log-scale
+`s_t`, and a Student-t tail split into a **clean** and an **assumed-business** regime
+(the latter, labelled RITC in parameter names, includes accepted external reinsurance to close,
+confirmed inward portfolio transfers and qualifying take-ons; it has its own tail index and a fitted log-scale
 shift `beta_RITC`; its ordering against the clean regime is not imposed and is not
 resolved (the headline fit below gives `P(nu_ritc < nu_clean)`); the transfer operator omits the
 scale shift — a structural simplification worth about 0.2% of the vignette stresses,
@@ -83,7 +84,7 @@ donor's reserve size, and multiplies the result by the target's base scale `sigm
 the base scale law and the two fitted tail indices of its own fit (the headline size-only operator the
 gamma = 0 fit's, the concentration overlay the gamma-free fit's). The base-standardised input is not
 a unit-scale draw: it still carries the donor's realised reporting-year multiplier `exp(s_t)` and,
-for an RITC donor, the fitted RITC scale multiplier `exp(beta_RITC)`. Neither is divided out, and the
+for an assumed-business donor, the fitted RITC-labelled scale multiplier `exp(beta_RITC)`. Neither is divided out, and the
 operator does not re-draw the year effect or apply `exp(beta_RITC * 1[RITC])` to the target (a measured
 structural simplification worth about 0.2% of the vignette stresses). The operator is **shape-aware**:
 a donor movement at `(R_s, H_s)` transfers to a target `(R_t, H_t)` by
@@ -97,8 +98,8 @@ where `F` is the Student-t CDF. When `nu_s = nu_t` this collapses to the pure re
 Student-t CDF of the base-standardised input, under the donor regime's tail index, supplies a
 model-imposed pseudo-rank, and that pseudo-rank is mapped through the target regime's quantile
 function. Because the input still carries the multipliers above, the pseudo-rank is not in general
-the donor's fitted conditional percentile. When the donor is an RITC year and the target is clean,
-this **de-RITCs** the donor's tail shape — mapping the input from the fitted RITC tail index to the
+the donor's fitted conditional percentile. When the donor is in the assumed-business regime and the target is clean,
+this **de-RITCs** the donor's tail shape — mapping the input from the fitted RITC-labelled tail index to the
 clean one, which thins the tail when the RITC index is the heavier and fattens it when it is the
 lighter (the fit's ordering is not a constraint) — but it does not remove the RITC scale multiplier.
 This is an
