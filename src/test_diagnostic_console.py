@@ -55,7 +55,8 @@ def test_tail_sign_is_descriptive(monkeypatch, capsys, sign):
 def test_ritc_sign_is_descriptive_and_fisher_test_remains_distinct(monkeypatch, capsys, sign):
     monkeypatch.setattr(ritc, 'cluster_bootstrap_ratio', lambda *a, **kw: {'ratio': 1.1, 'ci': (1., 1.2), 'p': sign})
     monkeypatch.setattr(ritc, 'cluster_bootstrap_diff', lambda *a, **kw: {'point': .2, 'ci': (.1, .3), 'p': sign})
-    monkeypatch.setattr(ritc, 'anderson_ksample_shape', lambda *a: {'stat': 2., 'p': sign})
+    monkeypatch.setattr(ritc, 'anderson_ksample_shape',
+                        lambda values, groups: {'stat': 2., 'p': sign, 'k': len(np.unique(groups))})
     monkeypatch.setattr(ritc.stats, 'fisher_exact', lambda *a: (2., .01))
     store = {}
     ritc.analyse('example', rows(), {f'{i}_2016' for i in range(20)}, set(), cal(), np.random.default_rng(7), store)
@@ -69,6 +70,9 @@ def test_ritc_sign_is_descriptive_and_fisher_test_remains_distinct(monkeypatch, 
     assert 'raw severity s' in store['example']['meta']['shape_section_input']
     assert 'scale mix' in store['example']['meta']['group_shape_note']
     assert 'estimated group median/IQR' in store['example']['meta']['row_test_note']
+    assert store['example']['shape']['ad_three_way'] is None
+    assert store['example']['shape']['ad_available_groups']['groups'] == ['clean', 'strong']
+    assert 'Three-way clean/weak/strong Anderson-Darling comparison unavailable' in output
     assert 'Fisher p=0.010  ***' in output
     assert all(a['fisher_p'] == .01 and a['odds_ratio'] == 2. for a in store['example']['tail']['levels'].values())
     assert all('***' not in line for line in output.splitlines() if 'sign2=' in line)
@@ -138,3 +142,42 @@ def test_ritc_summary_reports_where_direction_is_recorded(monkeypatch, tmp_path,
     output = capsys.readouterr().out
     assert "direction is recorded with its ratio in the result file" in output
     assert "direction is printed with its ratio above" not in output
+
+
+@pytest.mark.parametrize("weak_mode", ['absent', 'sparse', 'flat', 'valid'])
+def test_ritc_subgroup_ad_reports_only_eligible_groups(monkeypatch, capsys, weak_mode):
+    # A nonempty weak group is ineligible when it has fewer than eight rows or zero IQR.
+    monkeypatch.setattr(ritc, 'cluster_bootstrap_ratio', lambda *a, **kw: None)
+    monkeypatch.setattr(ritc, 'cluster_bootstrap_diff', lambda *a, **kw: None)
+    sample = rows()
+    strong = {f'{i}_2016' for i in range(10)}
+    weak_count = {'absent': 0, 'sparse': 7, 'flat': 10, 'valid': 10}[weak_mode]
+    weak = {f'{i}_2016' for i in range(10, 10 + weak_count)}
+    if weak_mode == 'flat':
+        for i in range(10, 20):
+            sample[i]['s_raw_a'] = .1
+    store = {}
+    ritc.analyse('example', sample, strong, weak, cal(), np.random.default_rng(7), store)
+    output = capsys.readouterr().out
+    record = store['example']['shape']
+    expected = ['clean', 'weak', 'strong'] if weak_mode == 'valid' else ['clean', 'strong']
+    assert record['ad_available_groups']['groups'] == expected
+    assert record['ad_available_groups']['result']['k'] == len(expected)
+    assert (record['ad_three_way'] is not None) == (weak_mode == 'valid')
+    assert ('Three-way clean/weak/strong Anderson-Darling comparison unavailable' in output) == (weak_mode != 'valid')
+
+
+def test_ritc_binary_ad_unavailable_when_a_group_has_zero_iqr(monkeypatch, capsys):
+    monkeypatch.setattr(ritc, 'cluster_bootstrap_ratio', lambda *a, **kw: None)
+    monkeypatch.setattr(ritc, 'cluster_bootstrap_diff', lambda *a, **kw: None)
+    sample = rows()
+    for i in range(10):
+        sample[i]['s_raw_a'] = .1
+    strong = {f'{i}_2016' for i in range(10)}
+    store = {}
+    ritc.analyse('example', sample, strong, set(), cal(), np.random.default_rng(7), store)
+    output = capsys.readouterr().out
+    assert store['example']['shape']['ad_clean_vs_ritc'] is None
+    assert store['example']['shape']['ad_available_groups'] == {'groups': ['clean'], 'result': None}
+    assert store['example']['shape']['ad_three_way'] is None
+    assert 'clean vs RITC comparison unavailable' in output

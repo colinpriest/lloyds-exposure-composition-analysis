@@ -150,5 +150,5 @@
   }
  },
  "no_drift_on_either_axis": true,
- "reading": "The legacy no_drift flag is true when every interval covers zero and the row-level Anderson-Darling p is at or above the line. This descriptive threshold rule does not establish invariance; the row-level p may be miscalibrated under panel dependence."
+ "reading": "The legacy no_drift flag is true when all intended groups enter the row-level Anderson-Darling comparison, its p is at or above the line, and every interval covers zero. This descriptive threshold rule does not establish invariance; the row-level p may be miscalibrated under panel dependence."
 }

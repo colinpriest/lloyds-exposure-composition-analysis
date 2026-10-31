@@ -74,7 +74,7 @@ def test_the_verdict_follows_the_intervals():
     assert set(flat["axes"]) == set(AXES) and flat["n"] == n
 
 
-def test_missing_anderson_darling_cannot_satisfy_the_threshold_rule(monkeypatch):
+def test_missing_or_partial_anderson_darling_cannot_satisfy_the_threshold_rule(monkeypatch):
     """The flag requires AD even when every cluster interval contains zero."""
     from types import SimpleNamespace
 
@@ -91,3 +91,6 @@ def test_missing_anderson_darling_cannot_satisfy_the_threshold_rule(monkeypatch)
     monkeypatch.setattr(CSI, 'anderson_ksample_shape', lambda *args: {'stat': 1., 'p': .25, 'k': 4})
     available = CSI.axis_result(x, np.sin(x), x, np.random.default_rng(1), n_boot=10)
     assert available['no_drift'] is True
+    monkeypatch.setattr(CSI, 'anderson_ksample_shape', lambda *args: {'stat': 1., 'p': .25, 'k': 2})
+    partial = CSI.axis_result(x, np.sin(x), x, np.random.default_rng(1), n_boot=10)
+    assert partial['no_drift'] is False

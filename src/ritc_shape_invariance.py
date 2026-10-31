@@ -34,8 +34,8 @@ preserving their within-syndicate rows. The legacy p fields are twice the smalle
 observed-bootstrap sign fraction without null centering, not established as
 null-calibrated p-values. The Fligner-Killeen, Levene,
 k-sample Anderson-Darling, KS and Fisher exact figures are ordinary library tests on
-rows: they assume independent observations, which this panel does not satisfy, so they
-may be miscalibrated or anti-conservative here and are descriptive rather than calibrated.
+rows: they assume independent observations; within-syndicate dependence, if present,
+may miscalibrate them, so they are descriptive rather than established as calibrated.
 Estimated group medians/IQRs can also alter the group-standardised Anderson-Darling reference.
 Shape stats reuse test_shape_invariance.py so the methodology is identical to the
 size/HHI axes.
@@ -201,12 +201,25 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     # ── (B) SHAPE invariance (location+scale removed) ────────────────────────
     print(f"\n{'='*74}\n  (B) SHAPE COMPARISONS on raw s: group-standardised AD and scale-invariant statistics\n{'='*74}")
     ad_shape = anderson_ksample_shape(s, gb)
-    print(f"  Anderson-Darling k-sample (group-standardised, clean vs RITC): "
-          f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  (row-level descriptive)")
+    if ad_shape is None:
+        print("  Anderson-Darling clean vs RITC comparison unavailable: fewer than two usable groups")
+    else:
+        print(f"  Anderson-Darling k-sample (group-standardised, clean vs RITC): "
+              f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  (row-level descriptive)")
+    # Match the helper's eligibility rule: each group must have at least 8 rows and a positive IQR.
+    available_groups = [name for code, name in ((0, "clean"), (1, "weak"), (2, "strong"))
+                        if int((g3 == code).sum()) >= 8 and robust_scale(s[g3 == code]) > 0]
     ad_shape3 = anderson_ksample_shape(s, g3)
-    print(f"  Anderson-Darling k-sample (clean vs weak vs strong):           "
-          f"A2k={ad_shape3['stat']:.2f}  p={ad_shape3['p']:.3f}")
-    res["shape"] = {"ad_clean_vs_ritc": ad_shape, "ad_three_way": ad_shape3, "diffs": {}}
+    three_way = ad_shape3 if ad_shape3 is not None and len(available_groups) == 3 and ad_shape3["k"] == 3 else None
+    if ad_shape3 is None:
+        print("  Anderson-Darling subgroup comparison unavailable: fewer than two usable groups")
+    else:
+        print(f"  Anderson-Darling available groups ({', '.join(available_groups)}): "
+              f"A2k={ad_shape3['stat']:.2f}  p={ad_shape3['p']:.3f}  k={ad_shape3['k']}")
+    if three_way is None:
+        print("  Three-way clean/weak/strong Anderson-Darling comparison unavailable")
+    res["shape"] = {"ad_clean_vs_ritc": ad_shape, "ad_three_way": three_way,
+                    "ad_available_groups": {"groups": available_groups, "result": ad_shape3}, "diffs": {}}
     print(f"\n  RITC - clean standardised-shape difference (cluster bootstrap):")
     for lab, fn in SHAPE_STATS.items():
         rr = cluster_bootstrap_diff(s, cluster, gb, fn, 1, 0, rng, n=N_BOOT)

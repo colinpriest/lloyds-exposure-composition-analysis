@@ -12,7 +12,8 @@ For each axis (opening reserves R; the concentration index H), the sample is cut
   * the top-less-bottom quartile difference of each robust shape statistic, with a 95% interval from a cluster
     bootstrap over syndicates;
   * the slope of each statistic across deciles, with the same bootstrap interval.
-The legacy "no drift" flag requires every interval to cover zero and the Anderson-Darling p to be at or above 0.05.
+The legacy "no drift" flag requires every intended group in the Anderson-Darling comparison, every interval to
+cover zero and the Anderson-Darling p to be at or above 0.05.
 Panel dependence and estimated group medians/IQRs may miscalibrate the Anderson-Darling reference.
 Within-group conditional scale mixtures can change pooled shape even if conditional shape is invariant.
 The flag is a descriptive threshold rule, not proof of invariance.
@@ -48,7 +49,7 @@ def axis_result(axis, s, cluster, rng, n_boot=N_BOOT, n_groups=4):
            "location_kruskal_wallis": {"H": float(kw.statistic), "p": float(kw.pvalue)},
            "shape_anderson_darling": ad,
            "top_less_bottom_quartile": {}, "decile_slope": {}}
-    covers = [ad is not None and ad["p"] >= AD_LINE]
+    covers = [ad is not None and ad["k"] == n_groups and ad["p"] >= AD_LINE]
     for label, fn in SHAPE_STATS.items():
         d = cluster_bootstrap_diff(s, cluster, grp, fn, n_groups - 1, 0, rng, n=n_boot)
         sl = cluster_bootstrap_slope(s, cluster, axis, fn, rng, n=n_boot)
@@ -84,8 +85,9 @@ def run(S, R, H, syn, n_boot=N_BOOT, seed=SEED):
         "group_shape_note": GROUP_SHAPE_NOTE,
         "axes": axes,
         "no_drift_on_either_axis": all(a["no_drift"] for a in axes.values()),
-        "reading": ("The legacy no_drift flag is true when every interval covers zero and the row-level "
-                    "Anderson-Darling p is at or above the line. This descriptive threshold rule does not "
+        "reading": ("The legacy no_drift flag is true when all intended groups enter the row-level "
+                    "Anderson-Darling comparison, its p is at or above the line, and every interval covers zero. "
+                    "This descriptive threshold rule does not "
                     "establish invariance; the row-level p may be miscalibrated under panel dependence."),
     }
 
@@ -97,7 +99,8 @@ def main():
         fh.write(json.dumps(out, indent=1) + "\n")
     print("n=%d (%d syndicates); diagnostic threshold flag on both axes: %s" %
           (out["n"], out["n_syndicates"], out["no_drift_on_either_axis"]))
-    print("Threshold flag requires all intervals to cover zero and row-level AD p >= 0.05; it does not prove invariance.")
+    print("Threshold flag requires all groups in row-level AD, AD p >= 0.05 and all intervals covering zero;")
+    print("it does not prove invariance.")
     print("Panel dependence and estimated medians/IQRs may miscalibrate the row-level AD reference.")
     print("Pooled shape can change with the within-group scale mix even if conditional shape is invariant.")
     for name, a in out["axes"].items():
