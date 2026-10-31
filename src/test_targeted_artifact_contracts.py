@@ -75,9 +75,36 @@ def test_targeted_contracts_reject_untracked_producer_and_altered_history(tmp_pa
     assert any('historical evidence' in err and 'not tracked' in err for err in rp.check_targeted_contracts())
 
 
-def test_real_contracts_cover_twenty_three_new_records():
-    assert len(rp.TARGETED_PRODUCERS) == 16
-    assert len(rp.TARGETED_RUN_EVIDENCE) == 7
+def test_mixed_source_result_is_pinned_evidence_not_a_single_producer(tmp_path, monkeypatch):
+    rel = 'results/check_inherited_history_corrected_results.json'
+    source = Path(rp.HERE) / rel
+    raw = source.read_bytes().replace(b'\r\n', b'\n')
+    evidence = json.loads(raw)
+    assert evidence['scenario_source_commits']['690_original_clean'] != evidence['scenario_source_commits']['742_original']
+    assert rel in rp.TARGETED_RUN_EVIDENCE and rel not in rp.TARGETED_PRODUCERS
+    for scenario in ('742_original', '742_permuted'):
+        for c in (1, 5):
+            artifact = f'results/inherited_history_corrected_draws/{scenario}-c{c}-draws.npz'
+            producer, command = rp.TARGETED_PRODUCERS[artifact]
+            assert producer == 'src/targeted_inherited_history.py'
+            assert '--output-dir PATH --scenarios 742_original 742_permuted' in command
+    subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True)
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True)
+    target.write_bytes(raw)
+    subprocess.run(['git', '-C', str(tmp_path), 'add', rel], check=True)
+    monkeypatch.setattr(rp, 'HERE', str(tmp_path))
+    monkeypatch.setattr(rp, 'TARGETED_PRODUCERS', {})
+    monkeypatch.setattr(rp, 'TARGETED_RUN_EVIDENCE', {rel: hashlib.sha256(raw).hexdigest()})
+    assert rp.check_targeted_contracts() == []
+    evidence['run']['fit_seed'] += 1
+    target.write_text(json.dumps(evidence), encoding='utf8')
+    assert any('differs from its recorded hash' in problem for problem in rp.check_targeted_contracts())
+
+
+def test_real_contracts_cover_registered_records():
+    assert len(rp.TARGETED_PRODUCERS) == 20
+    assert len(rp.TARGETED_RUN_EVIDENCE) == 8
     assert set(rp.TARGETED_PRODUCERS).isdisjoint(rp.TARGETED_RUN_EVIDENCE)
     assert rp.check_targeted_contracts() == []
     assert rp.check_manifest_completeness() == []

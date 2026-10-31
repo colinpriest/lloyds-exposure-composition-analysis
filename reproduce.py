@@ -364,6 +364,10 @@ MANUAL_ASSETS = ()
 # a new explicit directory. Nothing here states that the historical manifest ran it.
 TARGETED_PRODUCERS = {
     "model/maturity_share_recovered_groups_omitted.json": ("src/build_maturity_group_sensitivity.py", "--output PATH"),
+    "results/inherited_history_corrected_draws/742_original-c1-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH --scenarios 742_original 742_permuted; 742_original-c1-draws.npz"),
+    "results/inherited_history_corrected_draws/742_original-c5-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH --scenarios 742_original 742_permuted; 742_original-c5-draws.npz"),
+    "results/inherited_history_corrected_draws/742_permuted-c1-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH --scenarios 742_original 742_permuted; 742_permuted-c1-draws.npz"),
+    "results/inherited_history_corrected_draws/742_permuted-c5-draws.npz": ("src/targeted_inherited_history.py", "--output-dir PATH --scenarios 742_original 742_permuted; 742_permuted-c5-draws.npz"),
     "results/check_maturity_denominator_diagnostics.json": ("src/targeted_maturity_refit.py", "--case primary --output-dir PATH; diagnostics.json"),
     "results/check_maturity_denominator_exclude_457_2015_results.json": ("src/targeted_maturity_refit.py", "--case exclude-457 --output-dir PATH; results.json"),
     "results/check_maturity_denominator_recovered_groups_omitted_results.json": ("src/targeted_maturity_refit.py", "--case no-groups --output-dir PATH; results.json"),
@@ -386,6 +390,8 @@ TARGETED_PRODUCERS = {
 # Each record is tracked, parsed as JSON, and checked against a fixed LF-normalised
 # SHA-256; edits require an explicit evidence review and contract update.
 TARGETED_RUN_EVIDENCE = {
+    # Mixed-source assembly: 690 historical and corrected 742 fits; not one producer run.
+    "results/check_inherited_history_corrected_results.json": "e83c33990e55505bd7bc376f003def017d5094382366dc92847f03ecf6b08ef1",
     "results/check_maturity_additional_sensitivities_provenance.json": "f5e48bfcde40c42b59a9d7490d9dd0168d331ec82c4395c2fb8eab1e9bb5f759",
     "results/check_maturity_denominator_exclude_457_2015_inputs.json": "882fa3067a40757b00cc77749c3f98d19eea6509679e2b509dc84ee91597909b",
     "results/check_maturity_denominator_recovered_groups_omitted_inputs.json": "1bd97da270e42baa9b50f77126becaaba2dbf124f289434afe6d897380c6d614",
@@ -401,6 +407,23 @@ TARGETED_RUN_EVIDENCE = {
 # Text is hashed after CRLF-to-LF normalization; the compressed patch is hashed as bytes.
 # Every tracked file still needs its own explicit entry: this is not a directory exemption.
 REVIEW_EVIDENCE_SHA256 = {
+    'results/review_evidence/source_correction_1980_2357_20261031/manifest.json': '5ff1e951ead17a9fd96b9e2afaf6da58b162b86b5c8d3821e67b3513f754a132',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-connected-provenance-test-20261031.log': '1a66abe03b6728e6f464afeaafc29f0b4ee7a563d2b6a2dc77c82c9c357a9fe3',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-exclusion-influence-comparison-20261031.json': '9d550b2bfdb4778854464a1ffee0e56794eaea3d09e18329f3719683119aa532',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-independent-numeric-comparison-20261031.json': 'e35af8025c20434e388702be489cf2832e6729550db0ead8786def31785fdd31',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-producer-error_rate-20261031.log': 'ea5e853304c94a4a5ad41879479d29ae2038dd140dced30c086833a3fbb602c7',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-producer-exclusion_influence-20261031.log': '09a492151aa4ee933ae51c2ec2f10e89fdac72a1948bdba5616d4a6cbbfbb658',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-producer-run-analysis-20261031.log': 'fb0797096524e009fea50e6887f8226fe424e9897a721e3cc9f451acef89e6c3',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-producer-small_book-20261031.log': 'ca40cb7692a13f4e67871380e5f42690d4d7083297ff680d3c809b1c8dc11122',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-run-analysis-secondary-artifacts-20261031.json': '58103fcda39d0cb3882b173136fa6219192dd9add77ced0015e6813b16e8ae1a',
+    'results/review_evidence/source_correction_1980_2357_20261031/source-correction-sensitivity-input-comparison-20261031.json': 'b0b85a4949ef5d6715e26137fdb1a98a3c9491c160ecc5f0504a2e3d068f7247',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/connected-output-comparison-1980-20261031.json': '28ced77f403d4b942f3ac8bf849f30bfba943d8702c4025a53fcfdf3a481ef45',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/manifest.json': '4fe405562dc1dff59724e40c3ffe60156fa3da28b1c6a92f374716b93f3d170c',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/transfer-correction-connected-provenance-test-20261031.log': 'fee1b06fef83902f6c6dcfdcf736e2ed3fc88d11ce69548eee59757d9438f620',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/transfer-correction-producer-error_rate-20261031.log': '61b9141b88e863b4ca727b0217226b882957fc89d49b89410330efa214cda96b',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/transfer-correction-producer-exclusion_influence-20261031.log': 'a82d98266933d5f5aa4574a1a7f31a269e1e0333cc7725fa75a9c4d0502f4daf',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/transfer-correction-producer-run-analysis-20261031.log': '55fe9db3ea92108fdb517226224de719915406b3d40744ce046c97a8e81dcdcd',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/transfer-correction-producer-small_book-20261031.log': 'b37c656635a7037a68bf73eb1c8f24a94e13b8f8b0db48b0a4db68ddddea070a',
     'results/review_evidence/provenance_refresh_1cb/manifest.json': '05abaa0bbe044fd32300eb39872e8259b75f92630c3a1ddbb0afb78523944f2e',
     'results/review_evidence/provenance_refresh_1cb/provenance-refresh-check_exclusion_influence-1cb.log': '5cfafc9f59e71b7ea00adc73e8fae260bad39c4af0769872a4292e8e522baf2a',
     'results/review_evidence/provenance_refresh_1cb/provenance-refresh-check_small_book_diagnosis-1cb.log': 'a986646caeaf03c8ec949f6b4f512e7cc00a876579caa05038b7dcb8f124ab23',
