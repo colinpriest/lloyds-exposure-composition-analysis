@@ -39,6 +39,9 @@ def test_the_record_distinguishes_row_tests_from_cluster_bootstrap():
     rec = _record()
     assert rec["row_test_note"] == CSI.ROW_TEST_NOTE
     assert "ordinary row-level" in rec["row_test_note"]
+    assert "estimated group median/IQR" in rec["row_test_note"]
+    assert rec["group_shape_note"] == CSI.GROUP_SHAPE_NOTE
+    assert "scale mix" in rec["group_shape_note"]
     assert rec["bootstrap_sign_note"] == CSI.BOOTSTRAP_SIGN_NOTE
     assert "without null centering" in rec["bootstrap_sign_note"]
 
@@ -69,3 +72,22 @@ def test_the_verdict_follows_the_intervals():
     drift = CSI.run(skewed, R, R * 0 + 0.3 + rng.uniform(0, 0.4, n), syn, n_boot=200)
     assert drift["axes"]["size_opening_reserves"]["no_drift"] is False
     assert set(flat["axes"]) == set(AXES) and flat["n"] == n
+
+
+def test_missing_anderson_darling_cannot_satisfy_the_threshold_rule(monkeypatch):
+    """The flag requires AD even when every cluster interval contains zero."""
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(CSI.stats, 'kruskal', lambda *args: SimpleNamespace(statistic=1., pvalue=.5))
+    monkeypatch.setattr(CSI, 'cluster_bootstrap_diff', lambda *args, **kwargs: {
+        'point': 0., 'ci': (-1., 1.), 'n_boot': 10})
+    monkeypatch.setattr(CSI, 'cluster_bootstrap_slope', lambda *args, **kwargs: {
+        'slope': 0., 'ci': (-1., 1.)})
+    x = np.arange(40., dtype=float)
+    monkeypatch.setattr(CSI, 'anderson_ksample_shape', lambda *args: None)
+    missing = CSI.axis_result(x, np.sin(x), x, np.random.default_rng(1), n_boot=10)
+    assert missing['shape_anderson_darling'] is None
+    assert missing['no_drift'] is False
+    monkeypatch.setattr(CSI, 'anderson_ksample_shape', lambda *args: {'stat': 1., 'p': .25, 'k': 4})
+    available = CSI.axis_result(x, np.sin(x), x, np.random.default_rng(1), n_boot=10)
+    assert available['no_drift'] is True

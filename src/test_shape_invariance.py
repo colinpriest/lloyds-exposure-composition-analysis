@@ -8,7 +8,7 @@ location 0*:  s | (size R, mix HHI) has
                                   fitted intercept is in check_mean_zero_boundary.py's
                                   results)
     scale     = sqrt(V(R,HHI))   (power-law dispersion model, N5)
-    SHAPE     = invariant        <-- what this script tests
+    SHAPE     = invariant        <-- assumption examined by grouped diagnostics
 
 If shape is invariant then, after removing location and scale, the *shape* of
 the distribution (skewness, kurtosis, tail asymmetry) must not depend on where
@@ -16,19 +16,20 @@ in the (R, HHI) space an observation sits.  If it does, transporting a donor's
 shape to a target at different coordinates is not justified by mere linear
 scaling.
 
-We test this model-free: robust shape statistics that are invariant to any
-linear rescale (Bowley skewness, Moors kurtosis, tail-spread ratio) are
-computed within groups along each axis (size R, mix HHI) and tested for
-constancy.  Being scale/location invariant, these sidestep any mis-
-specification of the variance model itself -- a cleaner test of the shape
-assumption alone.  A k-sample Anderson-Darling test on group-standardised
-values provides a full-distribution complement.
+We compare robust shape statistics (Bowley skewness, Moors kurtosis, tail-skew
+ratio) within groups along each axis (size R, mix HHI), alongside a k-sample
+Anderson-Darling comparison of group-standardised values. These statistics are
+invariant to a common positive affine rescaling of an entire group, but each group
+may mix observations with different conditional scales. Changing that scale mix
+can change pooled shape even if every conditional shape is identical. The
+grouped diagnostics therefore do not isolate conditional shape from scale mixing.
 
 Shape-statistic intervals use a CLUSTER bootstrap that resamples syndicates.
 Its legacy `p` is twice the smaller observed-bootstrap sign fraction, without null
 centering; it is not established as a null-calibrated p-value. Kruskal-Wallis and
 Anderson-Darling use ordinary SciPy row-level tests and may be miscalibrated under
-within-syndicate dependence; they are descriptive.
+within-syndicate dependence; estimating group medians and IQRs can also affect
+the Anderson-Darling reference. Both tests are descriptive.
 
 The manifest step src/check_shape_invariance.py runs these statistics on the working sample the calibration is
 fitted on and writes them to its results file; that is the record the paper cites (the review
@@ -47,7 +48,10 @@ import run_analysis as ra
 SEED = 12345
 N_BOOT = 4000
 ROW_TEST_NOTE = ("Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; "
-                 "within-syndicate dependence may miscalibrate them")
+                 "within-syndicate dependence may miscalibrate them, and estimated group median/IQR "
+                 "standardisation can alter the Anderson-Darling reference")
+GROUP_SHAPE_NOTE = ("each group mixes observations with potentially different conditional scales; "
+                    "pooled shape can change with the scale mix even if conditional shape is invariant")
 BOOTSTRAP_SIGN_NOTE = ("legacy bootstrap p is twice the smaller observed-bootstrap sign fraction "
                        "without null centering, not an established null-calibrated p-value")
 
@@ -65,7 +69,7 @@ def bowley_skew(a):
 
 
 def tail_skew_ratio(a):
-    """(Q90 - Q50) / (Q50 - Q10).  Symmetric -> 1; >1 = heavier right tail."""
+    """(Q90 - Q50) / (Q50 - Q10). Symmetric -> 1; >1 has a wider upper percentile spread."""
     q10, q50, q90 = _q(a, 10), _q(a, 50), _q(a, 90)
     lo = q50 - q10
     return (q90 - q50) / lo if lo > 0 else np.nan
@@ -164,8 +168,9 @@ def cluster_bootstrap_slope(s, cluster, axis, stat_fn, rng, n_bins=10, n=N_BOOT)
 def anderson_ksample_shape(s, group):
     """k-sample Anderson-Darling on group-standardised values.
 
-    Each group is centred by its median and scaled by its IQR, so location and
-    scale are removed and only SHAPE differences remain.  Returns (stat, p).
+    Each group is centred by its sample median and scaled by its sample IQR.
+    The row-level p is descriptive: panel dependence and estimated group
+    median/IQR standardisation may alter its reference calibration.
     """
     samples = []
     for g in np.unique(group):
@@ -193,7 +198,9 @@ def make_groups(axis, n_groups):
 # ── one axis (size or mix) ───────────────────────────────────────────────────
 def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
     print(f"\n{'='*74}\n  AXIS: {name}\n{'='*74}")
-    print("  Row-level test p-values are descriptive: within-syndicate dependence may miscalibrate them.")
+    print("  Row-level test p-values may be miscalibrated by panel dependence; estimated group")
+    print("  medians/IQRs can also alter the Anderson-Darling reference.")
+    print("  Group shape can change with its mixture of conditional scales even when conditional shape is invariant.")
     print("  sign2 is twice the smaller observed-bootstrap sign fraction, not an established null-calibrated p-value.")
     grp = make_groups(axis, n_quartiles)
 
@@ -208,9 +215,9 @@ def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
               f"{robust_scale(a):>9.4f}{bowley_skew(a):>9.3f}"
               f"{tail_skew_ratio(a):>8.2f}{moors_kurt(a):>8.3f}")
 
-    # location check across groups (should be flat if mean-zero holds)
+    # Row-level rank comparison, not a test of equal means or medians in general.
     kw = stats.kruskal(*[s[grp == g] for g in range(n_quartiles)])
-    print(f"\n  Location (Kruskal-Wallis, medians equal?):  H={kw.statistic:.2f}  p={kw.pvalue:.3f}")
+    print(f"\n  Kruskal-Wallis on group ranks (row-level descriptive):  H={kw.statistic:.2f}  p={kw.pvalue:.3f}")
 
     # full-distribution SHAPE test
     ad = anderson_ksample_shape(s, grp)
@@ -227,8 +234,8 @@ def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
                   f"95% CI [{res['ci'][0]:+.3f}, {res['ci'][1]:+.3f}]  "
                   f"sign2={res['p']:.3f}")
 
-    # monotone trend across deciles
-    print(f"\n  Monotone trend across deciles (OLS slope of stat vs decile index):")
+    # Linear slope across deciles; a slope does not establish monotonicity.
+    print(f"\n  Linear slope across deciles (OLS slope of stat vs decile index):")
     for label, fn in SHAPE_STATS.items():
         res = cluster_bootstrap_slope(s, cluster, axis, fn, rng)
         if res.get("ci"):
@@ -249,8 +256,8 @@ def build_population():
 
 def select(records, mode):
     if mode == "N5":
-        # the round-4x fitting population (2014-2019, reserves above GBP 5m, HHI below 0.99, resolved weights:
-        # 348 records); the working sample the calibration is fitted on now is check_shape_invariance.py's
+        # The round-4x fitting rule (2014-2019, reserves above GBP 5m, HHI below 0.99, resolved weights)
+        # had 348 records when first reported; it is not a fixed count. The working sample is check_shape_invariance.py's.
         return [r for r in records
                 if r.get("eligible_for_n3", False)
                 and r["s_raw_a"] is not None
@@ -295,9 +302,10 @@ def main():
     run_for(records, "BROAD")  # sensitivity: wider net for statistical power
     print("\nInterpretation:")
     print("  * Shape intervals describe uncertainty in the contrasts and fitted slopes.")
-    print("    The row-level Anderson-Darling p may be miscalibrated under panel dependence.")
+    print("    Panel dependence and estimated medians/IQRs can miscalibrate the Anderson-Darling reference.")
+    print("    Pooled shape can change with the within-group scale mix even if conditional shape is invariant.")
     print("    These diagnostics do not establish invariance or the direction of tail error.")
-    print("  * Bowley skew & Moors kurtosis are invariant to any linear rescale,")
+    print("  * Bowley skew & Moors kurtosis are invariant to positive affine rescaling,")
     print("    so these results are independent of the variance-model fit.")
 
 

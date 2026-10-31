@@ -13,12 +13,14 @@
         "sd_div": 0.04899329394570356,
         "reference_size": 500.0
       },
-      "seed": 12345,
-      "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
       "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
-      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
-      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
+      "shape_section_input": "section B uses raw severity s; Anderson-Darling groups are centred and scaled by their own median/IQR, and the shape statistics are invariant to common positive affine group rescaling",
+      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them, and estimated group median/IQR standardisation can alter the Anderson-Darling reference",
+      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value",
+      "group_shape_note": "each group mixes observations with potentially different conditional scales; pooled shape can change with the scale mix even if conditional shape is invariant",
+      "seed": 12345,
+      "n_boot": 4000
     },
     "scale": {
       "fligner_p": 0.2875846893619103,
@@ -146,12 +148,14 @@
         "sd_div": 0.04899329394570356,
         "reference_size": 500.0
       },
-      "seed": 12345,
-      "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
       "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
-      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
-      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
+      "shape_section_input": "section B uses raw severity s; Anderson-Darling groups are centred and scaled by their own median/IQR, and the shape statistics are invariant to common positive affine group rescaling",
+      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them, and estimated group median/IQR standardisation can alter the Anderson-Darling reference",
+      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value",
+      "group_shape_note": "each group mixes observations with potentially different conditional scales; pooled shape can change with the scale mix even if conditional shape is invariant",
+      "seed": 12345,
+      "n_boot": 4000
     },
     "scale": {
       "fligner_p": 0.015202130412187943,

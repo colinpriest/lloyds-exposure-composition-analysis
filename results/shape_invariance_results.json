@@ -1,6 +1,6 @@
 {
  "purpose": "rescale-invariant shape tests along the size and concentration axes, on the working sample the calibration is fitted on (the review of 2 October 2026, P-17)",
- "method": "src/test_shape_invariance.py's statistics: Kruskal-Wallis on the quartiles' locations; k-sample Anderson-Darling on the quartiles, each centred by its median and scaled by its IQR; Bowley skewness, the tail-skew ratio and Moors kurtosis, compared top less bottom quartile and as a slope across deciles, each with a 95% interval from a cluster bootstrap over syndicates",
+ "method": "src/test_shape_invariance.py's statistics: row-level Kruskal-Wallis on quartile ranks; k-sample Anderson-Darling on the quartiles, each centred by its median and scaled by its IQR; Bowley skewness, the tail-skew ratio and Moors kurtosis, compared top less bottom quartile and as a slope across deciles, each with a 95% interval from a cluster bootstrap over syndicates",
  "population": "adopted_model.load_sample(): the gross-basis working sample",
  "n": 632,
  "n_syndicates": 117,
@@ -8,6 +8,9 @@
  "n_boot": 4000,
  "anderson_darling_line": 0.05,
  "anderson_darling_p_note": "scipy reports the k-sample Anderson-Darling p within [0.001, 0.25]: 0.25 is its cap, not an estimate",
+ "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them, and estimated group median/IQR standardisation can alter the Anderson-Darling reference",
+ "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value",
+ "group_shape_note": "each group mixes observations with potentially different conditional scales; pooled shape can change with the scale mix even if conditional shape is invariant",
  "axes": {
   "size_opening_reserves": {
    "n_groups": 4,
@@ -147,7 +150,5 @@
   }
  },
  "no_drift_on_either_axis": true,
- "reading": "'no drift' means every interval covers zero and the Anderson-Darling p is at or above the line; it is the absence of evidence of drift at this sample size, not evidence of none",
- "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
- "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
+ "reading": "The legacy no_drift flag is true when every interval covers zero and the row-level Anderson-Darling p is at or above the line. This descriptive threshold rule does not establish invariance; the row-level p may be miscalibrated under panel dependence."
 }

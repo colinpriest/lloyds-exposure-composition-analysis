@@ -1,11 +1,15 @@
-"""Compare clean and assumed-business observations after base-scale standardisation.
+"""Compare clean and assumed-business observations using spread, shape and tail diagnostics.
 
-Severity s = signed_pyd / reserve base is divided by the posterior-mean size,
+For sections A, C and D, severity s = signed_pyd / reserve base is divided by the posterior-mean size,
 concentration and floor scale from model/dispersion_calibration.json: the older
 single-regime, gamma-free calibration, not the adopted two-regime headline fit.
 Neither a reporting-year multiplier nor a separate assumed-business multiplier is
-divided out, so both can remain in z. RITC is the historical shorthand here for the
-broader assumed-business flag, including confirmed inward transfers and take-ons.
+divided out, so both can remain in z. Section B instead uses raw severity s: the
+Anderson-Darling groups are centred/scaled by their own median/IQR, and the shape
+statistics are invariant to a common positive affine rescaling of a group. The
+groups can mix different conditional scales: pooled shape can change with the
+scale mix even when conditional shape is invariant. RITC is historical shorthand
+for the broader assumed-business flag, including confirmed inward transfers and take-ons.
 
 RITC (reinsurance-to-close of another syndicate's account) can introduce a step in
 observed PYD or change the cohort mix and subsequent development. It could break invariance in two
@@ -17,8 +21,8 @@ distinct ways, and we test each separately:
 
   (B) SHAPE invariance.  Remove location AND scale (each group standardised by its own
       median / IQR) and compare the standardised SHAPE (Bowley skew, tail-skew ratio,
-      Moors kurtosis, k-sample Anderson-Darling).  If RITC has a different standardised
-      shape, a common standardised-shape assumption would be challenged.
+      Moors kurtosis, k-sample Anderson-Darling). These compare pooled group shapes;
+      different within-group scale mixtures can affect the comparison.
 
   (C) OMNIBUS.  k-sample Anderson-Darling on the base-standardised z itself (clean vs
       RITC) -- a joint scale+shape comparison of "is the base-standardised residual the
@@ -32,6 +36,7 @@ null-calibrated p-values. The Fligner-Killeen, Levene,
 k-sample Anderson-Darling, KS and Fisher exact figures are ordinary library tests on
 rows: they assume independent observations, which this panel does not satisfy, so they
 may be miscalibrated or anti-conservative here and are descriptive rather than calibrated.
+Estimated group medians/IQRs can also alter the group-standardised Anderson-Darling reference.
 Shape stats reuse test_shape_invariance.py so the methodology is identical to the
 size/HHI axes.
 
@@ -46,7 +51,7 @@ import run_analysis as ra
 from test_shape_invariance import (
     build_population, select, bowley_skew, tail_skew_ratio, moors_kurt,
     robust_scale, anderson_ksample_shape, cluster_bootstrap_diff, _q,
-    ROW_TEST_NOTE, BOOTSTRAP_SIGN_NOTE,
+    ROW_TEST_NOTE, BOOTSTRAP_SIGN_NOTE, GROUP_SHAPE_NOTE,
 )
 import assumed_business
 
@@ -54,6 +59,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent
 CAL = SCRIPT_DIR / "model" / "dispersion_calibration.json"
 CALIBRATION_SOURCE = "model/dispersion_calibration.json (single-regime, gamma-free)"
 STANDARDISATION_NOTE = "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
+SHAPE_INPUT_NOTE = ("section B uses raw severity s; Anderson-Darling groups are centred and scaled by their own "
+                    "median/IQR, and the shape statistics are invariant to common positive affine group rescaling")
 RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
 OUT = SCRIPT_DIR / "results" / "ritc_shape_invariance_results.json"
 SEED = 12345
@@ -153,11 +160,14 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
                     "clean": int((~ritc).sum()), "weak": int(isW.sum()), "strong": int(isS.sum()),
                     "operator": {kk: cal[kk] for kk in ("k", "gamma", "sd_undiv", "sd_div", "reference_size")},
                     "calibration_source": CALIBRATION_SOURCE,
-                    "standardisation": STANDARDISATION_NOTE,
+                    "standardisation": STANDARDISATION_NOTE, "shape_section_input": SHAPE_INPUT_NOTE,
                     "row_test_note": ROW_TEST_NOTE, "bootstrap_sign_note": BOOTSTRAP_SIGN_NOTE,
+                    "group_shape_note": GROUP_SHAPE_NOTE,
                     "seed": SEED, "n_boot": N_BOOT}}
 
-    print("  Row-level test p-values are descriptive: within-syndicate dependence may miscalibrate them.")
+    print("  Row-level test p-values may be miscalibrated by panel dependence; estimated group")
+    print("  medians/IQRs can also alter the group-standardised Anderson-Darling reference.")
+    print("  Group shape can change with its mixture of conditional scales even when conditional shape is invariant.")
     print("  sign2 is twice the smaller observed-bootstrap sign fraction, not an established null-calibrated p-value.")
 
     # ── (A) Spread after single-regime base-scale standardisation ────────────
@@ -189,7 +199,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
             res["scale"]["ratios"][f"IQR_{gname}"] = rr
 
     # ── (B) SHAPE invariance (location+scale removed) ────────────────────────
-    print(f"\n{'='*74}\n  (B) SHAPE INVARIANCE:  standardised skew / kurtosis / tail asymmetry\n{'='*74}")
+    print(f"\n{'='*74}\n  (B) SHAPE COMPARISONS on raw s: group-standardised AD and scale-invariant statistics\n{'='*74}")
     ad_shape = anderson_ksample_shape(s, gb)
     print(f"  Anderson-Darling k-sample (group-standardised, clean vs RITC): "
           f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  (row-level descriptive)")
@@ -265,10 +275,10 @@ def main():
     print("               entirely BELOW 1 => RITC residuals have the narrower spread;")
     print("               retained year and regime effects preclude attributing this solely to base scale;")
     print("               STRADDLING 1 => the comparison is unresolved at this resolution.")
-    print("               Each population's own direction is printed with its ratio above")
-    print("               and recorded in the result file; these intervals are the")
-    print("               cluster-bootstrapped ones.")
-    print("           (B) Shape intervals describe uncertainty; row-level AD p-values may be miscalibrated.")
+    print("               Each population's direction is recorded with its ratio in the result file;")
+    print("               the intervals above are cluster-bootstrapped.")
+    print("           (B) Shape intervals describe uncertainty; panel dependence and estimated group")
+    print("               medians/IQRs can miscalibrate the AD reference; within-group scale mixing also matters.")
     print("           (C) The omnibus compares base-standardised residuals on a row-level basis.")
     print("           (D) Fisher odds ratios describe tail representation; row-level p-values may be miscalibrated.")
 
