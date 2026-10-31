@@ -151,9 +151,10 @@ subfolders:
 
 Each script anchors its paths to the repo root (`Path(__file__).resolve().parent.parent`),
 so it reads/writes these subfolders automatically regardless of the working directory — no
-configuration is needed for repository-relative inputs and outputs. The one script that
-reads files outside this repository, `src/currency_scan.py`, takes the source-PDF folder
-from `--pdf-dir` or `LLOYDS_SYNDICATE_PDF_DIR` (see [docs/fx-conversion.md](docs/fx-conversion.md)).
+configuration is needed for repository-relative inputs and outputs. The source-PDF scanner,
+`src/currency_scan.py`, takes its external folder from `--pdf-dir` or
+`LLOYDS_SYNDICATE_PDF_DIR` (see [docs/fx-conversion.md](docs/fx-conversion.md)). Other
+cross-repository checks are described under Tests below.
 
 ## Setup
 
