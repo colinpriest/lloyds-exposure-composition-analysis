@@ -1,12 +1,10 @@
-"""Every fitting script builds the adopted model from adopted_model.scale_block and
-departs from it only in its declared dimension.
+"""Check declared adopted-model variants built from adopted_model.scale_block.
 
 Round 51 of the paper review (T1): ten scripts carried their own copy of the
 two-regime block, the mechanism by which an earlier refit diverged from the adopted
-likelihood. The block is now defined once; this test enumerates every random
-variable each script creates and fails on any that is not the script's declared
-departure, so a copy of a shared term cannot come back. A graph test pins the
-headline block itself.
+likelihood. For variants with enumerated sets, this test checks named random
+variables against the script's declared departure; several listed variants are
+explicitly not enumerated. A graph test pins the headline block itself.
 
 Run:  python -m pytest src/test_model_variants.py -q
 """
@@ -216,6 +214,22 @@ def test_a_gap_from_a_zero_sd_reference_is_not_zero(tmp_path):
     assert not ok and rows[0]["gap_in_sd"] == float("inf")
     ok, rows = am.check_against_headline({"k": np.array([0.5])}, reference=ref)
     assert ok and rows[0]["gap_in_sd"] == 0.0
+
+
+def test_no_shared_parameters_does_not_pass_the_comparison(tmp_path):
+    import adopted_model as am
+    ref = _fake_reference(tmp_path, {"k": {"mean": 0.6, "sd": 0.1}})
+    for post in ({}, {"unrelated": np.array([0.6])}):
+        ok, rows = am.check_against_headline(post, reference=ref)
+        assert not ok and rows == []
+
+
+def test_nonfinite_refit_does_not_pass_the_comparison(tmp_path):
+    import adopted_model as am
+    ref = _fake_reference(tmp_path, {"k": {"mean": 0.6, "sd": 0.1}})
+    for value in (float("nan"), float("inf"), float("-inf")):
+        ok, rows = am.check_against_headline({"k": np.array([value])}, reference=ref)
+        assert not ok and rows[0]["gap_in_sd"] == float("inf")
 
 
 def _guard_row_lists(node, path=""):

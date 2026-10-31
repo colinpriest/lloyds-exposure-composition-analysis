@@ -45,10 +45,9 @@ with (R, H, yr, ritc) and nothing else; each sensitivity script departs from the
 adopted model only through the block's keyword options (the support of k, a fitted
 gamma, a loading on the scale shock, an extra log-scale term) or through its own likelihood (a
 location term, observation weights, a random intercept). test_model_variants.py
-enumerates every random variable each script creates and fails on any that is not
-its declared departure; paper/audit_numbers.py lists every fitting script on each
-build and FAILS the build for one that claims the adopted model without building
-from this block.
+checks declared random-variable sets for enumerated variants; some variants are
+explicitly not enumerated there. The paper audit also checks scripts that claim
+the adopted model for use of this block.
 """
 import io
 import os
@@ -286,8 +285,10 @@ def check_against_headline(post, tol_sd=TOL_SD, reference=HEADLINE_JSON):
 
     `post` maps parameter name -> posterior draws. Returns (ok, rows) where each row
     records the refit mean, the reference mean and the gap in reference posterior SDs.
-    The comparison can flag a shift for review; its size alone cannot establish whether
-    the model, inputs or sampling caused it.
+    Only parameters present in both mappings are compared; no comparable parameters
+    fails the check. A passing partial comparison is not proof that every parameter or
+    likelihood term agrees. A shift can flag a review but its size alone cannot establish
+    whether the model, inputs or sampling caused it.
     The reference is the gamma = 0 headline (SHARED); with reference=GAMMA_FREE_JSON a refit of the
     gamma-free model is compared with that fit, gamma included (GAMMA_FREE_SHARED). A parameter whose
     reference posterior SD is 0 passes only at the reference value exactly: a gap from a point mass is
@@ -301,14 +302,16 @@ def check_against_headline(post, tol_sd=TOL_SD, reference=HEADLINE_JSON):
             continue
         m = float(np.asarray(post[p]).ravel().mean())
         hm, hsd = float(h[p]["mean"]), float(h[p]["sd"])
-        if hsd > 0:
+        if not np.isfinite(m) or not np.isfinite(hm) or not np.isfinite(hsd) or hsd < 0:
+            z = float("inf")
+        elif hsd > 0:
             z = abs(m - hm) / hsd
         else:
             z = 0.0 if m == hm else float("inf")
         rows.append({"param": p, "refit": m, "headline": hm, "gap_in_sd": z})
         if z > tol_sd:
             ok = False
-    return ok, rows
+    return bool(rows) and ok, rows
 
 
 def report(rows, ok, label=""):
