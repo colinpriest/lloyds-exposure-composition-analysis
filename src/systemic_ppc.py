@@ -39,7 +39,10 @@ N_REPS = 500
 
 
 def implied_curve(dz, grid):
-    """M1's implied within-pair correlation at each equal-size pair size in `grid`, over the posterior draws."""
+    """M1's implied Pearson correlation for equal-size pairs, averaged over posterior draws.
+
+    This reference is not the pairwise Spearman statistic used for the points and PPC band.
+    """
     nu_d, ts_d = dz["nu_clean"], dz["tau_s"]
     cfac = np.where(nu_d > NU_VAR_EPS, nu_d / (nu_d - 2.0) * np.exp(2 * ts_d ** 2), np.nan)
     curve = np.empty_like(grid)
@@ -57,16 +60,16 @@ def profile_figure(xbin, band, bins_obs, grid, curve):
     with PFS.style():
         fig, ax = PFS.figure("systemic_correlation_profile", 3.1)
         ax.fill_between(xbin, band[0], band[1], color="#9aa5b1", alpha=0.30, lw=0,
-                        label="PPC 5-95% band (M1 replicates)")
+                        label="PPC 5-95% band (Spearman)")
         ax.plot(xbin, bins_obs, "o-", color="#2166ac", lw=1.5, markersize=5, zorder=3,
-                label="Observed mean pairwise Spearman rho")
+                label="Observed Spearman rho (base-scaled)")
         # the pair size is R: the base fit has gamma = 0 in the likelihood since option B (10 October 2026), so the
         # effective size R (1/H)^gamma these labels named is R itself
         ax.plot(grid, curve, "--", color="#b2182b", lw=1.5,
-                label="M1 implied rho(R), equal-size pairs")
+                label="M1 implied Pearson, equal-size pairs")
         ax.set_xscale("log")
         ax.set_xlabel("Pair size R (£m, geometric mean)")
-        ax.set_ylabel("Within-pair PYD correlation")
+        ax.set_ylabel("Within-pair correlation")
         ax.set_title("Correlation-vs-size profile:\nobserved vs M1 posterior predictive")
         ax.grid(True, alpha=0.25)
         ax.axhline(0, color="0.5", lw=0.8, alpha=0.5)

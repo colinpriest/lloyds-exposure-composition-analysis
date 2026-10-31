@@ -1,11 +1,13 @@
 """Stage 0 of specifications/systemic-correlation-analysis.md.
 
-Descriptive gate for the systemic-vs-non-systemic question: does the within-year
-correlation of signed PYD severities rise with syndicate size?  Rank-based, no MCMC.
+Descriptive gate for the systemic-vs-non-systemic question: does the pairwise
+correlation of base-scaled signed severities across common years rise with syndicate size?
+Rank-based, no MCMC.
 
 Method (spec section 3):
-  1. Standardise severities with the archived M0 posterior means (no exp(s_t) term --
-     per-year scale shocks are not persisted; harmless for signed rank stats, see spec).
+  1. Standardise severities with the M0 posterior-mean base scale. The per-year scale
+     shocks are not persisted or divided out; varying year scales can change ranks
+     across years and hence the pairwise correlations.
   2. Drop RITC observations.
   3. Pairwise Spearman correlations over >=6 common reporting years, binned by pair
      effective size terciles; trend stats D (top-bottom mean rho) and Kendall tau.

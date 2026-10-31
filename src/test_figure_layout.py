@@ -262,7 +262,7 @@ def test_the_check_sees_the_profiles_legend_where_it_was():
     with PFS.style():
         ax.set_ylim(-0.0285, 0.1825)               # the limits Matplotlib chose from the data before
         hits = PFS.data_under_legend(fig, ax, legend)
-    assert "Observed mean pairwise Spearman rho" in hits, hits
+    assert "Observed Spearman rho (base-scaled)" in hits, hits
 
 
 def test_the_script_makes_room_where_it_can_and_refuses_where_it_cannot(monkeypatch):
