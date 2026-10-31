@@ -219,7 +219,7 @@ def main():
     if len(selected) != 52 or len({v['file'] for v in selected}) != 52:
         raise ValueError('the 52 source-positive candidates changed; re-audit selection')
     calibration = json.loads((ROOT / 'model/dispersion_calibration_ritc.json').read_text(encoding='utf8'))
-    old = json.loads((ROOT / 'results/check_missingness_sensitivity_results.json', 'model/exposure_results.json', 'pdf_extraction/ritc_scan.json', 'data/opening_reserves_takeon_base.json', 'results/disposition_ledger.csv').read_text(encoding='utf8'))
+    old = json.loads((ROOT / 'results/check_missingness_sensitivity_results.json').read_text(encoding='utf8'))
     old_stress = old['eligibility_unresolved_stress']
     if [v['file'] for v in unavailable + unresolved] != old_stress['records']:
         raise ValueError('historical selected-case order changed; revalidate comparison')
