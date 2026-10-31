@@ -948,3 +948,126 @@ def test_donor_rule_describes_the_applicable_base_and_runoff_screen():
         assert 'an applicable reserve base above &pound;0.1m' in text
         assert 'augmented by qualifying take-ons' in text
         assert 'Run-off filings and records failing' not in text
+
+
+@pytest.mark.parametrize("tool_path", [TEMPLATE, GENERATED])
+def test_changed_portfolio_inputs_clear_previous_results(tool_path):
+    """Changes to every basis control must hide the old computed portfolio."""
+    if NODE is None:
+        pytest.skip("node is not available")
+    html = _read(tool_path)
+    assert "wireResultInvalidation();" in extract_function(html, "initTool")
+    functions = "\n".join(extract_function(html, name) for name in (
+        "invalidateResults", "wireResultInvalidation", "syncSlider", "validWeight", "updateWeightTotal", "applyPreset", "closeModal"
+    ))
+    program = r'''
+      let RESULT;
+      const DATA = {lob_names: ["Property"]};
+      const PRESETS = {small: {weights: {Property: 35}, reserve: 100}};
+      const els = {};
+      const document = {getElementById(id) {
+        if (!els[id]) els[id] = {value: 25, textContent: "", style: {},
+          classList: {removed: [], remove(c) {this.removed.push(c);}}};
+        return els[id];
+      }};
+    ''' + functions + r'''
+      function start() {
+        RESULT = {old: true};
+        els.summaryCards = {style: {display: "block"}};
+        els.resultsArea = {classList: {removed: [], remove(c) {this.removed.push(c);}}};
+        els.modalOverlay = {classList: {removed: [], remove(c) {this.removed.push(c);}}};
+      }
+      function cleared(name) {
+        if (RESULT !== null || els.summaryCards.style.display !== "none" ||
+            !els.resultsArea.classList.removed.includes("active") ||
+            !els.modalOverlay.classList.removed.includes("active")) throw Error(name);
+      }
+      wireResultInvalidation();
+      start(); document.getElementById("reserveSize").oninput(); cleared("reserve");
+      start(); document.getElementById("targetRegime").onchange(); cleared("regime");
+      start(); document.getElementById("gammaMode").onchange(); cleared("operator");
+      start(); syncSlider(0, "slider"); cleared("slider");
+      start(); syncSlider(0, "num"); cleared("number");
+      for (const bad of ["", "-10", "101", "33.7"]) {
+        document.getElementById("lob_num_0").value = bad;
+        start(); syncSlider(0, "num"); cleared("invalid number");
+        if (validWeight(bad) || els.weightTotal.className !== "weight-total err") throw Error("accepted " + bad);
+      }
+      if (!validWeight("33") || !validWeight("0") || !validWeight("100")) throw Error("valid bounds");
+      start(); applyPreset("small"); cleared("preset");
+    '''
+    result = subprocess.run([NODE, "-e", program], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr[-2000:]
+
+
+@pytest.mark.parametrize("tool_path", [TEMPLATE, GENERATED])
+def test_failed_computes_and_file_loads_hide_old_results(tool_path):
+    if NODE is None:
+        pytest.skip("node is not available")
+    html = _read(tool_path)
+    functions = "\n".join(extract_function(html, name) for name in
+                          ("invalidateResults", "closeModal", "validWeight", "compute", "validToolData", "loadFile"))
+    program = r'''
+      const fit = {k: .6, gamma: 0, nu_clean: 4, nu_ritc: 5, sd_undiv: .02, sd_div: .04,
+                   reference_size: 500, hhi_floor: .01, hhi_ceil: 1};
+      const donor = {opening_reserves_gbp_m: 1, s_raw_a: .1, hhi: 1, weights: [1], lob_severity: [.1]};
+      let RESULT, DATA = {lob_names: ["Property"], donors: Array(10).fill(donor),
+                         pooling_model: fit, pooling_model_overlay: fit};
+      let loadGeneration = 0;
+      let GAMMA_MODE = "size_only", alertText = "", reader;
+      const GAMMA_MODES = {size_only: {}};
+      const els = {};
+      const document = {getElementById(id) {
+        if (!els[id]) els[id] = {value: "", style: {},
+          classList: {removed: [], remove(c) {this.removed.push(c);}}};
+        return els[id];
+      }};
+      function alert(s) {alertText = s;}
+      function getTargetWeights() {return [Number(els.lob_num_0.value)];}
+      function currentRegime() {return "clean";}
+      function computeDistributions() {return [];}
+      function initTool() {}
+      class FileReader {constructor() {reader = this;} readAsText() {}}
+    ''' + functions + r'''
+      function reset() {
+        RESULT = {old: true};
+        els.summaryCards = {style: {display: "block"}};
+        els.resultsArea = {classList: {removed: [], remove(c) {this.removed.push(c);}}};
+        els.modalOverlay = {classList: {removed: [], remove(c) {this.removed.push(c);}}};
+        alertText = "";
+      }
+      function check(name) {
+        if (RESULT !== null || els.summaryCards.style.display !== "none" ||
+            !els.resultsArea.classList.removed.includes("active") ||
+            !els.modalOverlay.classList.removed.includes("active")) throw Error(name);
+      }
+      for (const bad of ["", "-10", "101", "33.7"]) {
+        document.getElementById("lob_num_0").value = bad; reset(); compute(); check("invalid weight");
+        if (!alertText.includes("whole percentages")) throw Error("invalid weight accepted");
+      }
+      els.lob_num_0.value = "0"; reset(); compute(); check("zero weights");
+      els.lob_num_0.value = "25"; document.getElementById("reserveSize").value = "";
+      reset(); compute(); check("invalid reserve");
+      for (const bad of ["0", "0.5", "50001", "1e200"]) {
+        els.reserveSize.value = bad; reset(); compute(); check("out-of-range reserve");
+        if (!alertText.includes("between")) throw Error("invalid reserve accepted: " + bad);
+      }
+      els.reserveSize.value = "500"; reset(); compute(); check("insufficient donors");
+      const previous = DATA;
+      reset(); loadFile({}); check("load start");
+      reset(); reader.onload({target: {result: "not json"}}); check("late invalid JSON");
+      if (DATA !== previous) throw Error("invalid JSON replaced DATA");
+      reset(); loadFile({}); reset(); reader.onload({target: {result: JSON.stringify({lob_names: [], donors: [], pooling_model: {}, pooling_model_overlay: {}})}}); check("invalid schema");
+      if (DATA !== previous) throw Error("invalid schema replaced DATA");
+      reset(); loadFile({}); reset(); reader.onerror(); check("read error");
+      reset(); loadFile({}); reset(); reader.onload({target: {result: JSON.stringify(previous)}});
+      check("valid replacement");
+      reset(); loadFile({}); const first = reader;
+      loadFile({}); const second = reader;
+      const newer = {...previous, run_id: "newer"};
+      second.onload({target: {result: JSON.stringify(newer)}});
+      first.onload({target: {result: JSON.stringify({...previous, run_id: "older"})}});
+      if (DATA.run_id !== "newer") throw Error("late reader overwrote newer data");
+    '''
+    result = subprocess.run([NODE, "-e", program], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr[-2000:]

@@ -43,6 +43,8 @@ header h1 { font-size: 20px; font-weight: 600; }
 .weight-total.err { background: #f8d7da; color: #721c24; }
 .reserve-input { margin-top: 12px; display: flex; align-items: center; gap: 8px; }
 .reserve-input label { font-weight: 600; }
+.choice-input { display: block; }
+.choice-input select { display: block; width: 100%; min-width: 0; margin-top: 4px; }
 .reserve-input input { width: 120px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; }
 
 .btn { padding: 10px 24px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.15s; }
@@ -120,8 +122,22 @@ canvas { max-height: 380px; }
 .about-section li { margin-bottom: 4px; }
 
 @media (max-width: 900px) {
-  .input-panel { grid-template-columns: 1fr; }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .input-panel { grid-template-columns: minmax(0, 1fr); }
+  .input-panel > .card { min-width: 0; }
+  .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 500px) {
+  header { flex-wrap: wrap; gap: 8px; }
+  .container { padding: 12px; }
+  .lob-input-row { gap: 4px; }
+  .lob-input-row label { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lob-input-row input[type="range"] { flex: 0 1 60px; min-width: 30px; }
+  .lob-input-row input[type="number"] { flex: 0 0 45px; width: 45px !important; }
+  .lob-input-row .lob-val { min-width: 38px; }
+  .reserve-input { flex-wrap: wrap; }
+  .reserve-input input { min-width: 0; max-width: 100%; }
+  .tab-bar { flex-wrap: wrap; }
+  .tab-panel { overflow-x: auto; }
 }
 </style>
 </head>
@@ -177,9 +193,9 @@ canvas { max-height: 380px; }
         <div id="weightTotal" class="weight-total ok">Total: 100.0%</div>
         <div class="reserve-input">
           <label>Outstanding claims (&pound;m):</label>
-          <input type="number" id="reserveSize" value="500" min="1" max="50000" step="10">
+          <input type="number" id="reserveSize" value="500" min="1" max="50000" step="any">
         </div>
-        <div class="reserve-input" style="margin-top:10px;">
+        <div class="reserve-input choice-input" style="margin-top:10px;">
           <label>Target tail regime:</label>
           <select id="targetRegime">
             <option value="clean" selected>Clean (no accepted RITC, inward portfolio transfer or take-on)</option>
@@ -193,7 +209,7 @@ canvas { max-height: 380px; }
           target's. The diagnostic option leaves each donor in its own regime, so the
           tail-regime channel is exactly zero.
         </div>
-        <div class="reserve-input" style="margin-top:10px;">
+        <div class="reserve-input choice-input" style="margin-top:10px;">
           <label>Operator:</label>
           <select id="gammaMode">
             <option value="size_only" selected>Size-only (&gamma; = 0) &mdash; the paper's headline operator</option>
@@ -496,15 +512,57 @@ dropZone.addEventListener('drop', e => {
 
 function handleFile(e) { if (e.target.files.length) loadFile(e.target.files[0]); }
 
+let loadGeneration = 0;
+
+function validToolData(data) {
+  if (!data || !Array.isArray(data.lob_names) || data.lob_names.length === 0 ||
+      !data.lob_names.every(name => typeof name === 'string' && name.length > 0) ||
+      !Array.isArray(data.donors)) return false;
+  const fitKeys = ['k', 'gamma', 'nu_clean', 'nu_ritc', 'sd_undiv', 'sd_div',
+                   'reference_size', 'hhi_floor', 'hhi_ceil'];
+  const validFit = fit => fit && fitKeys.every(key => Number.isFinite(fit[key])) &&
+      fit.nu_clean > 0 && fit.nu_ritc > 0 && fit.sd_undiv >= 0 && fit.sd_div >= 0 &&
+      (fit.sd_undiv > 0 || fit.sd_div > 0) &&
+      fit.reference_size > 0 && fit.hhi_floor > 0 && fit.hhi_ceil >= fit.hhi_floor;
+  if (!validFit(data.pooling_model) || !validFit(data.pooling_model_overlay)) return false;
+  const eligible = data.donors.filter(d => d && d.opening_reserves_gbp_m > 0 && d.s_raw_a != null);
+  return eligible.length >= 10 && eligible.every(d =>
+    Number.isFinite(d.opening_reserves_gbp_m) && Number.isFinite(d.s_raw_a) &&
+    (d.hhi == null || (Number.isFinite(d.hhi) && d.hhi > 0)) && Array.isArray(d.weights) &&
+    d.weights.length === data.lob_names.length &&
+    d.weights.every(w => Number.isFinite(w) && w >= 0) && d.weights.some(w => w > 0) &&
+    Array.isArray(d.lob_severity) && d.lob_severity.length === data.lob_names.length &&
+    d.lob_severity.every(Number.isFinite));
+}
+
 function loadFile(file) {
+  const generation = ++loadGeneration;
+  invalidateResults();
   const reader = new FileReader();
   reader.onload = function(e) {
+    if (generation !== loadGeneration) return;
+    invalidateResults();
+    const previousData = DATA;
     try {
-      DATA = JSON.parse(e.target.result);
+      const nextData = JSON.parse(e.target.result);
+      if (!validToolData(nextData)) {
+        throw new Error('missing required portfolio data');
+      }
+      DATA = nextData;
       initTool();
     } catch(err) {
-      alert('Invalid JSON: ' + err.message);
+      DATA = previousData;
+      if (DATA) initTool();
+      else {
+        document.getElementById('landingPage').style.display = 'block';
+        document.getElementById('toolArea').style.display = 'none';
+      }
+      alert('Invalid data: ' + err.message);
     }
+  };
+  reader.onerror = () => {
+    if (generation !== loadGeneration) return;
+    invalidateResults(); alert('Could not read the data file.');
   };
   reader.readAsText(file);
 }
@@ -516,6 +574,7 @@ function initTool() {
   document.getElementById('landingPage').style.display = 'none';
   document.getElementById('toolArea').style.display = 'block';
   buildLobInputs();
+  wireResultInvalidation();
   applyPreset('diversified');
 }
 
@@ -537,26 +596,52 @@ function buildLobInputs() {
   });
 }
 
+function invalidateResults() {
+  RESULT = null;
+  document.getElementById('summaryCards').style.display = 'none';
+  document.getElementById('resultsArea').classList.remove('active');
+  closeModal();
+}
+
+function wireResultInvalidation() {
+  document.getElementById('reserveSize').oninput = invalidateResults;
+  document.getElementById('targetRegime').onchange = invalidateResults;
+  document.getElementById('gammaMode').onchange = invalidateResults;
+}
+
 function syncSlider(i, source) {
+  invalidateResults();
   const slider = document.getElementById(`lob_slider_${i}`);
   const num = document.getElementById(`lob_num_${i}`);
   if (source === 'slider') num.value = slider.value;
-  else slider.value = num.value;
-  document.getElementById(`lob_pct_${i}`).textContent = slider.value + '%';
+  else if (validWeight(num.value)) slider.value = num.value;
+  document.getElementById(`lob_pct_${i}`).textContent = validWeight(num.value) ? slider.value + '%' : '—';
   updateWeightTotal();
 }
 
+function validWeight(value) {
+  if (String(value).trim() === '') return false;
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 0 && n <= 100;
+}
+
 function updateWeightTotal() {
+  const el = document.getElementById('weightTotal');
+  if (!DATA.lob_names.every((_, i) => validWeight(document.getElementById(`lob_num_${i}`).value))) {
+    el.textContent = 'Enter whole percentages between 0 and 100.';
+    el.className = 'weight-total err';
+    return;
+  }
   let total = 0;
   DATA.lob_names.forEach((_, i) => {
     total += parseFloat(document.getElementById(`lob_slider_${i}`).value);
   });
-  const el = document.getElementById('weightTotal');
   el.textContent = `Total: ${total.toFixed(1)}%`;
   el.className = 'weight-total ' + (Math.abs(total - 100) < 0.5 ? 'ok' : total > 100 ? 'err' : 'warn');
 }
 
 function applyPreset(key) {
+  invalidateResults();
   const p = PRESETS[key];
   DATA.lob_names.forEach((name, i) => {
     const val = p.weights[name] || 0;
@@ -882,12 +967,18 @@ function kde(data, gridMin, gridMax, nPoints, bandwidth) {
 // MAIN COMPUTE
 // ============================================================
 function compute() {
+  invalidateResults();
+  if (!DATA.lob_names.every((_, i) => validWeight(document.getElementById(`lob_num_${i}`).value))) {
+    alert('Enter whole percentages between 0 and 100.'); return;
+  }
   const tw = getTargetWeights();
   const totalW = tw.reduce((s, v) => s + v, 0);
   if (totalW < 0.01) { alert('Please set LoB weights before computing.'); return; }
 
   const tSize = parseFloat(document.getElementById('reserveSize').value);
-  if (isNaN(tSize) || tSize <= 0) { alert('Please enter a valid reserve size.'); return; }
+  if (!Number.isFinite(tSize) || tSize < 1 || tSize > 50000) {
+    alert('Enter outstanding claims between £1m and £50,000m.'); return;
+  }
 
   // the operator mode is read before anything is computed, so donor standardisation and target
   // scaling are on the same gamma (frozen review of 25 September 2026, T01)
