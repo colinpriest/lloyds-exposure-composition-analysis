@@ -18,7 +18,7 @@ def cal():
 
 @pytest.mark.parametrize("sign", [.01, .5])
 def test_axis_bootstrap_sign_is_not_a_p_value_or_significance_verdict(monkeypatch, capsys, sign):
-    monkeypatch.setattr(shape, 'anderson_ksample_shape', lambda *args: {'stat': 2., 'p': sign})
+    monkeypatch.setattr(shape, 'anderson_ksample_shape', lambda *args: {'stat': 2., 'p': sign, 'k': 4})
     monkeypatch.setattr(shape, 'cluster_bootstrap_diff', lambda *args, **kwargs: {'point': .2, 'ci': (.1, .3), 'p': sign})
     monkeypatch.setattr(shape, 'cluster_bootstrap_slope', lambda *args, **kwargs: {'slope': .2, 'ci': (.1, .3), 'p': sign})
     x = np.arange(40.)
@@ -181,3 +181,25 @@ def test_ritc_binary_ad_unavailable_when_a_group_has_zero_iqr(monkeypatch, capsy
     assert store['example']['shape']['ad_available_groups'] == {'groups': ['clean'], 'result': None}
     assert store['example']['shape']['ad_three_way'] is None
     assert 'clean vs RITC comparison unavailable' in output
+
+
+@pytest.mark.parametrize("flat, expected, available", [
+    ([], 'Q1, Q3, Q4', True),
+    ([2, 3], 'Q1', False),
+])
+def test_legacy_axis_ad_reports_actual_eligible_quartiles(monkeypatch, capsys, flat, expected, available):
+    # Q2 is nonempty but too small; specified groups have zero IQR.
+    groups = np.repeat([0, 1, 2, 3], [10, 7, 13, 10])
+    axis = np.arange(len(groups), dtype=float)
+    severity = np.sin(axis)
+    for g in flat:
+        severity[groups == g] = .1
+    monkeypatch.setattr(shape, 'make_groups', lambda values, n: groups)
+    monkeypatch.setattr(shape, 'SHAPE_STATS', {})
+    shape.analyse_axis('example', axis, severity, axis, np.random.default_rng(7))
+    output = capsys.readouterr().out
+    if available:
+        assert f'Eligible quartiles: {expected} (k=3/4)' in output
+        assert 'Anderson-Darling unavailable' not in output
+    else:
+        assert f'Anderson-Darling unavailable: fewer than two eligible quartiles (eligible: {expected}; 1/4)' in output

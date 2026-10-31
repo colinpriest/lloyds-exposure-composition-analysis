@@ -219,11 +219,18 @@ def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
     kw = stats.kruskal(*[s[grp == g] for g in range(n_quartiles)])
     print(f"\n  Kruskal-Wallis on group ranks (row-level descriptive):  H={kw.statistic:.2f}  p={kw.pvalue:.3f}")
 
-    # full-distribution SHAPE test
+    # Match the AD helper's eligibility rule: at least eight rows and positive IQR.
+    eligible = [f"Q{g + 1}" for g in range(n_quartiles)
+                if int((grp == g).sum()) >= 8 and robust_scale(s[grp == g]) > 0]
     ad = anderson_ksample_shape(s, grp)
+    groups_text = ", ".join(eligible) if eligible else "none"
     if ad:
         print(f"  Shape (Anderson-Darling k-sample, group-standardised):"
               f"  A2k={ad['stat']:.2f}  p={ad['p']:.3f}  (row-level descriptive)")
+        print(f"    Eligible quartiles: {groups_text} (k={ad['k']}/{n_quartiles})")
+    else:
+        print(f"  Shape Anderson-Darling unavailable: fewer than two eligible quartiles"
+              f" (eligible: {groups_text}; {len(eligible)}/{n_quartiles})")
 
     # extreme-group differences with cluster bootstrap CI
     print(f"\n  Extreme-group shape difference (Q{n_quartiles} - Q1), cluster bootstrap:")
