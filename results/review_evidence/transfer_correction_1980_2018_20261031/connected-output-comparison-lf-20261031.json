@@ -1,0 +1,369 @@
+{
+  "baseline_commit": "292c67c95d470dab632b0f67f6227c42fa95a313",
+  "candidate_checkout": "D:\\tmp\\baj-lf-connected-producer-20261031",
+  "files": {
+    "model/exposure_results.json": {
+      "diff_count": 4,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/analysis_run_id",
+          "kind": "other",
+          "old": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68",
+          "new": "ceae56da-7746-588c-a947-e0ab966895a2"
+        },
+        {
+          "path": "/analysis_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        },
+        {
+          "path": "/analysis_timestamp",
+          "kind": "other",
+          "old": "2026-10-31T07:32:46.472005+00:00",
+          "new": "2026-10-31T08:18:48.396862+00:00"
+        },
+        {
+          "path": "/source_data_hash",
+          "kind": "other",
+          "old": "fca0ba3baebccbdc",
+          "new": "f21280efa6ac6fa7"
+        }
+      ],
+      "old_observations": 902,
+      "new_observations": 902,
+      "observation_changes": [],
+      "eligible_mask_changes": []
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "diff_count": 1,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/inputs/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        }
+      ]
+    },
+    "results/error_rate_propagation_results.json": {
+      "diff_count": 4,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/fit/analysis_commit",
+          "kind": "other",
+          "old": "8493a8263a87d738c84bc164084e8206a1696bf0",
+          "new": "69701dc2f66f2fcebae684209a9821859098e24b"
+        },
+        {
+          "path": "/fit/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        },
+        {
+          "path": "/pooled_rate_sensitivity/rate_population/current/exposure_results_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        },
+        {
+          "path": "/rate_population/current/exposure_results_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        }
+      ]
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "diff_count": 3,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/execution_timestamp_utc",
+          "kind": "other",
+          "old": "2026-10-31T07:34:20.814516+00:00",
+          "new": "2026-10-31T08:20:13.124641+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "kind": "other",
+          "old": "8493a8263a87d738c84bc164084e8206a1696bf0",
+          "new": "69701dc2f66f2fcebae684209a9821859098e24b"
+        },
+        {
+          "path": "/run_id",
+          "kind": "other",
+          "old": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68",
+          "new": "ceae56da-7746-588c-a947-e0ab966895a2"
+        }
+      ]
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "diff_count": 3,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/execution_timestamp_utc",
+          "kind": "other",
+          "old": "2026-10-31T07:34:22.213191+00:00",
+          "new": "2026-10-31T08:20:14.684054+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "kind": "other",
+          "old": "8493a8263a87d738c84bc164084e8206a1696bf0",
+          "new": "69701dc2f66f2fcebae684209a9821859098e24b"
+        },
+        {
+          "path": "/run_id",
+          "kind": "other",
+          "old": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68",
+          "new": "ceae56da-7746-588c-a947-e0ab966895a2"
+        }
+      ]
+    },
+    "results/check_exclusion_influence_results.json": {
+      "diff_count": 36,
+      "numeric_changes": [
+        {
+          "path": "/runtime_seconds/fits_seconds/0",
+          "kind": "numeric",
+          "old": 70.76090121269226,
+          "new": 57.94729971885681
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/1",
+          "kind": "numeric",
+          "old": 65.80815196037292,
+          "new": 52.85053896903992
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/2",
+          "kind": "numeric",
+          "old": 68.39845180511475,
+          "new": 55.09622836112976
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/3",
+          "kind": "numeric",
+          "old": 55.062687397003174,
+          "new": 49.31907558441162
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/4",
+          "kind": "numeric",
+          "old": 54.46489071846008,
+          "new": 51.44447445869446
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/5",
+          "kind": "numeric",
+          "old": 54.48293089866638,
+          "new": 50.88329005241394
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/6",
+          "kind": "numeric",
+          "old": 48.611165285110474,
+          "new": 47.60893964767456
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/7",
+          "kind": "numeric",
+          "old": 50.17849254608154,
+          "new": 49.45343375205994
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/8",
+          "kind": "numeric",
+          "old": 51.08891320228577,
+          "new": 50.53829622268677
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/9",
+          "kind": "numeric",
+          "old": 49.52230381965637,
+          "new": 48.902915477752686
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/10",
+          "kind": "numeric",
+          "old": 51.59622025489807,
+          "new": 50.45334720611572
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/11",
+          "kind": "numeric",
+          "old": 53.99946618080139,
+          "new": 52.8971221446991
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/12",
+          "kind": "numeric",
+          "old": 48.87909555435181,
+          "new": 47.540891885757446
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/13",
+          "kind": "numeric",
+          "old": 49.726075887680054,
+          "new": 49.853935956954956
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/14",
+          "kind": "numeric",
+          "old": 48.86123490333557,
+          "new": 49.11708641052246
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/15",
+          "kind": "numeric",
+          "old": 55.505945920944214,
+          "new": 50.578901529312134
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/16",
+          "kind": "numeric",
+          "old": 55.953115463256836,
+          "new": 50.51164722442627
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/17",
+          "kind": "numeric",
+          "old": 53.58553504943848,
+          "new": 47.73377251625061
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/18",
+          "kind": "numeric",
+          "old": 53.453378200531006,
+          "new": 48.47866702079773
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/19",
+          "kind": "numeric",
+          "old": 54.25723147392273,
+          "new": 48.838324308395386
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/20",
+          "kind": "numeric",
+          "old": 51.51140737533569,
+          "new": 46.88166117668152
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/21",
+          "kind": "numeric",
+          "old": 52.925639152526855,
+          "new": 49.30367136001587
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/22",
+          "kind": "numeric",
+          "old": 56.903018951416016,
+          "new": 52.840606451034546
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/23",
+          "kind": "numeric",
+          "old": 53.2011661529541,
+          "new": 49.63276934623718
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/24",
+          "kind": "numeric",
+          "old": 54.233453035354614,
+          "new": 49.50550651550293
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/25",
+          "kind": "numeric",
+          "old": 54.10818886756897,
+          "new": 49.60873794555664
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/26",
+          "kind": "numeric",
+          "old": 55.27165222167969,
+          "new": 50.07211494445801
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/27",
+          "kind": "numeric",
+          "old": 53.893507957458496,
+          "new": 49.994736194610596
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/28",
+          "kind": "numeric",
+          "old": 54.5239999294281,
+          "new": 48.70909762382507
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/29",
+          "kind": "numeric",
+          "old": 55.36587429046631,
+          "new": 50.82412648200989
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/30",
+          "kind": "numeric",
+          "old": 56.85433578491211,
+          "new": 50.020060300827026
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/31",
+          "kind": "numeric",
+          "old": 55.67854595184326,
+          "new": 49.0348596572876
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/32",
+          "kind": "numeric",
+          "old": 56.308847188949585,
+          "new": 49.43235969543457
+        },
+        {
+          "path": "/runtime_seconds/fits_wall",
+          "kind": "numeric",
+          "old": 620.8881866931915,
+          "new": 569.600724697113
+        },
+        {
+          "path": "/runtime_seconds/total",
+          "kind": "numeric",
+          "old": 626.1292369365692,
+          "new": 574.1529159545898
+        }
+      ],
+      "other_changes": [
+        {
+          "path": "/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "fe75913f-7049-5e66-a4c6-d95a277f3c38",
+          "new": "989c6e57-2eb2-5ada-a0cd-0a7c37221836"
+        }
+      ]
+    },
+    "results/check_exclusion_influence_draws.npz": {
+      "old_sha256": "676bbb11af654f0a3415f02517138caf8623305bc8208ce60c57af9afdc671a0",
+      "new_sha256": "676bbb11af654f0a3415f02517138caf8623305bc8208ce60c57af9afdc671a0",
+      "old_array_count": 309,
+      "new_array_count": 309,
+      "old_only": [],
+      "new_only": [],
+      "unequal_arrays": []
+    }
+  },
+  "dashboard": {
+    "old_run_id": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68",
+    "new_run_id": "ceae56da-7746-588c-a947-e0ab966895a2",
+    "all_other_embedded_data_equal": true,
+    "donor_count": 632
+  },
+  "status": "final after exclusion producer completion"
+}

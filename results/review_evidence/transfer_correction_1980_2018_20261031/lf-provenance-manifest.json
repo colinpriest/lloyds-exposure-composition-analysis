@@ -1,0 +1,58 @@
+{
+  "producing_analysis_commit": "69701dc2f66f2fcebae684209a9821859098e24b",
+  "recorded_extraction_commit": "e8d1ddb11adba50989bee46c7019083e7a85d2c4",
+  "register_sha256": "bc1a2ae21fa7e8a88734f9d4dbdd34bfeaed434eb9a85b7c3df108765f0c914c",
+  "source_clean_at_start": true,
+  "environment": {
+    "python": "3.12.6, locked baj-analysis-suite-venv-20261029",
+    "pytensor": "cxx disabled; isolated compilation cache",
+    "mplbackend": "Agg"
+  },
+  "commands": [
+    "python -u src/run_analysis.py",
+    "python -u src/check_small_book_diagnosis.py",
+    "python -u src/error_rate_propagation.py",
+    "python -u src/check_exclusion_influence.py",
+    "python -m pytest -q src/test_connected_run_provenance.py"
+  ],
+  "all_exit_codes": 0,
+  "independent_comparison": "902 observations, eligibility mask and 632 dashboard donors identical; all exclusion-influence values except runtime identical; 309-array archive byte-identical. Corrected 742 fits and historical raw input hashes are separate.",
+  "outputs": {
+    "model/exposure_results.json": {
+      "before_git_blob_sha256": "ed3b88eaab97dfe6178c6ced1238c41a5aca5d45095c41ef4334059353180c0e",
+      "produced_file_sha256": "a377d73b932b204050c8641e6219ac86a7fa6b98f0899cf9e79a66586f678468"
+    },
+    "distortion_tool.html": {
+      "before_git_blob_sha256": "0fcfdb3b89cfcf8adafdd60a412f406fcbf88b878d3e6aca2a0dffb8d6c11798",
+      "produced_file_sha256": "65ba4cb444214e3054adda4446f59320ef3452730c3616f7251f5fc2a951d85d"
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "before_git_blob_sha256": "21714a919ddc9d82a9e383972806e1bd9510e47c7b51d2a58287d443269eaabc",
+      "produced_file_sha256": "877b80e9bf66eade544ed253e6883a700f39e3ee9d1f97d949d8bb321e92d1d3"
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "before_git_blob_sha256": "7ace04ea91e2e820239aa99da9e21f6805d2db6aa869aa92f8dd1df0d178b702",
+      "produced_file_sha256": "4b761c8522ee439bc74adead7bc83cebe37c266e20742ffb7b299483e18d58cf"
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "before_git_blob_sha256": "ec78baf3562a069d00115a3643dcf1eb73478f60ccb559e87cfd7cbab93c66e0",
+      "produced_file_sha256": "8020d15b81e236acc1f4ba88056e824ff3254213911b4cc58f2963986844bb77"
+    },
+    "results/error_rate_propagation_results.json": {
+      "before_git_blob_sha256": "6743553cc4d61050bf9155acd78444e5986401a8f9d5a45275697fa5d3d9457c",
+      "produced_file_sha256": "efdb07e50c042a8a623eb9b6219f7bac2849dedbfb6ea7de3c21db35f43a4ce1"
+    },
+    "results/check_exclusion_influence_results.json": {
+      "before_git_blob_sha256": "d89cb72db1f8cc1fc7b645c34a255d9fda22cdbc9ab3811091586ca1bfdb2c2a",
+      "produced_file_sha256": "5357a0109ae49dd206a0513f1e585a30cd2fa8a33fc75005613a1c5e0a5c1457"
+    }
+  },
+  "evidence_sha256": {
+    "lf-correction-producer-run-analysis-20261031.log": "622bb1ed8a97de2b533a06c22938348466c7090ef0b4e231035b0d2078a91d75",
+    "lf-correction-producer-small_book-20261031.log": "43114f2b71833e4a000d106143be2dc940c7027488f686d43c43ed4705f4b6a4",
+    "lf-correction-producer-error_rate-20261031.log": "032945a1c36ad1d120d5e2e386ef4c5c925889262be0849f11518933a8230567",
+    "lf-correction-producer-exclusion_influence-20261031.log": "4271c8b96e6b77660320aa3a13aa951d856126eb58d44eef32a5c3b95935de43",
+    "lf-correction-connected-provenance-test-20261031.log": "43557565734a08c43e5a3973973179f5bf3692ffb6987e822d48d508730995f8",
+    "connected-output-comparison-lf-20261031.json": "e6d5f828e16da36d81c4b3e60d23a2323dcbf1a27d7e3fcdb6f24bf22c7a92f8"
+  }
+}

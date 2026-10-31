@@ -407,6 +407,13 @@ TARGETED_RUN_EVIDENCE = {
 # Text is hashed after CRLF-to-LF normalization; the compressed patch is hashed as bytes.
 # Every tracked file still needs its own explicit entry: this is not a directory exemption.
 REVIEW_EVIDENCE_SHA256 = {
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-correction-producer-run-analysis-20261031.log': '622bb1ed8a97de2b533a06c22938348466c7090ef0b4e231035b0d2078a91d75',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-correction-producer-small_book-20261031.log': '43114f2b71833e4a000d106143be2dc940c7027488f686d43c43ed4705f4b6a4',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-correction-producer-error_rate-20261031.log': '032945a1c36ad1d120d5e2e386ef4c5c925889262be0849f11518933a8230567',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-correction-producer-exclusion_influence-20261031.log': '4271c8b96e6b77660320aa3a13aa951d856126eb58d44eef32a5c3b95935de43',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-correction-connected-provenance-test-20261031.log': '43557565734a08c43e5a3973973179f5bf3692ffb6987e822d48d508730995f8',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/connected-output-comparison-lf-20261031.json': 'e6d5f828e16da36d81c4b3e60d23a2323dcbf1a27d7e3fcdb6f24bf22c7a92f8',
+    'results/review_evidence/transfer_correction_1980_2018_20261031/lf-provenance-manifest.json': '5bcb61c5d0d4b472c5f628371f09b9743fb53664e41de53025ef8b4eec35663f',
     'results/review_evidence/transfer_correction_1980_2018_20261031/reconstruct-742-model-inputs.py': 'c8660beb27d0105a2d450c965497205d014c42d954d931eade93094c7d6be293',
     'results/review_evidence/transfer_correction_1980_2018_20261031/corrected-742-model-input-lf-equivalence.json': '2b4567d69f0f08ea7f29176bb73af84458986fb2de4b6a7fe2bbe0c1cd4bceae',
     'results/review_evidence/source_correction_1980_2357_20261031/manifest.json': '5ff1e951ead17a9fd96b9e2afaf6da58b162b86b5c8d3821e67b3513f754a132',
