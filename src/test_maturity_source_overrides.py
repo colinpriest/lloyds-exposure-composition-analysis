@@ -129,6 +129,12 @@ def test_primary_ess_is_derived_from_the_original_detailed_diagnostics():
     augmentation = prov['ess_diagnostics_augmentation']
     assert prov['source_commit'] == '6675756b3ef59f594ab8bd6f17a2a69f3d5377a7'
     assert augmentation['verification_rerun_commit'] == 'b12b664782e2fb47d40560eaa42abb6326a1a298'
+    old_provenance = (ROOT / augmentation['original_provenance_file']).read_bytes().replace(b'\r\n', b'\n')
+    assert hashlib.sha256(old_provenance).hexdigest() == augmentation['original_provenance_sha256_normalized_lf']
+    copied_prov = dict(prov)
+    copied_prov.pop('augmented_result_sha256')
+    copied_prov.pop('ess_diagnostics_augmentation')
+    assert copied_prov == json.loads(old_provenance)
     old_bytes = (ROOT / augmentation['original_result_file']).read_bytes().replace(b'\r\n', b'\n')
     details_bytes = (ROOT / augmentation['source_diagnostics_file']).read_bytes().replace(b'\r\n', b'\n')
     assert hashlib.sha256(old_bytes).hexdigest() == prov['result_sha256']
