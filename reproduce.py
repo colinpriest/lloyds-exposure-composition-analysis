@@ -1395,11 +1395,31 @@ def check_inputs_after(before, root=None):
     return dict(before, unchanged_after=not problems, changed_after=problems[:50])
 
 
+def _atomic_write_json(path, value):
+    """Replace a JSON record only after its complete contents are flushed to disk."""
+    directory = os.path.dirname(os.path.abspath(path))
+    name = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n",
+                                         dir=directory, delete=False) as fh:
+            name = fh.name
+            fh.write(json.dumps(value, indent=2) + "\n")
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(name, path)
+        name = None
+    finally:
+        if name is not None:
+            try:
+                os.unlink(name)
+            except FileNotFoundError:
+                pass
+
+
 def write_stamp(ran, failed):
     """Record which scripts actually ran, so --verify cannot report on nothing."""
-    with io.open(STAMP, "w", encoding="utf-8") as _fh:
-        _fh.write(json.dumps(
-            {"ran": ran, "failed": failed, "manifest_size": len(STEPS)}, indent=2))
+    _atomic_write_json(STAMP,
+                       {"ran": ran, "failed": failed, "manifest_size": len(STEPS)})
 
 
 def _reject_nonfinite_json_constant(value):
@@ -1804,11 +1824,13 @@ def main():
 
     print()
     # the input attestation is taken BEFORE any script runs, and checked again after
+    # A previous success must not survive an interrupted new run as evidence
+    # for that run.  The marker also prevents fallback to an older report.
+    write_stamp([], ["run in progress or interrupted"])
     tree_before = capture_inputs()
     failed = run(steps)
     tree_state = check_inputs_after(tree_before)
     ran_ok = [sc for sc, _, _ in steps if sc not in failed]
-    write_stamp(ran_ok, failed)
     # the durable, COMMITTED record of this pass: the gitignored stamp cannot be
     # audited from a clean clone, so the claim it supported was unfalsifiable there
     import datetime
@@ -1835,8 +1857,7 @@ def main():
             env[pkg] = _md.version(pkg)
         except Exception:
             env[pkg] = "absent"
-    with io.open(REPORT, "w", encoding="utf-8", newline="\n") as _fh:
-        _fh.write(json.dumps({
+    _atomic_write_json(REPORT, {
             "schema": 4,
             "environment": env,
             "commit": rc.stdout.strip(),
@@ -1853,7 +1874,9 @@ def main():
                         for sc, _, _ in steps},
             "outputs": outs,
             "volatile_json_fields_excluded_by_verify": list(VOLATILE),
-        }, indent=2) + "\n")
+        })
+    # Publish success only after the complete new report is safely in place.
+    write_stamp(ran_ok, failed)
     print("\nrun report written to reproduce-run-report.json (commit this file: it "
           "is the\ndurable record --verify and the cover letter refer to)")
     n_json = len([f for f in os.listdir(os.path.join(HERE, "results"))

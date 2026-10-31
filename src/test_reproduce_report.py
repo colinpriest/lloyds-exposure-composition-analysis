@@ -893,3 +893,77 @@ def test_review_evidence_requires_its_exact_tracked_content_and_does_not_exempt_
     assert any("unlisted.json has no manifest producer" in e for e in rp.check_manifest_completeness())
     allowed.unlink()
     assert any("unreadable" in e for e in rp.check_review_evidence_contract())
+
+
+def _setup_interruption_probe(monkeypatch, tmp_path):
+    """A previously successful local run and the actual new-run control flow."""
+    stamp = tmp_path / ".reproduce-run.json"
+    report = tmp_path / "reproduce-run-report.json"
+    monkeypatch.setattr(rp, "STAMP", str(stamp))
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "STEPS", [("sample.py", "checks", 1)])
+    monkeypatch.setattr(rp, "OUTPUTS", {"sample.py": ("results/not-a-real-output.json",)})
+    monkeypatch.setattr(rp, "REQUIRED", ())
+    monkeypatch.setattr(rp.sys, "argv", ["reproduce.py"])
+    monkeypatch.setattr(rp, "check_environment", lambda: True)
+    for name in ("check_manifest_completeness", "check_environment_lock",
+                 "check_readme_counts", "check_test_counts"):
+        monkeypatch.setattr(rp, name, lambda: [])
+    monkeypatch.setattr(rp, "capture_inputs", lambda: {"outputs_excluded": []})
+    monkeypatch.setattr(rp, "check_inputs_after", lambda before: before)
+    rp.write_stamp(["sample.py"], [])
+    report.write_text("old report\n", encoding="utf-8")
+    assert rp.validate_stamp(rp.read_stamp()) == []
+    return stamp, report
+
+
+def test_interrupted_run_invalidates_previous_success(monkeypatch, tmp_path):
+    _, report = _setup_interruption_probe(monkeypatch, tmp_path)
+
+    def interrupt(_steps):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(rp, "run", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        rp.main()
+    assert report.read_text(encoding="utf-8") == "old report\n"
+    assert rp.validate_stamp(rp.read_stamp())
+    assert not rp.verify()  # An old valid report cannot rescue the local run.
+
+
+def test_report_write_interruption_keeps_old_report_and_fails_closed(monkeypatch, tmp_path):
+    _, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+    replace = rp.os.replace
+
+    def interrupt_report(src, dst):
+        if os.path.abspath(dst) == os.path.abspath(report):
+            raise OSError("interrupted report replacement")
+        return replace(src, dst)
+
+    monkeypatch.setattr(rp.os, "replace", interrupt_report)
+    with pytest.raises(OSError, match="interrupted report"):
+        rp.main()
+    assert report.read_text(encoding="utf-8") == "old report\n"
+    assert rp.validate_stamp(rp.read_stamp())
+    assert not rp.verify()
+
+
+def test_success_stamp_is_published_only_after_complete_report(monkeypatch, tmp_path):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+    monkeypatch.setattr(rp, "verify", lambda: True)
+    original_write = rp._atomic_write_json
+    writes = []
+
+    def observe(path, value):
+        if os.path.abspath(path) == os.path.abspath(stamp) and not value["failed"]:
+            assert json.loads(report.read_text(encoding="utf-8"))["scripts"] == {
+                "sample.py": {"status": "ok"}}
+        writes.append(os.path.basename(path))
+        original_write(path, value)
+
+    monkeypatch.setattr(rp, "_atomic_write_json", observe)
+    assert rp.main() == 0
+    assert writes == [stamp.name, report.name, stamp.name]
+    assert rp.validate_stamp(rp.read_stamp()) == []

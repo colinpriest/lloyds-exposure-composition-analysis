@@ -248,6 +248,10 @@ posterior draws, which the old verifier's `.json` filter could not see) except t
 workbooks: a workbook is compared on its members' names and contents, in name order, without
 `docProps/core.xml`, the member that records when it was written, and without the zip entries' own
 metadata. It fails on any changed output that no ran script declared.
+A run command exits zero when its scripts complete, even if the inline output comparison
+fails; check `python reproduce.py --verify` separately and use its exit status to
+establish whether the regenerated outputs match. An in-progress or interrupted run
+leaves a failing local stamp, so it cannot be mistaken for an earlier successful run.
 
 The whole manifest was rerun as a recorded pass from a clean clone of the
 historical analysis commit `02390cc` (every manifest script, no failures; its posterior-draw `.npz` files and
