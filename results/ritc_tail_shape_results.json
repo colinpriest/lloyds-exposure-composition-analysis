@@ -8,7 +8,8 @@
       "seed": 12345,
       "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
-      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
+      "bootstrap_p_note": "legacy p is twice the smaller observed-bootstrap fraction on either side of the null; without null centering it is not established as a null-calibrated p-value"
     },
     "tests": {
       "Student-t nu (MLE)": {
@@ -37,7 +38,7 @@
         "ci": null,
         "p": null,
         "n_boot": 0,
-        "measures": "shape"
+        "measures": "threshold-dependent shape"
       },
       "Hill xi (top 15% |z|)": {
         "ritc": 0.40514992755103657,
@@ -98,7 +99,8 @@
       "seed": 12345,
       "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
-      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
+      "bootstrap_p_note": "legacy p is twice the smaller observed-bootstrap fraction on either side of the null; without null centering it is not established as a null-calibrated p-value"
     },
     "tests": {
       "Student-t nu (MLE)": {
@@ -127,7 +129,7 @@
         "ci": null,
         "p": null,
         "n_boot": 0,
-        "measures": "shape"
+        "measures": "threshold-dependent shape"
       },
       "Hill xi (top 15% |z|)": {
         "ritc": 1.3601247030242416,

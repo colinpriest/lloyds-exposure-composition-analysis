@@ -28,7 +28,7 @@ from scipy import stats
 
 from adopted_model import load_sample
 from test_shape_invariance import (N_BOOT, SEED, SHAPE_STATS, anderson_ksample_shape, cluster_bootstrap_diff,
-                                   cluster_bootstrap_slope, make_groups)
+                                   cluster_bootstrap_slope, make_groups, ROW_TEST_NOTE, BOOTSTRAP_SIGN_NOTE)
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "shape_invariance_results.json"
@@ -76,6 +76,8 @@ def run(S, R, H, syn, n_boot=N_BOOT, seed=SEED):
         "seed": seed, "n_boot": n_boot, "anderson_darling_line": AD_LINE,
         "anderson_darling_p_note": "scipy reports the k-sample Anderson-Darling p within [0.001, 0.25]: 0.25 is "
                                    "its cap, not an estimate",
+        "row_test_note": ROW_TEST_NOTE,
+        "bootstrap_sign_note": BOOTSTRAP_SIGN_NOTE,
         "axes": axes,
         "no_drift_on_either_axis": all(a["no_drift"] for a in axes.values()),
         "reading": ("'no drift' means every interval covers zero and the Anderson-Darling p is at or above the "

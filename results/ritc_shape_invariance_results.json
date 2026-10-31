@@ -16,7 +16,9 @@
       "seed": 12345,
       "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
-      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
+      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
+      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
     },
     "scale": {
       "fligner_p": 0.2875846893619103,
@@ -147,7 +149,9 @@
       "seed": 12345,
       "n_boot": 4000,
       "calibration_source": "model/dispersion_calibration.json (single-regime, gamma-free)",
-      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z"
+      "standardisation": "single-regime base scale only; reporting-year and assumed-business scale effects remain in z",
+      "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
+      "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
     },
     "scale": {
       "fligner_p": 0.015202130412187943,

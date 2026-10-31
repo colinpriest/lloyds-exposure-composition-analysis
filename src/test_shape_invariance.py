@@ -24,8 +24,11 @@ specification of the variance model itself -- a cleaner test of the shape
 assumption alone.  A k-sample Anderson-Darling test on group-standardised
 values provides a full-distribution complement.
 
-All p-values / CIs use a CLUSTER bootstrap that resamples *syndicates*, since
-a syndicate contributes multiple correlated syndicate-years.
+Shape-statistic intervals use a CLUSTER bootstrap that resamples syndicates.
+Its legacy `p` is twice the smaller observed-bootstrap sign fraction, without null
+centering; it is not established as a null-calibrated p-value. Kruskal-Wallis and
+Anderson-Darling use ordinary SciPy row-level tests and may be miscalibrated under
+within-syndicate dependence; they are descriptive.
 
 The manifest step src/check_shape_invariance.py runs these statistics on the working sample the calibration is
 fitted on and writes them to its results file; that is the record the paper cites (the review
@@ -43,6 +46,10 @@ import run_analysis as ra
 
 SEED = 12345
 N_BOOT = 4000
+ROW_TEST_NOTE = ("Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; "
+                 "within-syndicate dependence may miscalibrate them")
+BOOTSTRAP_SIGN_NOTE = ("legacy bootstrap p is twice the smaller observed-bootstrap sign fraction "
+                       "without null centering, not an established null-calibrated p-value")
 
 
 # ── robust, scale/location-invariant shape statistics ────────────────────────
@@ -106,7 +113,7 @@ def cluster_bootstrap_diff(s, cluster, group, stat_fn, g_top, g_bot, rng, n=N_BO
     if len(diffs) < n * 0.5:
         return None
     lo, hi = np.percentile(diffs, [2.5, 97.5])
-    # two-sided bootstrap p for H0: diff == 0
+    # Twice the smaller observed-bootstrap sign fraction, without null centering.
     p = 2.0 * min((diffs <= 0).mean(), (diffs >= 0).mean())
     return {"point": float(np.median(diffs)), "ci": (float(lo), float(hi)),
             "p": float(min(p, 1.0)), "n_boot": len(diffs)}
@@ -115,7 +122,7 @@ def cluster_bootstrap_diff(s, cluster, group, stat_fn, g_top, g_bot, rng, n=N_BO
 def cluster_bootstrap_slope(s, cluster, axis, stat_fn, rng, n_bins=10, n=N_BOOT):
     """Bootstrap the OLS slope of a per-bin shape stat vs bin index.
 
-    Non-zero slope => shape drifts monotonically along the axis.
+    A non-zero fitted linear trend does not establish monotonicity in every bin.
     """
     clusters = np.unique(cluster)
     idx_by_cluster = {c: np.where(cluster == c)[0] for c in clusters}

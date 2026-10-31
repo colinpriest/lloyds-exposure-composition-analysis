@@ -35,6 +35,14 @@ def test_the_record_is_on_the_working_sample():
     assert rec["population"].startswith("adopted_model.load_sample()")
 
 
+def test_the_record_distinguishes_row_tests_from_cluster_bootstrap():
+    rec = _record()
+    assert rec["row_test_note"] == CSI.ROW_TEST_NOTE
+    assert "ordinary row-level" in rec["row_test_note"]
+    assert rec["bootstrap_sign_note"] == CSI.BOOTSTRAP_SIGN_NOTE
+    assert "without null centering" in rec["bootstrap_sign_note"]
+
+
 def test_every_interval_the_text_summarises_covers_zero():
     rec = _record()
     assert set(rec["axes"]) == set(AXES)

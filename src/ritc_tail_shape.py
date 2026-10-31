@@ -23,9 +23,13 @@ RITC scale term, so each regime's own scale and each year's effect stay in z.  T
 ratios of |z| are therefore MAGNITUDE statistics: multiplying one group's z by a constant moves
 them without changing that group's tail shape, and a significant ratio says the RITC residuals
 are smaller or larger at that quantile, not that their tail is thinner or heavier.  The
-Student-t nu (fitted with a free scale), the GPD and Hill indices and the far-spread ratio do not
-move under that rescaling, and are the SHAPE statistics.  Each result records which it is
-("measures"), and src/test_tail_shape_measures.py checks both properties on a rescaled sample.
+Student-t nu (fitted with a free scale), the Hill index and the far-spread ratio do not
+move under that rescaling. The GPD shape estimate uses a fixed pooled threshold: scaling
+one group changes its exceedances and can move the estimate; scaling the threshold with
+the group restores scale equivariance. Each result records its measurement scope.
+The bootstrap's legacy `p` is twice the smaller fraction of resampled contrasts on either
+side of zero (or one for a ratio), without null centering; it is not established as a
+null-calibrated p-value.
 
 The Student-t nu is an MLE CLIPPED to NU_CLIP = [1, 50]. A clipped value is a boundary, not an
 estimate: the strict rescaling population's 16 RITC residuals returned exactly 1.00, the lower
@@ -54,16 +58,17 @@ OUT = SCRIPT_DIR / "results" / "ritc_tail_shape_results.json"
 SEED = 12345
 N_BOOT = 4000
 THR_Q = 90.0     # common threshold percentile (of pooled |z|) for GPD/Hill exceedances
-# what each statistic measures: a constant rescaling of one group moves a "magnitude" statistic
-# and leaves a "shape" statistic where it was (see the module docstring)
+# The GPD's fixed pooled threshold can change its selected tail under group rescaling.
 MEASURES = {
     "Student-t nu (MLE)": "shape",
-    "GPD xi (|z| exceedances)": "shape",
+    "GPD xi (|z| exceedances)": "threshold-dependent shape",
     "Hill xi (top 15% |z|)": "shape",
     "q95(|z|) ratio": "magnitude",
     "q99(|z|) ratio": "magnitude",
     "far spread (q99-q50)/(q90-q50)": "shape",
 }
+BOOTSTRAP_P_NOTE = ("legacy p is twice the smaller observed-bootstrap fraction on either side of the null; "
+                    "without null centering it is not established as a null-calibrated p-value")
 
 
 # ── tail-shape estimators (all defined on a 1-D array of z) ──────────────────
@@ -191,7 +196,9 @@ def run(label, rows, strong, weak, cal, rng, store):
     ]
     res = {"meta": {"n": len(z), "clean": int((~ritc).sum()), "ritc": int(ritc.sum()),
                     "calibration_source": CALIBRATION_SOURCE, "standardisation": STANDARDISATION_NOTE,
+                    "bootstrap_p_note": BOOTSTRAP_P_NOTE,
                     "thr_p90_absz": thr, "seed": SEED, "n_boot": N_BOOT}, "tests": {}}
+    print("  p denotes twice the smaller observed-bootstrap sign fraction, not a null-calibrated p-value")
     print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'p':>8}")
     print("  " + "-" * 92)
     for name, fn, kind, th, note in tests:

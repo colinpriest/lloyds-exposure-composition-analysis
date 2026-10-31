@@ -45,6 +45,7 @@ import run_analysis as ra
 from test_shape_invariance import (
     build_population, select, bowley_skew, tail_skew_ratio, moors_kurt,
     robust_scale, anderson_ksample_shape, cluster_bootstrap_diff, _q,
+    ROW_TEST_NOTE, BOOTSTRAP_SIGN_NOTE,
 )
 import assumed_business
 
@@ -152,6 +153,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
                     "operator": {kk: cal[kk] for kk in ("k", "gamma", "sd_undiv", "sd_div", "reference_size")},
                     "calibration_source": CALIBRATION_SOURCE,
                     "standardisation": STANDARDISATION_NOTE,
+                    "row_test_note": ROW_TEST_NOTE, "bootstrap_sign_note": BOOTSTRAP_SIGN_NOTE,
                     "seed": SEED, "n_boot": N_BOOT}}
 
     # ── (A) Spread after single-regime base-scale standardisation ────────────

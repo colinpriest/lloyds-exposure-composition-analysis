@@ -1,8 +1,8 @@
 """The tail diagnostics say what each one measures (frozen review of 21 September 2026, M05).
 
-A constant rescaling of one group moves the |z| quantile ratios and no tail-shape statistic, so a
-significant quantile ratio is extreme residual magnitude, not tail shape. These tests check both
-properties on a rescaled copy of the same sample, and that the recorded results carry the label.
+A constant rescaling of one group moves the |z| quantile ratios, but not Student-t nu,
+Hill xi or the far-spread ratio. The fixed pooled-threshold GPD can move because its
+exceedance set changes. These tests check these properties and the recorded labels.
 """
 import io
 import json
@@ -63,10 +63,21 @@ def test_a_rescaled_copy_moves_no_shape_statistic():
     assert abs(rts.t_nu(0.6 * z) - rts.t_nu(z)) < 0.05
 
 
+def test_fixed_gpd_threshold_is_not_invariant_to_group_rescaling():
+    z = np.random.default_rng(414).lognormal(0, 1, 1500)
+    original = rts.gpd_xi(z, 2.0)
+    fixed = rts.gpd_xi(0.6 * z, 2.0)
+    scaled_threshold = rts.gpd_xi(0.6 * z, 1.2)
+    assert np.sum(z > 2.0) != np.sum(0.6 * z > 2.0)
+    assert abs(fixed - original) > 0.005
+    assert abs(scaled_threshold - original) < 0.001
+
+
 def test_each_statistic_is_labelled_by_what_it_measures():
     assert rts.MEASURES["q95(|z|) ratio"] == "magnitude"
     assert rts.MEASURES["q99(|z|) ratio"] == "magnitude"
-    for name in ("Student-t nu (MLE)", "GPD xi (|z| exceedances)", "Hill xi (top 15% |z|)",
+    assert rts.MEASURES["GPD xi (|z| exceedances)"] == "threshold-dependent shape"
+    for name in ("Student-t nu (MLE)", "Hill xi (top 15% |z|)",
                  "far spread (q99-q50)/(q90-q50)"):
         assert rts.MEASURES[name] == "shape", name
 
@@ -76,6 +87,7 @@ def test_the_recorded_results_carry_the_label():
                             encoding="utf-8") as _fh:
         res = json.load(_fh)
     for pop in res.values():
+        assert pop["meta"]["bootstrap_p_note"] == rts.BOOTSTRAP_P_NOTE
         for name, r in pop["tests"].items():
             assert r.get("measures") == rts.MEASURES[name], (name, r.get("measures"))
 

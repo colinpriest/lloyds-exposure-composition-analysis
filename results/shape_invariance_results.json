@@ -147,5 +147,7 @@
   }
  },
  "no_drift_on_either_axis": true,
- "reading": "'no drift' means every interval covers zero and the Anderson-Darling p is at or above the line; it is the absence of evidence of drift at this sample size, not evidence of none"
+ "reading": "'no drift' means every interval covers zero and the Anderson-Darling p is at or above the line; it is the absence of evidence of drift at this sample size, not evidence of none",
+ "row_test_note": "Kruskal-Wallis and Anderson-Darling are ordinary row-level SciPy tests; within-syndicate dependence may miscalibrate them",
+ "bootstrap_sign_note": "legacy bootstrap p is twice the smaller observed-bootstrap sign fraction without null centering, not an established null-calibrated p-value"
 }
