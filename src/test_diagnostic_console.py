@@ -43,6 +43,8 @@ def test_tail_sign_is_descriptive(monkeypatch, capsys, sign):
     output = capsys.readouterr().out
     assert 'sign2' in output and 'not an established null-calibrated p-value' in output
     assert '***' not in output
+    gpd_line = next(line for line in output.splitlines() if 'GPD xi' in line)
+    assert 'pooled threshold; scale-sensitive' in gpd_line
     assert all(x['p'] == sign for x in store['example']['tests'].values())
 
 
@@ -87,3 +89,23 @@ def test_working_axis_summary_names_its_threshold_as_diagnostic(monkeypatch, tmp
     assert 'diagnostic threshold flag on both axes: True' in output
     assert 'does not prove invariance' in output
     assert 'may be miscalibrated under within-syndicate dependence' in output
+
+
+def test_tail_summary_distinguishes_fixed_threshold_gpd_from_shape(monkeypatch, tmp_path, capsys):
+    import json
+
+    calibration = tmp_path / 'calibration.json'
+    calibration.write_text(json.dumps(cal()), encoding='utf-8')
+    monkeypatch.setattr(tail, 'CAL', calibration)
+    monkeypatch.setattr(tail, 'OUT', tmp_path / 'tail.json')
+    monkeypatch.setattr(tail.assumed_business, 'strong_weak', lambda: (set(), set()))
+    monkeypatch.setattr(tail, 'load_calib_population', lambda: [])
+    monkeypatch.setattr(tail, 'build_population', lambda: [])
+    monkeypatch.setattr(tail, 'select', lambda records, mode: [])
+    monkeypatch.setattr(tail, 'run', lambda *args: None)
+    tail.main()
+    output = capsys.readouterr().out
+    assert 'GPD xi uses a fixed pooled threshold' in output
+    assert 'can change under group rescaling' in output
+    assert 'its contrast alone does not establish a shape change' in output
+    assert 'Hill index' in output and 'q95/q99 ratios describe magnitudes' in output

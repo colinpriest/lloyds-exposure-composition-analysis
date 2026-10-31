@@ -7,8 +7,8 @@ extreme tail. A failure to detect central shape differences does not settle tail
 The current robustness fits give similar point estimates with and without the
 assumed-business records; their point difference does not establish a tail-shape change.
 
-This script tests the tail shape of z = s / sigma(R,HHI) directly, clean vs RITC, with
-tail-SENSITIVE estimators and a cluster (by-syndicate) bootstrap:
+This script compares tail behaviour of z = s / sigma(R,HHI), clean vs RITC, with
+tail-sensitive statistics and a cluster (by-syndicate) bootstrap:
 
   * Student-t degrees of freedom nu (MLE) fit to z per group  -> lower nu = heavier tail
   * GPD tail index xi on |z| exceedances over a common high threshold
@@ -32,8 +32,9 @@ side of zero (or one for a ratio), without null centering; it is not established
 null-calibrated p-value.
 
 The Student-t nu is an MLE CLIPPED to NU_CLIP = [1, 50]. A clipped value is a boundary, not an
-estimate: the strict rescaling population's 16 RITC residuals returned exactly 1.00, the lower
-clip, and a review note quoted it as a "direct MLE" (review of 29 September 2026, A-6). Each
+estimate: in the 29 September 2026 review, the then-current strict rescaling population had 16
+RITC residuals whose fit returned exactly 1.00, the lower clip, and a review note quoted it as
+a "direct MLE" (A-6). Each
 Student-t row therefore records whether either group's value sits on a clip bound
 (`ritc_at_bound`, `clean_at_bound`: "lower", "upper" or null) and how many bootstrap replicates
 had a group on a bound (`n_boot_at_bound`), so the contrast's interval is read knowing it is
@@ -188,7 +189,7 @@ def run(label, rows, strong, weak, cal, rng, store):
 
     tests = [
         ("Student-t nu (MLE)",        t_nu,       "diff",  None, "lower nu = heavier"),
-        ("GPD xi (|z| exceedances)",  gpd_xi,     "diff",  thr,  "higher xi = heavier"),
+        ("GPD xi (|z| exceedances)",  gpd_xi,     "diff",  thr,  "pooled threshold; scale-sensitive"),
         ("Hill xi (top 15% |z|)",     hill_xi,    "diff",  None, "higher xi = heavier"),
         ("q95(|z|) ratio",            lambda a, p=95: q_ratio_stat(a, p), "ratio", None, ">1 = RITC bigger"),
         ("q99(|z|) ratio",            lambda a, p=99: q_ratio_stat(a, p), "ratio", None, ">1 = RITC bigger"),
@@ -235,9 +236,10 @@ def main():
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:
         _fh.write(json.dumps(store, indent=2))
     print(f"\nWrote {OUT}")
-    print("\nA heavier RITC tail SHAPE shows as: nu(RITC) < nu(clean) (negative nu contrast),")
-    print("xi(RITC) > xi(clean) (positive) and a larger far-spread ratio.  q95/q99 ratios above 1")
-    print("say the RITC residuals are larger at that quantile, which a scale difference alone produces.")
+    print("\nStudent-t nu, the Hill index and far-spread ratio describe tail shape; read contrasts")
+    print("with their intervals and any nu clipping. GPD xi uses a fixed pooled threshold and")
+    print("can change under group rescaling, so its contrast alone does not establish a shape change.")
+    print("q95/q99 ratios describe magnitudes and can change under rescaling alone.")
 
 
 if __name__ == "__main__":
