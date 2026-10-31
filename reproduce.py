@@ -400,6 +400,14 @@ TARGETED_RUN_EVIDENCE = {
 # Text is hashed after CRLF-to-LF normalization; the compressed patch is hashed as bytes.
 # Every tracked file still needs its own explicit entry: this is not a directory exemption.
 REVIEW_EVIDENCE_SHA256 = {
+    'results/review_evidence/provenance_refresh_1cb/manifest.json': '05abaa0bbe044fd32300eb39872e8259b75f92630c3a1ddbb0afb78523944f2e',
+    'results/review_evidence/provenance_refresh_1cb/provenance-refresh-check_exclusion_influence-1cb.log': '5cfafc9f59e71b7ea00adc73e8fae260bad39c4af0769872a4292e8e522baf2a',
+    'results/review_evidence/provenance_refresh_1cb/provenance-refresh-check_small_book_diagnosis-1cb.log': 'a986646caeaf03c8ec949f6b4f512e7cc00a876579caa05038b7dcb8f124ab23',
+    'results/review_evidence/provenance_refresh_1cb/provenance-refresh-error_rate_propagation-1cb.log': '2c034e5ff44e2f4f9eb71fadbbdd9d8e49c682ed4d03ac6cb42005f5d2fd5de6',
+    'results/review_evidence/provenance_refresh_1cb/provenance-refresh-run-analysis-1cb.log': '4a4913c2feffe107ce5abf886083a8660258933c01708bc70ed97fa0313c16e0',
+    'results/review_evidence/provenance_refresh_1cb/provenance-test-after-refresh.log': '5b42d38f8a04f115a4f20139efe8cda08bb604bb1fb04ccb57ff37ccdb3f0c4c',
+    'results/review_evidence/provenance_refresh_1cb/provenance-test-before-refresh.log.gz': '83518fd6f59741096630292974b5b18e1989fff1cff933c27a28028f14ccb236',
+    'results/review_evidence/provenance_refresh_1cb/provenance-test-missing-exclusion.log.gz': 'ce7569da0f97e704f761a46291ef95d2fa07b0ce9557228fbb2c6356317d6ff8',
     'results/review_evidence/baj-compare-selection-inputs.py': '26a60efe477a231c23e2fa0b6251f4ed198311fd69ebe66634a4e9350efbcee6',
     'results/review_evidence/baj-selection-current-inputs.json': '40411082918d45f6830132cd31ae8108a374f8126b79a4ccf770df960289dd87',
     'results/review_evidence/baj-selection-run-inputs.json': '40411082918d45f6830132cd31ae8108a374f8126b79a4ccf770df960289dd87',

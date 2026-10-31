@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "producing_commit": "1cb49325f2d0144af6bfa2a74ef864f46c8b50cd",
+  "source_checkout": "fresh isolated checkout; source, data and extraction-input git diffs against producing commit are empty",
+  "python": "3.12.6, locked D:/tmp/baj-analysis-suite-venv-20261029",
+  "environment": {
+    "PYTENSOR_FLAGS": "cxx=,base_compiledir=D:/tmp/baj-provenance-refresh-pytensor-1cb",
+    "MPLBACKEND": "Agg",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "extraction_commit": "15dbb476373bb6ae2658464a52688d08cf244744"
+  },
+  "requirements_lock_sha256": "b3a0cf50553d44c426babd5d26143fe75e499134f15808c40c5eae2589381555",
+  "producer_commands": [
+    "python -u src/run_analysis.py",
+    "python -u src/check_small_book_diagnosis.py",
+    "python -u src/error_rate_propagation.py",
+    "python -u src/check_exclusion_influence.py"
+  ],
+  "producer_logs": {
+    "provenance-refresh-check_exclusion_influence-1cb.log": "5cfafc9f59e71b7ea00adc73e8fae260bad39c4af0769872a4292e8e522baf2a",
+    "provenance-refresh-check_small_book_diagnosis-1cb.log": "a986646caeaf03c8ec949f6b4f512e7cc00a876579caa05038b7dcb8f124ab23",
+    "provenance-refresh-error_rate_propagation-1cb.log": "2c034e5ff44e2f4f9eb71fadbbdd9d8e49c682ed4d03ac6cb42005f5d2fd5de6",
+    "provenance-refresh-run-analysis-1cb.log": "4a4913c2feffe107ce5abf886083a8660258933c01708bc70ed97fa0313c16e0",
+    "provenance-test-after-refresh.log": "5b42d38f8a04f115a4f20139efe8cda08bb604bb1fb04ccb57ff37ccdb3f0c4c",
+    "provenance-test-before-refresh.log.gz": "83518fd6f59741096630292974b5b18e1989fff1cff933c27a28028f14ccb236",
+    "provenance-test-missing-exclusion.log.gz": "ce7569da0f97e704f761a46291ef95d2fa07b0ce9557228fbb2c6356317d6ff8"
+  },
+  "expected_negative_tests": [
+    "provenance-test-before-refresh.log.gz",
+    "provenance-test-missing-exclusion.log.gz"
+  ],
+  "positive_test": "provenance-test-after-refresh.log",
+  "loader_fingerprint": {
+    "source_data_hash": "663d58179d7c6a99",
+    "analysis_code_hash": "b4d122cbf8a02f8d",
+    "analysis_run_id": "dd28fb86-a6d9-500a-80f9-cd23433a6a9e",
+    "analysis_run_id_without_calibration": "bf856903-4238-5779-9a5e-e9e6362ab504"
+  },
+  "outputs": {
+    "model/exposure_results.json": {
+      "before_git_blob_sha256": "62ca4ff8178c4cbae653a39fb45511e1e4a3c21fc69c9cffbd641b67f549216c",
+      "produced_file_sha256": "f875cfd2cf565b5f85dc4b8c829c5069f33592836d8051b756164d1ed296577e",
+      "changed_json_paths": [
+        "/analysis_code_hash",
+        "/analysis_run_id",
+        "/analysis_run_id_without_calibration",
+        "/analysis_timestamp",
+        "/fx_conversion/fx_source/retrieved_utc",
+        "/source_data_hash"
+      ]
+    },
+    "distortion_tool.html": {
+      "before_git_blob_sha256": "20decc4d7542f86bbd4994008233aadfd4df5c7ca917f127b6ad26af5f134d2b",
+      "produced_file_sha256": "1f5abaad9a8cd53797d0481b09377d31e7285a81c1fe695a1aa21f3b190bde08",
+      "changed_json_paths": [
+        "/embedded_data/run_id"
+      ]
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "before_git_blob_sha256": "8856f9e05285bf17f97ba01705216d7878bd477ea9e07feb060b84207316d59d",
+      "produced_file_sha256": "a4c00fe983e6c74e2134264a3e999c980cb22341a9c11295e29eae9af28a09d0",
+      "changed_json_paths": [
+        "/execution_timestamp_utc",
+        "/git_commit_or_hash",
+        "/run_id"
+      ]
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "before_git_blob_sha256": "c8e9b0de06752196be7833bdd2125625b0e8306e69a9a4ebc33e69b53410b63e",
+      "produced_file_sha256": "c5d97ace072111f3b60e1da1162f07575ced2335fbf83110843b23954f71e5e8",
+      "changed_json_paths": [
+        "/execution_timestamp_utc",
+        "/git_commit_or_hash",
+        "/run_id"
+      ]
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "before_git_blob_sha256": "08c3b818efed22e46346519e39078ba4e999dd7ec10eaf38295e925276527adc",
+      "produced_file_sha256": "82be340b4d5a34444dc5df7b932da6916c25208066b6d2235922bab080ae6ccb",
+      "changed_json_paths": [
+        "/inputs/loader_run_id_without_calibration"
+      ]
+    },
+    "results/error_rate_propagation_results.json": {
+      "before_git_blob_sha256": "68d70265a2c0282e7b2c09b89f8f52c344fead75ada76d3db175220b21972f9a",
+      "produced_file_sha256": "fb243e962a6ebc1c6c8f2940a96fbcea7d9c9b814a3ff5a019ec8d713c0c9db4",
+      "changed_json_paths": [
+        "/fit/analysis_commit",
+        "/fit/loader_run_id_without_calibration",
+        "/pooled_rate_sensitivity/rate_population/current/exposure_results_run_id_without_calibration",
+        "/rate_population/current/exposure_results_run_id_without_calibration"
+      ]
+    },
+    "results/check_exclusion_influence_results.json": {
+      "before_git_blob_sha256": "adb28e34771089d15fb1b99e13c08a4ca1a0fa023a16c4ce3fd5c64057cd2b74",
+      "produced_file_sha256": "ba4add3260841d50f29fd8999274aebb5473cb73af5a074ef069eac390e4b72e",
+      "changed_json_paths": [
+        "/loader_run_id_without_calibration",
+        "/runtime_seconds/fits_seconds/0",
+        "/runtime_seconds/fits_seconds/1",
+        "/runtime_seconds/fits_seconds/2",
+        "/runtime_seconds/fits_seconds/3",
+        "/runtime_seconds/fits_seconds/4",
+        "/runtime_seconds/fits_seconds/5",
+        "/runtime_seconds/fits_seconds/6",
+        "/runtime_seconds/fits_seconds/7",
+        "/runtime_seconds/fits_seconds/8",
+        "/runtime_seconds/fits_seconds/9",
+        "/runtime_seconds/fits_seconds/10",
+        "/runtime_seconds/fits_seconds/11",
+        "/runtime_seconds/fits_seconds/12",
+        "/runtime_seconds/fits_seconds/13",
+        "/runtime_seconds/fits_seconds/14",
+        "/runtime_seconds/fits_seconds/15",
+        "/runtime_seconds/fits_seconds/16",
+        "/runtime_seconds/fits_seconds/17",
+        "/runtime_seconds/fits_seconds/18",
+        "/runtime_seconds/fits_seconds/19",
+        "/runtime_seconds/fits_seconds/20",
+        "/runtime_seconds/fits_seconds/21",
+        "/runtime_seconds/fits_seconds/22",
+        "/runtime_seconds/fits_seconds/23",
+        "/runtime_seconds/fits_seconds/24",
+        "/runtime_seconds/fits_seconds/25",
+        "/runtime_seconds/fits_seconds/26",
+        "/runtime_seconds/fits_seconds/27",
+        "/runtime_seconds/fits_seconds/28",
+        "/runtime_seconds/fits_seconds/29",
+        "/runtime_seconds/fits_seconds/30",
+        "/runtime_seconds/fits_seconds/31",
+        "/runtime_seconds/fits_seconds/32",
+        "/runtime_seconds/fits_wall",
+        "/runtime_seconds/total"
+      ]
+    }
+  },
+  "exclusion_draw_archive": {
+    "path": "results/check_exclusion_influence_draws.npz",
+    "sha256": "676bbb11af654f0a3415f02517138caf8623305bc8208ce60c57af9afdc671a0",
+    "byte_identical_to_produced": true,
+    "arrays_checked": 309
+  },
+  "scope": "Selective actual producer runs; not a full-manifest reproduction. Twenty-one regenerated vignette workbooks differed only in docProps/core.xml and were not replaced. The historical reproduce-run-report.json remains unchanged.",
+  "negative_logs_format": "gzip preserves the exact original pytest log bytes; both failures were intentional checks before the complete repair"
+}

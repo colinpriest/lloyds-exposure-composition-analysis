@@ -1,0 +1,150 @@
+[14:41:39] ============================================================
+[14:41:39] Lloyd's Exposure Composition Analysis
+[14:41:39] ============================================================
+[14:41:39] Loading and classifying data...
+[14:41:39] Found 1065 syndicate JSON files
+[14:41:48]   Total files: 1065
+[14:41:48]   Excluded: 20
+[14:41:48]   Skipped: 107
+[14:41:48]   In Runoff: 28
+[14:41:48]   No Reserves: 4
+[14:41:48]   Reliable: 694
+[14:41:48]   Incomplete: 27
+[14:41:48]   Confirmed figures applied: 35
+[14:41:48]   Take-on, not development: 8
+[14:41:48]   Skipped for no mature cohort (in Skipped): 11
+[14:41:48]   Movement in the claims provision, not development: 1
+[14:41:48]   Gross triangle failing its own totals, no usable figure: 1
+[14:41:48]   Confirmed opening reserves applied: 4
+[14:41:48]   Take-ons added to the opening reserves: 18
+[14:41:48]   Premium totals from another reader: 7
+[14:41:48]   Kept (Reliable + Incomplete): 902
+[14:41:48] Building subsets...
+[14:41:48]   DENSE: 495 obs, 108 syndicates
+[14:41:48]   MID: 323 obs, 97 syndicates
+[14:41:48]   FULL: 818 obs, 127 syndicates
+[14:41:48]   BALANCED_K8: 573 obs, 60 syndicates
+[14:41:48]   BALANCED_K6: 670 obs, 75 syndicates
+[14:41:48]   BALANCED_ALL: 400 obs, 40 syndicates
+[14:41:48]   YEAR_2024: 84 obs, 84 syndicates
+[14:41:48] Computing eligibility masks...
+[14:41:48]   eligible_for_distribution: 816
+[14:41:48]   eligible_for_boxplot_reserves: 816
+[14:41:48]   eligible_for_n1: 437
+[14:41:48]   eligible_for_n3: 430
+[14:41:48]   eligible_for_capital: 632
+[14:41:48]   eligible_for_persona: 719
+[14:41:48] Computing distribution overview...
+[14:41:48] N0: Sampling Robustness
+[14:41:48] N1: Tail Trend
+[14:41:49] N2: Mean Excess Function
+[14:41:49] N3: Size-Severity Elasticity
+[14:41:49] N5: Exposure Composition (HHI + LoB Dispersion)
+[14:41:49]   Fitting power-law dispersion: single-factor HHI (concentration)
+[14:41:49]   Fitting power-law dispersion: single-factor R
+[14:41:50]   Fitting power-law dispersion: joint HHI + R
+[14:41:50]   Fitting power-law dispersion: joint no-intercept HHI + R
+[14:41:50]   Estimating per-LoB dispersion parameters
+[14:41:51] N6: Joint Composition (size-adjusted HHI dispersion)
+[14:41:51]   Fitting univariate size model on raw s�
+[14:41:51]   Fitting univariate HHI model on raw s�
+[14:41:51]   Univariate comparison: size R�=0.1082, HHI R�=0.0297 \u2192 size explains more
+[14:41:51]   Fitting HHI power-law on size-adjusted s�
+[14:41:51]   Alternative pipeline: HHI first, then size on residuals
+[14:41:51]   Fitting size power-law on HHI-adjusted s�
+[14:41:51]   Ordering comparison: size-first=89.9%, hhi-first=43.2% \u2192 size_first
+[14:41:51]   Dispersion calibration: k=0.624, gamma=0 (fixed in the likelihood), nu=3.96 (n=632)
+[14:41:51]   Gamma-free calibration (the overlay): gamma=0.394, k=0.632
+[14:41:51] N4: Capital Distortion (Shapley)
+[14:41:51]   N4: Bootstrap (500 replicates)
+[14:41:51]     Bootstrap replicate 0/500
+[14:41:53]     Bootstrap replicate 100/500
+[14:41:55]     Bootstrap replicate 200/500
+[14:41:58]     Bootstrap replicate 300/500
+[14:42:00]     Bootstrap replicate 400/500
+[14:42:03] Local-Donor Sensitivity
+[14:42:03] Personas
+[14:42:03] Computing tail capital sensitivity across subsets...
+[14:42:03] Computing tail sample support...
+[14:42:03] Summarising classification log...
+[14:42:03] Computing subset profiles...
+[14:42:03] Computing size-dispersion robustness checks...
+[14:42:03] Computing data-construction audit...
+[14:42:03] Writing results to D:\tmp\baj-provenance-refresh-1cb-20261031\model\exposure_results.json
+[14:42:03] ============================================================
+[14:42:03] Generating paper pack...
+[14:42:03]   Output directory: D:\tmp\baj-provenance-refresh-1cb-20261031\paper_pack
+[14:42:03]   [OK] Table 1: Corpus coverage
+[14:42:03]   [OK] Table 2: Sampling sensitivity
+[14:42:03]   [OK] Table 3: Size-severity specs
+[14:42:03]   [OK] Table 4: VaR decomposition
+[14:42:03]   [OK] Table 5: Worked example event
+[14:42:03]   [OK] Table 6: Worked example summary
+[14:42:03]   [OK] Table 7: Persona PYD stats
+[14:42:03]   [OK] Table 8: Persona tail diagnostics
+[14:42:03]   [OK] Table 9: Corpus summary
+[14:42:03]   [OK] Table 10: Data quality
+[14:42:03]   [OK] Table 11: Reserves distribution
+[14:42:03]   [OK] Table 12: Decile tests
+[14:42:03]   [OK] Table 13: Primary RE-GLS
+[14:42:03]   [OK] Table 14: Dispersion models
+[14:42:03]   [OK] Table 15: Direction test
+[14:42:03]   [OK] Table 16: Power-law HHI
+[14:42:03]   [OK] Table 17: Correlation
+[14:42:03]   [OK] Table 18: Variance attribution
+[14:42:03]   [OK] Table 19: HHI dispersion adjusted
+[14:42:03]   [OK] Table 20: Combined model
+[14:42:03]   [OK] Table 21: Test portfolios
+[14:42:03]   [OK] Table 4b: VaR personas
+[14:42:03]   [OK] Table 22: Univariate comparison
+[14:42:03]   [OK] Table 23: HHI-first variance attribution
+[14:42:03]   [OK] Table 24: Ordering comparison
+[14:42:03]   [OK] Table 25: Local-donor sensitivity
+[14:42:03]   [OK] Table 26: Tail sample support
+[14:42:03]   [OK] Table 27: Tail capital sensitivity
+[14:42:03]   [OK] Table 28: Bootstrap VaR
+[14:42:03]   [OK] Table 29: Reserve source audit
+[14:42:03]   [OK] Table 30: LoB weight source audit
+[14:42:03]   [OK] Table 31: PYD source audit
+[14:42:03]   [OK] Table 32: Dual-model workflow
+[14:42:03]   [OK] Table 33: Exclusions by year
+[14:42:03]   [OK] Table 34: Subset comparison
+[14:42:03]   [OK] Table 35: Dispersion robustness
+[14:42:03]   [OK] Table 36: Event groups
+[14:42:03]   [OK] Table 37: Event-group definitions
+[14:42:03]   [OK] Table 38: Dispersion calibration
+[14:42:03]   [OK] Table 39: Reconciliation from the disposition ledger
+[14:42:03]   [OK] Fig 1: Yearly observations
+[14:42:04]   [OK] Fig 2: p95 trends
+[14:42:04]   [OK] Fig 3: Mean excess
+[14:42:04]   [OK] Fig 4: Size-severity log-log
+[14:42:04]   [OK] Fig 5: VaR decomposition bars
+[14:42:04]   [OK] Fig 6: LoB elasticities
+[14:42:05]   [OK] Fig: Persona overlays
+[14:42:05]   [OK] Fig: PYD distribution
+[14:42:05]   [OK] Fig: Boxplots
+[14:42:05]   [OK] Fig: Size vs PYD
+[14:42:05]   [OK] Fig: Size vs |PYD%|
+[14:42:06]   [OK] Fig: Diversification vs |PYD%|
+[14:42:06]   [OK] Fig: Power-law size
+[14:42:06]   [OK] Fig: HHI severity
+[14:42:06]   [OK] Fig: Power-law HHI
+[14:42:06]   [OK] Fig: Diversification vs reserves
+[14:42:06]   [OK] Fig: Size-adjusted HHI
+[14:42:06]   [OK] Fig: HHI-adjusted size
+[14:42:07]   [OK] Fig: Capital decomposition
+[14:42:07] Paper pack complete: 59 succeeded, 0 failed.
+[14:42:07] ============================================================
+[14:42:07] ============================================================
+[14:42:07] Generating vignettes...
+[14:42:07]   Donor pool: 632 observations
+[14:42:07]   Generating Vignette 1: new entrant...
+[14:42:08]   Vignette 1 complete: 632 donors, 37 files
+[14:42:08]   Generating Vignette 2: post-exit...
+[14:42:09]   Vignette 2 complete: 632 donors, 48 files
+[14:42:09] Vignette generation complete.
+[14:42:09] ============================================================
+[14:42:09] Generating distortion tool (632 donors)...
+[14:42:09]   Distortion tool: D:\tmp\baj-provenance-refresh-1cb-20261031\distortion_tool.html (632 donors, 520 KB)
+[14:42:09] Done. Output: D:\tmp\baj-provenance-refresh-1cb-20261031\model\exposure_results.json
+[14:42:09] Run ID: dd28fb86-a6d9-500a-80f9-cd23433a6a9e
