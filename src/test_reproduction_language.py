@@ -97,7 +97,7 @@ def test_helper_fires_on_the_round43_wordings(bad):
 
 def test_helper_accepts_the_scoped_wordings():
     good = ("Everything downstream of that file is re-runnable from this "
-            "checkout through the manifest; what has been demonstrated is the "
+            "checkout and the pinned extraction checkout through the manifest; what has been demonstrated is the "
             "recorded partial clean run (--verify prints its exact coverage).")
     assert unscoped_reproduction_claims(good) == []
 
@@ -108,6 +108,6 @@ def test_the_round48_provenance_headline_fires():
     bad = ("The raw PDFs are deliberately not committed; everything downstream is "
            "reproducible from the committed JSON.")
     assert unscoped_reproduction_claims(bad)
-    good = ("everything downstream is re-runnable from the committed JSON, and what "
+    good = ("everything downstream is re-runnable from the committed JSON and pinned extraction checkout, and what "
             "has been demonstrated is the recorded partial clean run.")
     assert unscoped_reproduction_claims(good) == []

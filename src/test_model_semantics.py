@@ -41,6 +41,34 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(HERE, "src")
 
 
+@pytest.mark.parametrize("seed", [29, 42])
+def test_historical_ordering_diagnostic_does_not_choose_a_pipeline(seed, monkeypatch):
+    """Differently transformed variances cannot imply causal dominance or a preferred order."""
+    import run_analysis as ra
+    rng = np.random.default_rng(seed)
+    records = [{"eligible_for_n3": True, "s_raw_a": float(rng.normal() * .1),
+                "hhi": float(rng.uniform(.1, .9)), "weight_source": "premium_mix",
+                "opening_reserves_gbp_m": float(rng.uniform(40, 2000)),
+                "syndicate": 1000 + i, "year": 2018 + i % 5} for i in range(60)]
+    out = ra.analysis_n6(records, {"status": "fitted", "A": .002, "B": .03, "C": -.4})
+    assert out["status"] == "completed"
+    assert "not the adopted model" in out["scope_note"]
+    comparison = out["ordering_comparison"]
+    assert comparison["recommendation"] is None
+    assert "do not establish causal dominance or a preferred ordering" in comparison["recommendation_reason"]
+    assert "in-sample diagnostic" in out["univariate_comparison"]["comparison_scope"]
+    written = {}
+    monkeypatch.setattr(ra, "_write_tex", lambda name, body: written.setdefault(name, body))
+    for generator in (ra._gen_table18, ra._gen_table19, ra._gen_table22, ra._gen_table23, ra._gen_table24):
+        generator({"joint_composition": out})
+    assert len(written) == 5
+    for text in written.values():
+        assert "Historical" in text and "not the adopted model" in text
+        assert "should be removed first" not in text
+    assert "No ordering recommendation" in written["table24_ordering_comparison.tex"]
+    assert "Larger in-sample" in written["table22_univariate_comparison.tex"]
+
+
 def _read(rel):
     with io.open(os.path.join(HERE, rel), encoding="utf-8") as _fh:
         return _fh.read()

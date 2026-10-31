@@ -5220,7 +5220,7 @@ def fit_joint_power_no_intercept(HHI, R, y_sq, n_grid=80):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def analysis_n6(records, disp_r_result):
-    """N6 — Joint composition: fit HHI dispersion on size-adjusted residuals.
+    """N6 — Historical sequential size/HHI diagnostic, not the adopted model.
 
     Pipeline:
       1. Use the size power-law model (s² = A_R + B_R·R^C_R) to compute
@@ -5228,7 +5228,7 @@ def analysis_n6(records, disp_r_result):
       2. Scale each observation to a reference size:
          s²_adj = s² × V(R_ref) / V(R_i)
       3. Fit the mix power-law: s²_adj = A_H + B_H·H^C_H
-         This isolates the incremental HHI effect after size is removed.
+         This descriptive transformation does not isolate a causal HHI effect.
     """
     log("N6: Joint Composition (size-adjusted HHI dispersion)")
 
@@ -5239,7 +5239,7 @@ def analysis_n6(records, disp_r_result):
     B_R = disp_r_result["B"]
     C_R = disp_r_result["C"]
 
-    # Exclude HHI≥0.99 (single-LoB reporters — structural break, not true concentration)
+    # This historical diagnostic excludes HHI≥0.99 (including concentrated single-line reporters).
     eligible = [r for r in records
                 if r.get("eligible_for_n3", False)
                 and r["s_raw_a"] is not None
@@ -5296,7 +5296,7 @@ def analysis_n6(records, disp_r_result):
 
     univariate_comparison = {}
     if univar_size.get("status") == "fitted" and univar_hhi.get("status") == "fitted":
-        # Observation-level R² for fair comparison
+        # Descriptive in-sample observation-level R² for these univariate fits.
         r2_size = univar_size.get("r_squared_obs", univar_size.get("r_squared", 0.0))
         r2_hhi = univar_hhi.get("r_squared_obs", univar_hhi.get("r_squared", 0.0))
         # AIC approximation: n*ln(RSS/n) + 2k, k=3 for A+B+C
@@ -5324,8 +5324,9 @@ def analysis_n6(records, disp_r_result):
             "hhi_p_C": univar_hhi.get("p_C"),
             "better_univariate": better,
             "r2_difference": abs(r2_size - r2_hhi),
+            "comparison_scope": "historical in-sample diagnostic; R-squared differences do not establish causal dominance or out-of-sample superiority",
         }
-        log(f"  Univariate comparison: size R²={r2_size:.4f}, HHI R²={r2_hhi:.4f} → {better} explains more")
+        log(f"  Historical in-sample comparison: size R²={r2_size:.4f}, HHI R²={r2_hhi:.4f} → {better} has the larger R²")
 
     # Step 1: Predicted variance at each observation's size
     V_obs = A_R + B_R * R ** C_R
@@ -5337,7 +5338,7 @@ def analysis_n6(records, disp_r_result):
     # Step 3: Size-adjusted squared severity
     y_sq_adj = y_sq * (V_ref / V_obs)
 
-    # Step 4: Fit HHI power-law on size-adjusted s² (C>0: concentration increases variance)
+    # Step 4: Fit a historical HHI power law to the transformed squared severities.
     log("  Fitting HHI power-law on size-adjusted s²")
     disp_h_adj = fit_power_dispersion(HHI, y_sq_adj, label="Concentration (after size adjustment)", c_range=(0.01, 2.0))
 
@@ -5369,7 +5370,7 @@ def analysis_n6(records, disp_r_result):
                 {"x": 1.0 - p["x"], "y": p["y"]} for p in reversed(disp_h_adj["fitted_curve"])
             ]
 
-    # Variance reduction attribution
+    # Descriptive variance reductions on differently transformed outcomes, not causal attribution.
     var_raw = float(np.var(y_sq))
     var_after_size = float(np.var(y_sq_adj))
     var_explained_by_size_pct = (1.0 - var_after_size / var_raw) * 100 if var_raw > 0 else 0.0
@@ -5501,6 +5502,7 @@ def analysis_n6(records, disp_r_result):
 
     return {
         "status": "completed",
+        "scope_note": "historical sequential transformation diagnostic, not the adopted model; variance reductions do not identify causal contributions",
         "n": len(eligible),
         "hhi_r_correlation": hhi_r_correlation,
         "size_model_used": {"A": A_R, "B": B_R, "C": C_R},
@@ -7268,7 +7270,7 @@ def _gen_table16(results):
     for label, val in rows:
         body += f"{label} & {val} \\\\\n"
     _write_tex("table16_power_law_hhi.tex",
-               _wrap_table(body, "Power-law HHI dispersion ($\\sigma^2 = A + B \\cdot \\mathrm{HHI}^C$)", "power_law_hhi", "lr"))
+               _wrap_table(body, "Historical single-factor HHI dispersion diagnostic (not the adopted model)", "power_law_hhi", "lr"))
 
 
 def _gen_table17(results):
@@ -7315,7 +7317,7 @@ def _gen_table19(results):
     for label, val in rows:
         body += f"{label} & {val} \\\\\n"
     _write_tex("table19_hhi_dispersion_adjusted.tex",
-               _wrap_table(body, "HHI dispersion after size adjustment", "hhi_disp_adj", "lr"))
+               _wrap_table(body, "Historical HHI diagnostic after size adjustment (not the adopted model)", "hhi_disp_adj", "lr"))
 
 
 def _gen_table20(results):
@@ -7402,9 +7404,9 @@ def _gen_table22(results):
     body += "\\midrule\n"
     better = uc.get("better_univariate", "--")
     r2_diff = _fmt(uc.get("r2_difference"), ".4f")
-    body += f"\\multicolumn{{3}}{{l}}{{Better univariate: \\textbf{{{better}}} ($\\Delta R^2 = {r2_diff}$)}} \\\\\n"
+    body += f"\\multicolumn{{3}}{{l}}{{Larger in-sample $R^2$: \\textbf{{{better}}} ($\\Delta R^2 = {r2_diff}$)}} \\\\\n"
     _write_tex("table22_univariate_comparison.tex",
-               _wrap_table(body, "Univariate model comparison: size vs.\\ HHI", "univariate_comparison", "lrr"))
+               _wrap_table(body, "Historical in-sample univariate diagnostic (not the adopted model)", "univariate_comparison", "lrr"))
 
 
 def _gen_table23(results):
@@ -7942,7 +7944,7 @@ def _gen_fig_power_law_hhi(results):
     s2 = float(A) + float(B) * hhi_range ** float(C)
     ax.plot(hhi_range, s2, '-', color=_PP_ADV_COL, linewidth=2,
             label=f"$\\sigma^2 = {A:.4f} + {B:.4f} \\cdot \\mathrm{{HHI}}^{{{C:.4f}}}$")
-    _setup_ax(ax, "HHI", "Mean squared severity", "HHI dispersion: single-factor diagnostic")
+    _setup_ax(ax, "HHI", "Mean squared severity", "Historical single-factor HHI diagnostic")
     ax.legend(fontsize=10)
     _save_fig(fig, "fig_power_law_hhi.png")
 
@@ -10206,10 +10208,11 @@ def main():
             "lob_dispersion": n5_result.get("lob_dispersion", {}),
         }
 
-    # joint_composition: N6 result (sequential size→HHI pipeline)
+    # joint_composition: legacy N6 sequential size→HHI diagnostic
     joint_comp_shaped = {}
     if n6_result and n6_result.get("status") == "completed":
         joint_comp_shaped = {
+            "scope_note": n6_result.get("scope_note"),
             "hhi_r_correlation": n6_result.get("hhi_r_correlation", {}),
             "size_model_used": n6_result.get("size_model_used", {}),
             "reference_size": n6_result.get("reference_size"),
