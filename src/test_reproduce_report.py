@@ -967,3 +967,22 @@ def test_success_stamp_is_published_only_after_complete_report(monkeypatch, tmp_
     assert rp.main() == 0
     assert writes == [stamp.name, report.name, stamp.name]
     assert rp.validate_stamp(rp.read_stamp()) == []
+
+
+def test_interruption_after_report_before_success_stamp_fails_closed(monkeypatch, tmp_path):
+    stamp, report = _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "run", lambda _steps: [])
+    original_write = rp._atomic_write_json
+
+    def interrupt_success(path, value):
+        if os.path.abspath(path) == os.path.abspath(stamp) and not value["failed"]:
+            raise OSError("interrupted final stamp")
+        original_write(path, value)
+
+    monkeypatch.setattr(rp, "_atomic_write_json", interrupt_success)
+    with pytest.raises(OSError, match="interrupted final stamp"):
+        rp.main()
+    assert json.loads(report.read_text(encoding="utf-8"))["scripts"] == {
+        "sample.py": {"status": "ok"}}
+    assert rp.validate_stamp(rp.read_stamp())
+    assert not rp.verify()
