@@ -21,8 +21,8 @@ What each statistic measures (frozen review of 21 September 2026, M05).  z divid
 single-regime calibration's sigma at its posterior-mean parameters, with no year shock and no
 RITC scale term, so each regime's own scale and each year's effect stay in z.  The q95 and q99
 ratios of |z| are therefore MAGNITUDE statistics: multiplying one group's z by a constant moves
-them without changing that group's tail shape, and a significant ratio says the RITC residuals
-are smaller or larger at that quantile, not that their tail is thinner or heavier.  The
+them without changing that group's tail shape, and a ratio describes the relative residual
+magnitudes at that quantile, not whether their tail is thinner or heavier.  The
 Student-t nu (fitted with a free scale), the Hill index and the far-spread ratio do not
 move under that rescaling. The GPD shape estimate uses a fixed pooled threshold: scaling
 one group changes its exceedances and can move the estimate; scaling the threshold with
@@ -198,19 +198,18 @@ def run(label, rows, strong, weak, cal, rng, store):
                     "calibration_source": CALIBRATION_SOURCE, "standardisation": STANDARDISATION_NOTE,
                     "bootstrap_p_note": BOOTSTRAP_P_NOTE,
                     "thr_p90_absz": thr, "seed": SEED, "n_boot": N_BOOT}, "tests": {}}
-    print("  p denotes twice the smaller observed-bootstrap sign fraction, not established as null-calibrated")
-    print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'p':>8}")
+    print("  sign2 is twice the smaller observed-bootstrap sign fraction, not an established null-calibrated p-value")
+    print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'sign2':>8}")
     print("  " + "-" * 92)
     for name, fn, kind, th, note in tests:
         r = cluster_contrast(z, cluster, ritc, fn, kind, rng, thr=th,
                              bound_fn=nu_bound if fn is t_nu else None)
         ci = f"[{r['ci'][0]:+.2f}, {r['ci'][1]:+.2f}]" if r["ci"] else "     n/a"
         pv = f"{r['p']:.3f}" if r["p"] is not None else "  n/a"
-        sig = " ***" if (r["p"] is not None and r["p"] < 0.05) else ""
         cl = f"{r['clean']:.2f}" if r["clean"] is not None else "n/a"
         ri = f"{r['ritc']:.2f}" if r["ritc"] is not None else "n/a"
         ob = f"{r['obs']:+.2f}" if r["obs"] is not None else "n/a"
-        print(f"  {name:<34}{cl:>9}{ri:>9}{ob:>11}{ci:>22}{pv:>8}{sig}   ({note})")
+        print(f"  {name:<34}{cl:>9}{ri:>9}{ob:>11}{ci:>22}{pv:>8}   ({note})")
         r["measures"] = MEASURES[name]
         if fn is t_nu:
             r["clip"] = list(NU_CLIP)

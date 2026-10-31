@@ -193,6 +193,8 @@ def make_groups(axis, n_groups):
 # ── one axis (size or mix) ───────────────────────────────────────────────────
 def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
     print(f"\n{'='*74}\n  AXIS: {name}\n{'='*74}")
+    print("  Row-level test p-values are descriptive: within-syndicate dependence may miscalibrate them.")
+    print("  sign2 is twice the smaller observed-bootstrap sign fraction, not an established null-calibrated p-value.")
     grp = make_groups(axis, n_quartiles)
 
     # per-group descriptive shape table
@@ -213,29 +215,26 @@ def analyse_axis(name, axis, s, cluster, rng, n_quartiles=4):
     # full-distribution SHAPE test
     ad = anderson_ksample_shape(s, grp)
     if ad:
-        verdict = "SHAPE DIFFERS" if ad["p"] < 0.05 else "no shape difference"
         print(f"  Shape (Anderson-Darling k-sample, group-standardised):"
-              f"  A2k={ad['stat']:.2f}  p={ad['p']:.3f}  -> {verdict}")
+              f"  A2k={ad['stat']:.2f}  p={ad['p']:.3f}  (row-level descriptive)")
 
     # extreme-group differences with cluster bootstrap CI
     print(f"\n  Extreme-group shape difference (Q{n_quartiles} - Q1), cluster bootstrap:")
     for label, fn in SHAPE_STATS.items():
         res = cluster_bootstrap_diff(s, cluster, grp, fn, n_quartiles - 1, 0, rng)
         if res:
-            sig = "  *** " if res["p"] < 0.05 else "      "
             print(f"    {label:<16} diff={res['point']:+.3f}  "
                   f"95% CI [{res['ci'][0]:+.3f}, {res['ci'][1]:+.3f}]  "
-                  f"p={res['p']:.3f}{sig}")
+                  f"sign2={res['p']:.3f}")
 
     # monotone trend across deciles
     print(f"\n  Monotone trend across deciles (OLS slope of stat vs decile index):")
     for label, fn in SHAPE_STATS.items():
         res = cluster_bootstrap_slope(s, cluster, axis, fn, rng)
         if res.get("ci"):
-            sig = "  *** " if res["p"] < 0.05 else "      "
             print(f"    {label:<16} slope={res['slope']:+.4f}/decile  "
                   f"95% CI [{res['ci'][0]:+.4f}, {res['ci'][1]:+.4f}]  "
-                  f"p={res['p']:.3f}{sig}")
+                  f"sign2={res['p']:.3f}")
         else:
             print(f"    {label:<16} slope={res['slope']:+.4f}/decile  (CI unavailable)")
 
@@ -295,10 +294,9 @@ def main():
     run_for(records, "N5")     # the older fitting population (see select)
     run_for(records, "BROAD")  # sensitivity: wider net for statistical power
     print("\nInterpretation:")
-    print("  * A significant Anderson-Darling p, a Q4-Q1 CI excluding 0, or a")
-    print("    non-zero decile slope => the standardised shape (skew / kurtosis /")
-    print("    tail asymmetry) drifts along that axis => shape is NOT invariant,")
-    print("    so pure linear donor->target rescaling under-/over-states the tail.")
+    print("  * Shape intervals describe uncertainty in the contrasts and fitted slopes.")
+    print("    The row-level Anderson-Darling p may be miscalibrated under panel dependence.")
+    print("    These diagnostics do not establish invariance or the direction of tail error.")
     print("  * Bowley skew & Moors kurtosis are invariant to any linear rescale,")
     print("    so these results are independent of the variance-model fit.")
 

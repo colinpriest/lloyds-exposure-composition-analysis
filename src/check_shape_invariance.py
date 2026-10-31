@@ -12,8 +12,8 @@ For each axis (opening reserves R; the concentration index H), the sample is cut
   * the top-less-bottom quartile difference of each robust shape statistic, with a 95% interval from a cluster
     bootstrap over syndicates;
   * the slope of each statistic across deciles, with the same bootstrap interval.
-The verdict "no drift" needs every interval to cover zero and the Anderson-Darling p at or above 0.05. These are
-diagnostics, not significance tests of a posterior quantity.
+The legacy "no drift" flag requires every interval to cover zero and the Anderson-Darling p to be at or above 0.05.
+The row-level p may be miscalibrated under panel dependence. The flag is a diagnostic, not proof of invariance.
 
 Writes results/shape_invariance_results.json.
 Run:  python src/check_shape_invariance.py
@@ -90,11 +90,13 @@ def main():
     out = run(S, R, H, syn)
     with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(json.dumps(out, indent=1) + "\n")
-    print("n=%d (%d syndicates); no drift on either axis: %s" % (out["n"], out["n_syndicates"],
-                                                                   out["no_drift_on_either_axis"]))
+    print("n=%d (%d syndicates); diagnostic threshold flag on both axes: %s" %
+          (out["n"], out["n_syndicates"], out["no_drift_on_either_axis"]))
+    print("Threshold flag requires all intervals to cover zero and row-level AD p >= 0.05; it does not prove invariance.")
+    print("Row-level AD p-values may be miscalibrated under within-syndicate dependence.")
     for name, a in out["axes"].items():
         ad = a["shape_anderson_darling"] or {}
-        print("  %-24s AD p=%s  no drift: %s" % (name, ad.get("p"), a["no_drift"]))
+        print("  %-24s AD p=%s  threshold flag: %s" % (name, ad.get("p"), a["no_drift"]))
     print("Wrote %s" % OUT)
     return 0
 

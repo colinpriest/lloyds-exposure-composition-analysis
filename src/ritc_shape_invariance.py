@@ -25,9 +25,10 @@ distinct ways, and we test each separately:
       same distribution regardless of RITC?".
 
 Calibration, stated exactly because it differs between the numbers printed here.
-The ratio and shape-difference intervals and their p-values come from a CLUSTER
-bootstrap resampling *syndicates*, so they carry the within-syndicate dependence of a
-panel in which one syndicate contributes several years. The Fligner-Killeen, Levene,
+The ratio and shape-difference intervals use a CLUSTER bootstrap resampling syndicates,
+preserving their within-syndicate rows. The legacy p fields are twice the smaller
+observed-bootstrap sign fraction without null centering, not established as
+null-calibrated p-values. The Fligner-Killeen, Levene,
 k-sample Anderson-Darling, KS and Fisher exact figures are ordinary library tests on
 rows: they assume independent observations, which this panel does not satisfy, so they
 may be miscalibrated or anti-conservative here and are descriptive rather than calibrated.
@@ -156,6 +157,9 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
                     "row_test_note": ROW_TEST_NOTE, "bootstrap_sign_note": BOOTSTRAP_SIGN_NOTE,
                     "seed": SEED, "n_boot": N_BOOT}}
 
+    print("  Row-level test p-values are descriptive: within-syndicate dependence may miscalibrate them.")
+    print("  sign2 is twice the smaller observed-bootstrap sign fraction, not an established null-calibrated p-value.")
+
     # ── (A) Spread after single-regime base-scale standardisation ────────────
     print(f"\n{'='*74}\n  (A) SPREAD after base standardisation: z = s/sigma(R,HHI)\n{'='*74}")
     fk = stats.fligner(z[~ritc], z[ritc])
@@ -170,9 +174,8 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
             # prevent attribution of that contrast solely to the base scale.
             lo, hi = rr["ci"]
             rr["direction"] = spread_direction(lo, hi)
-            sig = "  *** " if rr["p"] < 0.05 else "      "
             print(f"    {lab:<8} RITC/clean ratio = {rr['ratio']:.3f}  "
-                  f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  p={rr['p']:.3f}{sig}")
+                  f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  sign2={rr['p']:.3f}")
             res["scale"]["ratios"][lab] = rr
     for gname, code in [("strong", 2), ("weak", 1)]:
         if int((g3 == code).sum()) == 0:
@@ -182,15 +185,14 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
         rr = cluster_bootstrap_ratio(z[keep], cluster[keep], gg[keep], robust_scale, 1, 0, rng)
         if rr:
             print(f"      IQR(z) {gname:<6}/clean ratio = {rr['ratio']:.3f}  "
-                  f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  p={rr['p']:.3f}")
+                  f"95% CI [{rr['ci'][0]:.3f}, {rr['ci'][1]:.3f}]  sign2={rr['p']:.3f}")
             res["scale"]["ratios"][f"IQR_{gname}"] = rr
 
     # ── (B) SHAPE invariance (location+scale removed) ────────────────────────
     print(f"\n{'='*74}\n  (B) SHAPE INVARIANCE:  standardised skew / kurtosis / tail asymmetry\n{'='*74}")
     ad_shape = anderson_ksample_shape(s, gb)
-    verdict = "SHAPE DIFFERS" if ad_shape["p"] < 0.05 else "no shape difference detected"
     print(f"  Anderson-Darling k-sample (group-standardised, clean vs RITC): "
-          f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  -> {verdict}")
+          f"A2k={ad_shape['stat']:.2f}  p={ad_shape['p']:.3f}  (row-level descriptive)")
     ad_shape3 = anderson_ksample_shape(s, g3)
     print(f"  Anderson-Darling k-sample (clean vs weak vs strong):           "
           f"A2k={ad_shape3['stat']:.2f}  p={ad_shape3['p']:.3f}")
@@ -199,9 +201,8 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
     for lab, fn in SHAPE_STATS.items():
         rr = cluster_bootstrap_diff(s, cluster, gb, fn, 1, 0, rng, n=N_BOOT)
         if rr:
-            sig = "  *** " if rr["p"] < 0.05 else "      "
             print(f"    {lab:<16} diff={rr['point']:+.3f}  "
-                  f"95% CI [{rr['ci'][0]:+.3f}, {rr['ci'][1]:+.3f}]  p={rr['p']:.3f}{sig}")
+                  f"95% CI [{rr['ci'][0]:+.3f}, {rr['ci'][1]:+.3f}]  sign2={rr['p']:.3f}")
             res["shape"]["diffs"][lab] = rr
 
     # ── (C) OMNIBUS on base-standardised z ───────────────────────────────────
@@ -210,8 +211,7 @@ def analyse(label, rows, strong, weak, cal, rng, out_store):
         adz = stats.anderson_ksamp([z[~ritc], z[ritc]])
     pz = getattr(adz, "pvalue", None) or adz.significance_level
     print(f"  Anderson-Darling k-sample on z (clean vs RITC, NOT re-scaled): "
-          f"A2k={adz.statistic:.2f}  p={float(pz):.3f}  -> "
-          f"{'DIFFERS' if pz < 0.05 else 'consistent'}")
+          f"A2k={adz.statistic:.2f}  p={float(pz):.3f}  (row-level descriptive)")
     ks = stats.ks_2samp(z[~ritc], z[ritc])
     print(f"  KS 2-sample on z (clean vs RITC):  D={ks.statistic:.3f}  p={ks.pvalue:.3f}")
     res["omnibus_z"] = {"ad_stat": float(adz.statistic), "ad_p": float(pz),
@@ -268,9 +268,9 @@ def main():
     print("               Each population's own direction is printed with its ratio above")
     print("               and recorded in the result file; these intervals are the")
     print("               cluster-bootstrapped ones.")
-    print("           (B) AD p<0.05 or shape-diff CI excluding 0 => RITC has a different standardised SHAPE.")
-    print("           (C) omnibus: is the base-standardised residual the same law regardless of RITC?")
-    print("           (D) Fisher OR>1 => RITC over-represented in the standardised tail (the nu channel).")
+    print("           (B) Shape intervals describe uncertainty; row-level AD p-values may be miscalibrated.")
+    print("           (C) The omnibus compares base-standardised residuals on a row-level basis.")
+    print("           (D) Fisher odds ratios describe tail representation; row-level p-values may be miscalibrated.")
 
 
 if __name__ == "__main__":
