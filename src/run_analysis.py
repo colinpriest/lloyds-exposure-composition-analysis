@@ -5461,15 +5461,12 @@ def analysis_n6(records, disp_r_result):
 
     if total_explained_size_first is not None and total_explained_hhi_first is not None:
         diff = total_explained_size_first - total_explained_hhi_first
-        if abs(diff) < 1.0:
-            recommendation = "equivalent"
-            rec_reason = "Both orderings explain similar total variance (difference < 1pp). Either pipeline is acceptable."
-        elif diff > 0:
-            recommendation = "size_first"
-            rec_reason = "Size-first explains more total variance, suggesting size is the dominant effect and should be removed first for cleaner HHI estimation."
-        else:
-            recommendation = "hhi_first"
-            rec_reason = "HHI-first explains more total variance, suggesting concentration is the dominant effect and should be removed first for cleaner size estimation."
+        # These legacy sequential transformations rescale the outcome differently.
+        # Their variance reductions do not establish a causal attribution or a
+        # preferred ordering, and they are not the adopted Bayesian model.
+        recommendation = None
+        rec_reason = ("Exploratory historical sequential transformations rescale the outcome differently; "
+                      "their variance reductions do not establish causal dominance or a preferred ordering.")
 
         ordering_comparison = {
             "total_explained_size_first": total_explained_size_first,
@@ -5482,7 +5479,7 @@ def analysis_n6(records, disp_r_result):
             "hhi_first_incremental_hhi": float(hhi_first_result["variance_attribution"]["pct_explained_by_hhi"]) if hhi_first_result else None,
             "hhi_first_incremental_size": float(hhi_first_result["variance_attribution"]["pct_explained_by_size"]) if hhi_first_result and hhi_first_result["variance_attribution"].get("pct_explained_by_size") is not None else None,
         }
-        log(f"  Ordering comparison: size-first={total_explained_size_first:.1f}%, hhi-first={total_explained_hhi_first:.1f}% → {recommendation}")
+        log(f"  Historical ordering diagnostic: size-first={total_explained_size_first:.1f}%, hhi-first={total_explained_hhi_first:.1f}%; no order recommendation")
 
     # Compute combined model metrics
     median_hhi = float(np.median(HHI))
@@ -7293,17 +7290,17 @@ def _gen_table17(results):
 def _gen_table18(results):
     va = _safe_get(results, "joint_composition", "variance_attribution", default={})
     rows = [
-        ("Raw $\\sigma^2$", _fmt(va.get("var_raw_sq"), ".6f")),
+        ("Variance of squared severity", _fmt(va.get("var_raw_sq"), ".6f")),
         ("After size adjustment", _fmt(va.get("var_after_size_adj"), ".6f")),
-        ("\\% explained by size", _fmt_pct(va.get("pct_explained_by_size"))),
+        ("\\% variance reduction after size", _fmt_pct(va.get("pct_explained_by_size"))),
         ("After HHI adjustment", _fmt(va.get("var_after_hhi_adj"), ".6f")),
-        ("\\% explained by HHI", _fmt_pct(va.get("pct_explained_by_hhi"))),
+        ("\\% variance reduction after HHI", _fmt_pct(va.get("pct_explained_by_hhi"))),
     ]
     body = "\\textbf{Stage} & \\textbf{Value} \\\\\n\\midrule\n"
     for label, val in rows:
         body += f"{label} & {val} \\\\\n"
     _write_tex("table18_variance_attribution.tex",
-               _wrap_table(body, "Variance attribution", "variance_attribution", "lr"))
+               _wrap_table(body, "Historical sequential variance diagnostic (not the adopted model)", "variance_attribution", "lr"))
 
 
 def _gen_table19(results):
@@ -7416,21 +7413,21 @@ def _gen_table23(results):
     if not va:
         return
     rows = [
-        ("Raw $\\sigma^2$", _fmt(va.get("var_raw_sq"), ".6f")),
+        ("Variance of squared severity", _fmt(va.get("var_raw_sq"), ".6f")),
         ("After HHI adjustment", _fmt(va.get("var_after_hhi_adj"), ".6f")),
-        ("\\% explained by HHI", _fmt_pct(va.get("pct_explained_by_hhi"))),
+        ("\\% variance reduction after HHI", _fmt_pct(va.get("pct_explained_by_hhi"))),
         ("After size adjustment", _fmt(va.get("var_after_size_adj"), ".6f")),
-        ("\\% explained by size", _fmt_pct(va.get("pct_explained_by_size"))),
+        ("\\% variance reduction after size", _fmt_pct(va.get("pct_explained_by_size"))),
     ]
     body = "\\textbf{Stage} & \\textbf{Value} \\\\\n\\midrule\n"
     for label, val in rows:
         body += f"{label} & {val} \\\\\n"
     _write_tex("table23_variance_attribution_hhi_first.tex",
-               _wrap_table(body, "Variance attribution (HHI-first pipeline)", "variance_attribution_hhi_first", "lr"))
+               _wrap_table(body, "Historical sequential variance diagnostic: HHI first (not the adopted model)", "variance_attribution_hhi_first", "lr"))
 
 
 def _gen_table24(results):
-    """Pipeline ordering comparison and recommendation."""
+    """Historical sequential-transformation comparison, without an order recommendation."""
     oc = _safe_get(results, "joint_composition", "ordering_comparison", default={})
     if not oc:
         return
@@ -7444,13 +7441,12 @@ def _gen_table24(results):
              f"& {_fmt_pct(oc.get('total_explained_hhi_first'))} \\\\\n")
     body += "\\midrule\n"
     diff = oc.get("difference_pp")
-    rec = oc.get("recommendation", "--")
     reason = oc.get("recommendation_reason", "")
     body += f"\\multicolumn{{4}}{{l}}{{Difference: {_fmt(abs(diff) if diff is not None else None, '.1f')} pp}} \\\\\n"
-    body += f"\\multicolumn{{4}}{{l}}{{Recommendation: \\textbf{{{rec}}}}} \\\\\n"
+    body += "\\multicolumn{4}{l}{No ordering recommendation} \\\\\n"
     body += f"\\multicolumn{{4}}{{p{{12cm}}}}{{{reason}}} \\\\\n"
     _write_tex("table24_ordering_comparison.tex",
-               _wrap_table(body, "Pipeline ordering comparison", "ordering_comparison", "lrrr"))
+               _wrap_table(body, "Historical sequential-transformation diagnostic (not the adopted model)", "ordering_comparison", "lrrr"))
 
 
 def _gen_table21(results):
