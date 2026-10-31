@@ -449,6 +449,10 @@ async function readJsonFiles(dirHandle) {
 function getUwFlag(syndicate, year, inceptionYears) {
     const syn = String(syndicate);
     const yr = Number(year);
+    // The 2013 cache entry for 2357 is not verified by its 2014 filing:
+    // the filing's 2013/2014 columns are calendar years, not underwriting years.
+    // Suppress both age badges until a source establishes its inception year.
+    if (syn === '2357') return null;
     const inception = inceptionYears[syn];
     if (inception == null || isNaN(yr)) return null;
     const delta = yr - inception; // report_year - inception_year
