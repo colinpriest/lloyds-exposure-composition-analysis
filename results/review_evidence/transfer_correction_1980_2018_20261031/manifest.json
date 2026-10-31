@@ -1,0 +1,59 @@
+{
+  "producing_analysis_commit": "8493a8263a87d738c84bc164084e8206a1696bf0",
+  "extraction_source_commit": "ab52be60147ef34ed510748af5f450feb994f7e9",
+  "final_recorded_extraction_commit": "e8d1ddb11adba50989bee46c7019083e7a85d2c4",
+  "extraction_input_scope": "No pdf_extraction paths differ between producing and final recorded extraction commits; only conftest.py and tests-run-report.json changed.",
+  "source_clean_at_start": true,
+  "environment": {
+    "python": "3.12.6, locked baj-analysis-suite-venv-20261029",
+    "pytensor": "cxx disabled; isolated compilation cache",
+    "mplbackend": "Agg"
+  },
+  "commands": [
+    "python -u src/run_analysis.py",
+    "python -u src/check_small_book_diagnosis.py",
+    "python -u src/error_rate_propagation.py",
+    "python -u src/check_exclusion_influence.py",
+    "python -m pytest -q src/test_connected_run_provenance.py"
+  ],
+  "all_exit_codes": 0,
+  "outputs": {
+    "model/exposure_results.json": {
+      "before_git_blob_sha256": "579a2c477673ffa085cedec3ef7c670265bdd780195cd238b55883f272aa3677",
+      "produced_file_sha256": "ed3b88eaab97dfe6178c6ced1238c41a5aca5d45095c41ef4334059353180c0e"
+    },
+    "distortion_tool.html": {
+      "before_git_blob_sha256": "0d58837481086f63a1d3e94e2ddccd869d66a8beb5fe92aee83cee21f6ca04f7",
+      "produced_file_sha256": "0fcfdb3b89cfcf8adafdd60a412f406fcbf88b878d3e6aca2a0dffb8d6c11798"
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "before_git_blob_sha256": "5a008db9746912b654d22fe0f77f852a02a991d8b3a466110801fa2ee66a0b1d",
+      "produced_file_sha256": "21714a919ddc9d82a9e383972806e1bd9510e47c7b51d2a58287d443269eaabc"
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "before_git_blob_sha256": "d8fa51c162023f93bd35cad7f766063804640276d81e4c38ea2b2d3c9ec53b78",
+      "produced_file_sha256": "7ace04ea91e2e820239aa99da9e21f6805d2db6aa869aa92f8dd1df0d178b702"
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "before_git_blob_sha256": "a5022d65170b9c5b2da1987bf64f7e1e346066692640598f0b85b7781322d3e3",
+      "produced_file_sha256": "ec78baf3562a069d00115a3643dcf1eb73478f60ccb559e87cfd7cbab93c66e0"
+    },
+    "results/error_rate_propagation_results.json": {
+      "before_git_blob_sha256": "b7265aa781c20226a57d599d4af6d15f4fb137fbf0f3b38645d12e20f66c0616",
+      "produced_file_sha256": "6743553cc4d61050bf9155acd78444e5986401a8f9d5a45275697fa5d3d9457c"
+    },
+    "results/check_exclusion_influence_results.json": {
+      "before_git_blob_sha256": "9fc7a0521c9e1d995939325ee43341d79293d5443d3e65ead202626f6cb7d032",
+      "produced_file_sha256": "d89cb72db1f8cc1fc7b645c34a255d9fda22cdbc9ab3811091586ca1bfdb2c2a"
+    }
+  },
+  "evidence_sha256": {
+    "transfer-correction-producer-run-analysis-20261031.log": "20e31738c0b153efdfb44f20fc5d0355b017fcd5de73efa91e58eac6318d046c",
+    "transfer-correction-producer-small_book-20261031.log": "826aad4a5c3dde9b9f406c429ca00ca780d7e7a5c58042801e7c7b2be36873d9",
+    "transfer-correction-producer-error_rate-20261031.log": "fdf540ce657ebf46448614b583a89a90db9a653f54868b01cfb675fb0f82d371",
+    "transfer-correction-producer-exclusion_influence-20261031.log": "d52de32eae73320a873f596a5c80ed75724090ab2f5efae0d8e23356fc609549",
+    "transfer-correction-connected-provenance-test-20261031.log": "5786dea9b9d57d2c49ced7482e3658b77a7e714793519049750ca2544972398d",
+    "connected-output-comparison-1980-20261031.json": "6dc66d20fa834bf4f22ccaf0b2f9cc3bf8aef6866a3cc3ee34b8df42785c873d"
+  },
+  "independent_numerical_comparison": "902 observations and eligible-for-capital mask identical; all exclusion-influence values other than runtimes identical; 309-array archive byte-identical; other connected differences limited to run IDs, source commit and timestamps. Corrected 742 results are separately recorded. The embedded dashboard donor payload also matches after excluding its run ID."
+}

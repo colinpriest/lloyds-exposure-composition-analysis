@@ -1,0 +1,27 @@
+fit: commit 8493a8263a87d738c84bc164084e8206a1696bf0, tree dirty True, n=632, loader run fe75913f-7049-5e66-a4c6-d95a277f3c38
+classified unread 247 of 632 (by the study's read set alone 298; 97 figures changed after their reading, 97 covered under the simulation-frame rule)
+  draw_four on the primary: 94 in the working sample, 13 figures changed, verdicts {'error': 0, 'correct': 94, 'undeterminable': 0}, 0 not restated ({'own_reading': 11, 'register': 2})
+  pooled on the primary: 148 in the working sample, 20 figures changed, verdicts {'error': 0, 'correct': 146, 'undeterminable': 1}, 1 not restated ({'own_reading': 11, 'register': 8})
+rate draw_four ~ Beta(2.5, 96.5)
+  size_only VaR99.5 0.3424  P(|rel|>5%): sign 0.000, replace 0.004, shift 0.203  shift median 2.3% [0.0%, 33.4%]
+              P(|rel|>4%): sign 0.000, replace 0.004, shift 0.205
+              P(|rel|>6%): sign 0.000, replace 0.004, shift 0.199
+              P(|rel|>10%): sign 0.000, replace 0.001, shift 0.063
+              share |rel| in [4%, 6%]: sign 0.000, replace 0.000, shift 0.007
+  overlay   VaR99.5 0.3287  P(|rel|>5%): sign 0.000, replace 0.001, shift 0.068  shift median 1.5% [0.0%, 30.2%]
+              P(|rel|>4%): sign 0.000, replace 0.001, shift 0.071
+              P(|rel|>6%): sign 0.000, replace 0.001, shift 0.067
+              P(|rel|>10%): sign 0.000, replace 0.001, shift 0.059
+              share |rel| in [4%, 6%]: sign 0.000, replace 0.000, shift 0.004
+rate pooled ~ Beta(8.5, 154.5)
+  size_only VaR99.5 0.3424  P(|rel|>5%): sign 0.000, replace 0.021, shift 0.513  shift median 7.6% [0.0%, 49.3%]
+              P(|rel|>4%): sign 0.000, replace 0.022, shift 0.523
+              P(|rel|>6%): sign 0.000, replace 0.021, shift 0.510
+              P(|rel|>10%): sign 0.000, replace 0.002, shift 0.237
+              share |rel| in [4%, 6%]: sign 0.000, replace 0.002, shift 0.013
+  overlay   VaR99.5 0.3287  P(|rel|>5%): sign 0.000, replace 0.002, shift 0.246  shift median 1.9% [0.0%, 39.8%]
+              P(|rel|>4%): sign 0.000, replace 0.002, shift 0.256
+              P(|rel|>6%): sign 0.000, replace 0.002, shift 0.239
+              P(|rel|>10%): sign 0.000, replace 0.002, shift 0.220
+              share |rel| in [4%, 6%]: sign 0.000, replace 0.000, shift 0.017
+Wrote D:\tmp\baj-recorder-candidate-next6-20261031\results\error_rate_propagation_results.json

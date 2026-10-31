@@ -32,7 +32,7 @@ this repository alone.
 
 ## 2. What changed in this import
 
-The current import is the extraction's commit `ab52be60147ef34ed510748af5f450feb994f7e9`. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
+The current import is the extraction's commit `e8d1ddb11adba50989bee46c7019083e7a85d2c4`. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
 
 An earlier import was the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026).
 That historical import replaced `2ee4007e` (1 October 2026)

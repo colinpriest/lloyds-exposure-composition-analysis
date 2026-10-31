@@ -1,0 +1,368 @@
+{
+  "baseline_commit": "36f4e65bf14c3ebe2e767ebb3c3e819f947d3f3a",
+  "candidate_checkout": "D:\\tmp\\baj-recorder-candidate-next6-20261031",
+  "files": {
+    "model/exposure_results.json": {
+      "diff_count": 4,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/analysis_run_id",
+          "kind": "other",
+          "old": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991",
+          "new": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68"
+        },
+        {
+          "path": "/analysis_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        },
+        {
+          "path": "/analysis_timestamp",
+          "kind": "other",
+          "old": "2026-10-31T07:05:20.421245+00:00",
+          "new": "2026-10-31T07:32:46.472005+00:00"
+        },
+        {
+          "path": "/source_data_hash",
+          "kind": "other",
+          "old": "62829b21a792cc43",
+          "new": "fca0ba3baebccbdc"
+        }
+      ],
+      "observation_count_old": 902,
+      "observation_count_new": 902,
+      "observation_changes": [],
+      "eligible_mask_changes": []
+    },
+    "results/check_exclusion_influence_results.json": {
+      "diff_count": 36,
+      "numeric_changes": [
+        {
+          "path": "/runtime_seconds/fits_seconds/0",
+          "kind": "numeric",
+          "old": 60.65476322174072,
+          "new": 70.76090121269226
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/1",
+          "kind": "numeric",
+          "old": 56.342188119888306,
+          "new": 65.80815196037292
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/2",
+          "kind": "numeric",
+          "old": 57.837883710861206,
+          "new": 68.39845180511475
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/3",
+          "kind": "numeric",
+          "old": 48.907031774520874,
+          "new": 55.062687397003174
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/4",
+          "kind": "numeric",
+          "old": 51.33892798423767,
+          "new": 54.46489071846008
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/5",
+          "kind": "numeric",
+          "old": 51.28748321533203,
+          "new": 54.48293089866638
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/6",
+          "kind": "numeric",
+          "old": 48.50168752670288,
+          "new": 48.611165285110474
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/7",
+          "kind": "numeric",
+          "old": 50.703713178634644,
+          "new": 50.17849254608154
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/8",
+          "kind": "numeric",
+          "old": 51.52377247810364,
+          "new": 51.08891320228577
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/9",
+          "kind": "numeric",
+          "old": 50.20688438415527,
+          "new": 49.52230381965637
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/10",
+          "kind": "numeric",
+          "old": 51.93695664405823,
+          "new": 51.59622025489807
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/11",
+          "kind": "numeric",
+          "old": 54.72465991973877,
+          "new": 53.99946618080139
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/12",
+          "kind": "numeric",
+          "old": 51.286608934402466,
+          "new": 48.87909555435181
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/13",
+          "kind": "numeric",
+          "old": 52.75813865661621,
+          "new": 49.726075887680054
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/14",
+          "kind": "numeric",
+          "old": 51.46262979507446,
+          "new": 48.86123490333557
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/15",
+          "kind": "numeric",
+          "old": 50.80956673622131,
+          "new": 55.505945920944214
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/16",
+          "kind": "numeric",
+          "old": 51.28465461730957,
+          "new": 55.953115463256836
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/17",
+          "kind": "numeric",
+          "old": 49.34183597564697,
+          "new": 53.58553504943848
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/18",
+          "kind": "numeric",
+          "old": 50.60109758377075,
+          "new": 53.453378200531006
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/19",
+          "kind": "numeric",
+          "old": 53.15482544898987,
+          "new": 54.25723147392273
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/20",
+          "kind": "numeric",
+          "old": 50.023051023483276,
+          "new": 51.51140737533569
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/21",
+          "kind": "numeric",
+          "old": 60.39745759963989,
+          "new": 52.925639152526855
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/22",
+          "kind": "numeric",
+          "old": 58.54567337036133,
+          "new": 56.903018951416016
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/23",
+          "kind": "numeric",
+          "old": 54.5517852306366,
+          "new": 53.2011661529541
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/24",
+          "kind": "numeric",
+          "old": 53.41530132293701,
+          "new": 54.233453035354614
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/25",
+          "kind": "numeric",
+          "old": 54.46970891952515,
+          "new": 54.10818886756897
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/26",
+          "kind": "numeric",
+          "old": 55.62575173377991,
+          "new": 55.27165222167969
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/27",
+          "kind": "numeric",
+          "old": 56.84042835235596,
+          "new": 53.893507957458496
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/28",
+          "kind": "numeric",
+          "old": 53.27258896827698,
+          "new": 54.5239999294281
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/29",
+          "kind": "numeric",
+          "old": 54.5503032207489,
+          "new": 55.36587429046631
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/30",
+          "kind": "numeric",
+          "old": 56.94858932495117,
+          "new": 56.85433578491211
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/31",
+          "kind": "numeric",
+          "old": 55.46961236000061,
+          "new": 55.67854595184326
+        },
+        {
+          "path": "/runtime_seconds/fits_seconds/32",
+          "kind": "numeric",
+          "old": 56.56081795692444,
+          "new": 56.308847188949585
+        },
+        {
+          "path": "/runtime_seconds/fits_wall",
+          "kind": "numeric",
+          "old": 606.0794293880463,
+          "new": 620.8881866931915
+        },
+        {
+          "path": "/runtime_seconds/total",
+          "kind": "numeric",
+          "old": 611.6386706829071,
+          "new": 626.1292369365692
+        }
+      ],
+      "other_changes": [
+        {
+          "path": "/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        }
+      ]
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "diff_count": 1,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/inputs/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        }
+      ]
+    },
+    "results/error_rate_propagation_results.json": {
+      "diff_count": 4,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/fit/analysis_commit",
+          "kind": "other",
+          "old": "f8ac550288752095c8dc0a984e9267008dc1216e",
+          "new": "8493a8263a87d738c84bc164084e8206a1696bf0"
+        },
+        {
+          "path": "/fit/loader_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        },
+        {
+          "path": "/pooled_rate_sensitivity/rate_population/current/exposure_results_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        },
+        {
+          "path": "/rate_population/current/exposure_results_run_id_without_calibration",
+          "kind": "other",
+          "old": "a9302517-41c7-5b01-9357-33e1b949f6ba",
+          "new": "fe75913f-7049-5e66-a4c6-d95a277f3c38"
+        }
+      ]
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "diff_count": 3,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/execution_timestamp_utc",
+          "kind": "other",
+          "old": "2026-10-31T07:05:40.872169+00:00",
+          "new": "2026-10-31T07:34:20.814516+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "kind": "other",
+          "old": "f8ac550288752095c8dc0a984e9267008dc1216e",
+          "new": "8493a8263a87d738c84bc164084e8206a1696bf0"
+        },
+        {
+          "path": "/run_id",
+          "kind": "other",
+          "old": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991",
+          "new": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68"
+        }
+      ]
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "diff_count": 3,
+      "numeric_changes": [],
+      "other_changes": [
+        {
+          "path": "/execution_timestamp_utc",
+          "kind": "other",
+          "old": "2026-10-31T07:05:42.127603+00:00",
+          "new": "2026-10-31T07:34:22.213191+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "kind": "other",
+          "old": "f8ac550288752095c8dc0a984e9267008dc1216e",
+          "new": "8493a8263a87d738c84bc164084e8206a1696bf0"
+        },
+        {
+          "path": "/run_id",
+          "kind": "other",
+          "old": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991",
+          "new": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68"
+        }
+      ]
+    },
+    "results/check_exclusion_influence_draws.npz": {
+      "old_sha256": "676bbb11af654f0a3415f02517138caf8623305bc8208ce60c57af9afdc671a0",
+      "new_sha256": "676bbb11af654f0a3415f02517138caf8623305bc8208ce60c57af9afdc671a0",
+      "old_array_count": 309,
+      "new_array_count": 309,
+      "old_only": [],
+      "new_only": [],
+      "unequal_arrays": []
+    }
+  },
+  "dashboard": {
+    "old_run_id": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991",
+    "new_run_id": "ab09ce22-2a4e-51ea-bcf8-f1fd968d3a68",
+    "all_other_embedded_data_equal": true,
+    "donor_count": 632
+  }
+}
