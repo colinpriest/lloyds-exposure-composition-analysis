@@ -24,12 +24,13 @@ Five fits, differing only in the location:
   D     mu = m0 + m_w (H - Hbar_i) + m_b (Hbar_i - Hbar) + alpha_i
 
 C and D exist because A pools repeated observations of the same syndicate as though
-they were independent, while the paper itself finds a persistent syndicate intercept
-of tau_alpha = 0.041 -- comparable with the whole diversifiable scale. A concentration
-slope estimated without it can be reporting culture rather than portfolio mix. D
-separates the two channels: m_w is what happens when a syndicate's OWN concentration
-moves, m_b is whether persistently more concentrated syndicates sit at a different
-level. Only m_w is a portfolio effect.
+they were independent. The random-intercept model estimates tau_alpha = 0.041,
+comparable with the whole diversifiable scale, conditional on that model; it does not
+uniquely identify a persistent component. A concentration slope estimated without it
+can reflect differences between syndicates rather than within-book association. D
+separates the two associations: m_w describes deviations within a syndicate, and m_b
+compares syndicates with different mean concentrations. Neither identifies a causal
+portfolio effect without further assumptions.
 
 Run: python src/check_mean_concentration_bayes.py
 """
