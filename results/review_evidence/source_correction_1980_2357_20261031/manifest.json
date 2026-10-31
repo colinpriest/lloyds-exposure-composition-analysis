@@ -1,0 +1,60 @@
+{
+  "producing_analysis_commit": "f8ac550288752095c8dc0a984e9267008dc1216e",
+  "extraction_source_commit": "d919a2a3b4d90acb47a4ffc5f8b9e2fe1ff72a80",
+  "source_clean_at_start": true,
+  "environment": {
+    "python": "3.12.6, locked baj-analysis-suite-venv-20261029",
+    "pytensor": "cxx disabled; isolated compilation cache",
+    "mplbackend": "Agg"
+  },
+  "commands": [
+    "python -u src/run_analysis.py",
+    "python -u src/check_small_book_diagnosis.py",
+    "python -u src/error_rate_propagation.py",
+    "python -u src/check_exclusion_influence.py",
+    "python -m pytest -q src/test_connected_run_provenance.py"
+  ],
+  "all_exit_codes": 0,
+  "independent_comparison_scope": "902 exposure observations; 1065 disposition rows; 52 sensitivity inputs; all exclusion-influence fit values and 309-array archive; see evidence files",
+  "outputs": {
+    "model/exposure_results.json": {
+      "before_git_blob_sha256": "f875cfd2cf565b5f85dc4b8c829c5069f33592836d8051b756164d1ed296577e",
+      "produced_file_sha256": "579a2c477673ffa085cedec3ef7c670265bdd780195cd238b55883f272aa3677"
+    },
+    "distortion_tool.html": {
+      "before_git_blob_sha256": "1f5abaad9a8cd53797d0481b09377d31e7285a81c1fe695a1aa21f3b190bde08",
+      "produced_file_sha256": "0d58837481086f63a1d3e94e2ddccd869d66a8beb5fe92aee83cee21f6ca04f7"
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "before_git_blob_sha256": "a4c00fe983e6c74e2134264a3e999c980cb22341a9c11295e29eae9af28a09d0",
+      "produced_file_sha256": "5a008db9746912b654d22fe0f77f852a02a991d8b3a466110801fa2ee66a0b1d"
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "before_git_blob_sha256": "c5d97ace072111f3b60e1da1162f07575ced2335fbf83110843b23954f71e5e8",
+      "produced_file_sha256": "d8fa51c162023f93bd35cad7f766063804640276d81e4c38ea2b2d3c9ec53b78"
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "before_git_blob_sha256": "82be340b4d5a34444dc5df7b932da6916c25208066b6d2235922bab080ae6ccb",
+      "produced_file_sha256": "a5022d65170b9c5b2da1987bf64f7e1e346066692640598f0b85b7781322d3e3"
+    },
+    "results/error_rate_propagation_results.json": {
+      "before_git_blob_sha256": "fb243e962a6ebc1c6c8f2940a96fbcea7d9c9b814a3ff5a019ec8d713c0c9db4",
+      "produced_file_sha256": "b7265aa781c20226a57d599d4af6d15f4fb137fbf0f3b38645d12e20f66c0616"
+    },
+    "results/check_exclusion_influence_results.json": {
+      "before_git_blob_sha256": "ba4add3260841d50f29fd8999274aebb5473cb73af5a074ef069eac390e4b72e",
+      "produced_file_sha256": "9fc7a0521c9e1d995939325ee43341d79293d5443d3e65ead202626f6cb7d032"
+    }
+  },
+  "evidence_sha256": {
+    "source-correction-producer-run-analysis-20261031.log": "36625991b5429a2c5407e9203cbeac8dcf90a958669868e5beebe70744e8de58",
+    "source-correction-producer-small_book-20261031.log": "37b0c0f846f506d99fe4e47eed8993e08ff0f37c732dc8b6b9ee02f6bb35db2a",
+    "source-correction-producer-error_rate-20261031.log": "37f9c3ad9ddb8d7a7c2badc20d34c6ac5ebd63bc5f413599ff8a1fb0cbfc59e6",
+    "source-correction-producer-exclusion_influence-20261031.log": "b757b924729f1e7ce8996292e1d1b8106cc92f7fbcbf5d2961cbc390ea762c7c",
+    "source-correction-connected-provenance-test-20261031.log": "58625b1ecd52202299085e2ded08192abe9965263e9dd5131894971f642622a9",
+    "source-correction-independent-numeric-comparison-20261031.json": "80f9692fffdf80182899e22115935fc0f7572607c7c7ebf6bec6c89cb8ee9ce2",
+    "source-correction-run-analysis-secondary-artifacts-20261031.json": "8fc5fc1a59b668df1f37095e51df5b0cad0ffe5032b0e4a3bfa2cb33f1d50be1",
+    "source-correction-sensitivity-input-comparison-20261031.json": "655529fdcf9ba73126c5f43dbc92b226471a714f40fff6c3c150d80b590ac0cb",
+    "source-correction-exclusion-influence-comparison-20261031.json": "66974c2328e444b4303fb45cce1c6e69de49c49eff688fe4aee7ac2d41c2a1e2"
+  }
+}

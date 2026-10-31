@@ -1,0 +1,283 @@
+{
+  "time_utc": "2026-10-31T07:10:07.698495+00:00",
+  "baseline": "7f3de019edc595fe15031ac6fac2f7172b8d13e2",
+  "source_commit": "f8ac550288752095c8dc0a984e9267008dc1216e",
+  "scope": "Selected completed producer outputs and full disposition ledger; exclusion influence producer is still running and is not covered here. Exposure values are compared recursively, including all observations.",
+  "json": {
+    "model/exposure_results.json": {
+      "before_sha256": "f875cfd2cf565b5f85dc4b8c829c5069f33592836d8051b756164d1ed296577e",
+      "after_sha256": "579a2c477673ffa085cedec3ef7c670265bdd780195cd238b55883f272aa3677",
+      "difference_count": 4,
+      "differences": [
+        {
+          "path": "/analysis_run_id",
+          "old": "dd28fb86-a6d9-500a-80f9-cd23433a6a9e",
+          "new": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991"
+        },
+        {
+          "path": "/analysis_run_id_without_calibration",
+          "old": "bf856903-4238-5779-9a5e-e9e6362ab504",
+          "new": "a9302517-41c7-5b01-9357-33e1b949f6ba"
+        },
+        {
+          "path": "/analysis_timestamp",
+          "old": "2026-10-31T04:41:39.238475+00:00",
+          "new": "2026-10-31T07:05:20.421245+00:00"
+        },
+        {
+          "path": "/source_data_hash",
+          "old": "663d58179d7c6a99",
+          "new": "62829b21a792cc43"
+        }
+      ]
+    },
+    "results/missingness_check_results.json": {
+      "before_sha256": "39f3691181a76a698870d488a5ee328b0fab533320fff8b8be48416ce6ffbdcd",
+      "after_sha256": "efe0c056598eaeb8b2ca38e624b36d5a999620c21937103cd9ccff213e471252",
+      "difference_count": 1,
+      "differences": [
+        {
+          "path": "/eligibility_unresolved_audit/records/5/evidence",
+          "old": "PDF page 30 records a USD 163.213m prior-year portfolio transfer into the 2018 opening and USD 221.625m gross claims outstanding at the 2019 opening. The underlying underwriting years and development scope have not been established; neither a mature cohort nor model inclusion follows from the transfer alone.",
+          "new": "PDF page 30 records a USD 163.213m prior-year portfolio transfer into the 2018 opening and USD 221.625m gross claims outstanding at the 2019 opening. Syndicate 4472's 2018 filing, PDF page 6 (printed 5), states that the Pioneer business transferred to 1980 related to underwriting years 2014-2017 (syndicate_reports/pdfs/syndicate_4472_2018.pdf, SHA-256 018bf183f5b97a5765d28e39109a89a07c7e2bf9dd622dc007a73351c541ff6d). The surviving original-year composition at the 2019 opening, applicable denominator and 2019 mature movement are not established; model inclusion does not follow from the transfer alone."
+        }
+      ]
+    },
+    "results/check_small_book_diagnosis_results.json": {
+      "before_sha256": "82be340b4d5a34444dc5df7b932da6916c25208066b6d2235922bab080ae6ccb",
+      "after_sha256": "a5022d65170b9c5b2da1987bf64f7e1e346066692640598f0b85b7781322d3e3",
+      "difference_count": 1,
+      "differences": [
+        {
+          "path": "/inputs/loader_run_id_without_calibration",
+          "old": "bf856903-4238-5779-9a5e-e9e6362ab504",
+          "new": "a9302517-41c7-5b01-9357-33e1b949f6ba"
+        }
+      ]
+    },
+    "results/error_rate_propagation_results.json": {
+      "before_sha256": "fb243e962a6ebc1c6c8f2940a96fbcea7d9c9b814a3ff5a019ec8d713c0c9db4",
+      "after_sha256": "b7265aa781c20226a57d599d4af6d15f4fb137fbf0f3b38645d12e20f66c0616",
+      "difference_count": 4,
+      "differences": [
+        {
+          "path": "/fit/analysis_commit",
+          "old": "1cb49325f2d0144af6bfa2a74ef864f46c8b50cd",
+          "new": "f8ac550288752095c8dc0a984e9267008dc1216e"
+        },
+        {
+          "path": "/fit/loader_run_id_without_calibration",
+          "old": "bf856903-4238-5779-9a5e-e9e6362ab504",
+          "new": "a9302517-41c7-5b01-9357-33e1b949f6ba"
+        },
+        {
+          "path": "/pooled_rate_sensitivity/rate_population/current/exposure_results_run_id_without_calibration",
+          "old": "bf856903-4238-5779-9a5e-e9e6362ab504",
+          "new": "a9302517-41c7-5b01-9357-33e1b949f6ba"
+        },
+        {
+          "path": "/rate_population/current/exposure_results_run_id_without_calibration",
+          "old": "bf856903-4238-5779-9a5e-e9e6362ab504",
+          "new": "a9302517-41c7-5b01-9357-33e1b949f6ba"
+        }
+      ]
+    },
+    "vignettes/vignette-1/metadata.json": {
+      "before_sha256": "a4c00fe983e6c74e2134264a3e999c980cb22341a9c11295e29eae9af28a09d0",
+      "after_sha256": "5a008db9746912b654d22fe0f77f852a02a991d8b3a466110801fa2ee66a0b1d",
+      "difference_count": 3,
+      "differences": [
+        {
+          "path": "/execution_timestamp_utc",
+          "old": "2026-10-31T04:42:08.262407+00:00",
+          "new": "2026-10-31T07:05:40.872169+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "old": "1cb49325f2d0144af6bfa2a74ef864f46c8b50cd",
+          "new": "f8ac550288752095c8dc0a984e9267008dc1216e"
+        },
+        {
+          "path": "/run_id",
+          "old": "dd28fb86-a6d9-500a-80f9-cd23433a6a9e",
+          "new": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991"
+        }
+      ]
+    },
+    "vignettes/vignette-2/metadata.json": {
+      "before_sha256": "c5d97ace072111f3b60e1da1162f07575ced2335fbf83110843b23954f71e5e8",
+      "after_sha256": "d8fa51c162023f93bd35cad7f766063804640276d81e4c38ea2b2d3c9ec53b78",
+      "difference_count": 3,
+      "differences": [
+        {
+          "path": "/execution_timestamp_utc",
+          "old": "2026-10-31T04:42:09.682391+00:00",
+          "new": "2026-10-31T07:05:42.127603+00:00"
+        },
+        {
+          "path": "/git_commit_or_hash",
+          "old": "1cb49325f2d0144af6bfa2a74ef864f46c8b50cd",
+          "new": "f8ac550288752095c8dc0a984e9267008dc1216e"
+        },
+        {
+          "path": "/run_id",
+          "old": "dd28fb86-a6d9-500a-80f9-cd23433a6a9e",
+          "new": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991"
+        }
+      ]
+    }
+  },
+  "observations": {
+    "count_before": 902,
+    "count_after": 902,
+    "exact_equal": true
+  },
+  "reported_counts": {
+    "n_filings": {
+      "before": 1065,
+      "after": 1065,
+      "equal": true
+    },
+    "disposition_counts": {
+      "before": {
+        "eligibility_unresolved": 24,
+        "eligible_observed_composition_unavailable": 24,
+        "eligible_outcome_unavailable": 10,
+        "scientific_exclusion": 273,
+        "structural_no_eligible_outcome": 102,
+        "working_sample": 632
+      },
+      "after": {
+        "eligibility_unresolved": 24,
+        "eligible_observed_composition_unavailable": 24,
+        "eligible_outcome_unavailable": 10,
+        "scientific_exclusion": 273,
+        "structural_no_eligible_outcome": 102,
+        "working_sample": 632
+      },
+      "equal": true
+    },
+    "disposition_detail_counts": {
+      "before": {
+        "first_year_inherited_business_opening_unresolved": 1,
+        "fx_untranslated_table": 5,
+        "gross_development_unavailable": 5,
+        "gross_triangle_does_not_reconcile": 1,
+        "in_runoff": 28,
+        "inherited_mature_cohort_outcome_scope_unresolved": 1,
+        "life_book": 13,
+        "missing_lob_composition": 24,
+        "mix_names_no_line_of_business": 37,
+        "no_deterministic_reading": 20,
+        "no_disclosed_mature_diagonal": 91,
+        "no_mature_cohort": 11,
+        "no_mature_cohort_figure": 56,
+        "no_positive_reserve_base": 4,
+        "no_usable_development_reading": 4,
+        "non_gross_or_unstated_development": 104,
+        "observed_eligible_complete": 632,
+        "provision_movement_not_development": 1,
+        "restated_base_table": 4,
+        "source_history_set_aside": 11,
+        "source_page_audit_unresolved": 2,
+        "takeon_base_unmeasurable": 1,
+        "takeon_not_development": 8,
+        "unreconciled_mature_takeon": 1
+      },
+      "after": {
+        "first_year_inherited_business_opening_unresolved": 1,
+        "fx_untranslated_table": 5,
+        "gross_development_unavailable": 5,
+        "gross_triangle_does_not_reconcile": 1,
+        "in_runoff": 28,
+        "inherited_mature_cohort_outcome_scope_unresolved": 1,
+        "life_book": 13,
+        "missing_lob_composition": 24,
+        "mix_names_no_line_of_business": 37,
+        "no_deterministic_reading": 20,
+        "no_disclosed_mature_diagonal": 91,
+        "no_mature_cohort": 11,
+        "no_mature_cohort_figure": 56,
+        "no_positive_reserve_base": 4,
+        "no_usable_development_reading": 4,
+        "non_gross_or_unstated_development": 104,
+        "observed_eligible_complete": 632,
+        "provision_movement_not_development": 1,
+        "restated_base_table": 4,
+        "source_history_set_aside": 11,
+        "source_page_audit_unresolved": 2,
+        "takeon_base_unmeasurable": 1,
+        "takeon_not_development": 8,
+        "unreconciled_mature_takeon": 1
+      },
+      "equal": true
+    },
+    "n_target_population": {
+      "before": 666,
+      "after": 666,
+      "equal": true
+    },
+    "n_eligibility_unresolved": {
+      "before": 24,
+      "after": 24,
+      "equal": true
+    },
+    "n_model_sample": {
+      "before": 632,
+      "after": 632,
+      "equal": true
+    },
+    "n_eligible_outcome_unavailable": {
+      "before": 10,
+      "after": 10,
+      "equal": true
+    }
+  },
+  "ledger": {
+    "rows": 1065,
+    "file_keys_equal": true,
+    "in_model_before": 632,
+    "in_model_after": 632,
+    "category_counts_before": {
+      "scientific_exclusion": 273,
+      "working_sample": 632,
+      "structural_no_eligible_outcome": 102,
+      "eligible_observed_composition_unavailable": 24,
+      "eligibility_unresolved": 24,
+      "eligible_outcome_unavailable": 10
+    },
+    "category_counts_after": {
+      "scientific_exclusion": 273,
+      "working_sample": 632,
+      "structural_no_eligible_outcome": 102,
+      "eligible_observed_composition_unavailable": 24,
+      "eligibility_unresolved": 24,
+      "eligible_outcome_unavailable": 10
+    },
+    "changes": [
+      [
+        "syndicate_1980_2019.json",
+        "classification_evidence",
+        "PDF page 30 records a USD 163.213m prior-year portfolio transfer into the 2018 opening and USD 221.625m gross claims outstanding at the 2019 opening. The underlying underwriting years and development scope have not been established; neither a mature cohort nor model inclusion follows from the transfer alone.",
+        "PDF page 30 records a USD 163.213m prior-year portfolio transfer into the 2018 opening and USD 221.625m gross claims outstanding at the 2019 opening. Syndicate 4472's 2018 filing, PDF page 6 (printed 5), states that the Pioneer business transferred to 1980 related to underwriting years 2014-2017 (syndicate_reports/pdfs/syndicate_4472_2018.pdf, SHA-256 018bf183f5b97a5765d28e39109a89a07c7e2bf9dd622dc007a73351c541ff6d). The surviving original-year composition at the 2019 opening, applicable denominator and 2019 mature movement are not established; model inclusion does not follow from the transfer alone."
+      ],
+      [
+        "syndicate_2357_2014.json",
+        "classification_evidence",
+        "No mature diagonal was established in the reviewed filing table; reviewed years are [2013, 2014] and the cutoff is 2012. The list does not establish inherited underwriting history.",
+        "No development triangle was printed; the calendar-year financial columns do not establish inception, an underwriting-year list or a mature outcome."
+      ]
+    ],
+    "non_evidence_changes": []
+  },
+  "html": {
+    "embedded_differences": [
+      {
+        "path": "/run_id",
+        "old": "dd28fb86-a6d9-500a-80f9-cd23433a6a9e",
+        "new": "e5697cb4-9ba4-5bf1-a35a-39fcfe55e991"
+      }
+    ],
+    "surrounding_text_equal": true
+  }
+}
