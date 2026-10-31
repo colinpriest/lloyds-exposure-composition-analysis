@@ -57,7 +57,7 @@ RITC = SCRIPT_DIR / "pdf_extraction" / "ritc_scan.json"
 OUT = SCRIPT_DIR / "results" / "ritc_tail_shape_results.json"
 SEED = 12345
 N_BOOT = 4000
-THR_Q = 90.0     # common threshold percentile (of pooled |z|) for GPD/Hill exceedances
+THR_Q = 90.0     # common pooled |z| threshold for GPD; Hill uses each group's top 15%
 # The GPD's fixed pooled threshold can change its selected tail under group rescaling.
 MEASURES = {
     "Student-t nu (MLE)": "shape",
@@ -198,7 +198,7 @@ def run(label, rows, strong, weak, cal, rng, store):
                     "calibration_source": CALIBRATION_SOURCE, "standardisation": STANDARDISATION_NOTE,
                     "bootstrap_p_note": BOOTSTRAP_P_NOTE,
                     "thr_p90_absz": thr, "seed": SEED, "n_boot": N_BOOT}, "tests": {}}
-    print("  p denotes twice the smaller observed-bootstrap sign fraction, not a null-calibrated p-value")
+    print("  p denotes twice the smaller observed-bootstrap sign fraction, not established as null-calibrated")
     print(f"  {'statistic':<34}{'clean':>9}{'RITC':>9}{'contrast':>11}{'95% CI':>22}{'p':>8}")
     print("  " + "-" * 92)
     for name, fn, kind, th, note in tests:
