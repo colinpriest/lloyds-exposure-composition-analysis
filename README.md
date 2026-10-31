@@ -179,6 +179,13 @@ recorded run may carry none of the environment skips.
 
 ## Reproducing the paper's results
 
+The complete manifest also needs a separate extraction Git checkout containing
+the pinned commit in `docs/data-provenance.md`: the cohort-depth sensitivity reads
+its `test_gemini.py` and `table_extraction.py` blobs. Set `LLOYDS_EXTRACTION_REPO`
+to that checkout if it is not at the default path shown under Tests below. These
+steps need neither the source filings nor a paid API key; the manifest's H.10 rate
+refresh requires network access.
+
 ```bash
 python -m pip install -r requirements.lock
 python reproduce.py --check     # environment and committed inputs, no fitting
@@ -357,7 +364,7 @@ It does **not** re-run the PDF extraction, which needs the source reports and pa
 API access; its output is committed as the record files `pdf_extraction/syndicate_*.json`, with
 the registers and scans imported beside them (`docs/data-provenance.md`). Everything
 downstream of those records, `model/exposure_results.json` included (`run_analysis.py` writes it),
-is *re-runnable* from this checkout through the manifest;
+is *re-runnable* from the committed records and pinned extraction checkout through the manifest;
 what was *demonstrated* is the historical clean full-manifest run at `02390cc` described above;
 later changed outputs require their own rerun evidence (`--verify` prints the recorded coverage).
 

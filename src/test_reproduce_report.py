@@ -919,6 +919,42 @@ def _setup_interruption_probe(monkeypatch, tmp_path):
     return stamp, report
 
 
+def test_extraction_preflight_checks_both_pinned_blobs_and_selected_steps(tmp_path):
+    import subprocess
+    root = tmp_path / "extraction"
+    root.mkdir()
+    def git(*args):
+        return subprocess.run(["git", "-C", str(root), *args], check=True,
+                              capture_output=True, text=True).stdout.strip()
+    git("init")
+    (root / "test_gemini.py").write_text("# estimator\n", encoding="utf-8")
+    git("add", "test_gemini.py")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "one blob")
+    one = git("rev-parse", "HEAD")
+    steps = [("check_cohort_depth_sensitivity.py", "checks", 1)]
+    assert "table_extraction.py" in rp.check_extraction_prerequisite(steps, str(root), one)[0]
+    (root / "table_extraction.py").write_text("# constants\n", encoding="utf-8")
+    git("add", "table_extraction.py")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-m", "both blobs")
+    both = git("rev-parse", "HEAD")
+    assert rp.check_extraction_prerequisite(steps, str(root), both) == []
+    (root / "test_gemini.py").unlink()  # the real estimator reads the pinned blob, not the worktree
+    assert rp.check_extraction_prerequisite(steps, str(root), both) == []
+    assert rp.check_extraction_prerequisite(steps, str(tmp_path / "absent"), both)
+    assert rp.check_extraction_prerequisite(steps, str(root), "not-a-sha")
+    assert rp.check_extraction_prerequisite([("sample.py", "inputs", 1)], str(tmp_path / "absent"), both) == []
+
+
+def test_missing_extraction_stops_before_manifest_scripts(monkeypatch, tmp_path):
+    _setup_interruption_probe(monkeypatch, tmp_path)
+    monkeypatch.setattr(rp, "check_extraction_prerequisite", lambda steps: ["missing extraction blob"])
+    def must_not_run(_steps):
+        pytest.fail("manifest ran despite missing extraction source")
+    monkeypatch.setattr(rp, "run", must_not_run)
+    assert rp.main() == 1
+    assert rp.validate_stamp(rp.read_stamp())
+
+
 def test_interrupted_run_invalidates_previous_success(monkeypatch, tmp_path):
     _, report = _setup_interruption_probe(monkeypatch, tmp_path)
 

@@ -13,10 +13,11 @@ headline calibration needs PyMC, ArviZ, PyTensor and SciPy, and the README docum
 few individual commands with no end-to-end route. The claim was made about a repository
 nobody had tried to reproduce from scratch.
 
-What it does NOT do. It does not re-run the PDF extraction: that needs the source
-reports and paid LLM API access, and its output is committed as
-model/exposure_results.json. Everything downstream of that file is RE-RUNNABLE from
-this checkout through the manifest below; what has been DEMONSTRATED is whatever the
+What it does NOT do. It does not re-run the PDF extraction. Fresh extraction needs
+source reports and paid model API access; cached replay also needs the reports but
+not paid calls, and has limited recorded coverage. The manifest uses committed extracted records and
+also requires the pinned extraction Git checkout for the cohort-depth estimator;
+source reports and paid keys are not needed for that estimator. What has been DEMONSTRATED is whatever the
 committed run report records, no more: --verify prints that run's exact coverage and
 says whether it was partial or complete.
 
@@ -768,6 +769,32 @@ def check_environment():
               "fiftieth of a posterior SD). Remove it from PATH to reproduce them "
               "bit for bit." % toolchain)
     return not (missing or absent)
+
+
+def check_extraction_prerequisite(steps, root=None, pin=None):
+    """Fail before fitting if the selected cohort-depth step cannot read its pinned blobs."""
+    if not any(script == "check_cohort_depth_sensitivity.py" for script, _, _ in steps):
+        return []
+    root = root or os.environ.get("LLOYDS_EXTRACTION_REPO") or os.path.join("D:" + os.sep, "dev", "lloyds_reserve_stress_testing")
+    if pin is None:
+        try:
+            with io.open(os.path.join(HERE, "docs", "data-provenance.md"), encoding="utf-8") as fh:
+                match = re.search(r"The current import is the extraction's commit `([0-9a-f]{40})`", fh.read())
+            pin = match.group(1) if match else ""
+        except OSError:
+            pin = ""
+    if not re.fullmatch(r"[0-9a-f]{40}", pin):
+        return ["docs/data-provenance.md does not name a valid pinned extraction commit"]
+    for path in ("test_gemini.py", "table_extraction.py"):
+        try:
+            result = subprocess.run(["git", "-C", root, "cat-file", "-t", pin + ":" + path],
+                                    capture_output=True, text=True)
+        except OSError as exc:
+            return ["cannot inspect the pinned extraction checkout %s: %s" % (root, exc)]
+        if result.returncode or result.stdout.strip() != "blob":
+            return ["extraction checkout %s cannot supply %s at %s; set LLOYDS_EXTRACTION_REPO to a checkout holding the pin"
+                    % (root, path, pin)]
+    return []
 
 
 def run(steps):
@@ -1806,6 +1833,9 @@ def main():
 
     print("environment and inputs:")
     ok = check_environment()
+    for msg in check_extraction_prerequisite(steps):
+        print("  extraction *** %s" % msg)
+        ok = False
     for msg in check_manifest_completeness():
         print("  manifest *** %s" % msg)
         ok = False

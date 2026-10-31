@@ -22,8 +22,10 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 | Portfolio-transfer scan | `pdf_extraction/portfolio_transfer_scan.json` | yes | not read here: kept equal to the extraction's copy so that the two repositories hold one version of it |
 | Raw filing documents | extraction repository, `syndicate_reports/pdfs/` | **no** (1,065 records: 970 PDF and 95 HTML; source files not committed) | source documents, not redistributed |
 
-The raw source documents are deliberately not committed (volume + redistribution); everything downstream
-is re-runnable from the committed JSON. The recorded clean full-manifest run demonstrated
+The raw source documents are deliberately not committed (volume + redistribution); the downstream manifest
+is re-runnable from the committed JSON and the pinned extraction Git checkout, whose estimator source
+the cohort-depth sensitivity reads. Neither source filings nor paid API access are needed for that step;
+the H.10 rate refresh in the full manifest needs network access. The recorded clean full-manifest run demonstrated
 reproduction at historical analysis commit `02390cc`; later changed inputs and outputs require
 separate evidence. Targeted clean-pin and changed-input refits are recorded in
 `results/review_evidence/` (`reproduce.py --verify` prints the historical run's coverage; see the README). The
@@ -430,11 +432,12 @@ extraction repo for prompts and the reconciliation logic.
 
 ## 5. Reproducing from a fresh clone
 
-1. Clone the extraction repo and copy its `pdf_extraction/` and `syndicate_reports/` outputs
-   into this repo (the JSON only; the source documents stay in the extraction
-   repository under `syndicate_reports/pdfs/` and are needed only to re-run
+1. Clone the extraction repo with the pinned commit present and set `LLOYDS_EXTRACTION_REPO` to that
+   checkout if it is not at the default path documented in the README. Imported `pdf_extraction/`
+   and `syndicate_reports/` inputs are already committed here; the cohort-depth estimator reads
+   two source files from the pinned extraction commit. Source documents are needed only to re-run
    `python src/currency_scan.py --pdf-dir <that folder> --allow-llm-fallback --replace-canonical`;
-   the two flags are needed because the 2024 filings published only as HTML have no PDF).
+   the two flags are needed because the 2024 filings published only as HTML have no PDF.
 2. `python reproduce.py` runs the whole manifest in its order (`python reproduce.py --list` prints it): the
    loader on the new records (`build_working_sample.py`), the calibrations, the checks and the tail
    analyses, then `run_analysis.py` again, so that the transfer tool, the paper pack and the vignette
