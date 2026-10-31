@@ -9,9 +9,9 @@ The first replacement was also wrong. It retyped its likelihood from
 calibrate_dispersion.py -- the older SINGLE-REGIME fit, one common nu, no RITC scale
 term -- while claiming to be the adopted model, and returned gamma = 0.310 against
 the adopted model's 0.243 without anyone noticing the gap. The scale and tail now
-come from adopted_model.scale_block(), which is the two-regime specification, and
-every fit here is checked against the published posterior before its location
-coefficient is believed. Since option B (the author's decision of 10 October 2026) the headline
+come from adopted_model.scale_block(), which is the two-regime specification. Every fit
+is compared with the published posterior: only the zero-location control must agree,
+while location variants can move the scale and tail parameters. Since option B (the author's decision of 10 October 2026) the headline
 fixes gamma at 0 in the likelihood, and so does every fit here (scale_block's default): the
 subject is concentration in the LOCATION, and the scale is the headline's.
 
