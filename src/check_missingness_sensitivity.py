@@ -7,8 +7,8 @@ missing composition, and the complete model records. This script then:
 1. fits ``P(model-sample membership)`` over the supported disclosure-defined
    target and evaluates explicitly capped, mean-normalised inverse-propensity
    weights at several caps; and
-2. appends pseudo-outcomes only for the eligible records whose outcome is genuinely
-   unavailable; and
+2. appends pseudo-outcomes for the selected unavailable-outcome records, whose
+   eligibility is source-supported for one and provisional for nine; and
 3. separately assumes that all eligibility-unresolved records (those with no deterministic
    reading: the extraction's parsers found no prior-year figure and its models were not run)
    were economically eligible and appends them too. Neither construction is a bound or
