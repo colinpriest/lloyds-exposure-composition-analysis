@@ -32,7 +32,7 @@ this repository alone.
 
 ## 2. What changed in this import
 
-The current import is the extraction's commit `ff770e5b3a1b95245bd75fde4b46a48252e97c39`. The imported files are unchanged from `e8d1ddb11adba50989bee46c7019083e7a85d2c4`; the descendant corrects documentation only. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
+The current import is the extraction's commit `ccd4589583add5ed97fa0af387e2e9e5d19dac2a`. Compared with `ff770e5b3a1b95245bd75fde4b46a48252e97c39`, the imported 1840/2022 record and structural eligibility audit clarify that printed dashes are interpreted as nil; the numeric values and eligibility decisions are unchanged. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
 
 An earlier import was the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026).
 That historical import replaced `2ee4007e` (1 October 2026)
