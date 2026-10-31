@@ -71,9 +71,10 @@ GAMMA_FREE_DRAWS = SD / "model" / "dispersion_posterior_draws_ritc_gamma_free.np
 REFERENCE_SIZE = 500.0
 HHI_FLOOR, HHI_CEIL = 0.01, 1.0
 
-# Shared parameters a location variant must not move by more than this, in units of
-# the reference posterior SD. A refit that shifts k or the floor by more than half a
-# posterior standard deviation is fitting something else.
+# Diagnostic threshold for differences in shared parameters, in units of the
+# reference posterior SD. A shift over half an SD flags a comparison for review;
+# sampling or changed inputs can also move estimates, so it does not prove a
+# different model was fitted. Callers decide whether a given control must agree.
 TOL_SD = 0.5
 
 

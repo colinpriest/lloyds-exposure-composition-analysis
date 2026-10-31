@@ -1,8 +1,8 @@
 """Check 3 (referee): M1 (free k) vs M2 (k=0.5, sqrt-N + floor) under BY-SYNDICATE 5-fold CV.
 
-Appendix 3.1 adjudicates M1 vs M2 on observation-level PSIS-LOO (optimistic under
-clustering). This re-runs the comparison on the identical five-fold by-syndicate folds used
-by the headline OOS check (oos_validation.py), scoring held-out ELPD. Reports
+Supplement S13.4 reports a separate observation-level PSIS-LOO comparison, optimistic
+under clustering. Appendix 3.1 reports this five-fold by-syndicate comparison on the
+same folds used by the headline OOS check (oos_validation.py), scoring held-out ELPD. Reports
 Delta ELPD(M1 - M2), its SE, and the fraction of held-out syndicate-years where M1 has
 higher predictive density. Both models carry the undiversifiable floor and drop the year
 shock (as in oos_validation), so the comparison isolates the pooling FORM.
@@ -24,6 +24,9 @@ from oos_validation import load, fold_assignment, sigma_draws, held_out_lppd, RE
 
 SD = Path(__file__).resolve().parent.parent
 OUT = SD / "results" / "check_pooling_cv_results.json"
+CRITERION = "5-fold by-syndicate held-out ELPD (same folds as the headline OOS check)"
+PSIS_NOTE = ("Supplement S13.4 reports the observation-level PSIS-LOO comparison separately; "
+             "this result uses by-syndicate cross-validation")
 
 
 def fit_pooling(S, R, H, free_k):
@@ -72,12 +75,11 @@ def main():
     dE = float(np.nansum(diff)); se = float(np.sqrt(len(diff)) * np.nanstd(diff))
     res = {
         "n": int(len(S)), "n_syndicates": int(len(uniq)), "folds": K, "seed": SEED,
-        "criterion": "5-fold by-syndicate held-out ELPD (matches Section 4.6 OOS)",
+        "criterion": CRITERION,
         "held_out_ELPD_M1_free_k": E1, "held_out_ELPD_M2_sqrtN_floor": E2,
         "delta_ELPD_M1_minus_M2": dE, "delta_SE": se, "z": dE / se if se else None,
         "pct_held_out_M1_higher_density": float(np.mean(diff > 0) * 100),
-        "note_psis_loo_appendix31": "the observation-level PSIS-LOO comparison is reported separately; "
-                                    "this is its conservative by-syndicate CV counterpart",
+        "note_psis_loo_appendix31": PSIS_NOTE,
         "divergences_by_fold": divergences,
     }
     with io.open(OUT, "w", encoding="utf-8", newline="") as _fh:

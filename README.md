@@ -84,7 +84,7 @@ donor's reserve size, and multiplies the result by the target's base scale `sigm
 the base scale law and the two fitted tail indices of its own fit (the headline size-only operator the
 gamma = 0 fit's, the concentration overlay the gamma-free fit's). The base-standardised input is not
 a unit-scale draw: it still carries the donor's realised reporting-year multiplier `exp(s_t)` and,
-for an assumed-business donor, the fitted RITC-labelled scale multiplier `exp(beta_RITC)`. Neither is divided out, and the
+for an assumed-business donor, the fitted RITC scale multiplier `exp(beta_RITC)`. Neither is divided out, and the
 operator does not re-draw the year effect or apply `exp(beta_RITC * 1[RITC])` to the target (a measured
 structural simplification worth about 0.2% of the vignette stresses). The operator is **shape-aware**:
 a donor movement at `(R_s, H_s)` transfers to a target `(R_t, H_t)` by

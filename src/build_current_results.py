@@ -1523,9 +1523,9 @@ def referee_section_3(pcv, cse):
         "> Generated block: written by `src/build_current_results.py` from",
         "> `results/check_pooling_cv_results.json` and `results/check_cv_clustered_se_results.json` at each manifest run.",
         "",
-        "**Concern.** Appendix 3.1 adjudicated M1 (free $k$) vs M2 ($\\sqrt N$+floor, $k$=0.5) on",
-        "observation-level PSIS-LOO (optimistic under clustering), whereas the headline comparison uses",
-        "5-fold by-syndicate CV.",
+        "**Concern.** Supplement S13.4 reports a separate observation-level PSIS-LOO comparison of",
+        "M1 (free $k$) and M2 ($\\sqrt N$+floor, $k$=0.5), optimistic under clustering;",
+        "Appendix 3.1 reports the 5-fold by-syndicate comparison.",
         "",
         "**Result** (%d by-syndicate folds; %d syndicate-years from %d syndicates; held-out ELPD):"
         % (pcv["folds"], pcv["n"], pcv["n_syndicates"]),

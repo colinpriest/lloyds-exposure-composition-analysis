@@ -91,6 +91,26 @@ def test_referee_currency_block_prints_tau_m_not_the_floor():
     assert ("%+.2f" % cu["corr_mt_diff_vs_usd_share"]) in sec
 
 
+def test_pooling_comparison_labels_match_the_comparison_actually_reported():
+    """The public note and recorded output distinguish observation and syndicate folds."""
+    import ast
+    pcv = _json("results", "check_pooling_cv_results.json")
+    cse = _json("results", "check_cv_clustered_se_results.json")
+    block = bcr.referee_section_3(pcv, cse)
+    assert block in _read("docs", "referee-checks.md")
+    assert "Supplement S13.4" in block and "Appendix 3.1" in block
+    assert "distinction is not adjudicated" in block
+    assert "Appendix 3.1 adjudicated" not in block
+    source = ast.parse(_read("src", "check_pooling_cv.py"))
+    labels = {n.targets[0].id: ast.literal_eval(n.value)
+              for n in source.body if isinstance(n, ast.Assign) and len(n.targets) == 1
+              and isinstance(n.targets[0], ast.Name) and n.targets[0].id in ("CRITERION", "PSIS_NOTE")}
+    assert pcv["criterion"] == labels["CRITERION"]
+    assert pcv["note_psis_loo_appendix31"] == labels["PSIS_NOTE"]
+    assert "conservative" not in labels["PSIS_NOTE"].lower()
+    assert "Section 4.6" not in labels["CRITERION"]
+
+
 def test_referee_size_only_block_matches_its_record():
     """DEFERRED-TO-REFIT: the committed record and section 5 are rewritten, keyed by operator, by the recorded pass."""
     g0 = _json("results", "check_gamma0_vignette_results.json")
