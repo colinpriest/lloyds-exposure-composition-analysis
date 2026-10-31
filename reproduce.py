@@ -1525,6 +1525,11 @@ def verify():
     generated_roots = ("model/", "results/", "vignettes/", "paper_pack/", "figures/")
     for path in changed_paths(HERE):
         rel = path.replace("\\", "/")
+        # The orchestrator writes this report after every run; it is validated
+        # above rather than declared as an individual script's output. A missing
+        # or unreadable report is not exempted from the changed-output check.
+        if rel == "reproduce-run-report.json" and report is not None:
+            continue
         if (rel in known_outputs or rel.startswith(generated_roots)) and rel not in declared:
             ok = False
             print("verify: *** %-48s changed but not declared by any ran script"

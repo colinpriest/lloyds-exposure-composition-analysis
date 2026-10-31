@@ -566,6 +566,45 @@ def test_partial_verifier_detects_changed_unrun_vignette_and_untracked_output(mo
         assert changed in capsys.readouterr().out
 
 
+@pytest.mark.parametrize("partial", [False, True], ids=["full", "partial"])
+def test_local_run_report_is_validated_without_being_misclassified_as_a_script_output(
+        monkeypatch, tmp_path, capsys, partial):
+    """A run writes its own report; that must not hide invalid reports or other outputs."""
+    report = tmp_path / "reproduce-run-report.json"
+    report.write_text('{"marker": 42}\n', encoding="utf-8")
+    monkeypatch.setattr(rp, "REPORT", str(report))
+    monkeypatch.setattr(rp, "read_stamp", lambda: {"ran": ["dummy.py"]})
+    monkeypatch.setattr(rp, "STEPS", [None, None] if partial else [None])
+    monkeypatch.setattr(rp, "OUTPUTS", {"dummy.py": ("results/known.json",),
+                                        "other.py": ("vignettes/vignette-1/summary_snippet.md",)})
+    monkeypatch.setattr(rp, "output_matches", lambda rel: ("byte-identical", ""))
+    seen = []
+    monkeypatch.setattr(rp, "validate_report", lambda record: (seen.append(record) or True, []))
+    monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json"])
+    assert rp.verify()
+    assert seen == [{"marker": 42}]
+
+    # Other changed or untracked generated outputs must continue to fail.
+    monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json",
+                                                           "results/new-output.json"])
+    assert not rp.verify()
+    assert "results/new-output.json" in capsys.readouterr().out
+
+    # A valid-looking but historically invalid report remains a failed check.
+    monkeypatch.setattr(rp, "changed_paths", lambda root: ["reproduce-run-report.json"])
+    monkeypatch.setattr(rp, "validate_report", lambda record: (False, ["bad attestation"]))
+    assert not rp.verify()
+    assert "bad attestation" in capsys.readouterr().out
+
+    # An unreadable or deleted changed report must not disappear from the check.
+    report.write_text("not json", encoding="utf-8")
+    assert not rp.verify()
+    assert "reproduce-run-report.json" in capsys.readouterr().out
+    report.unlink()
+    assert not rp.verify()
+    assert "reproduce-run-report.json" in capsys.readouterr().out
+
+
 def test_review_evidence_requires_its_exact_tracked_content_and_does_not_exempt_the_directory(tmp_path, monkeypatch):
     import hashlib
     import subprocess
