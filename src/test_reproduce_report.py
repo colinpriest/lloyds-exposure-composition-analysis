@@ -341,7 +341,9 @@ def test_a_stale_recorded_count_is_caught(monkeypatch, tmp_path):
     with io.open(os.path.join(HERE, "tests-run-report.json"),
                             encoding="utf-8") as _fh:
         rec = json.load(_fh)
-    rec["collected"] = rec["collected"] + 7
+    # This nonempty suite can never collect zero tests, even when the old
+    # recorded count happens to differ from the current count by seven.
+    rec["collected"] = 0
     p = tmp_path / "stale.json"
     with io.open(str(p), "w", encoding="utf-8") as _fh:
         _fh.write(json.dumps(rec))
