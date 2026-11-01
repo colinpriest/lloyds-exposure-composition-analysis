@@ -142,3 +142,31 @@ def test_recorded_all_free_diagnostics_match_draws_and_historical_results():
             assert digest == result["posterior_draw_hashes"][name]
             if scenario != "690_original_clean":
                 assert digest == previous["posterior_draw_hashes"][name]
+
+
+
+def test_scale_multiplier_scales_only_the_synthetic_outcomes(monkeypatch, tmp_path):
+    """c multiplies sigma * unit_t for the pseudo rows; the observed outcomes enter unchanged at every c."""
+    unavailable = [rec('syndicate_1200_2018.json', 'eligible_outcome_unavailable', size=100)]
+    unresolved = [rec('syndicate_1201_2018.json', 'eligibility_unresolved', size=500)]
+    selected = [rec('syndicate_1202_2018.json', size=1000)]
+    rows = unavailable + unresolved + selected
+    monkeypatch.setattr(s.original, 'ritc_flag', lambda names: np.array([False] * len(names)))
+    seen = {}
+
+    def fake_fit(sy, rs, hs, yidx, n_years, ritc, label, keep, keep_as, keep_idata):
+        seen[label] = np.array(sy)
+        keep[keep_as] = {'convergence': {}, 'idata': None, 'free_parameters': [], 'draws': {'k': np.zeros(2)}}
+        return {}
+
+    monkeypatch.setattr(s.original, 'fit', fake_fit)
+    monkeypatch.setattr(s, 'all_parameter_diagnostics', lambda *args: {})
+    calibration = {'nu_clean': 4, 'gamma': 0, 'k': .6, 'sd_undiv': .03, 'sd_div': .04}
+    observed = np.array([.1, -.2])
+    result = s.calculate(rows, unavailable, unresolved, selected, observed, np.array([10., 500.]), np.array([.4, .4]),
+                         np.array([2018, 2018]), ['a', 'b'], calibration, 'original', 'x', tmp_path)
+    base = np.array([p['sigma'] * p['unit_t'] for p in result['pseudo_inputs']])
+    assert sorted(seen) == ['x c=1', 'x c=5'] and np.all(base != 0)
+    for label, c in (('x c=1', 1), ('x c=5', 5)):
+        np.testing.assert_array_equal(seen[label][:2], observed)
+        np.testing.assert_allclose(seen[label][2:], c * base)

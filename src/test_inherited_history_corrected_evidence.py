@@ -31,3 +31,12 @@ def test_corrected_scenarios_preserve_historical_690_and_record_full_diagnostics
     for name, expected in current['posterior_draw_hashes'].items():
         archive = ROOT / current['posterior_draw_paths'][name]
         assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected
+
+
+def test_historical_artifact_hash_is_over_the_committed_bytes():
+    """A hash read from a CRLF working copy holds on one checkout only; the record must name the LF bytes."""
+    current = json.loads((ROOT / 'results/check_inherited_history_corrected_results.json').read_text(encoding='utf8'))
+    artifact = current['historical_690_artifact']
+    data = (ROOT / artifact['path']).read_bytes().replace(b'\r\n', b'\n')
+    assert hashlib.sha256(data).hexdigest() == artifact['sha256']
+    assert hashlib.sha256(data.replace(b'\n', b'\r\n')).hexdigest() == artifact['sha256_crlf_checkout']
