@@ -193,13 +193,13 @@ python reproduce.py --list      # every script in the manifest, in order, with r
 python reproduce.py             # run everything (no C++ toolchain needed)
 ```
 
-No C++ toolchain is needed. The recorded full-manifest pass at historical commit
-`02390cc` used none. Toolchain availability matters for bit-for-bit reproduction:
+No C++ toolchain is needed. The historical full-manifest pass at `02390cc` and the
+recorded clean pass at `2088e730e0089b8cbd77ce199800b95aba41ee09` used none. Toolchain availability matters for bit-for-bit reproduction:
 with a toolchain on the path PyTensor compiles operations it otherwise runs in Python,
 and on the reference machine that changed every posterior draw from the first one
 (posterior means moved by roughly a fiftieth of a posterior SD in that comparison).
 `reproduce.py --check` reports a detected toolchain; removing it matches the recorded
-pass's environment but does not establish reproduction of outputs changed since that pass.
+pass's environment but does not establish reproduction of outputs changed after that pass.
 
 Two parallelism switches exist and neither changes an output. `PYMC_CORES` (default
 1) is the number of chains each fit samples in parallel; round 53 ran the manifest
@@ -264,10 +264,14 @@ cannot be mistaken for an earlier successful run. New schema-5 reports remain ma
 verified-run claim in a clean clone. Schema-4 reports retain their historical meaning.
 Use `python reproduce.py --verify` to check the recorded outputs again.
 
-The whole manifest was rerun as a recorded pass from a clean clone of the
-historical analysis commit `02390cc` (every manifest script, no failures; its posterior-draw `.npz` files and
-figures reproduced byte for byte against that commit). This historical pass does not demonstrate reproduction
-of later changed outputs; the separate targeted runs and their records are described below. `reproduce-run-report.json` (committed) records the commit, a
+The whole manifest was rerun from a clean clone of analysis commit
+`2088e730e0089b8cbd77ce199800b95aba41ee09`: all 84 scripts completed successfully, and
+all 263 declared outputs matched that commit under the comparison rules above.
+The earlier pass at `02390cc` remains historical evidence for that earlier tree.
+Commit `f510cfbb9314b2a003713df1765e5021e37c5be8` records the 2088 run report; it
+and the subsequent documentation-only revision were not themselves full-manifest runs.
+That revision changes this README and the provenance note, both declared text outputs; the report attests to their 2088 versions.
+The separate targeted runs and their records are described below. `reproduce-run-report.json` (committed) records the commit, a
 `worktree_dirty_src` flag, an input attestation, the environment, and per-output hashes --
 canonical SHA-256 for JSON (volatile fields excluded), byte SHA-256 for binaries -- and
 `--verify` VALIDATES that report against history: a dirty recorded run is rejected,
@@ -297,9 +301,10 @@ environment: installation from `requirements.lock`, `reproduce.py --check`, clea
 record, stamped here by `record_tests.py` from `tests-run-report.json`, is
 (3586 passed, 0 skipped), which is not the count of that 31 August run. A calibration smoke
 run of `calibrate_dispersion.py` completed 6,000 posterior draws with zero divergences
-and maximum R-hat 1.000. The full-manifest run described above began on 29 October 2026 and finished at
-01:53 on 30 October 2026 Brisbane time (UTC+10), on a source tree with no uncommitted change; the distinction between re-runnable and
-demonstrated above remains deliberate.
+and maximum R-hat 1.000. The 2088 full-manifest run described above began on 1 November 2026 and finished at
+11:50 on 01 November 2026 Brisbane time (UTC+10), on a source tree with no uncommitted change;
+the report timestamp marks completion of the scripts, and output verification followed.
+The distinction between re-runnable and demonstrated above remains deliberate.
 
 Four test files cross into the manuscript (`src/test_cross_repository.py` holds this list to the
 test files that read `LLOYDS_PAPER_REPO`):
@@ -367,8 +372,8 @@ API access; its output is committed as the record files `pdf_extraction/syndicat
 the registers and scans imported beside them (`docs/data-provenance.md`). Everything
 downstream of those records, `model/exposure_results.json` included (`run_analysis.py` writes it),
 is *re-runnable* from the committed records and pinned extraction checkout through the manifest;
-what was *demonstrated* is the historical clean full-manifest run at `02390cc` described above;
-later changed outputs require their own rerun evidence (`--verify` prints the recorded coverage).
+what was *demonstrated* is the clean full-manifest run at `2088e730e0089b8cbd77ce199800b95aba41ee09` described above;
+subsequently changed outputs require their own rerun evidence (`--verify` prints the recorded coverage).
 
 Individual steps still work on their own:
 
@@ -426,7 +431,7 @@ click-through worked examples.
 
 Three analyses were run separately from the full manifest: source-numerator alternatives,
 the conditional 1254/2022 inclusion, and maturity-proxy variants. The existing full
-run report does not attest to these later targeted runs. `reproduce.py` keeps explicit
+run report does not attest to these separate targeted runs. `reproduce.py` keeps explicit
 producer contracts for their tracked outputs and checks the separate historical
 provenance and input-comparison records against recorded SHA-256 hashes. A hash check
 is an integrity check on the archived record, not an independent rerun or evidence of

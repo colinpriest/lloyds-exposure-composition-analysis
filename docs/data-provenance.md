@@ -25,16 +25,19 @@ scenario-transfer modelling. This file records exactly what was imported and whe
 The raw source documents are deliberately not committed (volume + redistribution); the downstream manifest
 is re-runnable from the committed JSON and the pinned extraction Git checkout, whose estimator source
 the cohort-depth sensitivity reads. Neither source filings nor paid API access are needed for that step;
-the H.10 rate refresh in the full manifest needs network access. The recorded clean full-manifest run demonstrated
-reproduction at historical analysis commit `02390cc`; later changed inputs and outputs require
-separate evidence. Targeted clean-pin and changed-input refits are recorded in
-`results/review_evidence/` (`reproduce.py --verify` prints the historical run's coverage; see the README). The
+the H.10 rate refresh in the full manifest needs network access. The recorded clean full-manifest run at analysis commit
+`2088e730e0089b8cbd77ce199800b95aba41ee09` reproduced its declared outputs under the documented comparison rules.
+The earlier `02390cc` run remains historical evidence. The report-only commit `f510cfbb9314b2a003713df1765e5021e37c5be8`
+and the subsequent documentation-only revision were not themselves full runs. That revision changes this provenance note
+and the README, both declared text outputs; the report attests to their 2088 versions. Later changes require separate evidence.
+Targeted clean-pin and changed-input refits are recorded in `results/review_evidence/`
+(`reproduce.py --verify` validates the committed report and prints its coverage; see the README). The
 extraction itself is reconstructible from the public filings but not re-runnable from
 this repository alone.
 
 ## 2. What changed in this import
 
-The current import is the extraction's commit `c9a6f7501a829625fa1a3611bed683ffeb24156d`. Compared with `ff770e5b3a1b95245bd75fde4b46a48252e97c39`, the imported 1840/2022 record and structural eligibility audit clarify that printed dashes are interpreted as nil; the numeric values and eligibility decisions are unchanged. The imported subset is identified in the table above; this pin does not imply that all later analysis outputs were reproduced by the historical full-manifest run.
+The current import is the extraction's commit `c9a6f7501a829625fa1a3611bed683ffeb24156d`. Compared with `ff770e5b3a1b95245bd75fde4b46a48252e97c39`, the imported 1840/2022 record and structural eligibility audit clarify that printed dashes are interpreted as nil; the numeric values and eligibility decisions are unchanged. The imported subset is identified in the table above; this pin alone does not establish reproduction. The recorded 2088 full-manifest run and the separate targeted refits provide the execution evidence described above.
 
 An earlier import was the extraction's commit `57b4b14d8e066bd7b71a3c33d7bdb8e3a2ea06cb` (4 October 2026).
 That historical import replaced `2ee4007e` (1 October 2026)
