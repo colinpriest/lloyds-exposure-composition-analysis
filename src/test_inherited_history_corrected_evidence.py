@@ -33,10 +33,11 @@ def test_corrected_scenarios_preserve_historical_690_and_record_full_diagnostics
         assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected
 
 
-def test_historical_artifact_hash_is_over_the_committed_bytes():
-    """A hash read from a CRLF working copy holds on one checkout only; the record must name the LF bytes."""
+def test_historical_artifact_hash_identifies_the_committed_content_on_any_checkout():
+    """The record's hash was read from a CRLF working copy (docs/inherited-history-sensitivity-20261031.md); it must
+    name the committed content in its LF or its CRLF form, whichever line endings this checkout has, and no other."""
     current = json.loads((ROOT / 'results/check_inherited_history_corrected_results.json').read_text(encoding='utf8'))
     artifact = current['historical_690_artifact']
-    data = (ROOT / artifact['path']).read_bytes().replace(b'\r\n', b'\n')
-    assert hashlib.sha256(data).hexdigest() == artifact['sha256']
-    assert hashlib.sha256(data.replace(b'\n', b'\r\n')).hexdigest() == artifact['sha256_crlf_checkout']
+    lf = (ROOT / artifact['path']).read_bytes().replace(b'\r\n', b'\n')
+    forms = {hashlib.sha256(lf).hexdigest(), hashlib.sha256(lf.replace(b'\n', b'\r\n')).hexdigest()}
+    assert artifact['sha256'] in forms

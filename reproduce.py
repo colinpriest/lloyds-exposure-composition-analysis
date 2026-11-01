@@ -392,7 +392,7 @@ TARGETED_PRODUCERS = {
 # SHA-256; edits require an explicit evidence review and contract update.
 TARGETED_RUN_EVIDENCE = {
     # Mixed-source assembly: 690 historical and corrected 742 fits; not one producer run.
-    "results/check_inherited_history_corrected_results.json": "33b6ac356c93f86c6fa469529fee18c921ef614c4f64f3cd5b4d4aa18ea5bfb1",
+    "results/check_inherited_history_corrected_results.json": "e83c33990e55505bd7bc376f003def017d5094382366dc92847f03ecf6b08ef1",
     "results/check_maturity_additional_sensitivities_provenance.json": "f5e48bfcde40c42b59a9d7490d9dd0168d331ec82c4395c2fb8eab1e9bb5f759",
     "results/check_maturity_denominator_exclude_457_2015_inputs.json": "882fa3067a40757b00cc77749c3f98d19eea6509679e2b509dc84ee91597909b",
     "results/check_maturity_denominator_recovered_groups_omitted_inputs.json": "1bd97da270e42baa9b50f77126becaaba2dbf124f289434afe6d897380c6d614",
